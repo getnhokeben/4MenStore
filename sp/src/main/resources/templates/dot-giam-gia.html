@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đợt giảm giá</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <script src="/js/app-shell.js" defer></script>
+    <style>
+        :root {
+            --gold: #c8a474;
+            --gold-dark: #a8895a;
+            --gold-soft: rgba(200, 164, 116, .12);
+            --bg: #f3f4f6;
+            --white: #fff;
+            --line: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+            --green: #16a34a;
+            --danger: #dc2626;
+            --radius: 8px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, .03);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.45;
+            font-synthesis: none;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+        .page { min-height: 100vh; padding: 20px 24px; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .title { display: flex; align-items: center; gap: 12px; }
+        .title h1 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: .3px; }
+        .round {
+            width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line);
+            background: #fff; display: grid; place-items: center; color: #6b7280; cursor: pointer;
+        }
+        .btn {
+            height: 36px; border: 1.5px solid var(--line); border-radius: 6px; background: #fff; color: var(--text);
+            font-weight: 600; font-size: 13px; font-family: inherit; padding: 0 14px; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center; gap: 7px; text-decoration: none; transition: .15s;
+        }
+        .btn:hover { border-color: #aaa; color: var(--text); }
+        .btn.primary { background: var(--gold); border-color: var(--gold); color: #fff; box-shadow: none; }
+        .btn.primary:hover { background: var(--gold-dark); border-color: var(--gold-dark); color: #fff; }
+        .btn.icon { width: 32px; padding: 0; border-radius: 6px; }
+        .btn.ghost-pink { color: var(--text); background: #fff; border-color: var(--line); }
+        .btn.ghost-pink:hover { border-color: var(--gold); color: var(--gold-dark); }
+        .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+        .filter-card { padding: 16px 18px; margin-bottom: 16px; }
+        .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .card-head .icon { width: 32px; height: 32px; border-radius: 6px; background: var(--gold-soft); color: var(--gold-dark); display: grid; place-items: center; font-weight: 700; }
+        .card-title { font-weight: 700; }
+        .card-sub { font-size: 12px; color: var(--muted); }
+        .filters { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr; gap: 14px; align-items: end; }
+        .field { margin-bottom: 12px; }
+        .field label { display: block; color: var(--muted); font-size: 11.5px; font-weight: 600; margin-bottom: 5px; }
+        .field input, .field select, .field textarea, .product-tools input, .product-tools select, .selected-filters input, .selected-filters select {
+            width: 100%; height: 36px; border: 1px solid var(--line); border-radius: 6px; padding: 0 12px;
+            font-size: 13px; font-family: inherit; background: #f9fafb; color: var(--text); outline: none;
+        }
+        .field textarea { height: 84px; padding: 12px; resize: vertical; }
+        .field input:focus, .field select:focus, .field textarea:focus, .product-tools input:focus, .product-tools select:focus, .selected-filters input:focus {
+            border-color: var(--gold); background: #fff; box-shadow: 0 0 0 3px rgba(200, 164, 116, .12);
+        }
+        .date-wrap { position: relative; }
+        .date-wrap input { padding-right: 42px; }
+        .date-wrap input::-webkit-calendar-picker-indicator { opacity: 0; }
+        .cal-btn {
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px;
+            border: 0; background: transparent; border-radius: 6px; cursor: pointer; display: grid; place-items: center; color: #111827;
+        }
+        .cal-btn:hover { background: var(--gold-soft); color: var(--gold-dark); }
+        .cal-ico { position: relative; width: 13px; height: 13px; border: 2px solid currentColor; border-radius: 2px; }
+        .cal-ico:before { content: ""; position: absolute; left: -2px; right: -2px; top: 2px; border-top: 2px solid currentColor; }
+        .filter-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+        .table-card { padding: 0; overflow: hidden; }
+        .table-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .table-head { padding: 14px 16px 0; }
+        .table-head h2 { font-size: 14px; font-weight: 700; margin: 0; }
+        .table-head span { font-size: 12px; color: var(--muted); }
+        .table-wrap { overflow: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 980px; }
+        th { height: 40px; background: #f9fafb; color: var(--muted); font-size: 11px; text-align: left; font-weight: 700; padding: 0 14px; white-space: nowrap; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1.5px solid var(--line); }
+        td { height: 46px; border-bottom: 1px solid var(--line); padding: 0 14px; font-size: 13px; vertical-align: middle; }
+        tbody tr:hover { background: #fafafa; }
+        .badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 20px; padding: 3px 9px; font-size: 11.5px; font-weight: 700; }
+        .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; display: block; }
+        .badge.on { background: #dcfce7; color: #16a34a; }
+        .badge.on::before { background: #16a34a; }
+        .badge.off { background: #fee2e2; color: #dc2626; }
+        .badge.off::before { background: #dc2626; }
+        .badge.expired { background: #fee2e2; color: #dc2626; }
+        .badge.expired::before { background: #dc2626; }
+        .actions { display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .power { border: 0; background: transparent; color: var(--muted); width: 28px; height: 28px; border-radius: 6px; cursor: pointer; }
+        .power:hover { background: var(--gold-soft); color: var(--gold-dark); }
+        .view { border: 1px solid #ead9c6; background: #fffaf3; color: var(--gold-dark); width: 30px; height: 30px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+        .view:hover { background: #f6eee3; border-color: var(--gold); }
+        .switch { position: relative; display: inline-flex; width: 38px; height: 20px; }
+        .switch input { display: none; }
+        .switch span { position: absolute; inset: 0; background: #d1d5db; border-radius: 999px; cursor: pointer; transition: .15s; }
+        .switch span:before { content: ""; position: absolute; width: 16px; height: 16px; left: 2px; top: 2px; background: #fff; border-radius: 50%; transition: .15s; box-shadow: 0 1px 2px rgba(0,0,0,.18); }
+        .switch input:checked + span { background: var(--green); }
+        .switch input:checked + span:before { transform: translateX(18px); }
+        .pager { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; color: var(--muted); font-size: 13px; background: #f9fafb; border-top: 1px solid var(--line); }
+        .pager-actions { display: flex; gap: 8px; }
+        .form-grid { display: grid; grid-template-columns: 360px minmax(0,1fr); gap: 16px; align-items: start; }
+        .form-card { padding: 18px; }
+        .form-actions { display: grid; gap: 10px; margin-top: 18px; }
+        .product-tools { display: grid; grid-template-columns: 1fr 150px 150px auto; gap: 10px; margin-bottom: 12px; }
+        .pick-table table { min-width: 760px; }
+        .pick-check { width: 16px; height: 16px; }
+        .plus-btn { border: 0; background: transparent; font-size: 20px; color: #8b95a5; cursor: pointer; }
+        .selected-card { margin-top: 16px; padding: 18px; }
+        .selected-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 12px; }
+        .selected-head h2 { font-size: 15px; margin: 0; }
+        .selected-head p { margin: 3px 0 0; font-size: 12px; color: var(--muted); }
+        .selected-filters { display: flex; gap: 10px; }
+        .remove-btn { border: 0; background: transparent; color: #9ca3af; font-size: 18px; cursor: pointer; }
+        .price-after { color: #a8895a; font-weight: 700; }
+        .thumb { display: inline-block; width: 28px; height: 28px; border: 1px solid #ddd; border-radius: 3px; background: #f9fafb; }
+        .empty { padding: 36px; text-align: center; color: var(--muted); }
+        .hidden { display: none !important; }
+        .toast {
+            position: fixed; right: 24px; top: 70px; z-index: 1200; background: #dcfce7; color: #166534;
+            border-left: 5px solid #22c55e; padding: 12px 18px; border-radius: 6px; font-size: 13px; font-weight: 700;
+            box-shadow: var(--shadow); max-width: 420px;
+        }
+        .toast.error { background: #fee2e2; color: #991b1b; border-left-color: #ef4444; }
+        .confirm-backdrop{position:fixed;inset:0;background:rgba(17,24,39,.42);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+        .confirm-backdrop.show{display:flex}
+        .confirm-dialog{width:min(420px,100%);background:#fff;border:1px solid #ead9c6;border-radius:10px;box-shadow:0 24px 70px rgba(31,20,10,.22);overflow:hidden}
+        .confirm-head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid #f1e5d7}
+        .confirm-icon{width:34px;height:34px;border-radius:50%;background:var(--gold-soft);color:var(--gold-dark);display:flex;align-items:center;justify-content:center;font-weight:800}
+        .confirm-title{font-size:15px;font-weight:800;color:#111}
+        .confirm-body{padding:16px 18px;color:#555;font-size:13.5px;line-height:1.55}
+        .confirm-actions{display:flex;justify-content:flex-end;gap:8px;padding:14px 18px;background:#faf8f5;border-top:1px solid #f1e5d7}
+        .confirm-actions .btn{height:34px}
+        @media (max-width: 1100px) {
+            .filters, .form-grid, .product-tools { grid-template-columns: 1fr; }
+            .filter-actions { justify-content: flex-start; flex-wrap: wrap; }
+            .selected-head { align-items: flex-start; flex-direction: column; }
+            .selected-filters { width: 100%; flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<aside class="sidebar"></aside>
+<main class="main page">
+    <section id="listView">
+        <div class="topbar">
+            <div class="title">
+                <h1>Quản lý đợt giảm giá</h1>
+            </div>
+        </div>
+
+        <section class="card filter-card">
+            <div class="card-head">
+                <div class="icon">⌕</div>
+                <div>
+                    <div class="card-title">Bộ lọc</div>
+                    <div class="card-sub">Tra cứu nhanh dữ liệu.</div>
+                </div>
+            </div>
+            <form id="filterForm">
+                <div class="filters">
+                    <div class="field">
+                        <label>Tìm kiếm</label>
+                        <input name="keyword" placeholder="Mã, tên...">
+                    </div>
+                    <div class="field">
+                        <label>Ngày bắt đầu</label>
+                        <div class="date-wrap">
+                            <input name="tuNgay" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm">
+                            <button class="cal-btn" type="button" data-picker="tuNgay"><span class="cal-ico"></span></button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Ngày kết thúc</label>
+                        <div class="date-wrap">
+                            <input name="denNgay" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm">
+                            <button class="cal-btn" type="button" data-picker="denNgay"><span class="cal-ico"></span></button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Trạng thái</label>
+                        <select name="tienDo">
+                            <option value="">Tất cả</option>
+                            <option value="DANG_HOAT_DONG">Đang hoạt động</option>
+                            <option value="NGUNG_HOAT_DONG">Ngừng hoạt động</option>
+                            <option value="HET_HAN">Hết hạn</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn ghost-pink" id="resetBtn" type="button">↻ Đặt lại bộ lọc</button>
+                    <button class="btn ghost-pink" id="exportBtn" type="button">▣ Xuất Excel</button>
+                    <button class="btn primary" id="addBtn" type="button">+ Tạo đợt giảm giá</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="card table-card">
+            <div class="table-head">
+                <h2>Danh sách các đợt giảm giá</h2>
+                <span id="summary">0 bản ghi hiển thị.</span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã</th>
+                        <th>Tên</th>
+                        <th>Giá trị</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody id="rows"></tbody>
+                </table>
+                <div class="empty" id="empty" hidden>Không có đợt giảm giá</div>
+            </div>
+            <div class="pager">
+                <span id="pageInfo">Trang 1/1</span>
+                <div class="pager-actions">
+                    <button class="btn icon" id="prevBtn" type="button">‹</button>
+                    <button class="btn icon" id="nextBtn" type="button">›</button>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section id="formView" class="hidden">
+        <div class="topbar">
+            <div class="title">
+                <button class="round" type="button" id="backBtn">←</button>
+                <h1 id="formTitle">Thêm đợt giảm giá mới</h1>
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <section class="card form-card">
+                <form id="promotionForm" novalidate>
+                    <input type="hidden" name="id">
+                    <input type="hidden" name="trangThai" value="true">
+                    <input type="hidden" name="loaiGiamGia" value="PHAN_TRAM">
+                    <div class="card-head">
+                        <div class="icon">◇</div>
+                        <div class="card-title">Thông tin đợt giảm</div>
+                    </div>
+                    <div class="field">
+                        <label>Mã đợt *</label>
+                        <input name="maDotGiamGia" placeholder="Tự tạo nếu để trống">
+                    </div>
+                    <div class="field">
+                        <label>Tên đợt *</label>
+                        <input name="tenDotGiamGia" placeholder="Ví dụ: Siêu giảm giá mùa hè">
+                    </div>
+                    <div class="field">
+                        <label>Giá trị giảm (%) *</label>
+                        <input name="giaTriGiamGia" type="number" min="0" max="100" step="0.01" value="0">
+                    </div>
+                    <div class="field">
+                        <label>Từ ngày *</label>
+                        <div class="date-wrap">
+                            <input name="ngayBatDau" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm">
+                            <button class="cal-btn" type="button" data-picker="ngayBatDau"><span class="cal-ico"></span></button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Đến ngày *</label>
+                        <div class="date-wrap">
+                            <input name="ngayKetThuc" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm">
+                            <button class="cal-btn" type="button" data-picker="ngayKetThuc"><span class="cal-ico"></span></button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Số tiền tối đa *</label>
+                        <input name="soTienToiDa" type="number" min="0" step="1000">
+                    </div>
+                    <div class="field">
+                        <label>Mô tả</label>
+                        <textarea name="moTa" placeholder="Nhập mô tả..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn primary" type="submit">▣ Tạo đợt giảm giá</button>
+                        <button class="btn" type="button" id="cancelBtn">Hủy</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="card form-card">
+                <div class="card-head">
+                    <div class="icon">⌕</div>
+                    <div>
+                        <div class="card-title">Chọn sản phẩm áp dụng</div>
+                        <div class="card-sub" id="chooseSub">Đã chọn 0 biến thể</div>
+                    </div>
+                </div>
+                <div class="product-tools">
+                    <input id="spctSearch" placeholder="Tìm theo tên hoặc mã sản phẩm...">
+                    <select id="colorFilter"><option value="">Tất cả màu sắc</option></select>
+                    <select id="sizeFilter"><option value="">Tất cả kích cỡ</option></select>
+                    <button class="btn primary" type="button" id="searchProductBtn">Tìm kiếm</button>
+                </div>
+                <div class="table-wrap pick-table">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th><input id="checkAll" type="checkbox"></th>
+                            <th>STT</th>
+                            <th>Mã SP</th>
+                            <th>Tên sản phẩm</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="spctRows"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <section class="card selected-card">
+            <div class="selected-head">
+                <div>
+                    <h2>Sản phẩm & biến thể đã chọn áp dụng</h2>
+                    <p id="selectedSub">Danh sách chi tiết gồm 0 biến thể đã chọn</p>
+                </div>
+                <div class="selected-filters">
+                    <select id="selectedColorFilter"><option value="">Tất cả màu sắc</option></select>
+                    <select id="selectedSizeFilter"><option value="">Tất cả kích cỡ</option></select>
+                    <input id="selectedSearch" placeholder="Tìm trong danh sách...">
+                </div>
+            </div>
+            <div class="table-wrap selected-table">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Ảnh</th>
+                        <th>Mã SP</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Mã biến thể</th>
+                        <th>Màu sắc</th>
+                        <th>Kích cỡ</th>
+                        <th>Giá gốc</th>
+                        <th>Giá sau giảm</th>
+                        <th>Số lượng</th>
+                        <th>Xóa</th>
+                    </tr>
+                    </thead>
+                    <tbody id="selectedRows"></tbody>
+                </table>
+                <div class="empty" id="selectedEmpty">Chưa chọn sản phẩm áp dụng</div>
+            </div>
+        </section>
+    </section>
+</main>
+<div class="confirm-backdrop" id="confirmBackdrop" aria-hidden="true">
+    <div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <div class="confirm-head">
+            <div class="confirm-icon">?</div>
+            <div class="confirm-title" id="confirmTitle">Xác nhận thao tác</div>
+        </div>
+        <div class="confirm-body" id="confirmMessage"></div>
+        <div class="confirm-actions">
+            <button class="btn" type="button" id="confirmCancel">Hủy</button>
+            <button class="btn primary" type="button" id="confirmOk">Đồng ý</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API = '/api/dot-giam-gia';
+    const state = { page: 0, size: 20, totalPages: 1, totalElements: 0, items: [], spcts: [], selectedSpctIds: new Set() };
+    const $ = id => document.getElementById(id);
+    const filterForm = $('filterForm');
+    const form = $('promotionForm');
+    let filterTimer;
+    let spctLoadPromise;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        $('addBtn').addEventListener('click', () => openForm());
+        $('backBtn').addEventListener('click', showList);
+        $('cancelBtn').addEventListener('click', showList);
+        $('resetBtn').addEventListener('click', async () => {
+            if (!await confirmAction('Bạn có chắc chắn muốn đặt lại bộ lọc không?')) return;
+            filterForm.reset();
+            loadData(0);
+        });
+        $('exportBtn').addEventListener('click', exportExcel);
+        filterForm.addEventListener('input', () => { clearTimeout(filterTimer); filterTimer = setTimeout(() => loadData(0), 300); });
+        filterForm.addEventListener('change', () => loadData(0));
+        form.addEventListener('submit', savePromotion);
+        form.elements.giaTriGiamGia.addEventListener('input', renderSelectedRows);
+        $('prevBtn').addEventListener('click', () => loadData(Math.max(0, state.page - 1)));
+        $('nextBtn').addEventListener('click', () => loadData(Math.min(state.totalPages - 1, state.page + 1)));
+        $('spctSearch').addEventListener('input', renderSpctRows);
+        $('selectedSearch').addEventListener('input', renderSelectedRows);
+        $('colorFilter').addEventListener('change', renderSpctRows);
+        $('sizeFilter').addEventListener('change', renderSpctRows);
+        $('selectedColorFilter').addEventListener('change', renderSelectedRows);
+        $('selectedSizeFilter').addEventListener('change', renderSelectedRows);
+        $('searchProductBtn').addEventListener('click', renderSpctRows);
+        $('checkAll').addEventListener('change', e => toggleAllVisible(e.target.checked));
+        document.querySelectorAll('.cal-btn').forEach(btn => {
+            btn.addEventListener('click', () => openNativePicker(document.querySelector(`[name="${btn.dataset.picker}"]`)));
+        });
+        spctLoadPromise = loadSpct();
+        loadData();
+    });
+
+    async function loadData(page = 0) {
+        state.page = page;
+        const response = await fetch(`${API}?${currentParams(true)}`);
+        if (!response.ok) return toast(await readError(response), true);
+        const data = await response.json();
+        const pageData = normalizePageResponse(data);
+        state.items = pageData.content;
+        state.page = pageData.page;
+        state.size = pageData.size || state.size;
+        state.totalPages = pageData.totalPages;
+        state.totalElements = pageData.totalElements;
+        renderList();
+    }
+
+    function normalizePageResponse(data) {
+        const pageMeta = data.page || {};
+        const totalPages = Number(data.totalPages ?? pageMeta.totalPages ?? 1);
+        return {
+            content: data.content || [],
+            page: Number(data.number ?? pageMeta.number ?? state.page ?? 0),
+            size: Number(data.size ?? pageMeta.size ?? state.size ?? 20),
+            totalPages: Math.max(1, Number.isFinite(totalPages) ? totalPages : 1),
+            totalElements: Number(data.totalElements ?? pageMeta.totalElements ?? 0)
+        };
+    }
+
+    async function loadSpct() {
+        const response = await fetch(`${API}/san-pham-chi-tiet`);
+        if (!response.ok) return;
+        state.spcts = await response.json();
+        populateVariantFilters();
+        renderSpctRows();
+        renderSelectedRows();
+    }
+
+    function populateVariantFilters() {
+        fillSelect($('colorFilter'), uniqueValues('tenMauSac'), 'Tất cả màu sắc');
+        fillSelect($('selectedColorFilter'), uniqueValues('tenMauSac'), 'Tất cả màu sắc');
+        fillSelect($('sizeFilter'), uniqueValues('tenKichCo'), 'Tất cả kích cỡ');
+        fillSelect($('selectedSizeFilter'), uniqueValues('tenKichCo'), 'Tất cả kích cỡ');
+    }
+
+    function uniqueValues(key) {
+        return [...new Set(state.spcts.map(item => item[key]).filter(Boolean))]
+            .sort((a, b) => String(a).localeCompare(String(b), 'vi', { numeric: true }));
+    }
+
+    function fillSelect(select, values, defaultText) {
+        const current = select.value;
+        select.innerHTML = `<option value="">${defaultText}</option>` + values
+            .map(value => `<option value="${esc(value)}">${esc(value)}</option>`)
+            .join('');
+        if (values.includes(current)) select.value = current;
+    }
+
+    function matchesVariantFilter(sp, keyword, color, size) {
+        const textMatch = !keyword
+            || String(sp.maSpct || '').toLowerCase().includes(keyword)
+            || String(sp.tenSp || '').toLowerCase().includes(keyword)
+            || String(sp.tenMauSac || '').toLowerCase().includes(keyword)
+            || String(sp.tenKichCo || '').toLowerCase().includes(keyword);
+        const colorMatch = !color || sp.tenMauSac === color;
+        const sizeMatch = !size || sp.tenKichCo === size;
+        return textMatch && colorMatch && sizeMatch;
+    }
+
+    function currentParams(includePaging) {
+        const data = new FormData(filterForm);
+        const params = new URLSearchParams();
+        ['keyword', 'tienDo', 'tuNgay', 'denNgay'].forEach(key => {
+            const value = (data.get(key) || '').trim();
+            if (value) params.set(key, key.includes('Ngay') ? withSeconds(value) : value);
+        });
+        if (includePaging) {
+            params.set('page', state.page);
+            params.set('size', state.size);
+        }
+        return params;
+    }
+
+    function renderList() {
+        $('summary').textContent = `${state.totalElements} bản ghi hiển thị.`;
+        $('pageInfo').textContent = `Trang ${state.page + 1}/${state.totalPages}`;
+        $('prevBtn').disabled = state.page <= 0;
+        $('nextBtn').disabled = state.page >= state.totalPages - 1;
+        $('empty').hidden = state.items.length > 0;
+        $('rows').innerHTML = state.items.map((item, index) => {
+            const status = progressLabel(item);
+            return `<tr>
+                <td>${state.page * state.size + index + 1}</td>
+                <td>${esc(item.maDotGiamGia)}</td>
+                <td>${esc(item.tenDotGiamGia)}</td>
+                <td>${formatDiscount(item)}</td>
+                <td>${dateOnly(item.ngayBatDau)}</td>
+                <td>${dateOnly(item.ngayKetThuc)}</td>
+                <td><span class="badge ${status.cls}">${status.text}</span></td>
+                <td>
+                    <div class="actions">
+                        <label class="switch"><input type="checkbox" ${item.trangThai ? 'checked' : ''} onchange="toggleStatus(${item.id})"><span></span></label>
+                        <button class="view" type="button" onclick="openForm(${item.id})">◎</button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    function progressLabel(item) {
+        const now = new Date();
+        const end = item.ngayKetThuc ? new Date(item.ngayKetThuc) : null;
+        if (end && now > end) return { text: 'Hết hạn', cls: 'expired' };
+        if (item.trangThai) return { text: 'Đang hoạt động', cls: 'on' };
+        return { text: 'Ngừng hoạt động', cls: 'off' };
+    }
+
+    async function openForm(id) {
+        form.reset();
+        state.selectedSpctIds = new Set();
+        resetVariantFilters();
+        form.elements.trangThai.value = 'true';
+        form.elements.loaiGiamGia.value = 'PHAN_TRAM';
+        delete form.dataset.savedOnce;
+        setDefaultFutureDates();
+        $('formTitle').textContent = id ? 'Cập nhật đợt giảm giá' : 'Thêm đợt giảm giá mới';
+        form.querySelector('[type="submit"]').textContent = id ? '▣ Lưu đợt giảm giá' : '▣ Tạo đợt giảm giá';
+        $('listView').classList.add('hidden');
+        $('formView').classList.remove('hidden');
+        if (id) form.dataset.savedOnce = 'true';
+        await ensureSpctsLoaded();
+        if (id) await loadPromotionForEdit(id);
+        renderSpctRows();
+        renderSelectedRows();
+    }
+
+    async function loadPromotionForEdit(id, fallbackSelectedIds = []) {
+        await ensureSpctsLoaded();
+        const cached = state.items.find(v => v.id === id);
+        const item = cached || await (await fetch(`${API}/${id}`)).json();
+        Object.entries(item).forEach(([key, value]) => {
+            if (form.elements[key]) form.elements[key].value = value ?? '';
+        });
+        form.elements.ngayBatDau.value = toInputDateTime(item.ngayBatDau);
+        form.elements.ngayKetThuc.value = toInputDateTime(item.ngayKetThuc);
+        form.elements.trangThai.value = String(Boolean(item.trangThai));
+        const ids = await (await fetch(`${API}/${id}/san-pham-chi-tiet-ids`)).json();
+        const selectedIds = ids && ids.length ? ids : fallbackSelectedIds;
+        state.selectedSpctIds = new Set(selectedIds.map(Number));
+        renderSpctRows();
+        renderSelectedRows();
+    }
+
+    async function ensureSpctsLoaded() {
+        if (state.spcts.length) return;
+        if (!spctLoadPromise) spctLoadPromise = loadSpct();
+        await spctLoadPromise;
+    }
+
+    function resetVariantFilters() {
+        ['spctSearch', 'selectedSearch', 'colorFilter', 'sizeFilter', 'selectedColorFilter', 'selectedSizeFilter'].forEach(id => {
+            const element = $(id);
+            if (element) element.value = '';
+        });
+    }
+
+    function showList() {
+        $('formView').classList.add('hidden');
+        $('listView').classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function savePromotion(event) {
+        event.preventDefault();
+        const data = Object.fromEntries(new FormData(form).entries());
+        const id = data.id;
+        const isUpdate = Boolean(id) || form.dataset.savedOnce === 'true';
+        delete data.id;
+        data.giaTriGiamGia = data.giaTriGiamGia ? Number(data.giaTriGiamGia) : null;
+        data.soTienToiDa = data.soTienToiDa ? Number(data.soTienToiDa) : null;
+        data.trangThai = data.trangThai === 'true';
+        data.ngayBatDau = withSeconds(data.ngayBatDau || '');
+        data.ngayKetThuc = withSeconds(data.ngayKetThuc || '');
+        data.selectedSpctIds = [...state.selectedSpctIds];
+        const selectedBeforeSave = [...state.selectedSpctIds];
+        Object.keys(data).forEach(key => { if (data[key] === '') data[key] = null; });
+        const validationError = validatePromotionPayload(data);
+        if (validationError) return toast(validationError, true);
+        if (!await confirmAction('Bạn có chắc chắn muốn lưu đợt giảm giá này không?')) return;
+        const response = await fetch(id ? `${API}/${id}` : API, {
+            method: id ? 'PUT' : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (!response.ok) return toast(await readError(response), true);
+        const saved = await response.json();
+        toast('Đã lưu đợt giảm giá');
+        await loadData(0);
+        if (isUpdate) {
+            showList();
+            return;
+        }
+        if (saved && saved.id) {
+            form.elements.id.value = saved.id;
+            form.dataset.savedOnce = 'true';
+            $('formTitle').textContent = 'Cập nhật đợt giảm giá';
+            form.querySelector('[type="submit"]').textContent = '▣ Lưu đợt giảm giá';
+            state.selectedSpctIds = new Set(selectedBeforeSave.map(Number));
+            renderSpctRows();
+            renderSelectedRows();
+        }
+    }
+
+    function validatePromotionPayload(data) {
+        const code = String(data.maDotGiamGia || '').trim();
+        const name = String(data.tenDotGiamGia || '').trim();
+        if (code && !/^[A-Za-z0-9_-]{3,30}$/.test(code)) return 'Mã đợt giảm giá chỉ được gồm chữ, số, gạch ngang/gạch dưới và dài 3-30 ký tự';
+        if (!name) return 'Vui lòng nhập tên đợt giảm giá';
+        if (name.length < 3 || name.length > 100) return 'Tên đợt giảm giá phải dài từ 3 đến 100 ký tự';
+        if (!Number.isFinite(data.giaTriGiamGia) || data.giaTriGiamGia <= 0 || data.giaTriGiamGia > 100) return 'Giá trị giảm phải lớn hơn 0 và không vượt quá 100';
+        if (!Number.isFinite(data.soTienToiDa) || data.soTienToiDa < 0) return 'Vui lòng nhập số tiền tối đa hợp lệ và không âm';
+        if (!data.ngayBatDau || !data.ngayKetThuc) return 'Vui lòng nhập thời gian bắt đầu và kết thúc';
+        if (new Date(data.ngayKetThuc) <= new Date(data.ngayBatDau)) return 'Ngày kết thúc phải sau ngày bắt đầu';
+        if (!data.selectedSpctIds.length) return 'Vui lòng chọn ít nhất một sản phẩm áp dụng';
+        return '';
+    }
+
+    function renderSpctRows() {
+        const keyword = $('spctSearch').value.trim().toLowerCase();
+        const color = $('colorFilter').value;
+        const size = $('sizeFilter').value;
+        const list = state.spcts.filter(sp => matchesVariantFilter(sp, keyword, color, size));
+        $('spctRows').innerHTML = list.map((sp, index) => `
+            <tr>
+                <td><input class="pick-check" type="checkbox" value="${sp.idSpct}" ${state.selectedSpctIds.has(Number(sp.idSpct)) ? 'checked' : ''} onchange="toggleSpct(${sp.idSpct}, this.checked)"></td>
+                <td>${index + 1}</td>
+                <td>${esc(sp.maSpct)}</td>
+                <td>${esc(sp.tenSp)}</td>
+                <td><button class="plus-btn" type="button" onclick="toggleSpct(${sp.idSpct}, true)">+</button></td>
+            </tr>`).join('');
+    }
+
+    function renderSelectedRows() {
+        const keyword = $('selectedSearch').value.trim().toLowerCase();
+        const color = $('selectedColorFilter').value;
+        const size = $('selectedSizeFilter').value;
+        const discount = Number(form.elements.giaTriGiamGia.value || 0);
+        const selected = state.spcts
+            .filter(sp => state.selectedSpctIds.has(Number(sp.idSpct)))
+            .filter(sp => matchesVariantFilter(sp, keyword, color, size));
+        $('chooseSub').textContent = `Đã chọn ${state.selectedSpctIds.size} biến thể`;
+        $('selectedSub').textContent = `Danh sách chi tiết gồm ${state.selectedSpctIds.size} biến thể đã chọn`;
+        $('selectedEmpty').hidden = selected.length > 0;
+        $('selectedRows').innerHTML = selected.map((sp, index) => {
+            const original = Number(sp.giaBan || 0);
+            const after = Math.max(0, original * (100 - discount) / 100);
+            return `<tr>
+                <td>${index + 1}</td>
+                <td><span class="thumb"></span></td>
+                <td>${esc(sp.maSpct)}</td>
+                <td>${esc(sp.tenSp)}</td>
+                <td>${esc(sp.maSpct)}</td>
+                <td>${esc(sp.tenMauSac || '-')}</td>
+                <td>${esc(sp.tenKichCo || '-')}</td>
+                <td>${money(original)}</td>
+                <td class="price-after">${money(after)}</td>
+                <td>${sp.soLuongTon ?? 0}</td>
+                <td><button class="remove-btn" type="button" onclick="toggleSpct(${sp.idSpct}, false)">×</button></td>
+            </tr>`;
+        }).join('');
+    }
+
+    function toggleSpct(id, checked) {
+        checked ? state.selectedSpctIds.add(Number(id)) : state.selectedSpctIds.delete(Number(id));
+        renderSpctRows();
+        renderSelectedRows();
+    }
+
+    function toggleAllVisible(checked) {
+        document.querySelectorAll('#spctRows input[type="checkbox"]').forEach(cb => {
+            checked ? state.selectedSpctIds.add(Number(cb.value)) : state.selectedSpctIds.delete(Number(cb.value));
+        });
+        renderSpctRows();
+        renderSelectedRows();
+    }
+
+    async function toggleStatus(id) {
+        const item = state.items.find(v => v.id === id);
+        const nextStatus = !(item && item.trangThai);
+        const message = nextStatus
+            ? 'Bạn có chắc chắn muốn bật đợt giảm giá này không?'
+            : 'Bạn có chắc chắn muốn tắt đợt giảm giá này không?';
+        if (!await confirmAction(message)) return loadData(state.page);
+        const response = await fetch(`${API}/${id}/trang-thai`, { method: 'PATCH' });
+        if (!response.ok) return toast(await readError(response), true);
+        await loadData(0);
+    }
+
+    async function exportExcel() {
+        if (!await confirmAction('Bạn có chắc chắn muốn xuất Excel danh sách đợt giảm giá không?')) return;
+        const params = currentParams(false);
+        params.set('page', 0);
+        params.set('size', 10000);
+        const response = await fetch(`${API}?${params}`);
+        if (!response.ok) return toast(await readError(response), true);
+        const data = await response.json();
+        const items = data.content || [];
+        if (!items.length) return toast('Không có dữ liệu để xuất', true);
+        const rows = [['STT', 'Mã', 'Tên', 'Giá trị', 'Ngày bắt đầu', 'Ngày kết thúc', 'Trạng thái']];
+        items.forEach((item, index) => rows.push([
+            index + 1, item.maDotGiamGia || '', item.tenDotGiamGia || '', formatDiscount(item),
+            dateOnly(item.ngayBatDau), dateOnly(item.ngayKetThuc), progressLabel(item).text
+        ]));
+        const table = rows.map(row => `<tr>${row.map(cell => `<td>${esc(cell)}</td>`).join('')}</tr>`).join('');
+        const blob = new Blob([`\uFEFF<html><head><meta charset="UTF-8"></head><body><table border="1">${table}</table></body></html>`], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `dot-giam-gia-${new Date().toISOString().slice(0, 10)}.xls`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        toast('Đã xuất Excel');
+    }
+
+    function setDefaultFutureDates() {
+        const start = new Date();
+        start.setDate(start.getDate() + 1);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(start);
+        end.setDate(end.getDate() + 7);
+        end.setHours(23, 59, 0, 0);
+        form.elements.ngayBatDau.value = toDateTimeLocal(start);
+        form.elements.ngayKetThuc.value = toDateTimeLocal(end);
+    }
+
+    function openNativePicker(input) {
+        if (!input) return;
+        if (input.type !== 'text') {
+            input.focus();
+            if (typeof input.showPicker === 'function') {
+                try { input.showPicker(); } catch {}
+            }
+            return;
+        }
+
+        const picker = document.createElement('input');
+        const rect = input.getBoundingClientRect();
+        picker.type = 'datetime-local';
+        picker.value = normalizeDateTime(input.value);
+        picker.style.position = 'fixed';
+        picker.style.left = `${Math.max(0, rect.right - 34)}px`;
+        picker.style.top = `${Math.max(0, rect.top + 2)}px`;
+        picker.style.width = '32px';
+        picker.style.height = '32px';
+        picker.style.opacity = '0.01';
+        picker.style.zIndex = '3000';
+        picker.style.border = '0';
+        picker.style.padding = '0';
+        document.body.appendChild(picker);
+
+        const cleanup = () => setTimeout(() => picker.remove(), 200);
+        const commit = () => {
+            if (picker.value) {
+                input.value = formatDateTimeInput(picker.value);
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            cleanup();
+        };
+
+        picker.addEventListener('change', commit);
+        picker.addEventListener('keydown', event => {
+            if (event.key === 'Escape') cleanup();
+        });
+        picker.addEventListener('blur', cleanup, { once: true });
+        picker.focus();
+        if (typeof picker.showPicker === 'function') {
+            try { picker.showPicker(); } catch {}
+        }
+    }
+
+    function withSeconds(value) {
+        const normalized = normalizeDateTime(value);
+        return normalized && normalized.length === 16 ? `${normalized}:00` : normalized;
+    }
+    function formatDiscount(item) { return `${item.giaTriGiamGia ?? 0}%`; }
+    function money(value) { return Number(value || 0).toLocaleString('vi-VN') + ' đ'; }
+    function dateOnly(value) {
+        if (!value) return '';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return '';
+        const pad = number => String(number).padStart(2, '0');
+        return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
+    }
+    function toInputDateTime(value) { return formatDateTimeInput(value); }
+    function toDateTimeLocal(date) {
+        const pad = value => String(value).padStart(2, '0');
+        return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+    function normalizeDateTime(value) {
+        if (!value) return '';
+        const text = String(value).trim();
+        if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/.test(text)) return text.slice(0, 16);
+        const match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?$/);
+        if (!match) return '';
+        const [, day, month, year, hour = '00', minute = '00'] = match;
+        const pad = number => String(number).padStart(2, '0');
+        return `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}`;
+    }
+    function formatDateTimeInput(value) {
+        if (!value) return '';
+        const normalized = normalizeDateTime(value) || String(value).substring(0, 16);
+        const match = normalized.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+        return match ? `${match[3]}/${match[2]}/${match[1]} ${match[4]}:${match[5]}` : '';
+    }
+    async function readError(response) {
+        const text = await response.text();
+        try { return JSON.parse(text).message || text; } catch { return text || 'Có lỗi xảy ra'; }
+    }
+    function confirmAction(message) {
+        return new Promise(resolve => {
+            const backdrop = $('confirmBackdrop');
+            const messageEl = $('confirmMessage');
+            const ok = $('confirmOk');
+            const cancel = $('confirmCancel');
+            messageEl.textContent = message;
+            backdrop.classList.add('show');
+            backdrop.setAttribute('aria-hidden', 'false');
+            ok.focus();
+            const cleanup = result => {
+                backdrop.classList.remove('show');
+                backdrop.setAttribute('aria-hidden', 'true');
+                ok.removeEventListener('click', onOk);
+                cancel.removeEventListener('click', onCancel);
+                backdrop.removeEventListener('click', onBackdrop);
+                document.removeEventListener('keydown', onKeydown);
+                resolve(result);
+            };
+            const onOk = () => cleanup(true);
+            const onCancel = () => cleanup(false);
+            const onBackdrop = event => { if (event.target === backdrop) cleanup(false); };
+            const onKeydown = event => { if (event.key === 'Escape') cleanup(false); };
+            ok.addEventListener('click', onOk);
+            cancel.addEventListener('click', onCancel);
+            backdrop.addEventListener('click', onBackdrop);
+            document.addEventListener('keydown', onKeydown);
+        });
+    }
+    function toast(message, error = false) {
+        const el = document.createElement('div');
+        el.className = `toast ${error ? 'error' : 'success'}`;
+        el.textContent = message;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3500);
+    }
+    function esc(value) {
+        return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+    }
+</script>
+</body>
+</html>

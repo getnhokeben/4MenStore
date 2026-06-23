@@ -1,0 +1,427 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Quản lý Hóa đơn – 4MenStore</title>
+    <script src="/js/app-shell.js" defer></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --gold:      #c8a474;
+            --gold-dark: #a8895a;
+            --gold-bg:   #7a5230;
+            --sidebar-w: 220px;
+            --sidebar-bg:#2b1d0e;
+            --white:     #fff;
+            --bg:        #f3f4f6;
+            --border:    #e5e7eb;
+            --text:      #111827;
+            --text-light:#6b7280;
+            --radius:    8px;
+        }
+        body { font-family: 'Inter', 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; font-size: 14px; }
+        .sidebar { width: var(--sidebar-w); background: var(--sidebar-bg); color: #ccc; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; }
+        .sidebar-logo { padding: 20px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #333; }
+        .logo-box { width: 42px; height: 42px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #fff; }
+        .logo-name { font-size: 13px; font-weight: 600; color: #fff; line-height: 1.3; }
+        .sidebar-nav { flex: 1; padding: 12px 0; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; cursor: pointer; font-size: 14px; color: #bbb; text-decoration: none; transition: background .15s, color .15s; }
+        .nav-item:hover { background: #2a2a2a; color: #fff; }
+        .nav-item.active { background: var(--gold); color: #fff; }
+        .nav-item .icon { width: 18px; text-align: center; font-size: 16px; }
+        .nav-item .arrow { margin-left: auto; font-size: 11px; }
+        .sidebar-bottom { padding: 16px 20px; border-top: 1px solid #333; }
+        .sidebar-bottom a { display: flex; align-items: center; gap: 10px; color: #e55; font-size: 14px; text-decoration: none; }
+        .main { margin-left: var(--sidebar-w); flex: 1; padding: 24px; }
+        .breadcrumb { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
+        .breadcrumb a { color: var(--text-light); text-decoration: none; }
+        .breadcrumb span { color: var(--text); font-weight: 500; }
+        .card { background: var(--white); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: none; }
+        .card-title { font-weight: 600; font-size: 15px; margin-bottom: 16px; }
+        .filter-row { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+        .filter-group { display: flex; flex-direction: column; gap: 6px; }
+        .filter-group label { font-size: 12px; color: var(--text-light); }
+        .filter-group input, .filter-group select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; min-width: 160px; outline: none; }
+        .filter-group input:focus, .filter-group select:focus { border-color: var(--gold); }
+        .btn-filter { padding: 8px 14px; background: var(--gold); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 18px; transition: background .15s; }
+        .btn-filter:hover { background: var(--gold-dark); }
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .table-header h2 { font-size: 16px; font-weight: 600; }
+        .status-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .tab-btn { padding: 7px 14px; border: 1px solid var(--border); border-radius: 20px; background: var(--white); font-size: 13px; cursor: pointer; transition: all .15s; white-space: nowrap; }
+        .tab-btn:hover { border-color: var(--gold); color: var(--gold); }
+        .tab-btn.active { background: var(--gold); color: #fff; border-color: var(--gold); font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        thead tr { background: #f9fafb; color: var(--text-light); border-bottom: 1.5px solid var(--border); }
+        thead th { padding: 11px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+        tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
+        tbody tr:hover { background: #fdf8ee; }
+        tbody td { padding: 11px 12px; }
+        .edit-input { width: 100%; padding: 4px 8px; border: 1px solid var(--gold); border-radius: 4px; font-size: 13px; outline: none; }
+        .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #555; margin-right: 4px; }
+        .status-dot.active { background: #27ae60; }
+        .status-dot.pending { background: #f39c12; }
+        .status-dot.cancelled { background: #e74c3c; }
+        .status-dot.processing { background:#3498db; }
+        .status-dot.shipping { background:#9b59b6; }
+        .action-btns { display: flex; gap: 8px; align-items: center; }
+        .btn-icon { background: none; border: none; cursor: pointer; font-size: 15px; color: var(--text-light); transition: color .15s; }
+        .btn-icon:hover { color: var(--gold); }
+        .btn-icon.del:hover { color: #e55; }
+        .btn-icon.save-inline { color: #27ae60; font-weight: bold; }
+        .select-status-quick { padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; color: var(--text); outline: none; cursor: pointer; background-color: #fff; }
+        .select-status-quick:focus { border-color: var(--gold); }
+        .pagination-row { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 10px; }
+        .show-select { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+        .show-select select { padding: 5px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; outline: none; }
+        .pagination { display: flex; gap: 4px; align-items: center; }
+        .page-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 6px; background: var(--white); cursor: pointer; font-size: 13px; transition: all .15s; }
+        .page-btn:hover, .page-btn.active { background: var(--gold); color: #fff; border-color: var(--gold); }
+        .page-btn:disabled { opacity: .4; cursor: default; }
+    </style>
+</head>
+<body>
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <div class="logo-box">4M</div>
+        <div class="logo-name">4MenStore</div>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="#" class="nav-item"><span class="icon">🏠</span> Trang chủ</a>
+        <a href="#" class="nav-item"><span class="icon">📊</span> Thống kê</a>
+        <a href="#" class="nav-item"><span class="icon">💰</span> Bán hàng</a>
+        <a href="/hoa-don" class="nav-item active"><span class="icon">🧾</span> Hóa đơn</a>
+        <a href="#" class="nav-item"><span class="icon">🛍️</span> Sản phẩm <span class="arrow">›</span></a>
+        <a href="#" class="nav-item"><span class="icon">🏷️</span> Phiếu giảm giá</a>
+        <a href="#" class="nav-item"><span class="icon">⏰</span> Đợt giảm giá</a>
+        <a href="#" class="nav-item"><span class="icon">👥</span> Khách hàng</a>
+        <a href="#" class="nav-item"><span class="icon">👤</span> Nhân viên</a>
+    </nav>
+    <div class="sidebar-bottom">
+        <a href="#"><span>🚪</span> Đăng xuất</a>
+    </div>
+</aside>
+
+<main class="main">
+    <div class="breadcrumb">
+        <a href="#">Home</a> / <span>Hóa đơn</span>
+    </div>
+    <div class="card">
+        <div class="card-title">Bộ lọc</div>
+        <div class="filter-row">
+            <div class="filter-group">
+                <label>Mã hóa đơn</label>
+                <input type="text" placeholder="Nhập mã hóa đơn..." id="filterMaHD" />
+            </div>
+            <div class="filter-group">
+                <label>Ngày bắt đầu</label>
+                <input type="date" id="filterFrom" />
+            </div>
+            <div class="filter-group">
+                <label>Ngày kết thúc</label>
+                <input type="date" id="filterTo" />
+            </div>
+            <div class="filter-group">
+                <label>Loại đơn</label>
+                <select id="filterLoai">
+                    <option value="">-- Tất cả --</option>
+                    <option value="Tại quầy">Tại quầy</option>
+                    <option value="Trực tuyến">Trực tuyến</option>
+                </select>
+            </div>
+            <button class="btn-filter" onclick="applyFilter()" title="Tìm kiếm">🔍</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="table-header">
+            <h2>Danh sách quản lý hóa đơn</h2>
+            <div>
+                <button type="button" onclick="xuatExcel()" style="background-color: #bfa014; border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">
+                    ↑ Export Excel
+                </button>
+            </div>
+        </div>
+
+        <div class="status-tabs">
+            <button class="tab-btn active" onclick="filterStatus(this,'')">Tất cả</button>
+            <button class="tab-btn" onclick="filterStatus(this,'Chờ xác nhận')">Chờ xác nhận</button>
+            <button class="tab-btn" onclick="filterStatus(this,'Đã xác nhận')">Đã xác nhận</button>
+            <button class="tab-btn" onclick="filterStatus(this,'Đang chuẩn bị hàng')">Đang chuẩn bị hàng</button>
+            <button class="tab-btn" onclick="filterStatus(this,'Đang giao hàng')">Đang giao hàng</button>
+            <button class="tab-btn" onclick="filterStatus(this,'Hoàn thành')">Hoàn thành</button>
+            <button class="tab-btn" onclick="filterStatus(this,'Đã hủy')">Đã hủy</button>
+        </div>
+
+        <table id="hoaDonTable">
+            <thead>
+            <tr>
+                <th>STT</th>
+                <th>Mã HD</th>
+                <th>Tên NV</th>
+                <th>Tên KH</th>
+                <th>SDT KH</th>
+                <th>Tổng tiền TT</th>
+                <th>Loại đơn</th>
+                <th>Ngày tạo</th>
+                <th>Trạng thái</th>
+                <th style="min-width: 180px;">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+
+        <div class="pagination-row">
+            <div class="show-select">
+                Hiển thị
+                <select id="pageSize" onchange="changePageSize()">
+                    <option value="8">8 dòng</option>
+                    <option value="15">15 dòng</option>
+                    <option value="30">30 dòng</option>
+                </select>
+            </div>
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+</main>
+
+<script>
+    let currentStatus = "";
+    let currentPage = 1;
+    let pageSize = 8;
+    let totalPages = 0;
+    let dataList = [];
+    let editingId = null;
+    let _pendingThanhToanId = null;
+
+    function formatMoney(n) {
+        if (!n) return "0 VNĐ";
+        return Number(n).toLocaleString("vi-VN") + " VNĐ";
+    }
+
+    function formatDate(d) {
+        if (!d) return "";
+        return new Date(d).toLocaleString("vi-VN");
+    }
+
+    async function loadData() {
+        const maHD = document.getElementById("filterMaHD").value.trim();
+        const tuNgay = document.getElementById("filterFrom").value;
+        const denNgay = document.getElementById("filterTo").value;
+        const loaiDon = document.getElementById("filterLoai").value;
+        const queryObj = { page: currentPage - 1, size: pageSize };
+        if (maHD) queryObj.maHD = maHD;
+        if (tuNgay) queryObj.tuNgay = tuNgay;
+        if (denNgay) queryObj.denNgay = denNgay;
+        if (loaiDon) queryObj.loaiDon = loaiDon;
+        if (currentStatus) queryObj.trangThai = currentStatus;
+        const params = new URLSearchParams(queryObj);
+        try {
+            const res = await fetch("/hoa-don/api?" + params.toString());
+            const data = await res.json();
+            dataList = data.content || [];
+            totalPages = data.totalPages || 1;
+            renderTable();
+            renderPagination();
+        } catch (err) {
+            console.error("Lỗi API danh sách:", err);
+        }
+    }
+
+    function getStatusDot(trangThai) {
+        if (trangThai === "Chờ xác nhận") return "pending";
+        if (trangThai === "Đã xác nhận" || trangThai === "Đang chuẩn bị hàng") return "processing";
+        if (trangThai === "Đang giao hàng") return "shipping";
+        if (trangThai === "Hoàn thành") return "active";
+        if (trangThai === "Đã hủy") return "cancelled";
+        return "active";
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById("tableBody");
+        if (!dataList.length) {
+            tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:20px;">Không có dữ liệu</td></tr>`;
+            return;
+        }
+        tbody.innerHTML = dataList.map((h, index) => {
+            const tenNV = h.nhanVien ? (h.nhanVien.hoTen || "") : "";
+            const sdtKH = h.soDienThoai || "";
+            const tenKH = h.tenKhachHang || (h.khachHang ? h.khachHang.tenKhachHang : "Khách lẻ");
+            const dotClass = getStatusDot(h.trangThai);
+            const isEditing = h.id === editingId;
+
+            // Chỉ cho phép đổi trạng thái theo đúng luồng
+            const trangThaiOptions = getTrangThaiOptions(h.trangThai);
+
+            return `
+      <tr>
+        <td>${(currentPage - 1) * pageSize + index + 1}</td>
+        <td><a href="hoa-don-chi-tiet.html?id=${h.id}" style="color:var(--gold);font-weight:600;text-decoration:none">${h.maHoaDon || ""}</a></td>
+        <td>${tenNV}</td>
+        <td>${isEditing ? `<input type="text" class="edit-input" id="editTenKH_${h.id}" value="${tenKH}">` : tenKH}</td>
+        <td>${isEditing ? `<input type="text" class="edit-input" id="editSdtKH_${h.id}" value="${sdtKH}" placeholder="Nhập 10 số">` : sdtKH}</td>
+        <td style="font-weight:600">${formatMoney(h.tongTienThanhToan)}</td>
+        <td>${h.loaiDon || "Tại quầy"}</td>
+        <td>${formatDate(h.ngayTao)}</td>
+        <td><span class="status-dot ${dotClass}"></span>${h.trangThai || ""}</td>
+        <td>
+          <div class="action-btns">
+            ${isEditing ? `
+              <button class="btn-icon save-inline" onclick="saveInlineUpdate(${h.id})" title="Lưu">💾 Lưu</button>
+              <button class="btn-icon" onclick="cancelInlineEdit()" title="Hủy bỏ">❌</button>
+            ` : `
+              <button class="btn-icon" onclick="location.href='hoa-don-chi-tiet.html?id=${h.id}'" title="Xem chi tiết">👁</button>
+              <button class="btn-icon" onclick="turnOnInlineEdit(${h.id})" title="Sửa thông tin KH">✏️</button>
+            `}
+            <select class="select-status-quick" onchange="updateStatusQuick(${h.id}, this.value, '${h.trangThai}')">
+              ${trangThaiOptions}
+            </select>
+          </div>
+        </td>
+      </tr>`;
+        }).join("");
+    }
+
+    // Chỉ hiện các lựa chọn hợp lệ theo luồng
+    function getTrangThaiOptions(trangThai) {
+        const all = [
+            "Chờ xác nhận",
+            "Đã xác nhận",
+            "Đang chuẩn bị hàng",
+            "Đang giao hàng",
+            "Hoàn thành",
+            "Đã thanh toán",
+            "Đã hủy"
+        ];
+        return all.map(opt =>
+            `<option value="${opt}" ${opt === trangThai ? 'selected' : ''}>${opt}</option>`
+        ).join("");
+    }
+
+    function turnOnInlineEdit(id) { editingId = id; renderTable(); }
+    function cancelInlineEdit() { editingId = null; renderTable(); }
+
+    async function saveInlineUpdate(id) {
+        const newTenKH = document.getElementById(`editTenKH_${id}`).value.trim();
+        const newSdtKH = document.getElementById(`editSdtKH_${id}`).value.trim();
+        if (!newTenKH) { alert("Tên khách hàng không được để trống!"); return; }
+        if (newSdtKH !== "") {
+            const vnf_regex = /((03|05|07|08|09)+([0-9]{8})\b)/g;
+            if (!vnf_regex.test(newSdtKH)) { alert("Số điện thoại không đúng định dạng VN!"); return; }
+        }
+        try {
+            const res = await fetch(`/hoa-don/update-thong-tin/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ tenKhachHang: newTenKH, soDienThoai: newSdtKH })
+            });
+            if (res.ok) { alert("Cập nhật thành công!"); editingId = null; loadData(); }
+            else { alert("Cập nhật thất bại."); }
+        } catch (err) { console.error(err); }
+    }
+
+    async function updateStatusQuick(id, trangThaiMoi, trangThaiCu) {
+        if (trangThaiMoi === trangThaiCu) return;
+
+        // Khi chọn "Đã thanh toán" → mở modal chọn phương thức
+        if (trangThaiMoi === "Đã thanh toán") {
+            _pendingThanhToanId = id;
+            document.getElementById("modalPhuongThuc").style.display = "flex";
+            document.querySelector('input[name="pttt"][value="Tiền mặt"]').checked = true;
+            return;
+        }
+
+        if (!confirm(`Xác nhận chuyển trạng thái sang "${trangThaiMoi}"?`)) {
+            loadData(); return;
+        }
+
+        try {
+            const res = await fetch(`/hoa-don/${id}/trang-thai`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ trangThai: trangThaiMoi })
+            });
+            if (res.ok) { alert("Cập nhật thành công!"); }
+            else { alert("Cập nhật thất bại!"); }
+            loadData();
+        } catch (err) { console.error(err); loadData(); }
+    }
+
+    function dongModalPhuongThuc() {
+        document.getElementById("modalPhuongThuc").style.display = "none";
+        _pendingThanhToanId = null;
+        loadData();
+    }
+
+    async function xacNhanThanhToan() {
+        const phuongThuc = document.querySelector('input[name="pttt"]:checked')?.value || "Tiền mặt";
+        document.getElementById("modalPhuongThuc").style.display = "none";
+        try {
+            const res = await fetch(`/hoa-don/${_pendingThanhToanId}/thanh-toan?hinhThucThanhToan=${encodeURIComponent(phuongThuc)}`, {
+                method: "POST"
+            });
+            if (res.ok) { alert(`Thanh toán thành công! Phương thức: ${phuongThuc}`); }
+            else { alert("Thanh toán thất bại!"); }
+        } catch (err) { console.error(err); }
+        finally { _pendingThanhToanId = null; loadData(); }
+    }
+
+    function renderPagination() {
+        const p = document.getElementById("pagination");
+        let html = "";
+        html += `<button class="page-btn" onclick="goPage(1)" ${currentPage === 1 ? "disabled" : ""}>«</button>`;
+        html += `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>‹</button>`;
+        for (let i = 1; i <= totalPages; i++) {
+            html += `<button class="page-btn ${i === currentPage ? "active" : ""}" onclick="goPage(${i})">${i}</button>`;
+        }
+        html += `<button class="page-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? "disabled" : ""}>›</button>`;
+        html += `<button class="page-btn" onclick="goPage(${totalPages})" ${currentPage === totalPages ? "disabled" : ""}>»</button>`;
+        p.innerHTML = html;
+    }
+
+    function goPage(page) { if (page < 1 || page > totalPages) return; currentPage = page; loadData(); }
+    function changePageSize() { pageSize = parseInt(document.getElementById("pageSize").value); currentPage = 1; loadData(); }
+    function applyFilter() { currentPage = 1; loadData(); }
+    function filterStatus(btn, status) {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentStatus = status;
+        currentPage = 1;
+        loadData();
+    }
+    function xuatExcel() {
+        let maHD = document.getElementById("filterMaHD").value.trim();
+        let tuNgay = document.getElementById("filterFrom").value;
+        let denNgay = document.getElementById("filterTo").value;
+        let loaiDon = document.getElementById("filterLoai").value;
+        window.location.href = `/hoa-don/api/xuat-excel?maHD=${encodeURIComponent(maHD)}&tuNgay=${tuNgay}&denNgay=${denNgay}&loaiDon=${encodeURIComponent(loaiDon)}&trangThai=${encodeURIComponent(currentStatus)}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => { loadData(); });
+</script>
+
+<!-- Modal chọn phương thức thanh toán -->
+<div id="modalPhuongThuc" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; padding:28px 32px; min-width:340px; box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+        <h3 style="margin:0 0 18px; color:#b8860b; font-size:16px;">💳 Chọn phương thức thanh toán</h3>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:22px;">
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:10px 14px; border:1.5px solid #e0d5b0; border-radius:8px;">
+                <input type="radio" name="pttt" value="Tiền mặt" checked> 💵 Tiền mặt
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:10px 14px; border:1.5px solid #e0d5b0; border-radius:8px;">
+                <input type="radio" name="pttt" value="Chuyển khoản"> 🏦 Chuyển khoản
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:10px 14px; border:1.5px solid #e0d5b0; border-radius:8px;">
+                <input type="radio" name="pttt" value="VNPay"> 📱 VNPay
+            </label>
+        </div>
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button onclick="dongModalPhuongThuc()" style="padding:8px 20px; border:1.5px solid #ccc; border-radius:7px; background:#fff; cursor:pointer;">Hủy</button>
+            <button onclick="xacNhanThanhToan()" style="padding:8px 20px; border:none; border-radius:7px; background:#b8860b; color:#fff; font-weight:600; cursor:pointer;">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

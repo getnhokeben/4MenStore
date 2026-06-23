@@ -1,0 +1,53 @@
+﻿{
+    "tenChatLieu":  "c",
+    "danhSachBienThe":  {
+                            "value":  [
+                                          {
+                                              "giaBan":  222222.00,
+                                              "giaNhap":  212121.00,
+                                              "idSanPham":  13,
+                                              "idSpct":  48,
+                                              "kichCo":  {
+                                                             "idKichCo":  3,
+                                                             "maKichCo":  "L",
+                                                             "tenKichCo":  "L"
+                                                         },
+                                              "kieuDang":  {
+                                                               "idKieuDang":  3,
+                                                               "maKieuDang":  "OVERSIZE",
+                                                               "tenKieuDang":  "Oversize"
+                                                           },
+                                              "loaiAo":  {
+                                                             "idLoaiAo":  2,
+                                                             "maLoai":  "TSHIRT",
+                                                             "tenLoai":  "Ão phÃ´ng khÃ´ng cá»"
+                                                         },
+                                              "maChiTietSanPham":  "s1",
+                                              "mauSac":  {
+                                                             "idMauSac":  2,
+                                                             "maMauSac":  "TRANG",
+                                                             "tenMauSac":  "Tráº¯ng"
+                                                         },
+                                              "ngayCapNhat":  null,
+                                              "ngayTao":  "2026-06-12T15:08:16.66",
+                                              "nguoiCapNhat":  null,
+                                              "nguoiTao":  "Admin",
+                                              "phongCachMac":  {
+                                                                   "idPhongCachMac":  2,
+                                                                   "maPhongCachMac":  "SPORT",
+                                                                   "tenPhongCach":  "Thá» thao"
+                                                               },
+                                              "soLuongTon":  10,
+                                              "trangThai":  true
+                                          }
+                                      ],
+                            "Count":  1
+                        },
+    "hinhAnhChinh":  "https://example.com/test.jpg",
+    "maSp":  "a",
+    "tenSp":  "s",
+    "nguoiThucHien":  "Admin",
+    "moTa":  "s",
+    "thuongHieu":  "as",
+    "tenXuatXu":  "d"
+}

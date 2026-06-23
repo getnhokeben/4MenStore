@@ -1,0 +1,38 @@
+﻿{
+    "giaBan":  220000.00,
+    "giaNhap":  120000.00,
+    "idSanPham":  7,
+    "idSpct":  37,
+    "kichCo":  {
+                   "idKichCo":  3,
+                   "maKichCo":  "L",
+                   "tenKichCo":  "L"
+               },
+    "kieuDang":  {
+                     "idKieuDang":  2,
+                     "maKieuDang":  "SLIM",
+                     "tenKieuDang":  "Slim Fit"
+                 },
+    "loaiAo":  {
+                   "idLoaiAo":  2,
+                   "maLoai":  "TSHIRT",
+                   "tenLoai":  "Ão phÃ´ng khÃ´ng cá»"
+               },
+    "maChiTietSanPham":  "SKU007_M_TRANG",
+    "mauSac":  {
+                   "idMauSac":  2,
+                   "maMauSac":  "TRANG",
+                   "tenMauSac":  "Tráº¯ng"
+               },
+    "ngayCapNhat":  null,
+    "ngayTao":  "2026-06-12T14:34:50.003",
+    "nguoiCapNhat":  null,
+    "nguoiTao":  "Admin",
+    "phongCachMac":  {
+                         "idPhongCachMac":  3,
+                         "maPhongCachMac":  "CASUAL",
+                         "tenPhongCach":  "Casual"
+                     },
+    "soLuongTon":  30,
+    "trangThai":  true
+}

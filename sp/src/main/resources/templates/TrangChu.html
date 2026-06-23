@@ -1,0 +1,441 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4MenStore | Trang chủ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/js/app-shell.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --sw: 240px;
+            --sbg: #2b1d0e;
+            --sactive: #7a5230;
+            --shover: rgba(255, 255, 255, .06);
+            --gold: #c8a474;
+            --bg: #f5f5f5;
+            --white: #fff;
+            --border: #e8e8e8;
+            --text: #1a1a1a;
+            --muted: #888;
+            --r: 12px;
+            --sh: 0 2px 8px rgba(0, 0, 0, .08);
+        }
+        body {
+            font-family: "Inter", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ─── SIDEBAR ─── */
+        .sidebar {
+            width: var(--sw);
+            background: var(--sbg);
+            position: fixed;
+            inset: 0 auto 0 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 100;
+            scrollbar-width: none;
+        }
+        .sidebar::-webkit-scrollbar {
+            display: none;
+        }
+        .sb-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
+        .sb-logo img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(200, 164, 116, .35);
+        }
+        .sb-nav {
+            padding: 6px 0;
+            flex: 1;
+        }
+
+        /* nav rows */
+        .ni {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 16px;
+            color: rgba(255, 255, 255, .68);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all .14s;
+            user-select: none;
+        }
+        .ni .ico {
+            font-size: 15px;
+            width: 18px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .ni .arr {
+            margin-left: auto;
+            font-size: 11px;
+            transition: transform .2s;
+            opacity: .45;
+        }
+        .ni:hover {
+            background: var(--shover);
+            color: #fff;
+        }
+        .ni.active {
+            background: var(--sactive);
+            color: #fff;
+            border-left-color: var(--gold);
+        }
+        .ni.sub-active {
+            color: var(--gold);
+        }
+
+        /* submenu */
+        .submenu {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height .25s ease;
+        }
+        .submenu.open {
+            max-height: 400px;
+        }
+        .sub-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px 8px 40px;
+            color: rgba(255, 255, 255, .55);
+            font-size: 12.5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all .12s;
+            border-left: 3px solid transparent;
+        }
+        .sub-item:hover {
+            color: #fff;
+            background: var(--shover);
+        }
+        .sub-item.active {
+            color: var(--gold);
+            font-weight: 600;
+            border-left-color: var(--gold);
+        }
+
+        /* ─── MAIN ─── */
+        .main {
+            margin-left: var(--sw);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        /* topbar */
+        .topbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 24px;
+            gap: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .tb-label {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+        .tb-bell {
+            font-size: 18px;
+            color: var(--muted);
+            cursor: pointer;
+            position: relative;
+        }
+        .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+        }
+        .tb-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: #fff;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* content */
+        .content {
+            padding: 22px 26px;
+            flex: 1;
+        }
+
+        .spin {
+            display: inline-block;
+            animation: rot .7s linear infinite;
+        }
+        @keyframes rot {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* welcome */
+        .welcome {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--sh);
+        }
+        .wt h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .wt p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        .wl img {
+            width: 108px;
+            height: 108px;
+            object-fit: contain;
+            opacity: .88;
+        }
+
+        /* feature grid */
+        .fg {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+        }
+        .fc {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 15px 17px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: var(--sh);
+            transition: all .17s;
+            cursor: pointer;
+        }
+        .fc:hover {
+            border-color: var(--gold);
+            box-shadow: 0 4px 14px rgba(200, 164, 116, .16);
+            transform: translateY(-1px);
+        }
+        .fi {
+            width: 40px;
+            height: 40px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .fi-b {
+            background: #eff6ff;
+        }
+        .fi-g {
+            background: #f0fdf4;
+        }
+        .fi-o {
+            background: #fff7ed;
+        }
+        .fi-p {
+            background: #fdf2f8;
+        }
+        .fi-v {
+            background: #faf5ff;
+        }
+        .fi-t {
+            background: #f0fdfa;
+        }
+        .ft {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .fd {
+            font-size: 12px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sb-logo">
+        <img src="/images/logo-4menstore.jpg" alt="4MenStore">
+    </div>
+    <nav class="sb-nav">
+        <a href="/san-pham/trang-chu" class="ni active" id="nav-home"><span class="ico">🏠</span> Trang chủ</a>
+        <a href="/ban-hang-tai-quay" class="ni"><span class="ico">🛒</span> Bán hàng tại quầy</a>
+        <a href="/hoa-don" class="ni"><span class="ico">🧾</span> Quản lý hóa đơn</a>
+
+        <!-- Quản lý sản phẩm -->
+        <div class="ni" id="nav-sp-toggle" onclick="toggleSP()">
+            <span class="ico">📦</span> Quản lý sản phẩm
+            <span class="arr" id="arr-sp">▶</span>
+        </div>
+        <div class="submenu" id="sub-sp">
+            <a href="/san-pham/quan-ly" class="sub-item">Sản phẩm</a>
+            <a href="/san-pham/bien-the" class="sub-item">Biến thể sản phẩm</a>
+        </div>
+
+        <!-- Thuộc tính -->
+        <div class="ni" id="nav-tt-toggle" onclick="toggleTT()">
+            <span class="ico">📋</span> Thuộc tính
+            <span class="arr" id="arr-tt">▶</span>
+        </div>
+        <div class="submenu" id="sub-tt">
+            <a href="/thuoc-tinh/loai-ao" class="sub-item">Loại áo</a>
+            <a href="/thuoc-tinh/kich-co" class="sub-item">Kích cỡ</a>
+            <a href="/thuoc-tinh/mau-sac" class="sub-item">Màu sắc</a>
+            <a href="/thuoc-tinh/phong-cach-mac" class="sub-item">Phong cách mặc</a>
+            <a href="/thuoc-tinh/kieu-dang" class="sub-item">Kiểu dáng</a>
+            <a href="/thuoc-tinh/xuat-xu" class="sub-item">Xuất xứ</a>
+            <a href="/thuoc-tinh/chat-lieu" class="sub-item">Chất liệu</a>
+        </div>
+
+        <a href="#" class="ni"><span class="ico">🏷️</span> Quản lý giảm giá <span class="arr">▶</span></a>
+        <a href="#" class="ni"><span class="ico">👤</span> Tài khoản <span class="arr">▶</span></a>
+    </nav>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+    <header class="topbar">
+        <span class="tb-label">Quản trị hệ thống</span>
+        <span class="tb-bell">🔔<span class="badge"></span></span>
+        <div class="tb-avatar">T</div>
+    </header>
+
+    <div class="content">
+
+        <!-- WELCOME -->
+        <div class="welcome">
+            <div class="wt">
+                <h2>Chào mừng đến với 4MenStore, admin@gmail.com! 👋</h2>
+                <p>Nền tảng quản lý thời trang nam 4MenStore tinh tế.<br>Bắt đầu công việc ngay hôm nay!</p>
+            </div>
+            <div class="wl"><img src="/images/logo-4menstore.jpg" alt="4MenStore"></div>
+        </div>
+
+        <!-- FEATURES -->
+        <div class="fg">
+            <a href="/ban-hang-tai-quay" class="fc">
+                <div class="fi fi-g">🛒</div>
+                <div>
+                    <div class="ft">Bán hàng</div>
+                    <div class="fd">Tạo đơn tại quầy</div>
+                </div>
+            </a>
+            <a href="/san-pham/quan-ly" class="fc">
+                <div class="fi fi-o">📦</div>
+                <div>
+                    <div class="ft">Sản phẩm</div>
+                    <div class="fd">Thêm sản phẩm mới</div>
+                </div>
+            </a>
+            <a href="#" class="fc">
+                <div class="fi fi-p">🧾</div>
+                <div>
+                    <div class="ft">Hóa đơn</div>
+                    <div class="fd">Quản lý đơn hàng</div>
+                </div>
+            </a>
+            <a href="#" class="fc">
+                <div class="fi fi-v">🎫</div>
+                <div>
+                    <div class="ft">Voucher</div>
+                    <div class="fd">Tạo phiếu giảm giá</div>
+                </div>
+            </a>
+            <a href="#" class="fc">
+                <div class="fi fi-t">👥</div>
+                <div>
+                    <div class="ft">Nhân viên</div>
+                    <div class="fd">Quản lý nhân sự</div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    /* ─── Toggle submenu ─── */
+    function toggleSP() {
+        const sub = document.getElementById('sub-sp');
+        const arr = document.getElementById('arr-sp');
+        const toggle = document.getElementById('nav-sp-toggle');
+        const isOpen = sub.classList.contains('open');
+        sub.classList.toggle('open', !isOpen);
+        arr.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
+        toggle.classList.toggle('sub-active', !isOpen);
+    }
+
+    function toggleTT() {
+        const sub = document.getElementById('sub-tt');
+        const arr = document.getElementById('arr-tt');
+        const toggle = document.getElementById('nav-tt-toggle');
+        const isOpen = sub.classList.contains('open');
+        sub.classList.toggle('open', !isOpen);
+        arr.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
+        toggle.classList.toggle('sub-active', !isOpen);
+    }
+
+    // Tự động mở submenu "Thuộc tính" khi load (nếu muốn)
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     toggleTT(); // mở sẵn
+    // });
+</script>
+</body>
+</html>

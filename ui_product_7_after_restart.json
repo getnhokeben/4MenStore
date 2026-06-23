@@ -1,0 +1,23 @@
+﻿{
+    "chatLieu":  {
+                     "idChatLieu":  10,
+                     "maChatLieu":  "CL_1781250915312",
+                     "tenChatLieu":  "LÃ¡Â»Â¥a"
+                 },
+    "hinhAnh":  "https://example.com/ao-moi.jpg",
+    "idSp":  7,
+    "maSp":  "SP007",
+    "moTa":  "ÃÂÃÂ£ cÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t mÃÂ´ tÃ¡ÂºÂ£ mÃ¡Â»Âi",
+    "ngayCapNhat":  "2026-06-12T14:57:02.297",
+    "ngayTao":  "2026-06-10T21:51:03.917",
+    "nguoiCapNhat":  "Admin",
+    "nguoiTao":  "Admin",
+    "tenSp":  "ÃÂo cÃ¡Â»Âc tay lÃ¡Â»Â¡",
+    "thuongHieu":  "Zara",
+    "trangThai":  false,
+    "xuatXu":  {
+                   "idXuatXu":  6,
+                   "maXuatXu":  "XX_1781250915269",
+                   "tenXuatXu":  "Trung QuÃ¡Â»Âc"
+               }
+}

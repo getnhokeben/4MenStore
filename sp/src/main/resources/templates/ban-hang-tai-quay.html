@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bán hàng tại quầy - 4MenStore</title>
+    <script src="/js/app-shell.js" defer></script>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{--gold:#b78a55;--gold-dark:#8f6536;--bg:#f5f5f5;--white:#fff;--line:#eee;--text:#252525;--muted:#777;--danger:#e65b43;--green:#16a05d;--shadow:0 8px 28px rgba(31,20,10,.10);--radius:8px}
+        body{font-family:"Inter","Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        .main{min-height:100vh}
+        .topbar{height:52px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:0 24px;position:sticky;top:0;z-index:20}
+        .tb-label{font-size:13px;color:#6b4b2c;font-weight:700}.tb-bell{position:relative;color:#d44}.tb-bell:after{content:"";position:absolute;right:-2px;top:-2px;width:7px;height:7px;background:#ef4444;border-radius:50%}.tb-avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#6b421f;color:#fff;font-weight:800}
+        .content{padding:22px 26px}
+        .page-head{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px}
+        .page-title{font-size:16px;font-weight:800;text-transform:uppercase}.btn{border:none;border-radius:6px;padding:9px 13px;font-size:13px;font-weight:800;cursor:pointer;transition:.15s;background:#fff;color:var(--text);border:1px solid var(--line)}.btn:hover{border-color:var(--gold);color:var(--gold-dark)}.btn.primary{background:var(--gold);border-color:var(--gold);color:#fff}.btn.primary:hover{background:var(--gold-dark);color:#fff}.btn.danger{background:var(--danger);border-color:var(--danger);color:#fff}.btn.small{padding:6px 9px;font-size:12px}
+        .tabs{display:flex;gap:8px;margin:0 0 12px 10px;flex-wrap:wrap}.tab{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-bottom:none;background:#fff;padding:10px 14px;border-radius:8px 8px 0 0;font-size:12.5px;cursor:pointer}.tab.active{color:var(--gold-dark);font-weight:800}.tab .close{color:#aaa;font-weight:900}
+        .sale-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 2px 12px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}.panel-title{font-size:13px;font-weight:900;text-transform:uppercase}.panel-body{padding:16px}
+        .empty{min-height:260px;display:grid;place-items:center;text-align:center;color:#777}.empty .box{font-size:42px;margin-bottom:10px}.empty p{font-size:13.5px;margin-bottom:14px}
+        table{width:100%;border-collapse:collapse;font-size:13px}th{font-size:11px;text-transform:uppercase;color:#777;text-align:left;padding:10px;border-bottom:1px solid var(--line)}td{padding:12px 10px;border-bottom:1px solid #f2f2f2;vertical-align:middle}.product-cell{display:flex;gap:10px;align-items:center}.thumb{width:48px;height:58px;border-radius:6px;background:#f2eee9;display:grid;place-items:center;overflow:hidden;flex:none}.thumb img{width:100%;height:100%;object-fit:cover}.p-name{font-weight:800;margin-bottom:3px}.p-meta{font-size:11.5px;color:#777}.money{font-weight:900}.red{color:#d6422d}.qty{display:inline-flex;align-items:center;gap:7px}.qty button{width:24px;height:24px;border:1px solid var(--line);background:#fff;border-radius:50%;cursor:pointer}.qty span{min-width:22px;text-align:center;font-weight:800}
+        .side-card{padding:14px 16px;border-bottom:1px solid var(--line)}.side-card:last-child{border-bottom:none}.side-title{font-size:12px;font-weight:900;text-transform:uppercase;text-align:center;margin-bottom:12px}.form-row{margin-bottom:10px}.input{width:100%;border:1px solid var(--line);border-radius:6px;padding:10px 11px;font-size:13px;outline:none;background:#fff}.input:focus{border-color:var(--gold)}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.switch-row{display:flex;align-items:center;justify-content:space-between;color:#666;font-size:12.5px}.summary-row{display:flex;justify-content:space-between;gap:10px;margin:9px 0;font-size:13px}.summary-row.total{border-top:1px solid var(--line);padding-top:13px;margin-top:13px;font-size:16px;font-weight:900}.summary-row.total span:last-child{color:#d6422d}.checkout{width:100%;margin-top:12px;padding:13px;border:none;border-radius:6px;background:linear-gradient(90deg,#b78a55,#6e3e19);color:#fff;font-weight:900;cursor:pointer}
+        .modal{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:300;display:none;align-items:center;justify-content:center;padding:24px}.modal.open{display:flex}.dialog{background:#fff;border-radius:10px;box-shadow:var(--shadow);width:min(980px,calc(100vw - 36px));max-height:86vh;display:flex;flex-direction:column;overflow:hidden}.dialog.small{width:min(760px,calc(100vw - 36px))}.dialog-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line)}.dialog-title{font-size:14px;font-weight:900;text-transform:uppercase}.dialog-body{padding:16px;overflow:auto}.x{border:none;background:#c8a474;color:#fff;border-radius:6px;width:28px;height:28px;cursor:pointer;font-weight:900}.search-row{display:flex;gap:10px;margin-bottom:14px}.search-row .input{flex:1}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}.product-card{border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;gap:10px;background:#fff}.product-card .thumb{width:54px;height:66px}.variant-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.variant-chip{border:1px solid var(--line);border-radius:999px;padding:5px 8px;background:#fff;font-size:11.5px;cursor:pointer}.variant-chip:hover{border-color:var(--gold);color:var(--gold-dark)}.customer-table td,.customer-table th{padding:11px 9px}.toast{position:fixed;right:24px;top:70px;background:#dcfce7;color:#166534;border-left:5px solid #22c55e;padding:12px 18px;border-radius:4px;box-shadow:var(--shadow);font-size:13px;font-weight:700;z-index:500;display:none}.toast.show{display:block}.toast.error{background:#fee2e2;color:#991b1b;border-left-color:#ef4444}
+        @media(max-width:980px){.sale-layout{grid-template-columns:1fr}.main{margin-left:0}.content{padding:14px}.panel-body{overflow:auto}}
+    </style>
+</head>
+<body>
+<aside class="sidebar"></aside>
+<main class="main">
+    <header class="topbar">
+        <span class="tb-label">Quản trị hệ thống</span>
+        <span class="tb-bell">●</span>
+        <div class="tb-avatar">T</div>
+    </header>
+    <section class="content">
+        <div class="page-head">
+            <div class="page-title">Bán hàng tại quầy</div>
+            <button class="btn primary" onclick="createOrder()">+ Tạo đơn hàng</button>
+        </div>
+        <div class="tabs" id="orderTabs"></div>
+        <div id="orderArea">
+            <div class="panel empty">
+                <div>
+                    <div class="box">□</div>
+                    <p>Chưa có đơn hàng tại quầy</p>
+                    <button class="btn primary" onclick="createOrder()">Tạo đơn hàng ngay</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div class="modal" id="productModal" onclick="closeModalOnBackdrop(event,'productModal')">
+    <div class="dialog">
+        <div class="dialog-head">
+            <div class="dialog-title">Chọn sản phẩm</div>
+            <button class="x" onclick="closeProductModal()">×</button>
+        </div>
+        <div class="dialog-body">
+            <div class="search-row">
+                <input class="input" id="productKeyword" placeholder="Tìm theo mã, tên sản phẩm...">
+                <button class="btn primary" onclick="loadProductChoices()">Tìm kiếm</button>
+            </div>
+            <div class="grid" id="productChoices"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="customerModal" onclick="closeModalOnBackdrop(event,'customerModal')">
+    <div class="dialog small">
+        <div class="dialog-head">
+            <div class="dialog-title">Chọn khách hàng</div>
+            <button class="x" onclick="closeCustomerModal()">×</button>
+        </div>
+        <div class="dialog-body">
+            <div class="search-row">
+                <input class="input" id="customerKeyword" placeholder="Tìm theo tên, email, số điện thoại...">
+                <button class="btn primary" onclick="loadCustomers()">Tìm kiếm</button>
+            </div>
+            <table class="customer-table">
+                <thead><tr><th>STT</th><th>Khách hàng</th><th>Liên hệ</th><th>Địa chỉ</th><th></th></tr></thead>
+                <tbody id="customerRows"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    let orders = [];
+    let activeOrderId = null;
+    let paidAmount = 0; // lưu tạm số tiền khách thanh toán
+    let productSearchTimer;
+    let customerSearchTimer;
+
+    const el = id => document.getElementById(id);
+    const fmt = value => new Intl.NumberFormat('vi-VN').format(Number(value || 0)) + ' đ';
+    const esc = value => (value ?? '').toString().replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
+
+    function toast(message, type = 'success') {
+        const box = el('toast');
+        box.textContent = message;
+        box.className = 'toast show' + (type === 'error' ? ' error' : '');
+        setTimeout(() => box.classList.remove('show'), 2600);
+    }
+
+    async function api(url, options = {}) {
+        const res = await fetch(url, {
+            ...options,
+            headers: {'Content-Type':'application/json', ...(options.headers || {})}
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.message || 'Có lỗi xảy ra');
+        }
+        if (res.status === 204) return null;
+        return res.json();
+    }
+
+    function imageHtml(item) {
+        const src = item.imageUrl || item.hinhAnh;
+        if (!src) return '<span>□</span>';
+        const url = src.startsWith('/') || src.startsWith('http') ? src : '/uploads/' + src;
+        return `<img src="${esc(url)}" alt="${esc(item.tenSanPham || item.tenSp || '')}" onerror="this.remove()">`;
+    }
+
+    function currentOrder() {
+        return orders.find(order => order.id === activeOrderId) || null;
+    }
+
+    function upsertOrder(order) {
+        const index = orders.findIndex(item => item.id === order.id);
+        if (index >= 0) orders[index] = order;
+        else orders.push(order);
+        activeOrderId = order.id;
+        render();
+    }
+
+    async function createOrder() {
+        try {
+            const order = await api('/api/pos/orders', {method:'POST'});
+            upsertOrder(order);
+            toast(`Đã tạo tab cho ${order.maHoaDon}`);
+        } catch (e) {
+            toast(e.message, 'error');
+        }
+    }
+
+    function render() {
+        renderTabs();
+        const order = currentOrder();
+        if (!order) {
+            el('orderArea').innerHTML = `<div class="panel empty"><div><div class="box">□</div><p>Chưa có đơn hàng tại quầy</p><button class="btn primary" onclick="createOrder()">Tạo đơn hàng ngay</button></div></div>`;
+            return;
+        }
+        el('orderArea').innerHTML = `
+            <div class="sale-layout">
+                <section class="panel">
+                    <div class="panel-head">
+                        <div class="panel-title">Sản phẩm</div>
+                        <div>
+                            <button class="btn small" onclick="scanCode()">Quét QR</button>
+                            <button class="btn primary small" onclick="openProductModal()">+ Chọn sản phẩm</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">${renderItems(order)}</div>
+                </section>
+                ${order.items.length ? renderPayment(order) : ''}
+            </div>`;
+    }
+
+    function renderTabs() {
+        el('orderTabs').innerHTML = orders.map((order, index) => `
+            <div class="tab ${order.id === activeOrderId ? 'active' : ''}" onclick="selectOrder(${order.id})">
+                <span>Đơn ${index + 1} - ${esc(order.maHoaDon)}</span>
+                <span>(${order.items.length} SP)</span>
+                <span class="close" onclick="event.stopPropagation();closeOrder(${order.id})">×</span>
+            </div>
+        `).join('');
+    }
+
+    function renderItems(order) {
+        if (!order.items.length) {
+            return `<div class="empty"><div><div class="box">□</div><p>Chưa có sản phẩm nào trong đơn hàng</p><button class="btn" onclick="openProductModal()">Thêm sản phẩm ngay</button></div></div>`;
+        }
+        return `<table>
+            <thead><tr><th>Sản phẩm</th><th>Đơn giá</th><th>Số lượng</th><th>Thành tiền</th><th></th></tr></thead>
+            <tbody>${order.items.map(item => `
+                <tr>
+                    <td><div class="product-cell"><div class="thumb">${imageHtml(item)}</div><div><div class="p-name">${esc(item.tenSanPham)}</div><div class="p-meta">Mã: ${esc(item.maChiTietSanPham)}<br>Màu: ${esc(item.mauSac || '-')} / Size: ${esc(item.kichCo || '-')}</div></div></div></td>
+                    <td class="money">${fmt(item.donGia)}</td>
+                    <td><div class="qty"><button onclick="changeQty(${item.idHdct},${item.soLuong - 1})">-</button><span>${item.soLuong}</span><button onclick="changeQty(${item.idHdct},${item.soLuong + 1})">+</button></div></td>
+                    <td class="money red">${fmt(item.thanhTien)}</td>
+                    <td><button class="btn danger small" onclick="removeItem(${item.idHdct})">×</button></td>
+                </tr>`).join('')}</tbody>
+        </table>`;
+    }
+
+    function renderPayment(order) {
+        const total = Number(order.tongTienThanhToan || 0);
+        const change = Math.max(0, paidAmount - total);
+        return `<aside class="panel">
+            <div class="side-card">
+                <div class="side-title">Thông tin khách hàng</div>
+                <button class="btn" style="width:100%;margin-bottom:10px" onclick="openCustomerModal()">Chọn khách hàng</button>
+                <div class="form-row"><input class="input" id="customerName" value="${esc(order.tenKhachHang || '')}" placeholder="Tên khách hàng"></div>
+                <div class="form-row"><input class="input" id="customerPhone" value="${esc(order.soDienThoai || '')}" placeholder="Số điện thoại"></div>
+                <div class="form-row"><input class="input" id="customerAddress" value="${esc(order.diaChiKhachHang || '')}" placeholder="Địa chỉ"></div>
+                <button class="btn small" onclick="saveManualCustomer()">Lưu thông tin</button>
+            </div>
+            <div class="side-card">
+                <div class="side-title">Thông tin thanh toán</div>
+                <div class="search-row" style="margin-bottom:8px">
+                    <input class="input" id="voucherInput" value="${esc(order.maVoucher || '')}" placeholder="Mã giảm giá">
+                    <button class="btn" onclick="applyVoucher()">Áp dụng</button>
+                </div>
+                ${order.maVoucher ? `<button class="btn small" onclick="removeVoucher()">Bỏ voucher ${esc(order.maVoucher)}</button>` : ''}
+                <div class="summary-row"><span>Tổng tiền hàng</span><b>${fmt(order.tongTienGoc)}</b></div>
+                <div class="summary-row"><span>Giảm giá</span><b>${fmt(order.soTienGiam)}</b></div>
+                <div class="summary-row total">
+                    <span>Tổng số tiền</span>
+                    <span id="totalDisplay" data-total="${total}">${fmt(total)}</span>
+                </div>
+                <div class="form-row">
+                    <input class="input" id="paidInput" type="number" min="0" value="${paidAmount || ''}" placeholder="Khách thanh toán" oninput="onPaidInput()">
+                </div>
+                <div class="summary-row"><span>Khách thanh toán</span><b id="paidDisplay">${fmt(paidAmount)}</b></div>
+                <div class="summary-row"><span>Tiền thừa</span><b id="changeDisplay" class="red">${fmt(change)}</b></div>
+                <button class="checkout" onclick="checkout()">Xác nhận đặt hàng</button>
+            </div>
+        </aside>`;
+    }
+
+    // Xử lý khi người dùng nhập tiền
+    function onPaidInput() {
+        paidAmount = Number(el('paidInput')?.value || 0);
+        updatePaymentFields();
+    }
+
+    // Chỉ cập nhật text hiển thị, không render lại
+    function updatePaymentFields() {
+        const totalEl = document.getElementById('totalDisplay');
+        const total = Number(totalEl?.dataset.total || 0);
+        const change = Math.max(0, paidAmount - total);
+
+        const paidDisplay = document.getElementById('paidDisplay');
+        const changeDisplay = document.getElementById('changeDisplay');
+        if (paidDisplay) paidDisplay.textContent = fmt(paidAmount);
+        if (changeDisplay) changeDisplay.textContent = fmt(change);
+    }
+
+    function selectOrder(id) {
+        // Khi chuyển tab, reset paidAmount về 0
+        paidAmount = 0;
+        activeOrderId = id;
+        render();
+    }
+
+    async function closeOrder(id) {
+        const order = orders.find(item => item.id === id);
+        if (!order) return;
+        if (!confirm(`Đóng và hủy đơn ${order.maHoaDon}?`)) return;
+        try {
+            await api(`/api/pos/orders/${id}/cancel`, {method:'POST'});
+            orders = orders.filter(item => item.id !== id);
+            if (activeOrderId === id) {
+                paidAmount = 0;
+            }
+            activeOrderId = orders[0]?.id || null;
+            render();
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    function openProductModal() {
+        if (!currentOrder()) return toast('Vui lòng tạo đơn hàng trước', 'error');
+        el('productModal').classList.add('open');
+        loadProductChoices();
+    }
+    function closeProductModal(){ el('productModal').classList.remove('open'); }
+    function openCustomerModal(){ el('customerModal').classList.add('open'); loadCustomers(); }
+    function closeCustomerModal(){ el('customerModal').classList.remove('open'); }
+    function closeModalOnBackdrop(event,id){ if(event.target.id === id) event.target.classList.remove('open'); }
+
+    async function loadProductChoices() {
+        const keyword = el('productKeyword').value.trim();
+        const params = new URLSearchParams({page:0,size:20,sort:'newest'});
+        if (keyword) params.set('keyword', keyword);
+        try {
+            const data = await api('/api/shop/products?' + params);
+            const products = data.content || [];
+            el('productChoices').innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="thumb">${imageHtml(product)}</div>
+                    <div style="flex:1;min-width:0">
+                        <div class="p-name">${esc(product.tenSp)}</div>
+                        <div class="p-meta">${esc(product.maSp || '')} · ${fmt(product.giaBanMin)} · tồn ${product.tongTon || 0}</div>
+                        <div class="variant-list" id="variants-${product.idSp}">
+                            <button class="variant-chip" onclick="loadVariants(${product.idSp})">Xem biến thể</button>
+                        </div>
+                    </div>
+                </div>`).join('') || '<p>Không tìm thấy sản phẩm</p>';
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    async function loadVariants(idSp) {
+        try {
+            const variants = await api(`/api/shop/products/${idSp}/variants`);
+            el(`variants-${idSp}`).innerHTML = variants.map(variant => `
+                <button class="variant-chip" onclick="addVariant(${variant.idSpct})">
+                    ${esc(variant.mauSac?.ten || '-')} / ${esc(variant.kichCo?.ten || '-')} · tồn ${variant.soLuongTon}
+                </button>`).join('') || '<span class="p-meta">Hết hàng</span>';
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    async function addVariant(idSpct) {
+        const order = currentOrder();
+        if (!order) return;
+        try {
+            const updated = await api(`/api/pos/orders/${order.id}/items`, {method:'POST', body:JSON.stringify({idSpct, soLuong:1})});
+            upsertOrder(updated);
+            closeProductModal();
+            toast('Đã thêm sản phẩm');
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    async function scanCode() {
+        const code = prompt('Nhập mã SKU / mã QR sản phẩm');
+        if (!code) return;
+        try {
+            const variant = await api('/api/pos/variants/by-code?code=' + encodeURIComponent(code));
+            await addVariant(variant.idSpct);
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    async function changeQty(idHdct, soLuong) {
+        const order = currentOrder();
+        if (!order) return;
+        if (soLuong < 1) return removeItem(idHdct);
+        try {
+            upsertOrder(await api(`/api/pos/orders/${order.id}/items/${idHdct}`, {method:'PATCH', body:JSON.stringify({soLuong})}));
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    async function removeItem(idHdct) {
+        const order = currentOrder();
+        if (!order) return;
+        try {
+            upsertOrder(await api(`/api/pos/orders/${order.id}/items/${idHdct}`, {method:'DELETE'}));
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    async function loadCustomers() {
+        const keyword = el('customerKeyword').value.trim();
+        const params = new URLSearchParams({page:0,size:10,trangThai:true});
+        if (keyword) params.set('keyword', keyword);
+        try {
+            const data = await api('/api/khach-hang?' + params);
+            const list = data.content || [];
+            el('customerRows').innerHTML = list.map((customer,index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td><b>${esc(customer.tenKhachHang)}</b></td>
+                    <td>${esc(customer.soDienThoai || '')}<br><span class="p-meta">${esc(customer.email || '')}</span></td>
+                    <td>${esc(customer.diaChi || '')}</td>
+                    <td><button class="btn primary small" onclick='chooseCustomer(${JSON.stringify(customer).replaceAll("'","&#39;")})'>Chọn</button></td>
+                </tr>`).join('') || '<tr><td colspan="5" style="text-align:center">Không có khách hàng</td></tr>';
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    async function chooseCustomer(customer) {
+        const order = currentOrder();
+        if (!order) return;
+        try {
+            const updated = await api(`/api/pos/orders/${order.id}/customer`, {
+                method:'PUT',
+                body:JSON.stringify({idKh:customer.id})
+            });
+            upsertOrder(updated);
+            closeCustomerModal();
+            toast('Đã chọn khách hàng');
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    async function saveManualCustomer() {
+        const order = currentOrder();
+        if (!order) return;
+        try {
+            upsertOrder(await api(`/api/pos/orders/${order.id}/customer`, {
+                method:'PUT',
+                body:JSON.stringify({
+                    tenKhachHang: el('customerName').value,
+                    soDienThoai: el('customerPhone').value,
+                    diaChiKhachHang: el('customerAddress').value
+                })
+            }));
+            toast('Đã lưu thông tin khách hàng');
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    async function applyVoucher() {
+        const order = currentOrder();
+        const code = el('voucherInput').value.trim();
+        if (!order || !code) return;
+        try {
+            upsertOrder(await api(`/api/pos/orders/${order.id}/voucher`, {method:'POST', body:JSON.stringify({maVoucher:code})}));
+            toast('Đã áp dụng mã giảm giá');
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    async function removeVoucher() {
+        const order = currentOrder();
+        if (!order) return;
+        try {
+            upsertOrder(await api(`/api/pos/orders/${order.id}/voucher`, {method:'DELETE'}));
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    async function checkout() {
+        const order = currentOrder();
+        if (!order) return;
+        try {
+            // Sử dụng biến paidAmount thay vì đọc lại input
+            const done = await api(`/api/pos/orders/${order.id}/checkout`, {
+                method:'POST',
+                body:JSON.stringify({khachThanhToan: paidAmount, phuongThucThanhToan:'TIEN_MAT'})
+            });
+            toast(`Thanh toán thành công ${done.maHoaDon}`);
+            orders = orders.filter(item => item.id !== done.id);
+            paidAmount = 0;
+            activeOrderId = orders[0]?.id || null;
+            render();
+        } catch (e) { toast(e.message, 'error'); }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        el('productKeyword')?.addEventListener('input', () => {
+            clearTimeout(productSearchTimer);
+            productSearchTimer = setTimeout(loadProductChoices, 350);
+        });
+        el('customerKeyword')?.addEventListener('input', () => {
+            clearTimeout(customerSearchTimer);
+            customerSearchTimer = setTimeout(loadCustomers, 350);
+        });
+    });
+</script>
+</body>
+</html>

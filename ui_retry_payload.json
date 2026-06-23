@@ -1,0 +1,24 @@
+﻿{
+    "maSp":  "SP007",
+    "tenSp":  "Ão cá»c tay lá»¡",
+    "moTa":  "ÄÃ£ cáº­p nháº­t mÃ´ táº£ má»i",
+    "hinhAnhChinh":  "https://example.com/ao-moi.jpg",
+    "tenXuatXu":  "Trung Quá»c",
+    "tenChatLieu":  "Lá»¥a",
+    "thuongHieu":  "Zara",
+    "nguoiThucHien":  "Admin",
+    "danhSachBienThe":  [
+                            {
+                                "idSpct":  37,
+                                "maChiTietSanPham":  "SKU007_M_TRANG",
+                                "idKichCo":  3,
+                                "idMauSac":  2,
+                                "idLoaiAo":  2,
+                                "idPhongCachMac":  null,
+                                "idKieuDang":  2,
+                                "soLuongTon":  30,
+                                "giaNhap":  120000.00,
+                                "giaBan":  220000.00
+                            }
+                        ]
+}

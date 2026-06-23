@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu giảm giá</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <script src="/js/app-shell.js" defer></script>
+    <style>
+        :root{--gold:#b78a55;--gold-dark:#8f6536;--bg:#f5f5f5;--white:#fff;--line:#eee;--text:#252525;--muted:#777;--danger:#e65b43;--green:#16a05d;--shadow:0 8px 28px rgba(31,20,10,.10);--radius:8px}*{box-sizing:border-box}body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.45;font-synthesis:none;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}.page{min-height:100vh;padding:22px 28px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:14px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}.title h1{font-size:18px;margin:0;font-weight:700;color:#111;text-transform:uppercase;letter-spacing:.3px}.title p{margin:4px 0 0;color:var(--muted);font-size:13px}.toolbar{display:flex;gap:8px}.btn{height:34px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--text);font-weight:600;font-size:13px;font-family:inherit;padding:0 12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:.15s}.btn:hover{border-color:var(--gold);color:var(--gold-dark)}.btn.primary{background:var(--gold);border-color:var(--gold);color:#fff}.btn.primary:hover{background:var(--gold-dark);border-color:var(--gold-dark);color:#fff}.btn.danger{color:var(--danger)}.btn.icon{width:30px;padding:0}.btn:disabled{opacity:.45;cursor:not-allowed}.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.03);margin-bottom:16px}.panel-head{height:40px;background:#fff;color:#111;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--line);font-size:13.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}.panel-head small{font-weight:500;font-size:12px;color:var(--muted);text-transform:none}.filters{display:grid;grid-template-columns:minmax(260px,1fr) 250px 250px;gap:12px 18px;padding:16px}.field label{display:block;font-size:12.5px;color:#555;font-weight:600;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;height:36px;border:1px solid var(--line);border-radius:6px;padding:0 10px;font-size:13px;font-family:inherit;background:#fff;color:var(--text);outline:none}.date-picker{cursor:text;padding-right:42px}.date-input-wrap{position:relative}.date-input-wrap input{display:block}.calendar-trigger{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:0;background:#fff;color:#111;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center}.calendar-trigger:hover{background:#f6eee3;color:var(--gold-dark)}.calendar-icon{position:relative;width:12px;height:12px;border:2px solid currentColor;border-radius:1px;display:block}.calendar-icon:before{content:"";position:absolute;left:-2px;right:-2px;top:2px;border-top:2px solid currentColor}.calendar-icon:after{content:"";position:absolute;left:2px;top:-4px;width:2px;height:4px;background:currentColor;box-shadow:4px 0 0 currentColor}.field textarea{height:78px;padding:10px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(183,138,85,.12)}.date-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.radio-line{display:flex;align-items:center;gap:18px;height:36px}.radio-line label{display:inline-flex;align-items:center;gap:6px;margin:0;text-transform:none;font-weight:500;color:#555}.radio-line input{width:14px;height:14px;accent-color:var(--gold)}.table-card{padding:18px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px}table{width:100%;border-collapse:collapse;min-width:1120px}th{height:40px;background:#fff;color:#777;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:0 12px;white-space:nowrap;border-bottom:1px solid var(--line)}td{height:44px;border-bottom:1px solid #f2f2f2;padding:0 12px;font-size:13px;text-align:center;vertical-align:middle;color:#444}tr:last-child td{border-bottom:0}tr:hover td{background:#faf8f5}.badge{display:inline-flex;border-radius:999px;padding:4px 9px;font-size:11.5px;font-weight:700}.badge.public{background:#f2eee9;color:var(--gold-dark);border:1px solid #ead9c6}.badge.on{background:#dcfce7;color:#166534}.badge.wait{background:#fef3c7;color:#92400e}.badge.off{background:#f1f1f1;color:#777}.actions{display:flex;align-items:center;justify-content:center;gap:8px}.edit-btn{border-color:#ead9c6;color:var(--gold-dark);background:#fffaf3}.edit-btn:hover{background:#f6eee3;border-color:var(--gold)}.switch{position:relative;display:inline-flex;width:38px;height:20px}.switch input{display:none}.switch span{position:absolute;inset:0;background:#d6d6d6;border-radius:999px;cursor:pointer;transition:.15s}.switch span:before{content:"";position:absolute;width:16px;height:16px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.18)}.switch input:checked+span{background:var(--gold)}.switch input:checked+span:before{transform:translateX(18px)}.empty{padding:36px 18px;text-align:center;color:var(--muted)}.pager{display:flex;justify-content:space-between;align-items:center;padding:12px 0 0;color:var(--muted);font-size:13px}.pager-center{display:flex;align-items:center;gap:8px}.page-input{width:42px;height:28px;border:1px solid var(--line);border-radius:6px;text-align:center;font-family:inherit}.form-card{padding:18px}.voucher-form{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}.full{grid-column:1/-1}.input-suffix{display:flex}.input-suffix input{border-radius:6px 0 0 6px}.suffix{height:36px;min-width:46px;border:1px solid var(--line);border-left:0;border-radius:0 6px 6px 0;background:#fafafa;color:#666;font-size:12px;display:flex;align-items:center;justify-content:center}.form-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;margin-top:34px}.toast{position:fixed;right:24px;top:70px;z-index:1200;background:#dcfce7;color:#166534;border-left:5px solid #22c55e;padding:12px 18px;border-radius:4px;font-size:13px;font-weight:700;max-width:420px;box-shadow:var(--shadow)}.toast.error{background:#fee2e2;color:#991b1b;border-left-color:#ef4444}.toast.success{background:#dcfce7;color:#166534}.hidden{display:none!important}@media(max-width:1080px){.filters,.voucher-form{grid-template-columns:1fr}.date-row{grid-template-columns:1fr}.topbar{align-items:flex-start;flex-direction:column}}@media(max-width:760px){.page{padding:16px}.table-card,.form-card{padding:12px}}
+        .badge.public {
+            min-width: 58px;
+            justify-content: center;
+            white-space: nowrap;
+            padding: 3px 8px;
+            background: #faf8f5;
+            color: #8f6536;
+            border: 1px solid #efe3d5;
+            font-size: 11px;
+            line-height: 1.15;
+            font-weight: 600;
+        }
+        .badge.on { background:#dcfce7!important; color:#166534!important; }
+        .badge.wait { background:#fef3c7!important; color:#92400e!important; }
+        .badge.off { background:#fee2e2!important; color:#dc2626!important; }
+        .switch input:checked+span { background:#16a34a!important; }
+        .confirm-backdrop{position:fixed;inset:0;background:rgba(17,24,39,.42);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+        .confirm-backdrop.show{display:flex}
+        .confirm-dialog{width:min(420px,100%);background:#fff;border:1px solid #ead9c6;border-radius:10px;box-shadow:0 24px 70px rgba(31,20,10,.22);overflow:hidden}
+        .confirm-head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid #f1e5d7}
+        .confirm-icon{width:34px;height:34px;border-radius:50%;background:#f6eee3;color:var(--gold-dark);display:flex;align-items:center;justify-content:center;font-weight:800}
+        .confirm-title{font-size:15px;font-weight:800;color:#111}
+        .confirm-body{padding:16px 18px;color:#555;font-size:13.5px;line-height:1.55}
+        .confirm-actions{display:flex;justify-content:flex-end;gap:8px;padding:14px 18px;background:#faf8f5;border-top:1px solid #f1e5d7}
+        .confirm-actions .btn{height:34px}
+    </style>
+</head>
+<body>
+<aside class="sidebar"></aside>
+<main class="main page">
+    <section id="listView">
+        <div class="topbar">
+            <div class="title">
+                <h1>Quản lý phiếu giảm giá</h1>
+            </div>
+            <div class="toolbar">
+                <button class="btn" type="button" id="exportBtn">Xuất Excel</button>
+                <button class="btn primary" type="button" id="addBtn">+ Thêm mới</button>
+            </div>
+        </div>
+
+        <section class="panel">
+            <div class="panel-head">
+                <span>Bộ lọc tìm kiếm</span>
+            </div>
+            <form class="filters" id="filterForm">
+                <div class="field">
+                    <label>Tìm kiếm</label>
+                    <input name="keyword" placeholder="Nhập mã / tên phiếu giảm giá...">
+                </div>
+                <div class="field">
+                    <label>Loại giảm</label>
+                    <select name="loaiGiam">
+                        <option value="">Tất cả</option>
+                        <option value="PHAN_TRAM">Giảm %</option>
+                        <option value="TIEN_MAT">Giảm tiền</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Trạng thái</label>
+                    <select name="tienDo">
+                        <option value="">Tất cả</option>
+                        <option value="SAP_DIEN_RA">Sắp diễn ra</option>
+                        <option value="DANG_DIEN_RA">Đang diễn ra</option>
+                        <option value="KET_THUC">Kết thúc</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Loại phiếu</label>
+                    <div class="radio-line">
+                        <label><input type="radio" checked disabled> Công khai</label>
+                    </div>
+                </div>
+                <div class="date-row">
+                    <div class="field">
+                        <label>Từ ngày</label>
+                        <div class="date-input-wrap"><input name="tuNgay" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm"><button class="calendar-trigger" type="button" aria-label="Chọn từ ngày" data-picker="tuNgay"><span class="calendar-icon"></span></button></div>
+                    </div>
+                    <div class="field">
+                        <label>Đến ngày</label>
+                        <div class="date-input-wrap"><input name="denNgay" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm"><button class="calendar-trigger" type="button" aria-label="Chọn đến ngày" data-picker="denNgay"><span class="calendar-icon"></span></button></div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>&nbsp;</label>
+                </div>
+            </form>
+        </section>
+
+        <section class="panel table-card">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã giảm giá</th>
+                        <th>Tên giảm giá</th>
+                        <th>Loại phiếu</th>
+                        <th>Giá trị giảm</th>
+                        <th>Đơn hàng tối thiểu</th>
+                        <th>Số lượng</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody id="rows"></tbody>
+                </table>
+                <div class="empty" id="empty" hidden>Không có phiếu giảm giá</div>
+            </div>
+            <div class="pager">
+                <span id="recordInfo">Hiển thị 0 / tổng 0 bản ghi</span>
+                <div class="pager-center">
+                    <button class="btn icon" id="prevBtn" type="button">‹</button>
+                    <span>Trang</span>
+                    <input class="page-input" id="pageInput" value="1">
+                    <button class="btn icon" id="nextBtn" type="button">›</button>
+                </div>
+                <select id="pageSize" class="btn">
+                    <option value="10">10 bản ghi / trang</option>
+                    <option value="20">20 bản ghi / trang</option>
+                    <option value="50">50 bản ghi / trang</option>
+                </select>
+            </div>
+        </section>
+    </section>
+
+    <section id="formView" class="hidden">
+        <div class="topbar">
+            <div class="title">
+                <h1 id="formTitle">Thêm phiếu giảm giá</h1>
+            </div>
+            <button class="btn" type="button" id="backBtn">← Quay lại danh sách</button>
+        </div>
+        <section class="panel form-card">
+            <form class="voucher-form" id="voucherForm" novalidate>
+                <input type="hidden" name="id">
+                <div class="field">
+                    <label>Tên phiếu giảm giá *</label>
+                    <input name="tenPgg" placeholder="Ví dụ: Sale 1/6">
+                </div>
+                <div class="field">
+                    <label>Số lượng *</label>
+                    <input name="soLuong" type="number" min="1" step="1" placeholder="1">
+                </div>
+                <div class="field">
+                    <label>Ngày bắt đầu *</label>
+                    <div class="date-input-wrap"><input name="ngayBatDau" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm"><button class="calendar-trigger" type="button" aria-label="Chọn ngày bắt đầu" data-picker="ngayBatDau"><span class="calendar-icon"></span></button></div>
+                </div>
+                <div class="field">
+                    <label>Ngày kết thúc *</label>
+                    <div class="date-input-wrap"><input name="ngayKetThuc" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm"><button class="calendar-trigger" type="button" aria-label="Chọn ngày kết thúc" data-picker="ngayKetThuc"><span class="calendar-icon"></span></button></div>
+                </div>
+                <div class="field">
+                    <label>Loại giảm</label>
+                    <select name="loaiGiam">
+                        <option value="PHAN_TRAM">Giảm %</option>
+                        <option value="TIEN_MAT">Giảm tiền</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Giá trị giảm *</label>
+                    <div class="input-suffix">
+                        <input name="giaTri" type="number" min="0" step="1" placeholder="1">
+                        <span class="suffix" id="discountSuffix">%</span>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Giảm tối đa (VND) *</label>
+                    <div class="input-suffix">
+                        <input name="giaTriToiDa" type="number" min="0" step="1000">
+                        <span class="suffix">VND</span>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Đơn hàng tối thiểu</label>
+                    <div class="input-suffix">
+                        <input name="dieuKienDonHang" type="number" min="0" step="1000" value="0">
+                        <span class="suffix">VND</span>
+                    </div>
+                </div>
+                <div class="field full">
+                    <label>Mã phiếu</label>
+                    <input name="maPgg" placeholder="Tự tạo nếu để trống">
+                </div>
+                <div class="field full">
+                    <label>Mô tả</label>
+                    <textarea name="moTa" placeholder="Nhập mô tả..." disabled></textarea>
+                </div>
+                <div class="field full">
+                    <label>Loại phiếu *</label>
+                    <div class="radio-line">
+                        <label><input type="radio" checked disabled> Công khai</label>
+                    </div>
+                </div>
+                <input type="hidden" name="trangThai" value="true">
+                <div class="form-actions">
+                    <button class="btn" type="button" id="cancelBtn">Hủy</button>
+                    <button class="btn primary" type="submit">Lưu phiếu giảm giá</button>
+                </div>
+            </form>
+        </section>
+    </section>
+</main>
+<div class="confirm-backdrop" id="confirmBackdrop" aria-hidden="true">
+    <div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <div class="confirm-head">
+            <div class="confirm-icon">?</div>
+            <div class="confirm-title" id="confirmTitle">Xác nhận thao tác</div>
+        </div>
+        <div class="confirm-body" id="confirmMessage"></div>
+        <div class="confirm-actions">
+            <button class="btn" type="button" id="confirmCancel">Hủy</button>
+            <button class="btn primary" type="button" id="confirmOk">Đồng ý</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API = '/api/phieu-giam-gia';
+    const state = {page: 0, size: 10, totalPages: 1, totalElements: 0, items: []};
+    const $ = (id) => document.getElementById(id);
+    const filterForm = $('filterForm');
+    const form = $('voucherForm');
+
+    document.addEventListener('DOMContentLoaded', () => {
+        $('addBtn').addEventListener('click', () => openForm());
+        $('backBtn').addEventListener('click', showList);
+        $('cancelBtn').addEventListener('click', showList);
+        $('exportBtn').addEventListener('click', exportExcel);
+        filterForm.addEventListener('submit', e => { e.preventDefault(); loadData(0); });
+        filterForm.addEventListener('input', debounceFilter);
+        filterForm.addEventListener('change', () => { syncFilterDateLimits(); loadData(0); });
+        form.addEventListener('submit', saveVoucher);
+        form.elements.loaiGiam.addEventListener('change', syncDiscountSuffix);
+        form.elements.ngayBatDau.addEventListener('change', syncVoucherDateLimits);
+        form.elements.ngayKetThuc.addEventListener('change', syncVoucherDateLimits);
+        document.querySelectorAll('.calendar-trigger').forEach(button => {
+            button.addEventListener('click', () => {
+                const input = document.querySelector(`[name="${button.dataset.picker}"]`);
+                if (input) openNativePicker(input);
+            });
+        });
+        $('prevBtn').addEventListener('click', () => loadData(Math.max(0, state.page - 1)));
+        $('nextBtn').addEventListener('click', () => loadData(Math.min(state.totalPages - 1, state.page + 1)));
+        $('pageSize').addEventListener('change', e => { state.size = Number(e.target.value); loadData(0); });
+        $('pageInput').addEventListener('change', e => {
+            const page = Math.min(Math.max(Number(e.target.value || 1), 1), state.totalPages);
+            loadData(page - 1);
+        });
+        syncDiscountSuffix();
+        syncFilterDateLimits();
+        syncVoucherDateLimits();
+        loadData();
+    });
+
+    async function loadData(page = 0) {
+        state.page = page;
+        const params = currentParams(true);
+        if (!params) return;
+        const response = await fetch(`${API}?${params}`);
+        if (!response.ok) return toast(await readError(response), true);
+        const data = await response.json();
+        const pageData = normalizePageResponse(data);
+        state.items = pageData.content;
+        state.page = pageData.page;
+        state.size = pageData.size || state.size;
+        state.totalPages = pageData.totalPages;
+        state.totalElements = pageData.totalElements;
+        render();
+    }
+
+    function normalizePageResponse(data) {
+        const pageMeta = data.page || {};
+        const totalPages = Number(data.totalPages ?? pageMeta.totalPages ?? 1);
+        return {
+            content: data.content || [],
+            page: Number(data.number ?? pageMeta.number ?? state.page ?? 0),
+            size: Number(data.size ?? pageMeta.size ?? state.size ?? 10),
+            totalPages: Math.max(1, Number.isFinite(totalPages) ? totalPages : 1),
+            totalElements: Number(data.totalElements ?? pageMeta.totalElements ?? 0)
+        };
+    }
+
+    function currentParams(includePaging) {
+        const data = new FormData(filterForm);
+        const params = new URLSearchParams();
+        ['keyword','loaiGiam','tienDo'].forEach(key => {
+            const value = (data.get(key) || '').trim();
+            if (value) params.set(key, value);
+        });
+        const tuNgay = (data.get('tuNgay') || '').trim();
+        const denNgay = (data.get('denNgay') || '').trim();
+        if (tuNgay && !isValidDateTimeLocal(tuNgay)) {
+            toast('Từ ngày không hợp lệ', true);
+            return null;
+        }
+        if (denNgay && !isValidDateTimeLocal(denNgay)) {
+            toast('Đến ngày không hợp lệ', true);
+            return null;
+        }
+        if (tuNgay && denNgay && new Date(denNgay) < new Date(tuNgay)) {
+            toast('Đến ngày phải lớn hơn hoặc bằng từ ngày', true);
+            return null;
+        }
+        if (tuNgay) params.set('tuNgay', withSeconds(tuNgay));
+        if (denNgay) params.set('denNgay', withSeconds(denNgay));
+        if (includePaging) {
+            params.set('page', state.page);
+            params.set('size', state.size);
+        }
+        return params;
+    }
+
+    function syncFilterDateLimits() {
+        const start = filterForm.elements.tuNgay;
+        const end = filterForm.elements.denNgay;
+        end.min = start.value || '';
+        start.max = end.value || '';
+        if (start.value && end.value && new Date(end.value) < new Date(start.value)) {
+            end.value = start.value;
+        }
+    }
+
+    function openNativePicker(input) {
+        if (!input) return;
+        if (input.type !== 'text') {
+            input.focus();
+            if (typeof input.showPicker === 'function') {
+                try { input.showPicker(); } catch {}
+            }
+            return;
+        }
+
+        const picker = document.createElement('input');
+        const rect = input.getBoundingClientRect();
+        picker.type = 'datetime-local';
+        picker.value = normalizeDateTime(input.value);
+        picker.style.position = 'fixed';
+        picker.style.left = `${Math.max(0, rect.right - 34)}px`;
+        picker.style.top = `${Math.max(0, rect.top + 2)}px`;
+        picker.style.width = '32px';
+        picker.style.height = '32px';
+        picker.style.opacity = '0.01';
+        picker.style.zIndex = '3000';
+        picker.style.border = '0';
+        picker.style.padding = '0';
+        document.body.appendChild(picker);
+
+        const cleanup = () => setTimeout(() => picker.remove(), 200);
+        const commit = () => {
+            if (picker.value) {
+                input.value = formatDateTimeInput(picker.value);
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            cleanup();
+        };
+
+        picker.addEventListener('change', commit);
+        picker.addEventListener('keydown', event => {
+            if (event.key === 'Escape') cleanup();
+        });
+        picker.addEventListener('blur', cleanup, { once: true });
+        picker.focus();
+        if (typeof picker.showPicker === 'function') {
+            try { picker.showPicker(); } catch {}
+        }
+    }
+
+    function isValidDateTimeLocal(value) {
+        const normalized = normalizeDateTime(value);
+        return Boolean(normalized) && !Number.isNaN(new Date(normalized).getTime());
+    }
+
+    function withSeconds(value) {
+        const normalized = normalizeDateTime(value);
+        return normalized && normalized.length === 16 ? `${normalized}:00` : normalized;
+    }
+
+    function render() {
+        const shown = state.items.length;
+        $('recordInfo').textContent = `Hiển thị ${shown} / tổng ${state.totalElements} bản ghi`;
+        $('pageInput').value = state.page + 1;
+        $('prevBtn').disabled = state.page <= 0;
+        $('nextBtn').disabled = state.page >= state.totalPages - 1;
+        $('empty').hidden = shown > 0;
+        $('rows').innerHTML = state.items.map((item, index) => {
+            const status = progressStatus(item);
+            return `
+            <tr>
+                <td>${state.page * state.size + index + 1}</td>
+                <td>${esc(item.maPgg)}</td>
+                <td>${esc(item.tenPgg)}</td>
+                <td><span class="badge public">Công khai</span></td>
+                <td>${formatDiscount(item)}</td>
+                <td>${money(item.dieuKienDonHang)}</td>
+                <td>${item.soLuong ?? 0}</td>
+                <td>${dateTime(item.ngayBatDau)}</td>
+                <td>${dateTime(item.ngayKetThuc)}</td>
+                <td><span class="badge ${status.cls}">${status.text}</span></td>
+                <td>
+                    <div class="actions">
+                        <button class="btn icon edit-btn" type="button" onclick="openForm(${item.id})">✎</button>
+                        <label class="switch"><input type="checkbox" ${item.trangThai ? 'checked' : ''} onchange="toggleStatus(${item.id})"><span></span></label>
+                    </div>
+                </td>
+            </tr>
+        `}).join('');
+    }
+
+    function progressStatus(item) {
+        const now = new Date();
+        const start = item.ngayBatDau ? new Date(item.ngayBatDau) : null;
+        const end = item.ngayKetThuc ? new Date(item.ngayKetThuc) : null;
+        if (end && now > end) return {text: 'Kết thúc', cls: 'off'};
+        if (item.trangThai) return {text: 'Đang diễn ra', cls: 'on'};
+        if (start && now < start) return {text: 'Sắp diễn ra', cls: 'wait'};
+        if (!item.trangThai) return {text: 'Kết thúc', cls: 'off'};
+        return {text: 'Đang diễn ra', cls: 'on'};
+    }
+
+    let filterTimer;
+    function debounceFilter() {
+        clearTimeout(filterTimer);
+        filterTimer = setTimeout(() => loadData(0), 300);
+    }
+
+    async function openForm(id) {
+        form.reset();
+        form.elements.trangThai.value = id ? 'true' : 'false';
+        form.elements.loaiGiam.value = 'PHAN_TRAM';
+        form.elements.dieuKienDonHang.value = 0;
+        form.elements.giaTriToiDa.disabled = false;
+        $('formTitle').textContent = id ? 'Cập nhật phiếu giảm giá' : 'Thêm phiếu giảm giá';
+        if (id) {
+            const item = state.items.find(v => v.id === id) || await (await fetch(`${API}/${id}`)).json();
+            Object.entries(item).forEach(([key, value]) => {
+                if (form.elements[key]) form.elements[key].value = value ?? '';
+            });
+            form.elements.ngayBatDau.value = toInputDateTime(item.ngayBatDau);
+            form.elements.ngayKetThuc.value = toInputDateTime(item.ngayKetThuc);
+            form.elements.trangThai.value = String(Boolean(item.trangThai));
+        } else {
+            setDefaultFutureDates();
+        }
+        syncDiscountSuffix();
+        syncVoucherDateLimits();
+        $('listView').classList.add('hidden');
+        $('formView').classList.remove('hidden');
+    }
+
+    function showList() {
+        $('formView').classList.add('hidden');
+        $('listView').classList.remove('hidden');
+    }
+
+    async function saveVoucher(event) {
+        event.preventDefault();
+        const data = Object.fromEntries(new FormData(form).entries());
+        const id = data.id;
+        delete data.id;
+        ['giaTri','giaTriToiDa','dieuKienDonHang'].forEach(key => data[key] = data[key] ? Number(data[key]) : null);
+        data.soLuong = data.soLuong ? Number(data.soLuong) : 0;
+        data.trangThai = data.trangThai === 'true';
+        data.ngayBatDau = withSeconds(data.ngayBatDau || '');
+        data.ngayKetThuc = withSeconds(data.ngayKetThuc || '');
+        data.khachHangIds = null;
+        Object.keys(data).forEach(key => { if (data[key] === '') data[key] = null; });
+        data.maPgg = data.maPgg ? String(data.maPgg).trim().toUpperCase() : null;
+        data.tenPgg = data.tenPgg ? String(data.tenPgg).trim().replace(/\s+/g, ' ') : null;
+        const validationError = validateVoucherPayload(data);
+        if (validationError) return toast(validationError, true);
+        if (!await confirmAction('Bạn có chắc chắn muốn lưu phiếu giảm giá này không?')) return;
+        const response = await fetch(id ? `${API}/${id}` : API, {
+            method: id ? 'PUT' : 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        if (!response.ok) return toast(await readError(response), true);
+        toast('Đã lưu phiếu giảm giá');
+        showList();
+        await loadData(0);
+    }
+
+    function validateVoucherPayload(data) {
+        const code = String(data.maPgg || '').trim();
+        if (code && !/^[A-Za-z0-9_-]{3,30}$/.test(code)) return 'Mã phiếu chỉ được gồm chữ, số, gạch ngang/gạch dưới và dài 3-30 ký tự';
+        const name = String(data.tenPgg || '').trim();
+        if (!name) return 'Vui lòng nhập tên phiếu';
+        if (name.length < 3 || name.length > 100) return 'Tên phiếu phải từ 3 đến 100 ký tự';
+        if (!['PHAN_TRAM','TIEN_MAT'].includes(data.loaiGiam)) return 'Loại giảm không hợp lệ';
+        if (!Number.isFinite(data.giaTri) || data.giaTri <= 0) return 'Giá trị giảm phải lớn hơn 0';
+        if (data.loaiGiam === 'PHAN_TRAM' && data.giaTri > 100) return 'Giá trị phần trăm phải lớn hơn 0 và không vượt quá 100';
+        if (data.loaiGiam === 'PHAN_TRAM' && (!Number.isFinite(data.giaTriToiDa) || data.giaTriToiDa <= 0)) return 'Vui lòng nhập giảm tối đa lớn hơn 0 khi giảm theo phần trăm';
+        if (data.loaiGiam === 'TIEN_MAT' && !Number.isInteger(data.giaTri)) return 'Giá trị giảm tiền mặt phải là số nguyên';
+        if (data.giaTriToiDa != null && (!Number.isFinite(data.giaTriToiDa) || data.giaTriToiDa < 0 || !Number.isInteger(data.giaTriToiDa))) return 'Giảm tối đa phải là số nguyên không âm';
+        if (data.loaiGiam === 'TIEN_MAT' && data.giaTriToiDa != null && data.giaTriToiDa > data.giaTri) return 'Giảm tối đa không được lớn hơn giá trị giảm tiền mặt';
+        if (data.dieuKienDonHang != null && (!Number.isFinite(data.dieuKienDonHang) || data.dieuKienDonHang < 0 || !Number.isInteger(data.dieuKienDonHang))) return 'Đơn hàng tối thiểu phải là số nguyên không âm';
+        if (data.loaiGiam === 'TIEN_MAT' && data.dieuKienDonHang != null && data.giaTri > data.dieuKienDonHang) return 'Giá trị giảm tiền mặt không được lớn hơn đơn hàng tối thiểu';
+        if (!Number.isInteger(data.soLuong) || data.soLuong <= 0) return 'Số lượng phải lớn hơn 0';
+        if (!data.ngayBatDau || !data.ngayKetThuc) return 'Vui lòng nhập thời gian bắt đầu và kết thúc';
+        const start = new Date(data.ngayBatDau);
+        const end = new Date(data.ngayKetThuc);
+        if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 'Thời gian bắt đầu hoặc kết thúc không hợp lệ';
+        if (end <= start) return 'Ngày kết thúc phải sau ngày bắt đầu';
+        return '';
+    }
+
+    async function toggleStatus(id) {
+        const item = state.items.find(v => v.id === id);
+        const nextStatus = !(item && item.trangThai);
+        const message = nextStatus
+            ? 'Bạn có chắc chắn muốn bật phiếu giảm giá này không?'
+            : 'Bạn có chắc chắn muốn tắt phiếu giảm giá này không?';
+        if (!await confirmAction(message)) {
+            await loadData(state.page);
+            return;
+        }
+        const response = await fetch(`${API}/${id}/trang-thai`, {method: 'PATCH'});
+        if (!response.ok) return toast(await readError(response), true);
+        await loadData(0);
+    }
+
+    function setDefaultFutureDates() {
+        const start = new Date();
+        start.setDate(start.getDate() + 1);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(start);
+        end.setDate(end.getDate() + 7);
+        end.setHours(23, 59, 0, 0);
+        form.elements.ngayBatDau.value = toDateTimeLocal(start);
+        form.elements.ngayKetThuc.value = toDateTimeLocal(end);
+    }
+
+    async function exportExcel() {
+        if (!await confirmAction('Bạn có chắc chắn muốn xuất Excel danh sách phiếu giảm giá không?')) return;
+        const params = currentParams(false);
+        if (!params) return;
+        params.set('page', 0);
+        params.set('size', 10000);
+        const response = await fetch(`${API}?${params}`);
+        if (!response.ok) return toast(await readError(response), true);
+        const data = await response.json();
+        const items = data.content || [];
+        if (!items.length) return toast('Không có dữ liệu để xuất', true);
+        const rows = [
+            ['STT', 'Mã giảm giá', 'Tên giảm giá', 'Loại phiếu', 'Loại giảm', 'Giá trị giảm', 'Đơn hàng tối thiểu', 'Số lượng', 'Ngày bắt đầu', 'Ngày kết thúc', 'Trạng thái']
+        ];
+        items.forEach((item, index) => {
+            rows.push([
+                index + 1,
+                item.maPgg || '',
+                item.tenPgg || '',
+                'Công khai',
+                item.loaiGiam === 'PHAN_TRAM' ? 'Giảm %' : 'Giảm tiền',
+                item.loaiGiam === 'PHAN_TRAM' ? `${item.giaTri ?? 0}%` : Number(item.giaTri || 0),
+                Number(item.dieuKienDonHang || 0),
+                item.soLuong ?? 0,
+                dateTime(item.ngayBatDau),
+                dateTime(item.ngayKetThuc),
+                progressStatus(item).text
+            ]);
+        });
+        const table = rows.map(row => `<tr>${row.map(cell => `<td>${esc(cell)}</td>`).join('')}</tr>`).join('');
+        const html = `\uFEFF<html><head><meta charset="UTF-8"></head><body><table border="1">${table}</table></body></html>`;
+        const blob = new Blob([html], {type: 'application/vnd.ms-excel;charset=utf-8;'});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `phieu-giam-gia-${new Date().toISOString().slice(0, 10)}.xls`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        toast('Đã xuất Excel');
+    }
+
+    function syncDiscountSuffix() {
+        const isPercent = form.elements.loaiGiam.value === 'PHAN_TRAM';
+        $('discountSuffix').textContent = isPercent ? '%' : 'VND';
+        form.elements.giaTri.step = isPercent ? '0.01' : '1000';
+        form.elements.giaTri.max = isPercent ? '100' : '';
+    }
+
+    function syncVoucherDateLimits() {
+        const start = form.elements.ngayBatDau;
+        const end = form.elements.ngayKetThuc;
+        end.min = start.value || '';
+        start.max = end.value || '';
+    }
+
+    function formatDiscount(item) {
+        return item.loaiGiam === 'PHAN_TRAM' ? `${item.giaTri ?? 0}%` : money(item.giaTri);
+    }
+    function money(value) { return value == null ? '0 đ' : Number(value).toLocaleString('vi-VN') + ' đ'; }
+    function dateTime(value) {
+        if (!value) return '';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return String(value).replace('T', ' ').substring(0, 16);
+        const pad = number => String(number).padStart(2, '0');
+        return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+    function toInputDateTime(value) { return formatDateTimeInput(value); }
+    function toDateTimeLocal(date) {
+        const pad = value => String(value).padStart(2, '0');
+        return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+    function normalizeDateTime(value) {
+        if (!value) return '';
+        const text = String(value).trim();
+        if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/.test(text)) return text.slice(0, 16);
+        const match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?$/);
+        if (!match) return '';
+        const [, day, month, year, hour = '00', minute = '00'] = match;
+        const pad = number => String(number).padStart(2, '0');
+        return `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}`;
+    }
+    function formatDateTimeInput(value) {
+        if (!value) return '';
+        const normalized = normalizeDateTime(value) || String(value).substring(0, 16);
+        const match = normalized.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+        return match ? `${match[3]}/${match[2]}/${match[1]} ${match[4]}:${match[5]}` : '';
+    }
+    async function readError(response) { const text = await response.text(); try { return JSON.parse(text).message || text; } catch { return text || 'Có lỗi xảy ra'; } }
+    function confirmAction(message) {
+        return new Promise(resolve => {
+            const backdrop = $('confirmBackdrop');
+            const messageEl = $('confirmMessage');
+            const ok = $('confirmOk');
+            const cancel = $('confirmCancel');
+            messageEl.textContent = message;
+            backdrop.classList.add('show');
+            backdrop.setAttribute('aria-hidden', 'false');
+            ok.focus();
+            const cleanup = result => {
+                backdrop.classList.remove('show');
+                backdrop.setAttribute('aria-hidden', 'true');
+                ok.removeEventListener('click', onOk);
+                cancel.removeEventListener('click', onCancel);
+                backdrop.removeEventListener('click', onBackdrop);
+                document.removeEventListener('keydown', onKeydown);
+                resolve(result);
+            };
+            const onOk = () => cleanup(true);
+            const onCancel = () => cleanup(false);
+            const onBackdrop = event => { if (event.target === backdrop) cleanup(false); };
+            const onKeydown = event => { if (event.key === 'Escape') cleanup(false); };
+            ok.addEventListener('click', onOk);
+            cancel.addEventListener('click', onCancel);
+            backdrop.addEventListener('click', onBackdrop);
+            document.addEventListener('keydown', onKeydown);
+        });
+    }
+    function toast(message, error = false) { const el = document.createElement('div'); el.className = `toast ${error ? 'error' : 'success'}`; el.textContent = message; document.body.appendChild(el); setTimeout(() => el.remove(), 3500); }
+    function esc(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
+</script>
+</body>
+</html>
+
+
+
