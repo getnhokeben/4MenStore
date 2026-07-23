@@ -3,439 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4MenStore | Trang chủ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="/js/app-shell.js" defer></script>
+    <title>Trang chủ | 4MenStore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
     <style>
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
+        :root {
+            --bg: #f2f5f9;
+            --line: #e3eaf2;
+            --ink: #263a56;
+            --muted: #74839a;
+            --navy: #102a56;
+            --navy-hover:#173d78;
+            --navy-2: #1a4a8a;
+            --white: #ffffff;
+        }
+
+        * {
             box-sizing: border-box;
         }
-        :root {
-            --sw: 240px;
-            --sbg: #2b1d0e;
-            --sactive: #7a5230;
-            --shover: rgba(255, 255, 255, .06);
-            --gold: #c8a474;
-            --bg: #f5f5f5;
-            --white: #fff;
-            --border: #e8e8e8;
-            --text: #1a1a1a;
-            --muted: #888;
-            --r: 12px;
-            --sh: 0 2px 8px rgba(0, 0, 0, .08);
-        }
+
         body {
-            font-family: "Inter", sans-serif;
+            margin: 0;
             background: var(--bg);
-            color: var(--text);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* ─── SIDEBAR ─── */
-        .sidebar {
-            width: var(--sw);
-            background: var(--sbg);
-            position: fixed;
-            inset: 0 auto 0 0;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            z-index: 100;
-            scrollbar-width: none;
-        }
-        .sidebar::-webkit-scrollbar {
-            display: none;
-        }
-        .sb-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 18px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, .08);
-        }
-        .sb-logo img {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(200, 164, 116, .35);
-        }
-        .sb-nav {
-            padding: 6px 0;
-            flex: 1;
-        }
-
-        /* nav rows */
-        .ni {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            padding: 10px 16px;
-            color: rgba(255, 255, 255, .68);
-            cursor: pointer;
+            color: var(--ink);
+            font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
             font-size: 13px;
-            font-weight: 500;
-            text-decoration: none;
-            border-left: 3px solid transparent;
-            transition: all .14s;
-            user-select: none;
-        }
-        .ni .ico {
-            font-size: 15px;
-            width: 18px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-        .ni .arr {
-            margin-left: auto;
-            font-size: 11px;
-            transition: transform .2s;
-            opacity: .45;
-        }
-        .ni:hover {
-            background: var(--shover);
-            color: #fff;
-        }
-        .ni.active {
-            background: var(--sactive);
-            color: #fff;
-            border-left-color: var(--gold);
-        }
-        .ni.sub-active {
-            color: var(--gold);
+            font-weight: 400;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* submenu */
-        .submenu {
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height .25s ease;
+        .page {
+            padding: 26px;
         }
-        .submenu.open {
-            max-height: 400px;
-        }
-        .sub-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px 8px 40px;
-            color: rgba(255, 255, 255, .55);
-            font-size: 12.5px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all .12s;
-            border-left: 3px solid transparent;
-        }
-        .sub-item:hover {
+
+        .hero {
+            margin-bottom: 18px;
+            padding: 24px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--navy), var(--navy-2));
             color: #fff;
-            background: var(--shover);
-        }
-        .sub-item.active {
-            color: var(--gold);
-            font-weight: 600;
-            border-left-color: var(--gold);
+            box-shadow: 0 14px 34px rgba(16, 42, 86, .22);
         }
 
-        /* ─── MAIN ─── */
-        .main {
-            margin-left: var(--sw);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
+        .hero-title {
+            margin: 0 0 6px;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
         }
 
-        /* topbar */
-        .topbar {
-            background: var(--white);
-            border-bottom: 1px solid var(--border);
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 0 24px;
+        .hero-sub {
+            color: rgba(255, 255, 255, .84);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 14px;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-        .tb-label {
-            font-size: 13px;
-            color: var(--muted);
-            font-weight: 500;
-        }
-        .tb-bell {
-            font-size: 18px;
-            color: var(--muted);
-            cursor: pointer;
-            position: relative;
-        }
-        .badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            width: 8px;
-            height: 8px;
-            background: #ef4444;
-            border-radius: 50%;
-        }
-        .tb-avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            background: var(--gold);
-            color: #fff;
-            font-weight: 700;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
         }
 
-        /* content */
-        .content {
-            padding: 22px 26px;
-            flex: 1;
-        }
-
-        .spin {
-            display: inline-block;
-            animation: rot .7s linear infinite;
-        }
-        @keyframes rot {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* welcome */
-        .welcome {
+        .card {
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
             background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: var(--r);
-            padding: 24px 28px;
-            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(40, 66, 101, .06);
+        }
+
+        .card-title {
+            margin-bottom: 10px;
+            color: #314763;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .metric {
+            color: var(--navy);
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+        }
+
+        .metric-label {
+            margin-top: 4px;
+            color: var(--muted);
+        }
+
+        .quick-list {
+            display: grid;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .quick-link {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: var(--sh);
-        }
-        .wt h2 {
-            font-size: 18px;
+            min-height: 42px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fff;
+            color: #314763;
+            text-decoration: none;
             font-weight: 700;
-            margin-bottom: 6px;
-        }
-        .wt p {
-            font-size: 13px;
-            color: var(--muted);
-            line-height: 1.6;
-        }
-        .wl img {
-            width: 108px;
-            height: 108px;
-            object-fit: contain;
-            opacity: .88;
+            transition: .16s ease;
         }
 
-        /* feature grid */
-        .fg {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 13px;
+        .quick-link:hover {
+            border-color: #b8c8db;
+            background: #f9fbfd;
         }
-        .fc {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: var(--r);
-            padding: 15px 17px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: inherit;
-            box-shadow: var(--sh);
-            transition: all .17s;
-            cursor: pointer;
+
+        .card-text {
+            color: #4f6078;
+            line-height: 1.6;
         }
-        .fc:hover {
-            border-color: var(--gold);
-            box-shadow: 0 4px 14px rgba(200, 164, 116, .16);
-            transform: translateY(-1px);
-        }
-        .fi {
-            width: 40px;
-            height: 40px;
-            border-radius: 9px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        .fi-b {
-            background: #eff6ff;
-        }
-        .fi-g {
-            background: #f0fdf4;
-        }
-        .fi-o {
-            background: #fff7ed;
-        }
-        .fi-p {
-            background: #fdf2f8;
-        }
-        .fi-v {
-            background: #faf5ff;
-        }
-        .fi-t {
-            background: #f0fdfa;
-        }
-        .ft {
-            font-size: 13px;
+
+        .loading-box,
+        .empty-box {
+            padding: 22px;
+            border: 1px dashed #cfd9e6;
+            border-radius: 12px;
+            background: #fff;
+            color: #71819a;
             font-weight: 700;
-            margin-bottom: 2px;
+            text-align: center;
         }
-        .fd {
-            font-size: 12px;
-            color: var(--muted);
+
+        @media (max-width: 1100px) {
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 650px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page {
+                padding: 14px;
+            }
+
+            .hero {
+                padding: 18px;
+            }
+
+            .hero-title {
+                font-size: 21px;
+            }
         }
     </style>
 </head>
 <body>
+<aside class="sidebar"></aside>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-    <div class="sb-logo">
-        <img src="/images/logo-4menstore.jpg" alt="4MenStore">
-    </div>
-    <nav class="sb-nav">
-        <a href="/san-pham/trang-chu" class="ni active" id="nav-home"><span class="ico">🏠</span> Trang chủ</a>
-        <a href="/ban-hang-tai-quay" class="ni"><span class="ico">🛒</span> Bán hàng tại quầy</a>
-        <a href="/hoa-don" class="ni"><span class="ico">🧾</span> Quản lý hóa đơn</a>
-
-        <!-- Quản lý sản phẩm -->
-        <div class="ni" id="nav-sp-toggle" onclick="toggleSP()">
-            <span class="ico">📦</span> Quản lý sản phẩm
-            <span class="arr" id="arr-sp">▶</span>
-        </div>
-        <div class="submenu" id="sub-sp">
-            <a href="/san-pham/quan-ly" class="sub-item">Sản phẩm</a>
-            <a href="/san-pham/bien-the" class="sub-item">Biến thể sản phẩm</a>
-        </div>
-
-        <!-- Thuộc tính -->
-        <div class="ni" id="nav-tt-toggle" onclick="toggleTT()">
-            <span class="ico">📋</span> Thuộc tính
-            <span class="arr" id="arr-tt">▶</span>
-        </div>
-        <div class="submenu" id="sub-tt">
-            <a href="/thuoc-tinh/loai-ao" class="sub-item">Loại áo</a>
-            <a href="/thuoc-tinh/kich-co" class="sub-item">Kích cỡ</a>
-            <a href="/thuoc-tinh/mau-sac" class="sub-item">Màu sắc</a>
-            <a href="/thuoc-tinh/phong-cach-mac" class="sub-item">Phong cách mặc</a>
-            <a href="/thuoc-tinh/kieu-dang" class="sub-item">Kiểu dáng</a>
-            <a href="/thuoc-tinh/xuat-xu" class="sub-item">Xuất xứ</a>
-            <a href="/thuoc-tinh/chat-lieu" class="sub-item">Chất liệu</a>
-        </div>
-
-        <a href="#" class="ni"><span class="ico">🏷️</span> Quản lý giảm giá <span class="arr">▶</span></a>
-        <a href="#" class="ni"><span class="ico">👤</span> Tài khoản <span class="arr">▶</span></a>
-    </nav>
-</aside>
-
-<!-- MAIN -->
-<div class="main">
-    <header class="topbar">
-        <span class="tb-label">Quản trị hệ thống</span>
-        <span class="tb-bell">🔔<span class="badge"></span></span>
-        <div class="tb-avatar">T</div>
-    </header>
-
-    <div class="content">
-
-        <!-- WELCOME -->
-        <div class="welcome">
-            <div class="wt">
-                <h2>Chào mừng đến với 4MenStore, admin@gmail.com! 👋</h2>
-                <p>Nền tảng quản lý thời trang nam 4MenStore tinh tế.<br>Bắt đầu công việc ngay hôm nay!</p>
+<main class="main">
+    <section class="page">
+        <section class="hero">
+            <h1 class="hero-title" id="heroTitle">Xin chào</h1>
+            <div class="hero-sub" id="heroSub">
+                Chào mừng bạn quay lại hệ thống quản trị 4MenStore.
             </div>
-            <div class="wl"><img src="/images/logo-4menstore.jpg" alt="4MenStore"></div>
-        </div>
+        </section>
 
-        <!-- FEATURES -->
-        <div class="fg">
-            <a href="/ban-hang-tai-quay" class="fc">
-                <div class="fi fi-g">🛒</div>
-                <div>
-                    <div class="ft">Bán hàng</div>
-                    <div class="fd">Tạo đơn tại quầy</div>
-                </div>
-            </a>
-            <a href="/san-pham/quan-ly" class="fc">
-                <div class="fi fi-o">📦</div>
-                <div>
-                    <div class="ft">Sản phẩm</div>
-                    <div class="fd">Thêm sản phẩm mới</div>
-                </div>
-            </a>
-            <a href="#" class="fc">
-                <div class="fi fi-p">🧾</div>
-                <div>
-                    <div class="ft">Hóa đơn</div>
-                    <div class="fd">Quản lý đơn hàng</div>
-                </div>
-            </a>
-            <a href="#" class="fc">
-                <div class="fi fi-v">🎫</div>
-                <div>
-                    <div class="ft">Voucher</div>
-                    <div class="fd">Tạo phiếu giảm giá</div>
-                </div>
-            </a>
-            <a href="#" class="fc">
-                <div class="fi fi-t">👥</div>
-                <div>
-                    <div class="ft">Nhân viên</div>
-                    <div class="fd">Quản lý nhân sự</div>
-                </div>
-            </a>
-        </div>
-
-    </div>
-</div>
+        <section id="dashboardGrid" class="grid">
+            <div class="loading-box" style="grid-column: 1 / -1;">
+                Đang tải dữ liệu người dùng...
+            </div>
+        </section>
+    </section>
+</main>
 
 <script>
-    /* ─── Toggle submenu ─── */
-    function toggleSP() {
-        const sub = document.getElementById('sub-sp');
-        const arr = document.getElementById('arr-sp');
-        const toggle = document.getElementById('nav-sp-toggle');
-        const isOpen = sub.classList.contains('open');
-        sub.classList.toggle('open', !isOpen);
-        arr.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
-        toggle.classList.toggle('sub-active', !isOpen);
+    document.addEventListener('DOMContentLoaded', initDashboard);
+
+    async function initDashboard() {
+        const user = await getCurrentEmployee();
+
+        if (!user) {
+            window.location.href = '/dang-nhap';
+            return;
+        }
+
+        const isManager = isManagerRole(user.vaiTro);
+
+        document.getElementById('heroTitle').textContent =
+            `Xin chào, ${user.hoTen || 'bạn'}`;
+
+        document.getElementById('heroSub').textContent = isManager
+            ? 'Bạn đang đăng nhập với quyền quản lý. Hệ thống hiển thị đầy đủ các chức năng quản trị.'
+            : 'Bạn đang đăng nhập với quyền nhân viên. Hệ thống chỉ hiển thị các chức năng được phép sử dụng.';
+
+        renderCards(isManager);
     }
 
-    function toggleTT() {
-        const sub = document.getElementById('sub-tt');
-        const arr = document.getElementById('arr-tt');
-        const toggle = document.getElementById('nav-tt-toggle');
-        const isOpen = sub.classList.contains('open');
-        sub.classList.toggle('open', !isOpen);
-        arr.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
-        toggle.classList.toggle('sub-active', !isOpen);
+    async function getCurrentEmployee() {
+        try {
+            const response = await fetch('/api/nhanvien/auth/me', {
+                credentials: 'same-origin'
+            });
+
+            if (!response.ok) {
+                return null;
+            }
+
+            return await response.json();
+        } catch {
+            return null;
+        }
     }
 
-    // Tự động mở submenu "Thuộc tính" khi load (nếu muốn)
-    // document.addEventListener('DOMContentLoaded', () => {
-    //     toggleTT(); // mở sẵn
-    // });
+    function renderCards(isManager) {
+        const cards = isManager
+            ? [
+                cardMetric('Tổng quan hệ thống', 'Manager mode'),
+                cardLinks('Đi nhanh', [
+                    ['Trang chủ', '/san-pham/trang-chu'],
+                    ['Bán hàng tại quầy', '/ban-hang-tai-quay'],
+                    ['Quản lý hóa đơn', '/hoa-don'],
+                    ['Chat hỗ trợ', '/chat-ho-tro'],
+                    ['Quản lý sản phẩm', '/san-pham/quan-ly'],
+                    ['Khách hàng', '/khach-hang'],
+                    ['Nhân viên', '/nhan-vien'],
+                    ['Thống kê', '/thong-ke']
+                ]),
+                cardText(
+                    'Quyền quản lý',
+                    'Bạn có thể quản lý nhân sự, sản phẩm, khách hàng, chương trình giảm giá, thống kê và các cấu hình vận hành của hệ thống.'
+                ),
+                cardText(
+                    'Nhắc việc',
+                    'Theo dõi doanh thu, tồn kho, đơn hàng chờ xử lý và các chương trình giảm giá đang hoạt động.'
+                )
+            ]
+            : [
+                cardMetric('Màn hình làm việc', 'Staff mode'),
+                cardLinks('Đi nhanh', [
+                    ['Trang chủ', '/trang-chu'],
+                    ['Bán hàng tại quầy', '/ban-hang-tai-quay'],
+                    ['Quản lý hóa đơn', '/hoa-don'],
+                    ['Chat hỗ trợ', '/chat-ho-tro'],
+                    ['Khách hàng', '/khach-hang']
+                ]),
+                cardText(
+                    'Quyền nhân viên',
+                    'Bạn chỉ thấy các màn được cấp quyền, không hiển thị quản trị nhân viên, thống kê, phiếu giảm giá và đặt giảm giá.'
+                ),
+                cardText(
+                    'Nhắc việc',
+                    'Ưu tiên xử lý bán hàng, cập nhật hóa đơn và hỗ trợ khách hàng trong ca làm việc.'
+                )
+            ];
+
+        document.getElementById('dashboardGrid').innerHTML = cards.join('');
+    }
+
+    function cardMetric(title, value) {
+        return `
+            <article class="card">
+                <div class="card-title">${title}</div>
+                <div class="metric">${value}</div>
+                <div class="metric-label">Giao diện tự động theo vai trò đang nhập</div>
+            </article>
+        `;
+    }
+
+    function cardLinks(title, links) {
+        return `
+            <article class="card">
+                <div class="card-title">${title}</div>
+                <div class="quick-list">
+                    ${links.map(([label, href]) => `
+                        <a class="quick-link" href="${href}">
+                            <span>${label}</span>
+                            <span>→</span>
+                        </a>
+                    `).join('')}
+                </div>
+            </article>
+        `;
+    }
+
+    function cardText(title, text) {
+        return `
+            <article class="card">
+                <div class="card-title">${title}</div>
+                <div class="card-text">${text}</div>
+            </article>
+        `;
+    }
+
+    function isManagerRole(role) {
+        const value = String(role || '')
+            .trim()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase();
+
+        if (!value) {
+            return false;
+        }
+
+        return !value.includes('nhan vien')
+            && !value.includes('nhanvien')
+            && !value.includes('staff')
+            && !value.includes('employee');
+    }
 </script>
 </body>
 </html>

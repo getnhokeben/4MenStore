@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết quả quét QR Demo</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6fa;
+            color: #1d2b3a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .result-card {
+            width: min(420px, 100%);
+            padding: 34px 26px;
+            text-align: center;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 18px 50px rgba(25, 47, 73, 0.14);
+        }
+
+        .result-icon {
+            display: grid;
+            place-items: center;
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 20px;
+            color: #fff;
+            background: #17a673;
+            border-radius: 50%;
+            font-size: 40px;
+            font-weight: 800;
+        }
+
+        h1 { margin: 0 0 10px; font-size: 25px; }
+        p { margin: 0; color: #68788a; font-size: 15px; line-height: 1.6; }
+        .demo-note { margin-top: 18px; color: #0875aa; font-size: 13px; font-weight: 700; }
+
+        .result-card.invalid .result-icon { background: #d9485f; }
+        .result-card.invalid .demo-note { color: #d9485f; }
+    </style>
+</head>
+<body>
+<main class="result-card" id="resultCard">
+    <div class="result-icon" id="resultIcon" aria-hidden="true">✓</div>
+    <h1 id="resultTitle">Đã xác nhận thanh toán</h1>
+    <p id="resultMessage">Đơn hàng trên máy tính sẽ tự động cập nhật. Bạn có thể đóng trang này.</p>
+    <p class="demo-note" id="demoNote">Giao dịch mô phỏng — không phát sinh tiền thật</p>
+</main>
+
+<script>
+    (() => {
+        const success = new URLSearchParams(window.location.search).get('result') === 'success';
+        if (success) return;
+
+        document.getElementById('resultCard').classList.add('invalid');
+        document.getElementById('resultIcon').textContent = '!';
+        document.getElementById('resultTitle').textContent = 'Không thể xác nhận';
+        document.getElementById('resultMessage').textContent =
+            'Mã QR không hợp lệ hoặc đã hết hạn. Hãy tạo lại giao dịch trên máy tính.';
+        document.getElementById('demoNote').textContent = 'Không có khoản thanh toán nào được ghi nhận';
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,1226 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f5f9">
+    <title>Thanh toán VNPay</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        :root {
+            --vnpay-blue: #006e9f;
+            --vnpay-blue-dark: #005c88;
+            --vnpay-cyan: #1595a4;
+            --ink: #20252b;
+            --muted: #65707d;
+            --line: #e2e6eb;
+            --soft: #f5f7fa;
+            --page: #f1f3f7;
+            --danger: #cf2233;
+        }
+
+        html { min-width: 320px; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            color: var(--ink);
+            background: var(--page);
+            font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        button,
+        input { font: inherit; }
+
+        button { -webkit-tap-highlight-color: transparent; }
+
+        .language-bar {
+            width: min(1120px, calc(100% - 32px));
+            height: 68px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .language-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 0;
+            color: #333a43;
+            background: transparent;
+            border: 0;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .language-button svg {
+            width: 25px;
+            height: 17px;
+            border: 1px solid #d9dce0;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+        }
+
+        .payment-shell {
+            width: min(1120px, calc(100% - 32px));
+            margin: 0 auto 42px;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid #e4e7eb;
+            border-radius: 7px;
+            box-shadow: 0 3px 12px rgba(31, 42, 55, .18);
+        }
+
+        .payment-header {
+            min-height: 88px;
+            padding: 17px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .vnpay-logo {
+            width: 156px;
+            height: 50px;
+            display: block;
+            flex: 0 0 auto;
+        }
+
+        .countdown {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #646a72;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        .countdown strong {
+            min-width: 42px;
+            padding: 10px 7px;
+            color: #fff;
+            background: #24282d;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 20px;
+            font-variant-numeric: tabular-nums;
+            box-shadow: inset 0 -1px 0 rgba(255,255,255,.08);
+        }
+
+        .countdown i {
+            margin: 0 -3px;
+            color: #282d32;
+            font-style: normal;
+            font-weight: 800;
+        }
+
+        .payment-body {
+            padding: 32px 30px 24px;
+            display: grid;
+            grid-template-columns: 405px minmax(0, 1fr);
+            gap: 55px;
+        }
+
+        .order-panel {
+            min-height: 510px;
+            padding: 32px 30px;
+            align-self: start;
+            background: #f4f6f9;
+        }
+
+        .order-panel h1 {
+            margin: 0;
+            color: #252a30;
+            font-size: 25px;
+            line-height: 1.35;
+            font-weight: 650;
+        }
+
+        .order-divider {
+            height: 1px;
+            margin: 30px 0 26px;
+            background: #d9dde3;
+        }
+
+        .order-row { margin-top: 28px; }
+        .order-row:first-of-type { margin-top: 0; }
+
+        .order-row span {
+            display: block;
+            margin-bottom: 6px;
+            color: #69727e;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .order-row strong {
+            display: block;
+            color: #2b3036;
+            font-size: 18px;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+        }
+
+        .order-row strong span {
+            display: inline;
+            margin-bottom: 0;
+            color: inherit;
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        .order-row .amount-line {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: nowrap;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .order-row .primary-amount {
+            color: #006f9f;
+            font-size: 30px;
+            line-height: 1.25;
+            letter-spacing: -.3px;
+        }
+
+        .currency {
+            display: inline !important;
+            margin-left: 0;
+            font-size: 13px;
+            line-height: 1;
+            vertical-align: baseline;
+        }
+
+        .checkout-panel {
+            min-width: 0;
+            padding: 1px 0 0;
+        }
+
+        .checkout-panel h2 {
+            margin: 0 0 38px;
+            text-align: center;
+            color: #202328;
+            font-size: 28px;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+
+        .card-type {
+            padding: 0 0 15px;
+            border-bottom: 2px solid var(--vnpay-cyan);
+            text-align: center;
+            color: #272c32;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .international-fields {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 12px;
+        }
+
+        .international-fields.active { display: grid; }
+        .international-fields .field { min-width: 0; }
+        .international-fields .wide-field { grid-column: 1 / -1; }
+
+        .bank-logo {
+            min-width: 48px;
+            justify-content: flex-end;
+            color: #0875a5;
+            letter-spacing: -.6px;
+        }
+
+        .bank-logo.visa { color: #17469e; }
+        .bank-logo.mastercard { color: #d12632; }
+        .bank-logo.jcb { color: #13854d; }
+        .bank-logo:empty { display: none; }
+
+        .field { margin-top: 23px; }
+        .card-number-field { margin-top: 28px; }
+
+        .field label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 9px;
+            color: #40454b;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .info-dot {
+            width: 16px;
+            height: 16px;
+            display: inline-grid;
+            place-items: center;
+            color: #fff;
+            background: #30343a;
+            border-radius: 50%;
+            font-size: 10px;
+            line-height: 1;
+            cursor: help;
+        }
+
+        .input-wrap { position: relative; }
+
+        .field input {
+            width: 100%;
+            height: 46px;
+            padding: 10px 17px;
+            color: #30353b;
+            background: #fff;
+            border: 1px solid #cfd5db;
+            border-radius: 3px;
+            outline: none;
+            transition: border-color .16s ease, box-shadow .16s ease;
+            font-size: 17px;
+        }
+
+        .field input:focus {
+            border-color: #168e9d;
+            box-shadow: 0 0 0 2px rgba(22, 142, 157, .1);
+        }
+
+        .field input::placeholder { color: #aeb5bd; }
+
+        .card-input { padding-right: 132px !important; }
+
+        .bank-logo {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            transform: translateY(-50%);
+            font-style: italic;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            pointer-events: none;
+        }
+
+        .bank-logo .n { color: #006d9d; }
+        .bank-logo .cb { color: #d9273f; }
+        .bank-logo small {
+            margin-left: 3px;
+            color: #7b848d;
+            font-size: 6px;
+            font-style: normal;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .holder-wrap input {
+            padding-right: 34px;
+            text-transform: uppercase;
+        }
+
+        .clear-input {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            width: 28px;
+            height: 28px;
+            transform: translateY(-50%);
+            color: #6f7780;
+            background: transparent;
+            border: 0;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .clear-input:hover { background: #f1f3f5; }
+
+        .holder-wrap input:placeholder-shown + .clear-input { display: none; }
+
+        .date-field { width: 268px; }
+
+        .promo-row {
+            min-height: 84px;
+            margin-top: 20px;
+            padding: 18px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            border-top: 1px dotted #e1e4e7;
+            border-bottom: 1px dotted #e1e4e7;
+        }
+
+        .promo-row strong {
+            color: #2c3137;
+            font-size: 19px;
+            font-weight: 500;
+        }
+
+        .promo-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 12px 14px;
+            color: #626a74;
+            background: #f6f7f9;
+            border: 0;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .ticket-icon {
+            width: 15px;
+            height: 11px;
+            display: inline-grid;
+            place-items: center;
+            color: #fff;
+            background: #62778a;
+            font-size: 8px;
+            font-weight: 800;
+        }
+
+        .promo-box {
+            display: none;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            padding: 11px 0 0;
+        }
+
+        .promo-box.open { display: grid; }
+
+        .promo-box input {
+            min-width: 0;
+            height: 34px;
+            padding: 7px 10px;
+            border: 1px solid #cfd5db;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .promo-box button {
+            padding: 0 15px;
+            color: #fff;
+            background: #64798b;
+            border: 0;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .terms {
+            margin: 25px 2px 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: #168897;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .terms svg { flex: 0 0 auto; }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .action-button {
+            min-height: 54px;
+            padding: 10px 15px;
+            border: 0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 650;
+            transition: transform .14s ease, filter .14s ease, box-shadow .14s ease;
+        }
+
+        .action-button:hover:not(:disabled) {
+            transform: translateY(-1px);
+            filter: brightness(.98);
+        }
+
+        .action-button:focus-visible {
+            outline: 3px solid rgba(0, 112, 160, .2);
+            outline-offset: 2px;
+        }
+
+        .action-button:disabled { cursor: not-allowed; opacity: .65; }
+
+        .cancel-button {
+            color: #4c535c;
+            background: #f1f3f6;
+        }
+
+        .continue-button {
+            color: #fff;
+            background: linear-gradient(180deg, #087eb4, #006d9f);
+            box-shadow: 0 2px 5px rgba(0, 91, 134, .2);
+        }
+
+        .form-message {
+            min-height: 0;
+            margin-top: 0;
+            color: var(--danger);
+            font-size: 11px;
+            text-align: right;
+        }
+
+        .form-message:not(:empty) { margin-top: 9px; }
+
+        .toast {
+            position: fixed;
+            z-index: 10;
+            left: 50%;
+            bottom: 28px;
+            max-width: calc(100% - 32px);
+            padding: 12px 17px;
+            color: #fff;
+            background: #24313d;
+            border-radius: 5px;
+            box-shadow: 0 8px 28px rgba(0,0,0,.2);
+            transform: translate(-50%, 25px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s ease, transform .2s ease;
+            font-size: 12px;
+        }
+
+        .toast.show {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+
+        .gateway-modal {
+            position: fixed;
+            z-index: 30;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(19, 30, 42, .55);
+            backdrop-filter: blur(2px);
+        }
+
+        .gateway-modal.open { display: flex; }
+
+        .gateway-dialog {
+            width: min(390px, 100%);
+            padding: 27px 28px 24px;
+            background: #fff;
+            border-radius: 7px;
+            box-shadow: 0 18px 55px rgba(0,0,0,.25);
+            text-align: center;
+        }
+
+        .dialog-icon {
+            width: 54px;
+            height: 54px;
+            margin: 0 auto 14px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            background: var(--vnpay-blue);
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .dialog-icon.error { background: #cf3043; }
+
+        .gateway-dialog h3 {
+            margin: 0;
+            color: #262c33;
+            font-size: 20px;
+        }
+
+        .gateway-dialog p {
+            margin: 9px 0 17px;
+            color: #697480;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .otp-summary {
+            margin: 0 0 16px;
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            color: #53606d;
+            background: #f4f7fa;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        .otp-summary strong { color: #193f6e; }
+
+        .otp-input {
+            width: 100%;
+            height: 42px;
+            padding: 8px 12px;
+            border: 1px solid #cbd4dc;
+            border-radius: 4px;
+            outline: none;
+            text-align: center;
+            font-size: 18px;
+            letter-spacing: 4px;
+        }
+
+        .otp-input:focus {
+            border-color: var(--vnpay-cyan);
+            box-shadow: 0 0 0 2px rgba(21,149,164,.12);
+        }
+
+        .otp-hint {
+            min-height: 17px;
+            margin: 7px 0 13px;
+            color: #6e7b88;
+            font-size: 10px;
+        }
+
+        .otp-error { color: #c7283b; }
+
+        .dialog-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .dialog-actions.single { grid-template-columns: 1fr; }
+
+        .dialog-button {
+            min-height: 39px;
+            padding: 9px 13px;
+            border: 0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .dialog-button.secondary { color: #56616d; background: #eef1f4; }
+        .dialog-button.primary { color: #fff; background: var(--vnpay-blue); }
+
+        @media (max-width: 760px) {
+            .language-bar { height: 50px; }
+            .payment-shell { width: min(580px, calc(100% - 22px)); margin-bottom: 22px; }
+            .payment-header { padding: 12px 15px; }
+            .countdown > span { display: none; }
+            .payment-body { grid-template-columns: 1fr; gap: 24px; padding: 15px; }
+            .order-panel { min-height: 0; padding: 22px; }
+            .order-details { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 25px; }
+            .order-row { margin-top: 0; }
+            .checkout-panel { padding: 2px 7px 7px; }
+            .checkout-panel h2 { margin-bottom: 24px; font-size: 19px; }
+        }
+
+        @media (max-width: 480px) {
+            .language-bar { width: calc(100% - 24px); }
+            .payment-header { align-items: flex-start; }
+            .vnpay-logo { width: 108px; height: auto; }
+            .countdown { gap: 4px; }
+            .countdown strong { min-width: 26px; padding: 7px 4px; font-size: 13px; }
+            .payment-body { padding: 11px; }
+            .order-panel { padding: 20px 18px; }
+            .order-details { grid-template-columns: 1fr; gap: 16px; }
+            .checkout-panel { padding: 2px 4px 7px; }
+            .checkout-panel h2 { font-size: 18px; }
+            .date-field { width: 100%; }
+            .promo-row { align-items: flex-start; flex-direction: column; }
+            .actions { grid-template-columns: 1fr; }
+            .international-fields { grid-template-columns: 1fr; }
+            .international-fields .wide-field { grid-column: auto; }
+            .cancel-button { order: 2; }
+            .continue-button { order: 1; }
+            .gateway-dialog { padding: 24px 19px 20px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+        }
+    </style>
+</head>
+<body>
+<div class="language-bar">
+    <button class="language-button" id="languageButton" type="button" aria-label="Đổi ngôn ngữ">
+        <svg viewBox="0 0 60 36" aria-hidden="true">
+            <rect width="60" height="36" fill="#17365d"/>
+            <path d="M0 0 60 36M60 0 0 36" stroke="#fff" stroke-width="8"/>
+            <path d="M0 0 60 36M60 0 0 36" stroke="#c8102e" stroke-width="4"/>
+            <path d="M30 0v36M0 18h60" stroke="#fff" stroke-width="12"/>
+            <path d="M30 0v36M0 18h60" stroke="#c8102e" stroke-width="7"/>
+        </svg>
+        <span id="languageLabel">En</span>
+    </button>
+</div>
+
+<main class="payment-shell">
+    <header class="payment-header">
+        <svg class="vnpay-logo" viewBox="0 0 236 74" role="img" aria-label="VNPay">
+            <path fill="#0066a4" d="M22 11 43 32 24 51 3 30z"/>
+            <path fill="#ed1b2f" d="M34 20 55 41 35 61 15 40z" opacity=".96"/>
+            <path fill="#0066a4" d="m51 24 12 12-8 8-12-12z"/>
+            <text x="70" y="24" fill="#507086" font-family="Arial,sans-serif" font-size="9" font-weight="700">CỔNG THANH TOÁN</text>
+            <text x="70" y="50" fill="#d71933" font-family="Arial,sans-serif" font-size="28" font-weight="900">VN</text>
+            <text x="110" y="50" fill="#0069a7" font-family="Arial,sans-serif" font-size="28" font-weight="900">PAY</text>
+            <text x="166" y="37" fill="#d71933" font-family="Arial,sans-serif" font-size="8" font-weight="800">QR</text>
+        </svg>
+
+        <div class="countdown" aria-label="Thời gian giao dịch còn lại">
+            <span id="expiryLabel">Giao dịch hết hạn sau</span>
+            <strong id="minutes">15</strong><i>:</i><strong id="seconds">00</strong>
+        </div>
+    </header>
+
+    <div class="payment-body">
+        <aside class="order-panel" aria-labelledby="orderHeading">
+            <h1 id="orderHeading">Thông tin đơn hàng</h1>
+            <div class="order-divider"></div>
+
+            <div class="order-details">
+                <div class="order-row">
+                    <span>Số tiền thanh toán</span>
+                    <strong class="amount-line primary-amount"><span id="paymentAmount">10.000</span><span class="currency">VND</span></strong>
+                </div>
+                <div class="order-row">
+                    <span>Giá trị đơn hàng</span>
+                    <strong class="amount-line"><span id="orderAmount">10.000</span><span class="currency">VND</span></strong>
+                </div>
+                <div class="order-row">
+                    <span>Phí giao dịch</span>
+                    <strong class="amount-line"><span>0</span><span class="currency">VND</span></strong>
+                </div>
+                <div class="order-row">
+                    <span>Mã đơn hàng</span>
+                    <strong id="orderCode">93749568</strong>
+                </div>
+                <div class="order-row">
+                    <span>Nhà cung cấp</span>
+                    <strong>VNPAY</strong>
+                </div>
+            </div>
+        </aside>
+
+        <section class="checkout-panel" aria-labelledby="checkoutHeading">
+            <h2 id="checkoutHeading">Thanh toán qua Ngân hàng NCB</h2>
+            <div class="card-type" id="cardTypeLabel">Thẻ nội địa</div>
+
+            <form id="paymentForm" action="/api/shop/payments/vnpay/checkout/complete" method="post" novalidate>
+                <div id="gatewayFields" hidden></div>
+                <input id="paymentOutcome" name="outcome" type="hidden" value="cancel">
+                <input id="testCardNumber" name="testCardNumber" type="hidden">
+                <input id="testCardDate" name="testCardDate" type="hidden">
+                <input id="testCvv" name="testCvv" type="hidden">
+                <input id="testOtp" name="testOtp" type="hidden">
+                <div class="field card-number-field">
+                    <label for="cardNumber">Số thẻ</label>
+                    <div class="input-wrap">
+                        <input class="card-input" id="cardNumber" type="text"
+                               inputmode="numeric" autocomplete="cc-number" maxlength="23"
+                               placeholder="Nhập số thẻ" aria-describedby="cardHelp">
+                        <span class="bank-logo" id="cardBrand" aria-hidden="true"></span>
+                    </div>
+                    <span id="cardHelp" hidden>Nhập từ 16 đến 19 chữ số.</span>
+                </div>
+
+                <div class="field">
+                    <label for="cardHolder">Tên chủ thẻ</label>
+                    <div class="input-wrap holder-wrap">
+                        <input id="cardHolder" type="text" autocomplete="cc-name"
+                               placeholder="Nhập tên chủ thẻ (không dấu)" maxlength="40">
+                        <button class="clear-input" type="button" aria-label="Xóa tên chủ thẻ" title="Xóa">×</button>
+                    </div>
+                </div>
+
+                <div class="field date-field">
+                    <label for="issueDate"><span id="dateLabel">Ngày phát hành</span> <span class="info-dot" title="Nhập theo định dạng MM/YY">i</span></label>
+                    <input id="issueDate" type="text" inputmode="numeric"
+                           autocomplete="cc-exp" placeholder="MM/YY" maxlength="5">
+                </div>
+
+                <div class="international-fields" id="internationalFields">
+                    <div class="field">
+                        <label for="cvv">CVC/CVV</label>
+                        <input id="cvv" type="password" inputmode="numeric" maxlength="3" placeholder="123">
+                    </div>
+                    <div class="field">
+                        <label for="payerEmail">Email</label>
+                        <input id="payerEmail" type="email" autocomplete="email" placeholder="Nhập email">
+                    </div>
+                    <div class="field wide-field">
+                        <label for="billingAddress">Địa chỉ</label>
+                        <input id="billingAddress" type="text" autocomplete="street-address" placeholder="Nhập địa chỉ">
+                    </div>
+                    <div class="field wide-field">
+                        <label for="billingCity">Thành phố</label>
+                        <input id="billingCity" type="text" autocomplete="address-level2" placeholder="Nhập thành phố">
+                    </div>
+                </div>
+
+                <div class="promo-row">
+                    <strong>Mã khuyến mại</strong>
+                    <button class="promo-toggle" id="promoToggle" type="button" aria-expanded="false" aria-controls="promoBox">
+                        <span class="ticket-icon">%</span> Chọn hoặc nhập mã
+                    </button>
+                </div>
+
+                <div class="promo-box" id="promoBox">
+                    <input id="promoCode" type="text" placeholder="Nhập mã khuyến mại" aria-label="Mã khuyến mại">
+                    <button id="applyPromo" type="button">Áp dụng</button>
+                </div>
+
+                <a class="terms" href="#terms" id="termsLink">
+                    <svg width="17" height="19" viewBox="0 0 17 19" fill="none" aria-hidden="true">
+                        <path d="M3 1.5h7l4 4V17H3z" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M10 1.5V6h4M5.5 9h6M5.5 12h6" stroke="currentColor" stroke-width="1.3"/>
+                    </svg>
+                    Điều kiện sử dụng dịch vụ
+                </a>
+
+                <div class="actions">
+                    <button class="action-button cancel-button" id="cancelButton" type="button">Hủy thanh toán</button>
+                    <button class="action-button continue-button" id="continueButton" type="submit">Tiếp tục</button>
+                </div>
+                <div class="form-message" id="formMessage" role="alert" aria-live="polite"></div>
+            </form>
+
+        </section>
+    </div>
+</main>
+
+<div class="gateway-modal" id="otpModal" role="dialog" aria-modal="true" aria-labelledby="otpHeading">
+    <div class="gateway-dialog">
+        <div class="dialog-icon">✓</div>
+        <h3 id="otpHeading">Xác thực OTP</h3>
+        <p id="otpDescription">Nhập mã OTP để xác nhận giao dịch.</p>
+        <div class="otp-summary">
+            <span id="otpBank">NCB</span>
+            <strong id="otpAmount">10.000 VND</strong>
+        </div>
+        <input class="otp-input" id="otpInput" type="text" autocomplete="one-time-code" aria-label="Mật khẩu OTP">
+        <div class="otp-hint" id="otpHint">Nhập mã OTP đã nhận.</div>
+        <div class="dialog-actions">
+            <button class="dialog-button secondary" id="otpBackButton" type="button">Quay lại</button>
+            <button class="dialog-button primary" id="otpConfirmButton" type="button">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+<div class="gateway-modal" id="resultModal" role="dialog" aria-modal="true" aria-labelledby="resultHeading">
+    <div class="gateway-dialog">
+        <div class="dialog-icon error">!</div>
+        <h3 id="resultHeading">Giao dịch không thành công</h3>
+        <p id="resultMessage">Ngân hàng từ chối giao dịch.</p>
+        <div class="dialog-actions single">
+            <button class="dialog-button primary" id="retryButton" type="button">Thử thẻ khác</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+    (() => {
+        'use strict';
+
+        const params = new URLSearchParams(window.location.search);
+        const amountParam = Number(params.get('vnp_Amount') || params.get('amount') || 1000000);
+        const amount = params.has('vnp_Amount') ? amountParam / 100 : amountParam;
+        const transactionRef = params.get('vnp_TxnRef') || params.get('transactionRef') || '93749568';
+        const orderInfo = params.get('vnp_OrderInfo') || params.get('orderInfo') || '';
+        const orderCodeMatch = orderInfo.match(/(?:don hang|đơn hàng)\s+(.+)$/i);
+        const orderCode = params.get('orderCode') || (orderCodeMatch ? orderCodeMatch[1] : transactionRef);
+        const formatter = new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 });
+        const testCards = [
+            { number: '9704198526191432198', mode: 'domestic', bank: 'NCB', brand: 'NCB', date: '07/15', dateType: 'issue', status: 'success', otp: '123456', note: 'Thành công' },
+            { number: '9704195798459170488', mode: 'domestic', bank: 'NCB', brand: 'NCB', date: '07/15', dateType: 'issue', status: 'declined', message: 'Thẻ không đủ số dư để thực hiện giao dịch.' },
+            { number: '9704192181368742', mode: 'domestic', bank: 'NCB', brand: 'NCB', date: '07/15', dateType: 'issue', status: 'declined', message: 'Thẻ chưa được kích hoạt.' },
+            { number: '9704193370791314', mode: 'domestic', bank: 'NCB', brand: 'NCB', date: '07/15', dateType: 'issue', status: 'declined', message: 'Thẻ đã bị khóa.' },
+            { number: '9704194841945513', mode: 'domestic', bank: 'NCB', brand: 'NCB', date: '07/15', dateType: 'issue', status: 'declined', message: 'Thẻ đã hết hạn sử dụng.' },
+            { number: '9704000000000018', mode: 'domestic', bank: 'NAPAS', brand: 'NAPAS', date: '03/07', dateType: 'issue', status: 'success', otp: 'otp', note: 'Thành công' },
+            { number: '9704020000000016', mode: 'domestic', bank: 'NAPAS', brand: 'NAPAS', date: '03/07', dateType: 'issue', status: 'success', otp: 'otp', note: 'Thành công' },
+            { number: '9704310005819191', mode: 'domestic', bank: 'EXIMBANK', brand: 'EXIM', date: '10/26', dateType: 'expiry', status: 'success', note: 'Thành công' },
+            { number: '4456530000001005', mode: 'international', bank: 'VISA', brand: 'VISA', date: '12/26', dateType: 'expiry', status: 'success', cvv: '123', threeDs: false, note: 'Thành công · No 3DS' },
+            { number: '4456530000001096', mode: 'international', bank: 'VISA', brand: 'VISA', date: '12/26', dateType: 'expiry', status: 'success', cvv: '123', threeDs: true, note: 'Thành công · 3DS' },
+            { number: '5200000000001005', mode: 'international', bank: 'MasterCard', brand: 'MC', date: '12/26', dateType: 'expiry', status: 'success', cvv: '123', threeDs: false, note: 'Thành công · No 3DS' },
+            { number: '5200000000001096', mode: 'international', bank: 'MasterCard', brand: 'MC', date: '12/26', dateType: 'expiry', status: 'success', cvv: '123', threeDs: true, note: 'Thành công · 3DS' },
+            { number: '3337000000000008', mode: 'international', bank: 'JCB', brand: 'JCB', date: '12/26', dateType: 'expiry', status: 'success', cvv: '123', threeDs: false, note: 'Thành công · No 3DS' },
+            { number: '3337000000200004', mode: 'international', bank: 'JCB', brand: 'JCB', date: '12/24', dateType: 'expiry', status: 'success', cvv: '123', threeDs: true, note: 'Thành công · 3DS' }
+        ];
+
+        document.getElementById('paymentAmount').textContent = formatter.format(Number.isFinite(amount) ? amount : 10000);
+        document.getElementById('orderAmount').textContent = formatter.format(Number.isFinite(amount) ? amount : 10000);
+        document.getElementById('orderCode').textContent = orderCode;
+
+        const paymentForm = document.getElementById('paymentForm');
+        const gatewayFields = document.getElementById('gatewayFields');
+        const paymentOutcome = document.getElementById('paymentOutcome');
+        const testCardNumber = document.getElementById('testCardNumber');
+        const testCardDate = document.getElementById('testCardDate');
+        const testCvv = document.getElementById('testCvv');
+        const testOtp = document.getElementById('testOtp');
+        params.forEach((value, key) => {
+            if (!key.startsWith('vnp_')) return;
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = value;
+            gatewayFields.appendChild(input);
+        });
+
+        const cardInput = document.getElementById('cardNumber');
+        const holderInput = document.getElementById('cardHolder');
+        const dateInput = document.getElementById('issueDate');
+        const dateLabel = document.getElementById('dateLabel');
+        const cardBrand = document.getElementById('cardBrand');
+        const cardTypeLabel = document.getElementById('cardTypeLabel');
+        const internationalFields = document.getElementById('internationalFields');
+        const cvvInput = document.getElementById('cvv');
+        const emailInput = document.getElementById('payerEmail');
+        const addressInput = document.getElementById('billingAddress');
+        const cityInput = document.getElementById('billingCity');
+        const formMessage = document.getElementById('formMessage');
+        const continueButton = document.getElementById('continueButton');
+        const cancelButton = document.getElementById('cancelButton');
+        const toast = document.getElementById('toast');
+        const otpModal = document.getElementById('otpModal');
+        const otpInput = document.getElementById('otpInput');
+        const otpHint = document.getElementById('otpHint');
+        const otpHeading = document.getElementById('otpHeading');
+        const otpDescription = document.getElementById('otpDescription');
+        const otpConfirmButton = document.getElementById('otpConfirmButton');
+        const resultModal = document.getElementById('resultModal');
+        const resultMessage = document.getElementById('resultMessage');
+        let currentMode = 'domestic';
+        let activeScenario = null;
+        let pendingScenario = null;
+        let toastTimer;
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            window.clearTimeout(toastTimer);
+            toastTimer = window.setTimeout(() => toast.classList.remove('show'), 2600);
+        }
+
+        function onlyDigits(value) {
+            return value.replace(/\D/g, '');
+        }
+
+        function formatCard(value) {
+            return onlyDigits(value).slice(0, 19).replace(/(.{4})/g, '$1 ').trim();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            const international = mode === 'international';
+            internationalFields.classList.toggle('active', international);
+        }
+
+        function renderCardBrand(brand) {
+            cardBrand.className = 'bank-logo';
+            if (brand === 'NCB') {
+                cardBrand.innerHTML = '<span class="n">N</span><span class="cb">CB</span><small>NGÂN HÀNG NCB</small>';
+                return;
+            }
+            cardBrand.textContent = brand || '';
+            if (brand === 'VISA') cardBrand.classList.add('visa');
+            else if (brand === 'MC') cardBrand.classList.add('mastercard');
+            else if (brand === 'JCB') cardBrand.classList.add('jcb');
+        }
+
+        function resetCardForm(mode) {
+            setMode(mode);
+            activeScenario = null;
+            cardInput.value = '';
+            holderInput.value = '';
+            dateInput.value = '';
+            cvvInput.value = '';
+            emailInput.value = '';
+            addressInput.value = '';
+            cityInput.value = '';
+            dateLabel.textContent = mode === 'international' ? 'Ngày hết hạn' : 'Ngày phát hành';
+            cardTypeLabel.textContent = mode === 'international' ? 'Thẻ quốc tế' : 'Thẻ nội địa';
+            renderCardBrand(mode === 'domestic' ? 'NCB' : '');
+            document.getElementById('checkoutHeading').textContent = mode === 'international'
+                ? 'Thanh toán bằng thẻ quốc tế'
+                : 'Thanh toán qua Ngân hàng NCB';
+            formMessage.textContent = '';
+        }
+
+        function refreshScenarioFromCard() {
+            const number = onlyDigits(cardInput.value);
+            const scenario = testCards.find((card) => card.number === number);
+            if (scenario) {
+                activeScenario = scenario;
+                setMode(scenario.mode);
+                cardTypeLabel.textContent = scenario.mode === 'international' ? 'Thẻ quốc tế' : 'Thẻ nội địa';
+                dateLabel.textContent = scenario.dateType === 'expiry' ? 'Ngày hết hạn' : 'Ngày phát hành';
+                renderCardBrand(scenario.brand);
+                document.getElementById('checkoutHeading').textContent = scenario.mode === 'international'
+                    ? `Thanh toán bằng thẻ ${scenario.bank}`
+                    : scenario.bank === 'NCB'
+                        ? 'Thanh toán qua Ngân hàng NCB'
+                        : `Thanh toán qua ${scenario.bank}`;
+                return;
+            }
+            activeScenario = null;
+            if (!number) renderCardBrand(currentMode === 'domestic' ? 'NCB' : '');
+            else if (number.startsWith('4')) renderCardBrand('VISA');
+            else if (number.startsWith('5')) renderCardBrand('MC');
+            else if (number.startsWith('33')) renderCardBrand('JCB');
+            else renderCardBrand('ATM');
+        }
+
+        cardInput.addEventListener('input', () => {
+            cardInput.value = formatCard(cardInput.value);
+            formMessage.textContent = '';
+            refreshScenarioFromCard();
+        });
+
+        holderInput.addEventListener('input', () => {
+            holderInput.value = holderInput.value.toUpperCase().replace(/[^A-Z\s]/g, '');
+            formMessage.textContent = '';
+        });
+
+        document.querySelector('.clear-input').addEventListener('click', () => {
+            holderInput.value = '';
+            holderInput.focus();
+        });
+
+        dateInput.addEventListener('input', () => {
+            const digits = onlyDigits(dateInput.value).slice(0, 4);
+            dateInput.value = digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
+            formMessage.textContent = '';
+        });
+
+        cvvInput.addEventListener('input', () => {
+            cvvInput.value = onlyDigits(cvvInput.value).slice(0, 3);
+            formMessage.textContent = '';
+        });
+
+        const promoToggle = document.getElementById('promoToggle');
+        const promoBox = document.getElementById('promoBox');
+        promoToggle.addEventListener('click', () => {
+            const open = promoBox.classList.toggle('open');
+            promoToggle.setAttribute('aria-expanded', String(open));
+            if (open) document.getElementById('promoCode').focus();
+        });
+
+        document.getElementById('applyPromo').addEventListener('click', () => {
+            const promo = document.getElementById('promoCode').value.trim();
+            showToast(promo ? `Đã ghi nhận mã ${promo.toUpperCase()}` : 'Vui lòng nhập mã khuyến mại');
+        });
+
+        document.getElementById('termsLink').addEventListener('click', (event) => {
+            event.preventDefault();
+            showToast('Điều khoản thanh toán an toàn của VNPay');
+        });
+
+        function isValidDate(value) {
+            const match = value.match(/^(0[1-9]|1[0-2])\/(\d{2})$/);
+            return Boolean(match);
+        }
+
+        function setProcessing(processing) {
+            continueButton.disabled = processing;
+            cancelButton.disabled = processing;
+            continueButton.textContent = processing ? 'Đang xử lý...' : 'Tiếp tục';
+        }
+
+        function submitScenario(scenario, otp = '') {
+            paymentOutcome.value = 'pay';
+            testCardNumber.value = scenario.number;
+            testCardDate.value = scenario.date;
+            testCvv.value = scenario.cvv || '';
+            testOtp.value = otp;
+            setProcessing(true);
+            showToast('Đang xác thực giao dịch...');
+            window.setTimeout(() => HTMLFormElement.prototype.submit.call(paymentForm), 450);
+        }
+
+        function openVerification(scenario) {
+            pendingScenario = scenario;
+            const needsOtp = Boolean(scenario.otp);
+            otpHeading.textContent = needsOtp ? 'Xác thực OTP' : 'Xác thực 3D Secure';
+            otpDescription.textContent = needsOtp
+                ? `Nhập mã OTP của ${scenario.bank} để xác nhận giao dịch.`
+                : `Xác nhận giao dịch 3D Secure cho thẻ ${scenario.bank}.`;
+            document.getElementById('otpBank').textContent = scenario.bank;
+            document.getElementById('otpAmount').textContent = `${formatter.format(amount)} VND`;
+            otpInput.value = '';
+            otpInput.style.display = needsOtp ? 'block' : 'none';
+            otpHint.className = 'otp-hint';
+            otpHint.textContent = needsOtp
+                ? 'Nhập mã OTP do ngân hàng gửi để tiếp tục.'
+                : 'Xác nhận giao dịch 3D Secure của ngân hàng phát hành.';
+            otpConfirmButton.textContent = needsOtp ? 'Xác nhận' : 'Xác nhận 3D Secure';
+            otpModal.classList.add('open');
+            if (needsOtp) window.setTimeout(() => otpInput.focus(), 50);
+        }
+
+        function showDeclined(message) {
+            resultMessage.textContent = message;
+            resultModal.classList.add('open');
+        }
+
+        function validateCardData() {
+            const cardNumber = onlyDigits(cardInput.value);
+            if (cardNumber.length < 16 || cardNumber.length > 19) {
+                formMessage.textContent = 'Số thẻ phải có từ 16 đến 19 chữ số.';
+                cardInput.focus();
+                return null;
+            }
+
+            const scenario = testCards.find((card) => card.number === cardNumber);
+            if (!scenario) {
+                formMessage.textContent = 'Số thẻ không được hỗ trợ.';
+                cardInput.focus();
+                return null;
+            }
+            if (holderInput.value.trim().toUpperCase() !== 'NGUYEN VAN A') {
+                formMessage.textContent = 'Tên chủ thẻ không hợp lệ.';
+                holderInput.focus();
+                return null;
+            }
+            if (!isValidDate(dateInput.value) || dateInput.value !== scenario.date) {
+                formMessage.textContent = `${scenario.dateType === 'expiry' ? 'Ngày hết hạn' : 'Ngày phát hành'} không hợp lệ.`;
+                dateInput.focus();
+                return null;
+            }
+            if (scenario.mode === 'international') {
+                if (cvvInput.value !== scenario.cvv) {
+                    formMessage.textContent = 'CVC/CVV không hợp lệ.';
+                    cvvInput.focus();
+                    return null;
+                }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
+                    formMessage.textContent = 'Email không hợp lệ.';
+                    emailInput.focus();
+                    return null;
+                }
+                if (!addressInput.value.trim() || !cityInput.value.trim()) {
+                    formMessage.textContent = 'Vui lòng nhập địa chỉ và thành phố của chủ thẻ.';
+                    (!addressInput.value.trim() ? addressInput : cityInput).focus();
+                    return null;
+                }
+            }
+            formMessage.textContent = '';
+            return scenario;
+        }
+
+        paymentForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const scenario = validateCardData();
+            if (!scenario) return;
+            activeScenario = scenario;
+            if (scenario.status !== 'success') {
+                showDeclined(scenario.message);
+                return;
+            }
+            if (scenario.otp || scenario.threeDs) {
+                openVerification(scenario);
+                return;
+            }
+            submitScenario(scenario);
+        });
+
+        cancelButton.addEventListener('click', () => {
+            paymentOutcome.value = 'cancel';
+            testCardNumber.value = onlyDigits(cardInput.value);
+            testCardDate.value = dateInput.value.trim();
+            testCvv.value = cvvInput.value.trim();
+            testOtp.value = '';
+            setProcessing(true);
+            showToast('Đã hủy giao dịch');
+            window.setTimeout(() => HTMLFormElement.prototype.submit.call(paymentForm), 350);
+        });
+
+        document.getElementById('otpBackButton').addEventListener('click', () => {
+            otpModal.classList.remove('open');
+            pendingScenario = null;
+        });
+
+        otpConfirmButton.addEventListener('click', () => {
+            if (!pendingScenario) return;
+            const enteredOtp = otpInput.value.trim();
+            if (pendingScenario.otp && enteredOtp.toLowerCase() !== pendingScenario.otp.toLowerCase()) {
+                otpHint.className = 'otp-hint otp-error';
+                otpHint.textContent = 'Mã OTP không đúng. Vui lòng kiểm tra lại.';
+                otpInput.focus();
+                return;
+            }
+            const scenario = pendingScenario;
+            otpModal.classList.remove('open');
+            pendingScenario = null;
+            submitScenario(scenario, enteredOtp);
+        });
+
+        document.getElementById('retryButton').addEventListener('click', () => {
+            resultModal.classList.remove('open');
+            cardInput.focus();
+        });
+
+        const requestedMode = params.get('cardType') === 'international' ? 'international' : 'domestic';
+        resetCardForm(requestedMode);
+
+        let remaining = 15 * 60;
+        const expireDate = params.get('vnp_ExpireDate');
+        if (expireDate && /^\d{14}$/.test(expireDate)) {
+            const end = new Date(
+                Number(expireDate.slice(0, 4)),
+                Number(expireDate.slice(4, 6)) - 1,
+                Number(expireDate.slice(6, 8)),
+                Number(expireDate.slice(8, 10)),
+                Number(expireDate.slice(10, 12)),
+                Number(expireDate.slice(12, 14))
+            );
+            remaining = Math.max(0, Math.floor((end.getTime() - Date.now()) / 1000));
+        }
+
+        const minutes = document.getElementById('minutes');
+        const seconds = document.getElementById('seconds');
+
+        function renderCountdown() {
+            minutes.textContent = String(Math.floor(remaining / 60)).padStart(2, '0');
+            seconds.textContent = String(remaining % 60).padStart(2, '0');
+            if (remaining <= 0) {
+                continueButton.disabled = true;
+                formMessage.textContent = 'Giao dịch đã hết hạn. Vui lòng quay lại cửa hàng.';
+                return;
+            }
+            remaining -= 1;
+            window.setTimeout(renderCountdown, 1000);
+        }
+
+        renderCountdown();
+
+        document.getElementById('languageButton').addEventListener('click', () => {
+            const label = document.getElementById('languageLabel');
+            const english = label.textContent === 'En';
+            label.textContent = english ? 'Vi' : 'En';
+            document.getElementById('expiryLabel').textContent = english ? 'Transaction expires in' : 'Giao dịch hết hạn sau';
+            document.getElementById('orderHeading').textContent = english ? 'Order information' : 'Thông tin đơn hàng';
+            document.getElementById('checkoutHeading').textContent = english
+                ? 'Pay via NCB Bank'
+                : 'Thanh toán qua Ngân hàng NCB';
+        });
+    })();
+</script>
+</body>
+</html>

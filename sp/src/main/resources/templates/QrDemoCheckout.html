@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán QR</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            color-scheme:light;
+            --brand:#008a4f;
+            --brand-dark:#00693c;
+            --brand-light:#22b875;
+            --brand-soft:#eaf8f0;
+            --ink:#102033;
+            --muted:#6b778c;
+            --line:#dfe8f1;
+            --page:#eef4f1;
+            --danger:#d8353f;
+            font-family:"Inter","Segoe UI",Arial,sans-serif;
+        }
+        body.theme-zalopay{
+            --brand:#0068ff;
+            --brand-dark:#004dc2;
+            --brand-light:#4d98ff;
+            --brand-soft:#eaf2ff;
+            --page:#eef4ff;
+        }
+        body.theme-vnpay{
+            --brand:#0875ad;
+            --brand-dark:#055d8e;
+            --brand-light:#16a0c2;
+            --brand-soft:#eaf8fc;
+            --page:#eef5f8;
+        }
+        *{box-sizing:border-box}
+        body{
+            min-height:100vh;
+            margin:0;
+            display:grid;
+            place-items:center;
+            padding:34px 18px;
+            background:
+                radial-gradient(780px 360px at 50% -120px, color-mix(in srgb,var(--brand) 18%,transparent), transparent),
+                linear-gradient(180deg,#f8fbfa,var(--page));
+            color:var(--ink);
+        }
+        .payment-shell{
+            width:min(1080px,100%);
+            overflow:hidden;
+            border-radius:28px;
+            background:#fff;
+            box-shadow:0 34px 90px rgba(16,38,58,.18),0 2px 12px rgba(16,38,58,.08);
+            border:1px solid rgba(255,255,255,.72);
+        }
+        .hero{
+            position:relative;
+            padding:34px 42px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:24px;
+            background:linear-gradient(135deg,var(--brand-light),var(--brand) 48%,var(--brand-dark));
+            color:#fff;
+            overflow:hidden;
+        }
+        .hero::before{
+            content:"";
+            position:absolute;
+            inset:-150px -70px auto auto;
+            width:420px;
+            height:260px;
+            border-radius:999px;
+            background:rgba(255,255,255,.12);
+        }
+        .brand-block,.amount-block{position:relative}
+        .brand-row{display:flex;align-items:center;gap:14px}
+        .brand-icon{
+            width:62px;
+            height:62px;
+            display:grid;
+            place-items:center;
+            border-radius:18px;
+            background:#fff;
+            color:var(--brand);
+            box-shadow:0 14px 30px rgba(0,0,0,.18);
+        }
+        .brand-icon svg{width:40px;height:40px;display:block}
+        .gateway-chip{
+            display:inline-flex;
+            align-items:center;
+            gap:7px;
+            margin-bottom:7px;
+            padding:6px 13px;
+            border-radius:999px;
+            background:rgba(255,255,255,.16);
+            color:#fff;
+            font-size:12px;
+            font-weight:900;
+            letter-spacing:.5px;
+        }
+        .gateway-chip::before{
+            content:"";
+            width:7px;
+            height:7px;
+            border-radius:50%;
+            background:#66f0a0;
+            box-shadow:0 0 0 4px rgba(102,240,160,.15);
+        }
+        h1{
+            margin:0;
+            font-family:"Manrope",sans-serif;
+            font-size:clamp(25px,3vw,38px);
+            font-weight:800;
+            letter-spacing:-.5px;
+        }
+        .order-ref{
+            margin:8px 0 0;
+            color:rgba(255,255,255,.82);
+            font-size:14px;
+            font-weight:700;
+        }
+        .amount-block{text-align:right}
+        .amount-label{
+            display:block;
+            margin-bottom:5px;
+            color:rgba(255,255,255,.75);
+            font-size:12px;
+            font-weight:900;
+            letter-spacing:.7px;
+            text-transform:uppercase;
+        }
+        .amount{
+            font-family:"Manrope",sans-serif;
+            font-size:clamp(34px,4vw,52px);
+            font-weight:800;
+            letter-spacing:-.8px;
+            white-space:nowrap;
+        }
+        .body{
+            display:grid;
+            grid-template-columns:minmax(330px,430px) minmax(0,1fr);
+            gap:0;
+            min-height:560px;
+        }
+        .qr-side{
+            padding:38px 40px 42px;
+            display:grid;
+            align-content:start;
+            justify-items:center;
+            background:#fbfdfc;
+            border-right:1px solid var(--line);
+        }
+        .timer{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            margin-bottom:20px;
+            padding:9px 15px;
+            border-radius:999px;
+            background:var(--brand-soft);
+            color:var(--brand-dark);
+            font-size:14px;
+            font-weight:900;
+            font-variant-numeric:tabular-nums;
+        }
+        .timer::before{content:"●";font-size:10px;color:var(--brand)}
+        .timer.warn{background:#fff0f0;color:var(--danger)}
+        .qr-frame{
+            position:relative;
+            width:min(340px,100%);
+            aspect-ratio:1;
+            display:grid;
+            place-items:center;
+            padding:22px;
+            border-radius:28px;
+            background:#fff;
+            box-shadow:0 20px 46px rgba(15,40,64,.12);
+            border:1px solid var(--line);
+        }
+        .qr-frame::before{
+            content:"";
+            position:absolute;
+            inset:13px;
+            border-radius:22px;
+            border:3px solid color-mix(in srgb,var(--brand) 72%,transparent);
+            clip-path:polygon(0 0,25% 0,25% 5%,5% 5%,5% 25%,0 25%,0 0,75% 0,100% 0,100% 25%,95% 25%,95% 5%,75% 5%,75% 0,0 75%,5% 75%,5% 95%,25% 95%,25% 100%,0 100%,0 75%,75% 100%,75% 95%,95% 95%,95% 75%,100% 75%,100% 100%,75% 100%);
+            pointer-events:none;
+        }
+        .scan-line{
+            position:absolute;
+            left:34px;
+            right:34px;
+            top:36px;
+            height:3px;
+            border-radius:999px;
+            background:linear-gradient(90deg,transparent,var(--brand),transparent);
+            box-shadow:0 0 12px color-mix(in srgb,var(--brand) 80%,transparent);
+            animation:scanMove 2.5s ease-in-out infinite;
+            pointer-events:none;
+        }
+        @keyframes scanMove{
+            0%{top:36px;opacity:0}
+            12%,82%{opacity:1}
+            50%{top:calc(100% - 38px)}
+            100%{top:calc(100% - 38px);opacity:0}
+        }
+        #qrContent{
+            position:relative;
+            width:100%;
+            display:grid;
+            place-items:center;
+        }
+        #qrContent img,#qrContent canvas{
+            width:100%;
+            max-width:274px;
+            height:auto;
+            display:block;
+            border-radius:10px;
+        }
+        .qr-loading{
+            min-height:270px;
+            display:grid;
+            place-items:center;
+            gap:12px;
+            color:var(--muted);
+            font-weight:800;
+            text-align:center;
+        }
+        .spinner{
+            width:34px;
+            height:34px;
+            border-radius:50%;
+            border:4px solid var(--brand-soft);
+            border-top-color:var(--brand);
+            animation:spin .75s linear infinite;
+        }
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .qr-caption{
+            margin:22px 0 0;
+            color:#31465e;
+            font-size:18px;
+            font-weight:900;
+            text-align:center;
+            line-height:1.35;
+        }
+        .qr-caption small{
+            display:block;
+            margin-top:7px;
+            color:var(--muted);
+            font-size:13px;
+            font-weight:700;
+        }
+        .qr-error{
+            display:none;
+            margin-top:18px;
+            padding:13px 15px;
+            border-radius:13px;
+            background:#fff0f1;
+            color:var(--danger);
+            font-size:14px;
+            font-weight:800;
+            text-align:center;
+        }
+        .detail-side{
+            padding:42px;
+            display:grid;
+            align-content:center;
+            gap:24px;
+        }
+        .status-card{
+            padding:28px;
+            border-radius:24px;
+            background:linear-gradient(180deg,#fff,var(--brand-soft));
+            border:1px solid color-mix(in srgb,var(--brand) 18%,var(--line));
+        }
+        .status-pill{
+            display:inline-flex;
+            align-items:center;
+            gap:9px;
+            padding:8px 13px;
+            border-radius:999px;
+            background:#fff;
+            color:var(--brand-dark);
+            font-size:13px;
+            font-weight:900;
+            box-shadow:0 8px 22px rgba(19,45,70,.08);
+        }
+        .status-pill::before{
+            content:"";
+            width:10px;
+            height:10px;
+            border-radius:50%;
+            background:var(--brand);
+            box-shadow:0 0 0 6px color-mix(in srgb,var(--brand) 18%,transparent);
+            animation:pulse 1.35s ease-in-out infinite;
+        }
+        .status-card.success .status-pill::before{animation:none;background:#16a35f}
+        .status-card.error .status-pill::before{animation:none;background:var(--danger)}
+        @keyframes pulse{50%{opacity:.35;transform:scale(.82)}}
+        .status-card h2{
+            margin:22px 0 10px;
+            color:var(--ink);
+            font-family:"Manrope",sans-serif;
+            font-size:clamp(25px,2.8vw,36px);
+            line-height:1.18;
+            letter-spacing:-.4px;
+        }
+        .status-card p{
+            margin:0;
+            color:var(--muted);
+            font-size:15px;
+            line-height:1.65;
+            font-weight:700;
+        }
+        .gateway-experience{
+            display:none;
+            padding:18px;
+            border-radius:22px;
+            background:#fff;
+            border:1px solid var(--line);
+            box-shadow:0 14px 34px rgba(15,40,64,.08);
+        }
+        .gateway-experience.show{display:block}
+        .wallet-card{
+            overflow:hidden;
+            border-radius:18px;
+            border:1px solid color-mix(in srgb,var(--brand) 20%,var(--line));
+            background:linear-gradient(180deg,#fff,var(--brand-soft));
+        }
+        .wallet-top{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:14px;
+            padding:16px 18px;
+            color:#fff;
+            background:linear-gradient(135deg,var(--brand),var(--brand-dark));
+        }
+        .wallet-logo{
+            display:inline-flex;
+            align-items:center;
+            gap:9px;
+            font-weight:900;
+            letter-spacing:.2px;
+        }
+        .wallet-logo-mark{
+            width:34px;
+            height:34px;
+            display:grid;
+            place-items:center;
+            border-radius:11px;
+            background:#fff;
+            color:var(--brand);
+            font-size:17px;
+            font-weight:900;
+        }
+        .wallet-secure{
+            padding:6px 10px;
+            border-radius:999px;
+            background:rgba(255,255,255,.18);
+            font-size:12px;
+            font-weight:900;
+        }
+        .wallet-body{
+            display:grid;
+            gap:10px;
+            padding:16px 18px;
+        }
+        .wallet-row{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:14px;
+            color:#536273;
+            font-size:13px;
+            font-weight:800;
+        }
+        .wallet-row b{
+            color:#142235;
+            font-size:14px;
+            text-align:right;
+        }
+        .wallet-row.total{
+            margin-top:4px;
+            padding-top:12px;
+            border-top:1px dashed var(--line);
+        }
+        .wallet-row.total b{
+            color:var(--brand-dark);
+            font-size:18px;
+        }
+        .steps{
+            display:grid;
+            gap:12px;
+        }
+        .step{
+            display:flex;
+            align-items:center;
+            gap:13px;
+            padding:14px 16px;
+            border:1px solid var(--line);
+            border-radius:16px;
+            background:#fff;
+            color:#34465c;
+            font-size:14px;
+            font-weight:800;
+        }
+        .step-index{
+            width:30px;
+            height:30px;
+            display:grid;
+            place-items:center;
+            flex:none;
+            border-radius:10px;
+            background:var(--brand);
+            color:#fff;
+            font-weight:900;
+        }
+        .actions{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+        .confirm-button,.back-link{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:44px;
+            padding:0 18px;
+            border-radius:12px;
+            border:1px solid var(--line);
+            background:#fff;
+            color:var(--brand-dark);
+            text-decoration:none;
+            font-weight:900;
+            font-size:14px;
+        }
+        .confirm-button{
+            min-width:190px;
+            min-height:52px;
+            border-color:var(--brand);
+            background:linear-gradient(135deg,var(--brand-light),var(--brand-dark));
+            color:#fff;
+            cursor:pointer;
+            box-shadow:0 14px 30px color-mix(in srgb,var(--brand) 28%,transparent);
+            text-transform:uppercase;
+            letter-spacing:.2px;
+        }
+        .confirm-button:disabled{opacity:.65;cursor:wait}
+        .hidden{display:none!important}
+        @media(max-width:780px){
+            body{padding:14px}
+            .hero{padding:26px;display:grid;text-align:center;justify-items:center}
+            .brand-row{display:grid;justify-items:center}
+            .amount-block{text-align:center}
+            .body{grid-template-columns:1fr}
+            .qr-side{border-right:0;border-bottom:1px solid var(--line);padding:30px 24px}
+            .detail-side{padding:28px 24px}
+        }
+    </style>
+</head>
+<body>
+<main class="payment-shell">
+    <header class="hero">
+        <div class="brand-block">
+            <div class="brand-row">
+                <div class="brand-icon" id="brandIcon"></div>
+                <div>
+                    <div class="gateway-chip" id="gatewayMark">QR PAYMENT</div>
+                    <h1 id="gatewayTitle">Thanh toán QR</h1>
+                    <p class="order-ref" id="orderRef">Đang tạo mã giao dịch...</p>
+                </div>
+            </div>
+        </div>
+        <div class="amount-block">
+            <span class="amount-label">Số tiền cần thanh toán</span>
+            <div class="amount" id="amount">—</div>
+        </div>
+    </header>
+
+    <section class="body">
+        <section class="qr-side">
+            <div class="timer" id="qrTimer">Còn hiệu lực 15:00</div>
+            <div class="qr-frame" id="qrFrame">
+                <div class="scan-line"></div>
+                <div id="qrContent">
+                    <div class="qr-loading"><span class="spinner"></span>Đang tạo mã QR...</div>
+                </div>
+            </div>
+            <div class="qr-error" id="qrError"></div>
+            <div class="qr-caption">
+                Quét mã thanh toán
+                <small>Kiểm tra đúng số tiền, sau đó bấm “Đã thanh toán” để hoàn tất đơn hàng.</small>
+            </div>
+        </section>
+
+        <section class="detail-side">
+            <div class="status-card" id="statusCard">
+                <div class="status-pill" id="statusPill">Đang chờ thanh toán</div>
+                <h2 id="statusTitle">Hoàn tất giao dịch</h2>
+                <p id="statusText">Sau khi bạn đã thanh toán trên ứng dụng ngân hàng hoặc ví điện tử, bấm nút xác nhận để hệ thống hoàn thành đơn hàng.</p>
+            </div>
+            <div class="gateway-experience" id="gatewayExperience"></div>
+            <div class="steps">
+                <div class="step"><span class="step-index">1</span><span>Mở ứng dụng ngân hàng hoặc ví điện tử.</span></div>
+                <div class="step"><span class="step-index">2</span><span>Quét mã QR và kiểm tra đúng số tiền.</span></div>
+                <div class="step"><span class="step-index">3</span><span>Bấm “Đã thanh toán” để hoàn tất đơn.</span></div>
+            </div>
+            <div class="actions">
+                <button class="confirm-button" id="confirmPaymentBtn" type="button">Đã thanh toán</button>
+                <a class="back-link" href="/shop">Quay lại cửa hàng</a>
+            </div>
+        </section>
+    </section>
+</main>
+
+<script>
+    (() => {
+        const params = new URLSearchParams(window.location.search);
+        const gateway = (params.get('gateway') || '').toUpperCase();
+        const signedKeys = ['gateway', 'ref', 'amount', 'expires', 'token'];
+        const signedParams = new URLSearchParams();
+        signedKeys.forEach((key) => signedParams.set(key, params.get(key) || ''));
+
+        const icons = {
+            BANKING: '<svg viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="9" fill="#00693c"/><path d="M18 8l11 5.5v2H7v-2z" fill="#fff"/><path d="M9 16.5h4V26H9zM16 16.5h4V26h-4zM23 16.5h4V26h-4z" fill="#fff"/><path d="M7 27h22v2.4H7z" fill="#fff"/></svg>',
+            VNPAY: '<svg viewBox="0 0 36 36"><rect x="4" y="4" width="28" height="28" rx="8" fill="#0875ad"/><path d="M10 13h6l2 7 2-7h6l-5 11h-6z" fill="#fff"/><path d="M22 12h7v4h-7z" fill="#e2253f"/></svg>',
+            ZALOPAY: '<svg viewBox="0 0 36 36"><path d="M4 12a8 8 0 0 1 8-8h12a8 8 0 0 1 8 8v6a8 8 0 0 1-8 8H14.5L6 32v-6.3A8 8 0 0 1 4 18.2z" fill="#0068ff"/><path d="M11.5 13h11l-9 9h9" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        };
+        const gatewayInfo = {
+            BANKING: { title: 'Thanh toán VietQR', mark: 'VIETQR · NAPAS 247', theme: '' },
+            VNPAY: { title: 'Thanh toán VNPay QR', mark: 'VNPAY QR', theme: 'theme-vnpay' },
+            ZALOPAY: { title: 'Thanh toán ZaloPay QR', mark: 'ZALOPAY QR', theme: 'theme-zalopay' }
+        }[gateway];
+
+        const qrContent = document.getElementById('qrContent');
+        const qrTimer = document.getElementById('qrTimer');
+        const qrError = document.getElementById('qrError');
+        const qrFrame = document.getElementById('qrFrame');
+        let countdownTimer = null;
+        let currentScanUrl = '';
+
+        function setText(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        }
+        function setHtml(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = value;
+        }
+        function amountNumber() {
+            const value = Number(params.get('amount') || 0);
+            return Number.isFinite(value) ? Math.max(0, Math.round(value)) : 0;
+        }
+        function money() {
+            return amountNumber().toLocaleString('vi-VN') + ' đ';
+        }
+        function renderGatewayExperience() {
+            const box = document.getElementById('gatewayExperience');
+            if (!box) return;
+            const amountText = money();
+            const ref = params.get('ref') || '';
+            const configs = {
+                ZALOPAY: {
+                    logo: 'Z',
+                    name: 'ZaloPay',
+                    secure: 'Ví điện tử',
+                    merchant: '4MenStore',
+                    account: 'Thanh toán qua ví ZaloPay',
+                    hint: 'Mở ZaloPay hoặc ứng dụng ngân hàng có hỗ trợ ZaloPay QR'
+                },
+                VNPAY: {
+                    logo: 'V',
+                    name: 'VNPAY',
+                    secure: 'QR an toàn',
+                    merchant: '4MenStore',
+                    account: 'VNPAY QR / Napas 247',
+                    hint: 'Mở app ngân hàng hoặc ví VNPAY để quét mã'
+                },
+                BANKING: {
+                    logo: '₫',
+                    name: 'VietQR',
+                    secure: 'Napas 247',
+                    merchant: '4MenStore',
+                    account: 'Chuyển khoản ngân hàng',
+                    hint: 'Quét mã VietQR bằng ứng dụng ngân hàng'
+                }
+            };
+            const config = configs[gateway];
+            if (!config) return;
+            box.classList.add('show');
+            box.innerHTML = `
+                <div class="wallet-card">
+                    <div class="wallet-top">
+                        <span class="wallet-logo"><span class="wallet-logo-mark">${config.logo}</span>${config.name}</span>
+                        <span class="wallet-secure">${config.secure}</span>
+                    </div>
+                    <div class="wallet-body">
+                        <div class="wallet-row"><span>Đơn vị nhận tiền</span><b>${config.merchant}</b></div>
+                        <div class="wallet-row"><span>Phương thức</span><b>${config.account}</b></div>
+                        <div class="wallet-row"><span>Mã giao dịch</span><b>${ref}</b></div>
+                        <div class="wallet-row total"><span>Số tiền</span><b>${amountText}</b></div>
+                        <div class="wallet-row"><span>Gợi ý</span><b>${config.hint}</b></div>
+                    </div>
+                </div>
+            `;
+        }
+        function stopCountdown() {
+            if (countdownTimer) window.clearInterval(countdownTimer);
+            countdownTimer = null;
+        }
+        function fail(message) {
+            stopCountdown();
+            qrFrame?.classList.add('hidden');
+            qrTimer?.classList.add('hidden');
+            qrError.style.display = 'block';
+            qrError.textContent = message;
+            const card = document.getElementById('statusCard');
+            card.classList.add('error');
+            setText('statusPill', 'Không thể thanh toán');
+            setText('statusTitle', 'Mã QR không hợp lệ');
+            setText('statusText', message);
+        }
+        function startCountdown() {
+            const expiresAt = Number(params.get('expires') || 0) * 1000;
+            if (!expiresAt) {
+                qrTimer.classList.add('hidden');
+                return;
+            }
+            const tick = () => {
+                const remainingMs = expiresAt - Date.now();
+                if (remainingMs <= 0) {
+                    fail('Mã QR đã hết hạn. Vui lòng quay lại cửa hàng để tạo giao dịch mới.');
+                    return;
+                }
+                const totalSeconds = Math.floor(remainingMs / 1000);
+                const mm = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+                const ss = String(totalSeconds % 60).padStart(2, '0');
+                qrTimer.textContent = `Còn hiệu lực ${mm}:${ss}`;
+                qrTimer.classList.toggle('warn', totalSeconds <= 60);
+            };
+            stopCountdown();
+            tick();
+            countdownTimer = window.setInterval(tick, 1000);
+        }
+        function waitForQrLibrary(timeoutMs = 4000) {
+            return new Promise((resolve) => {
+                if (typeof window.qrcode === 'function') return resolve(true);
+                const started = Date.now();
+                const timer = window.setInterval(() => {
+                    if (typeof window.qrcode === 'function') {
+                        window.clearInterval(timer);
+                        resolve(true);
+                    } else if (Date.now() - started > timeoutMs) {
+                        window.clearInterval(timer);
+                        resolve(false);
+                    }
+                }, 100);
+            });
+        }
+        function renderQrImageFallback(scanUrl) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.alt = 'Mã QR thanh toán';
+                img.onload = () => {
+                    qrContent.replaceChildren(img);
+                    resolve();
+                };
+                img.onerror = () => reject(new Error('Không tạo được mã QR.'));
+                img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&ecc=M&data=' + encodeURIComponent(scanUrl);
+            });
+        }
+        async function renderQr(scanUrl) {
+            const hasLibrary = await waitForQrLibrary();
+            qrContent.innerHTML = '';
+            if (hasLibrary) {
+                const qr = window.qrcode(0, 'M');
+                qr.addData(scanUrl);
+                qr.make();
+                qrContent.innerHTML = qr.createImgTag(7, 4, 'Mã QR thanh toán');
+            } else {
+                await renderQrImageFallback(scanUrl);
+            }
+        }
+        async function pollStatus() {
+            try {
+                const response = await fetch('/api/shop/payments/qr-demo/status?' + signedParams.toString(), {
+                    credentials: 'same-origin',
+                    cache: 'no-store'
+                });
+                const status = await response.json();
+                if (!response.ok || !status.valid) {
+                    fail('Giao dịch không hợp lệ hoặc đã hết hạn. Vui lòng tạo giao dịch mới.');
+                    return;
+                }
+                if (status.paid) {
+                    stopCountdown();
+                    const card = document.getElementById('statusCard');
+                    card.classList.add('success');
+                    setText('statusPill', 'Đã xác nhận');
+                    setText('statusTitle', 'Thanh toán thành công');
+                    setText('statusText', 'Hệ thống đã ghi nhận thanh toán. Đang chuyển về trang đơn hàng...');
+                    window.setTimeout(() => {
+                        const target = new URL('/shop', window.location.origin);
+                        target.searchParams.set('paymentResult', 'success');
+                        target.searchParams.set('gateway', gateway);
+                        target.searchParams.set('orderCode', status.orderCode || '');
+                        window.location.assign(target.toString());
+                    }, 850);
+                    return;
+                }
+                window.setTimeout(pollStatus, 1200);
+            } catch (_) {
+                window.setTimeout(pollStatus, 1800);
+            }
+        }
+        async function start() {
+            if (!gatewayInfo || signedKeys.some((key) => !params.get(key))) {
+                fail('Liên kết thanh toán không hợp lệ. Vui lòng quay lại cửa hàng để tạo mã mới.');
+                return;
+            }
+            if (gatewayInfo.theme) document.body.classList.add(gatewayInfo.theme);
+            setHtml('brandIcon', icons[gateway] || icons.BANKING);
+            setText('gatewayMark', gatewayInfo.mark);
+            setText('gatewayTitle', gatewayInfo.title);
+            setText('orderRef', `Mã giao dịch: ${params.get('ref')}`);
+            setText('amount', money());
+            renderGatewayExperience();
+
+            try {
+                const scanUrl = new URL('/api/shop/payments/qr-demo/scan-confirm?' + signedParams.toString(), window.location.origin).toString();
+                currentScanUrl = scanUrl;
+                await renderQr(scanUrl);
+                startCountdown();
+            } catch (error) {
+                fail(error.message || 'Không thể tạo mã QR.');
+            }
+        }
+        document.getElementById('confirmPaymentBtn').addEventListener('click', () => {
+            const button = document.getElementById('confirmPaymentBtn');
+            if (!currentScanUrl) {
+                fail('Chưa tạo được phiên xác nhận thanh toán.');
+                return;
+            }
+            button.disabled = true;
+            button.textContent = 'Đang xác nhận...';
+            window.location.assign(currentScanUrl);
+        });
+        start();
+    })();
+</script>
+</body>
+</html>

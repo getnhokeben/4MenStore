@@ -1,0 +1,14 @@
+# Local editor and agent metadata
+/.idea/
+/.vscode/
+/.agents/
+
+# Local application secrets
+/sp/src/main/resources/application.properties
+/sp/config/
+
+# Build and runtime data
+/sp/target/
+/sp/uploads/
+/sp/*.log
+

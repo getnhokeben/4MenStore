@@ -4,15 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Quản lý Hóa đơn – 4MenStore</title>
-    <script src="/js/app-shell.js" defer></script>
+    <script src="/js/app-shell.js?v=live-chat-menu-20260722-2" defer></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
+            --navy:#102a56;
+            --navy-hover:#173d78;
             --gold:      #c8a474;
-            --gold-dark: #a8895a;
-            --gold-bg:   #7a5230;
-            --sidebar-w: 220px;
-            --sidebar-bg:#2b1d0e;
             --white:     #fff;
             --bg:        #f3f4f6;
             --border:    #e5e7eb;
@@ -20,100 +18,245 @@
             --text-light:#6b7280;
             --radius:    8px;
         }
-        body { font-family: 'Inter', 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; font-size: 14px; }
-        .sidebar { width: var(--sidebar-w); background: var(--sidebar-bg); color: #ccc; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; }
-        .sidebar-logo { padding: 20px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #333; }
-        .logo-box { width: 42px; height: 42px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #fff; }
-        .logo-name { font-size: 13px; font-weight: 600; color: #fff; line-height: 1.3; }
-        .sidebar-nav { flex: 1; padding: 12px 0; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; cursor: pointer; font-size: 14px; color: #bbb; text-decoration: none; transition: background .15s, color .15s; }
-        .nav-item:hover { background: #2a2a2a; color: #fff; }
-        .nav-item.active { background: var(--gold); color: #fff; }
-        .nav-item .icon { width: 18px; text-align: center; font-size: 16px; }
-        .nav-item .arrow { margin-left: auto; font-size: 11px; }
-        .sidebar-bottom { padding: 16px 20px; border-top: 1px solid #333; }
-        .sidebar-bottom a { display: flex; align-items: center; gap: 10px; color: #e55; font-size: 14px; text-decoration: none; }
-        .main { margin-left: var(--sidebar-w); flex: 1; padding: 24px; }
+        body { font-family: 'Inter', 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; }
+        .main { padding: 24px; }
         .breadcrumb { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
         .breadcrumb a { color: var(--text-light); text-decoration: none; }
         .breadcrumb span { color: var(--text); font-weight: 500; }
         .card { background: var(--white); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: none; }
-        .card-title { font-weight: 600; font-size: 15px; margin-bottom: 16px; }
-        .filter-row { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
-        .filter-group { display: flex; flex-direction: column; gap: 6px; }
-        .filter-group label { font-size: 12px; color: var(--text-light); }
-        .filter-group input, .filter-group select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; min-width: 160px; outline: none; }
-        .filter-group input:focus, .filter-group select:focus { border-color: var(--gold); }
-        .btn-filter { padding: 8px 14px; background: var(--gold); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 18px; transition: background .15s; }
-        .btn-filter:hover { background: var(--gold-dark); }
-        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        .table-header h2 { font-size: 16px; font-weight: 600; }
-        .status-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-        .tab-btn { padding: 7px 14px; border: 1px solid var(--border); border-radius: 20px; background: var(--white); font-size: 13px; cursor: pointer; transition: all .15s; white-space: nowrap; }
-        .tab-btn:hover { border-color: var(--gold); color: var(--gold); }
-        .tab-btn.active { background: var(--gold); color: #fff; border-color: var(--gold); font-weight: 600; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        thead tr { background: #f9fafb; color: var(--text-light); border-bottom: 1.5px solid var(--border); }
-        thead th { padding: 11px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
-        tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
-        tbody tr:hover { background: #fdf8ee; }
-        tbody td { padding: 11px 12px; }
-        .edit-input { width: 100%; padding: 4px 8px; border: 1px solid var(--gold); border-radius: 4px; font-size: 13px; outline: none; }
-        .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #555; margin-right: 4px; }
-        .status-dot.active { background: #27ae60; }
-        .status-dot.pending { background: #f39c12; }
-        .status-dot.cancelled { background: #e74c3c; }
-        .status-dot.processing { background:#3498db; }
-        .status-dot.shipping { background:#9b59b6; }
-        .action-btns { display: flex; gap: 8px; align-items: center; }
-        .btn-icon { background: none; border: none; cursor: pointer; font-size: 15px; color: var(--text-light); transition: color .15s; }
-        .btn-icon:hover { color: var(--gold); }
-        .btn-icon.del:hover { color: #e55; }
+        .card-title { font-weight: 700; font-size: 15px; margin-bottom: 14px; }
+        .filter-card { padding: 16px 18px; }
+        .search-lbl { display:block; margin-bottom:6px; color:var(--text-light); font-size:12px; font-weight:600; }
+        .search-box { position:relative; margin-bottom:14px; }
+        .search-box input { width:100%; height:34px; padding:8px 12px 8px 34px; border:1px solid var(--border); border-radius:6px; background:#f9fafb; font-size:13px; outline:none; }
+        .search-box input:focus { border-color:var(--navy); background:#fff; }
+        .search-box .s-ico { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-light); font-size:13px; }
+        .filter-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+        .filter-group { display: flex; flex-direction: column; gap: 5px; flex:1; min-width:170px; }
+        .filter-group label { font-size: 12px; color: var(--text-light); font-weight:600; }
+        .filter-group input, .filter-group select { width:100%; height:36px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; background:#f9fafb; font-size: 13px; outline: none; }
+        .filter-group input:focus, .filter-group select:focus { border-color: var(--navy); background:#fff; }
+        .btn-filter{padding:8px 14px;background:var(--navy);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:18px;transition:background .15s}
+        .btn-filter:hover{background:var(--navy-hover)}
+
+        /* === KHOẢNG GIÁ SLIDER === */
+        .price-range-group { display: flex; flex-direction: column; gap: 6px; flex:1.55; min-width: 260px; }
+        .price-range-group label { font-size: 12px; color: var(--text-light); font-weight:600; }
+        .price-range-info { font-size: 12px; color: var(--text-light); }
+        .price-range-info span { color: var(--text); font-weight: 600; }
+        .price-max-label { font-size: 12px; color: var(--text-light); font-weight: 600; margin-top: 2px; }
+        .price-max-label span { color: var(--text); font-weight:700; }
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 4px;
+            background: linear-gradient(to right, var(--navy) 0%, var(--navy) 100%, #e5e7eb 100%);
+            outline: none;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--navy);
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--navy);
+            cursor: pointer;
+            border: none;
+        }
+
+        .invoice-list-card{padding:0;overflow:hidden;border-radius:10px;background:#fff}
+        .table-header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:18px 20px 10px;margin:0}
+        .table-title-wrap{display:flex;align-items:flex-start;gap:12px}
+        .table-title-icon{width:34px;height:34px;border-radius:10px;background:#fff7ed;color:#c78c35;display:flex;align-items:center;justify-content:center;font-size:15px}
+        .table-header h2{font-size:15px;font-weight:800;color:#1f2937;margin:0 0 4px}
+        .table-subtitle{font-size:12px;color:#8b95a5}
+        .export-btn{height:34px;border:0;border-radius:7px;background:var(--navy);color:#fff;padding:0 13px;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+        .export-btn:hover{background:var(--navy-hover)}
+        .status-tabs{display:flex;gap:12px;flex-wrap:wrap;padding:10px 20px 16px;margin:0}
+        .tab-btn{min-width:88px;height:34px;padding:0 16px;border:1px solid #e3e8ef;border-radius:999px;background:#fff;color:#6b7280;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s;white-space:nowrap;box-shadow:0 2px 8px rgba(15,23,42,.03)}
+        .tab-btn:hover{border-color:#b6c5d9;color:var(--navy);background:#f8fbff}
+        .tab-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 8px 20px rgba(16,42,86,.18)}
+        .table-wrap{width:100%;overflow:auto}
+        table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px}
+        thead tr{background:#f7f9fc;color:#4b5563;border:0}
+        thead th{padding:13px 14px;text-align:left;font-size:11px;font-weight:900;text-transform:uppercase;white-space:nowrap;letter-spacing:.02em}
+        tbody tr{border:0;transition:background .12s}
+        tbody tr:hover{background:#fbfdff}
+        tbody td{padding:13px 14px;border-bottom:1px solid #eef2f7;vertical-align:middle;color:#1f2937}
+        .code-text{color:#102a56;font-weight:900;font-size:11px}
+        .money-cell{font-weight:900;color:#c43b4a}
+        .type-badge,.status-badge{display:inline-flex;align-items:center;justify-content:center;min-width:78px;min-height:24px;padding:4px 10px;border-radius:7px;font-size:11px;font-weight:900;white-space:nowrap}
+        .type-badge{min-width:88px}
+        .type-badge.counter{background:#dbeafe;color:#1d4ed8;border:1px solid #bfdbfe}
+        .type-badge.ship{background:#dcfce7;color:#15803d;border:1px solid #bbf7d0}
+        .type-badge.online{background:#f3e8ff;color:#7e22ce;border:1px solid #e9d5ff}
+        .type-badge.default{background:#eef2f7;color:#475569}
+        .status-badge.success{background:#d9fbe8;color:#13945f}
+        .status-badge.pending{background:#fef3c7;color:#a16207}
+        .status-badge.processing{background:#e0f2fe;color:#0369a1}
+        .status-badge.preparing{background:#ffedd5;color:#c2410c}
+        .status-badge.shipping{background:#ede9fe;color:#6d28d9}
+        .status-badge.returning{background:#fef3c7;color:#92400e}
+        .status-badge.cancelled{background:#fee2e2;color:#b91c1c}
+        .action-btns{display:flex;gap:8px;align-items:center;justify-content:center}
+        .btn-icon{width:30px;height:30px;border:1px solid #e5eaf1;border-radius:8px;background:#fff;cursor:pointer;color:#69778a;transition:.15s;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+        .btn-icon:hover{border-color:#b8c5d8;color:var(--navy);background:#f8fbff}
+        .btn-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+        .type-col,.detail-col{text-align:center}
         .btn-icon.save-inline { color: #27ae60; font-weight: bold; }
         .select-status-quick { padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; color: var(--text); outline: none; cursor: pointer; background-color: #fff; }
         .select-status-quick:focus { border-color: var(--gold); }
-        .pagination-row { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 10px; }
-        .show-select { display: flex; align-items: center; gap: 8px; font-size: 13px; }
-        .show-select select { padding: 5px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; outline: none; }
-        .pagination { display: flex; gap: 4px; align-items: center; }
-        .page-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 6px; background: var(--white); cursor: pointer; font-size: 13px; transition: all .15s; }
-        .page-btn:hover, .page-btn.active { background: var(--gold); color: #fff; border-color: var(--gold); }
-        .page-btn:disabled { opacity: .4; cursor: default; }
+        .pg-area {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding-top: 12px;
+            margin-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .pg-info {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        .pg-nav {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            justify-content: flex-end;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+        .pg-btn {
+            min-width: 32px;
+            height: 32px;
+            padding: 0 8px;
+            border-radius: 6px;
+            border: 1.5px solid var(--border);
+            background: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            transition: all .13s;
+        }
+        .pg-btn:hover:not(:disabled):not(.active){border-color:var(--navy);color:var(--navy);background:#eef4fb}
+        .pg-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}
+        .pg-btn:disabled { opacity: .4; cursor: not-allowed; }
+        .pg-ellipsis { padding: 0 4px; color: var(--text-light); }
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(17, 24, 39, .45);
+        }
+        .modal-backdrop.show { display: flex; }
+        .modal-box {
+            width: min(460px, 100%);
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            box-shadow: 0 18px 48px rgba(15, 23, 42, .22);
+            overflow: hidden;
+        }
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-head h3 { margin: 0; font-size: 16px; color: var(--text); }
+        .modal-close {
+            width: 30px;
+            height: 30px;
+            border: 0;
+            border-radius: 6px;
+            background: #f3f4f6;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+        }
+        .modal-close:hover { color: var(--navy); background: #eef4fb; }
+        .modal-body { padding: 18px; display: grid; gap: 14px; }
+        .modal-field { display: grid; gap: 6px; }
+        .modal-field label { font-size: 12px; font-weight: 700; color: var(--text-light); }
+        .modal-field input {
+            width: 100%;
+            height: 38px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 10px;
+            outline: none;
+            font-size: 13px;
+            font-family: inherit;
+        }
+        .modal-field input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(16, 42, 86, .08); }
+        .modal-error {
+            display: none;
+            border-radius: 6px;
+            background: #fef2f2;
+            color: #b91c1c;
+            padding: 9px 10px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .modal-error.show { display: block; }
+        .modal-foot {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 14px 18px 18px;
+        }
+        .btn-secondary, .btn-primary {
+            min-width: 88px;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .btn-secondary { border: 1px solid var(--border); color: var(--text); background: #fff; }
+        .btn-secondary:hover { border-color: var(--navy); color: var(--navy); background: #eef4fb; }
+        .btn-primary { border: 1px solid var(--navy); color: #fff; background: var(--navy); }
+        .btn-primary:hover { background: var(--navy-hover); border-color: var(--navy-hover); }
     </style>
 </head>
 <body>
-<aside class="sidebar">
-    <div class="sidebar-logo">
-        <div class="logo-box">4M</div>
-        <div class="logo-name">4MenStore</div>
-    </div>
-    <nav class="sidebar-nav">
-        <a href="#" class="nav-item"><span class="icon">🏠</span> Trang chủ</a>
-        <a href="#" class="nav-item"><span class="icon">📊</span> Thống kê</a>
-        <a href="#" class="nav-item"><span class="icon">💰</span> Bán hàng</a>
-        <a href="/hoa-don" class="nav-item active"><span class="icon">🧾</span> Hóa đơn</a>
-        <a href="#" class="nav-item"><span class="icon">🛍️</span> Sản phẩm <span class="arrow">›</span></a>
-        <a href="#" class="nav-item"><span class="icon">🏷️</span> Phiếu giảm giá</a>
-        <a href="#" class="nav-item"><span class="icon">⏰</span> Đợt giảm giá</a>
-        <a href="#" class="nav-item"><span class="icon">👥</span> Khách hàng</a>
-        <a href="#" class="nav-item"><span class="icon">👤</span> Nhân viên</a>
-    </nav>
-    <div class="sidebar-bottom">
-        <a href="#"><span>🚪</span> Đăng xuất</a>
-    </div>
-</aside>
+<aside class="sidebar"></aside>
 
 <main class="main">
     <div class="breadcrumb">
         <a href="#">Home</a> / <span>Hóa đơn</span>
     </div>
-    <div class="card">
-        <div class="card-title">Bộ lọc</div>
+    <div class="card filter-card">
+        <span class="search-lbl">Tìm kiếm</span>
+        <div class="search-box">
+            <span class="s-ico">🔍</span>
+            <input type="text" placeholder="Nhập mã hóa đơn..." id="filterMaHD" />
+        </div>
         <div class="filter-row">
-            <div class="filter-group">
-                <label>Mã hóa đơn</label>
-                <input type="text" placeholder="Nhập mã hóa đơn..." id="filterMaHD" />
-            </div>
             <div class="filter-group">
                 <label>Ngày bắt đầu</label>
                 <input type="date" id="filterFrom" />
@@ -130,15 +273,28 @@
                     <option value="Trực tuyến">Trực tuyến</option>
                 </select>
             </div>
-            <button class="btn-filter" onclick="applyFilter()" title="Tìm kiếm">🔍</button>
+
+            <!-- KHOẢNG GIÁ -->
+            <div class="price-range-group">
+                <label>Khoảng giá: <span id="priceRangeLabel">0 đ – đang tải...</span></label>
+                <input type="range" id="priceMax" min="0" max="10000000" step="100000" value="10000000"
+                       oninput="onPriceChange(this.value)" />
+                <div class="price-max-label">Giá lớn nhất: <span id="priceMaxLabel">đang tải...</span></div>
+            </div>
         </div>
     </div>
 
-    <div class="card">
+    <div class="card invoice-list-card">
         <div class="table-header">
-            <h2>Danh sách quản lý hóa đơn</h2>
+            <div class="table-title-wrap">
+                <div class="table-title-icon">▣</div>
+                <div>
+                    <h2>Danh sách hóa đơn</h2>
+                    <div class="table-subtitle">Lọc nhanh theo trạng thái</div>
+                </div>
+            </div>
             <div>
-                <button type="button" onclick="xuatExcel()" style="background-color: #bfa014; border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">
+                <button type="button" onclick="xuatExcel()" class="export-btn">
                     ↑ Export Excel
                 </button>
             </div>
@@ -150,80 +306,151 @@
             <button class="tab-btn" onclick="filterStatus(this,'Đã xác nhận')">Đã xác nhận</button>
             <button class="tab-btn" onclick="filterStatus(this,'Đang chuẩn bị hàng')">Đang chuẩn bị hàng</button>
             <button class="tab-btn" onclick="filterStatus(this,'Đang giao hàng')">Đang giao hàng</button>
+            <button class="tab-btn" onclick="filterStatus(this,'Chờ hàng hoàn')">Chờ hàng hoàn</button>
             <button class="tab-btn" onclick="filterStatus(this,'Hoàn thành')">Hoàn thành</button>
             <button class="tab-btn" onclick="filterStatus(this,'Đã hủy')">Đã hủy</button>
         </div>
 
+        <div class="table-wrap">
         <table id="hoaDonTable">
             <thead>
             <tr>
                 <th>STT</th>
                 <th>Mã HD</th>
-                <th>Tên NV</th>
-                <th>Tên KH</th>
-                <th>SDT KH</th>
-                <th>Tổng tiền TT</th>
-                <th>Loại đơn</th>
+                <th>Vai trò</th>
+                <th>Khách hàng</th>
+                <th>SĐT KH</th>
                 <th>Ngày tạo</th>
+                <th>Tổng tiền</th>
+                <th class="type-col">Loại</th>
                 <th>Trạng thái</th>
-                <th style="min-width: 180px;">Thao tác</th>
+                <th class="detail-col" style="min-width: 80px;">Chi tiết</th>
             </tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
-
-        <div class="pagination-row">
-            <div class="show-select">
-                Hiển thị
-                <select id="pageSize" onchange="changePageSize()">
-                    <option value="8">8 dòng</option>
-                    <option value="15">15 dòng</option>
-                    <option value="30">30 dòng</option>
-                </select>
-            </div>
-            <div class="pagination" id="pagination"></div>
         </div>
+
+        <div class="pg-area" id="pgArea"></div>
     </div>
 </main>
 
 <script>
     let currentStatus = "";
-    let currentPage = 1;
-    let pageSize = 8;
-    let totalPages = 0;
+    let curPage = 0;
+    const PG = 10;
+    let totalPg = 0;
+    let totalEl = 0;
     let dataList = [];
-    let editingId = null;
     let _pendingThanhToanId = null;
+    let priceMaxValue = 0;
+    let priceMaxAll = 0; // giá max thực tế từ DB
+    let priceFilterTouched = false;
+    let debounceTimer = null;
 
     function formatMoney(n) {
-        if (!n) return "0 VNĐ";
-        return Number(n).toLocaleString("vi-VN") + " VNĐ";
+        if (!n) return "0 đ";
+        return (Math.round(Number(n) / 1000) * 1000).toLocaleString("vi-VN") + " đ";
     }
 
     function formatDate(d) {
         if (!d) return "";
-        return new Date(d).toLocaleString("vi-VN");
+        const date = new Date(d);
+        return date.toLocaleString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        });
     }
 
-    async function loadData() {
+    function formatPrice(n) {
+        return (Math.round(Number(n || 0) / 1000) * 1000).toLocaleString("vi-VN") + " đ";
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    // Load giá max từ API khi trang mở
+    async function loadGiaMax() {
+        try {
+            const res = await fetch("/hoa-don/api/gia-max");
+            const max = await res.json();
+            priceMaxAll = Math.max(0, Number(max) || 0);
+            priceMaxValue = priceMaxAll;
+
+            const slider = document.getElementById("priceMax");
+            slider.max = priceMaxAll;
+            slider.value = priceMaxAll;
+            slider.step = 1000;
+
+            const formatted = formatPrice(priceMaxAll);
+            document.getElementById("priceMaxLabel").innerText = formatted;
+            document.getElementById("priceRangeLabel").innerText = `0 đ – ${formatted}`;
+            slider.style.background = `linear-gradient(to right, var(--navy) 100%, #e5e7eb 100%)`;
+        } catch (err) {
+            console.error("Lỗi load giá max:", err);
+        }
+    }
+
+    function onPriceChange(val) {
+        priceFilterTouched = true;
+        priceMaxValue = parseInt(val);
+        const formatted = formatPrice(priceMaxValue);
+        document.getElementById("priceMaxLabel").innerText = formatted;
+        document.getElementById("priceRangeLabel").innerText = `0 đ – ${formatted}`;
+        const pct = priceMaxAll ? (priceMaxValue / priceMaxAll) * 100 : 100;
+        document.getElementById("priceMax").style.background =
+            `linear-gradient(to right, var(--navy) ${pct}%, #e5e7eb ${pct}%)`;
+        autoFilter();
+    }
+
+    // Lọc tự động có debounce 400ms
+    function autoFilter() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            loadData(0);
+        }, 400);
+    }
+
+    async function loadData(page = curPage) {
+        curPage = Math.max(0, Number(page) || 0);
         const maHD = document.getElementById("filterMaHD").value.trim();
         const tuNgay = document.getElementById("filterFrom").value;
         const denNgay = document.getElementById("filterTo").value;
         const loaiDon = document.getElementById("filterLoai").value;
-        const queryObj = { page: currentPage - 1, size: pageSize };
+        const queryObj = { page: curPage, size: PG };
         if (maHD) queryObj.maHD = maHD;
         if (tuNgay) queryObj.tuNgay = tuNgay;
         if (denNgay) queryObj.denNgay = denNgay;
         if (loaiDon) queryObj.loaiDon = loaiDon;
-        if (currentStatus) queryObj.trangThai = currentStatus;
+        if (currentStatus) {
+            if (currentStatus === "Hoàn thành") {
+                queryObj.trangThai = "Hoàn thành|Đã thanh toán";
+            } else {
+                queryObj.trangThai = currentStatus;
+            }
+        }
+        if (priceFilterTouched && priceMaxAll > 0 && priceMaxValue < priceMaxAll) queryObj.maxGia = priceMaxValue;
         const params = new URLSearchParams(queryObj);
         try {
             const res = await fetch("/hoa-don/api?" + params.toString());
             const data = await res.json();
-            dataList = data.content || [];
-            totalPages = data.totalPages || 1;
+            dataList = Array.isArray(data) ? data : (data.content || []);
+            totalEl = Number(data.totalElements ?? data.page?.totalElements ?? dataList.length ?? 0);
+            totalPg = Math.max(1, Number(data.totalPages ?? data.page?.totalPages ?? Math.ceil(totalEl / PG) ?? 1));
+            if (curPage >= totalPg) {
+                return loadData(totalPg - 1);
+            }
             renderTable();
-            renderPagination();
+            renderPg();
         } catch (err) {
             console.error("Lỗi API danh sách:", err);
         }
@@ -231,164 +458,181 @@
 
     function getStatusDot(trangThai) {
         if (trangThai === "Chờ xác nhận") return "pending";
-        if (trangThai === "Đã xác nhận" || trangThai === "Đang chuẩn bị hàng") return "processing";
+        if (trangThai === "Đã xác nhận") return "processing";
+        if (trangThai === "Đang chuẩn bị hàng") return "preparing";
         if (trangThai === "Đang giao hàng") return "shipping";
-        if (trangThai === "Hoàn thành") return "active";
+        if (trangThai === "Chờ hàng hoàn") return "returning";
+        if (trangThai === "Hoàn thành" || trangThai === "Đã thanh toán") return "success";
         if (trangThai === "Đã hủy") return "cancelled";
-        return "active";
+        return "processing";
+    }
+
+    function orderTypeClass(loaiDon) {
+        const value = String(loaiDon || "").normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/đ/g, "d")
+            .replace(/Đ/g, "D")
+            .toLowerCase();
+        if (value.includes("quay") || value.includes("truc tiep")) return "counter";
+        if (value.includes("giao")) return "ship";
+        if (value.includes("tuyen") || value.includes("online")) return "online";
+        return "default";
+    }
+
+    function displayOrderType(order) {
+        const rawType = String(order?.loaiDon || "Tại quầy").trim();
+        const normalized = rawType.normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/đ/g, "d")
+            .replace(/Đ/g, "D")
+            .toLowerCase();
+        return normalized === "giao hang" ? "Tại quầy" : rawType;
     }
 
     function renderTable() {
         const tbody = document.getElementById("tableBody");
         if (!dataList.length) {
-            tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:20px;">Không có dữ liệu</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:28px;color:#8b95a5;">Không có dữ liệu</td></tr>`;
             return;
         }
         tbody.innerHTML = dataList.map((h, index) => {
-            const tenNV = h.nhanVien ? (h.nhanVien.hoTen || "") : "";
+            const vaiTroNV = employeeRole(h.nhanVien);
             const sdtKH = h.soDienThoai || "";
             const tenKH = h.tenKhachHang || (h.khachHang ? h.khachHang.tenKhachHang : "Khách lẻ");
-            const dotClass = getStatusDot(h.trangThai);
-            const isEditing = h.id === editingId;
-
-            // Chỉ cho phép đổi trạng thái theo đúng luồng
-            const trangThaiOptions = getTrangThaiOptions(h.trangThai);
-
+            const statusClass = getStatusDot(h.trangThai);
+            const loaiDon = displayOrderType(h);
+            const typeClass = orderTypeClass(loaiDon);
             return `
       <tr>
-        <td>${(currentPage - 1) * pageSize + index + 1}</td>
-        <td><a href="hoa-don-chi-tiet.html?id=${h.id}" style="color:var(--gold);font-weight:600;text-decoration:none">${h.maHoaDon || ""}</a></td>
-        <td>${tenNV}</td>
-        <td>${isEditing ? `<input type="text" class="edit-input" id="editTenKH_${h.id}" value="${tenKH}">` : tenKH}</td>
-        <td>${isEditing ? `<input type="text" class="edit-input" id="editSdtKH_${h.id}" value="${sdtKH}" placeholder="Nhập 10 số">` : sdtKH}</td>
-        <td style="font-weight:600">${formatMoney(h.tongTienThanhToan)}</td>
-        <td>${h.loaiDon || "Tại quầy"}</td>
+        <td>${curPage * PG + index + 1}</td>
+        <td><span class="code-text">${escapeHtml(h.maHoaDon || "")}</span></td>
+        <td>${escapeHtml(vaiTroNV)}</td>
+        <td>${escapeHtml(tenKH)}</td>
+        <td>${escapeHtml(sdtKH)}</td>
         <td>${formatDate(h.ngayTao)}</td>
-        <td><span class="status-dot ${dotClass}"></span>${h.trangThai || ""}</td>
-        <td>
+        <td class="money-cell">${formatMoney(h.tongTienThanhToan)}</td>
+        <td class="type-col"><span class="type-badge ${typeClass}">${escapeHtml(loaiDon)}</span></td>
+        <td><span class="status-badge ${statusClass}">${escapeHtml(h.trangThai || "")}</span></td>
+        <td class="detail-col">
           <div class="action-btns">
-            ${isEditing ? `
-              <button class="btn-icon save-inline" onclick="saveInlineUpdate(${h.id})" title="Lưu">💾 Lưu</button>
-              <button class="btn-icon" onclick="cancelInlineEdit()" title="Hủy bỏ">❌</button>
-            ` : `
-              <button class="btn-icon" onclick="location.href='hoa-don-chi-tiet.html?id=${h.id}'" title="Xem chi tiết">👁</button>
-              <button class="btn-icon" onclick="turnOnInlineEdit(${h.id})" title="Sửa thông tin KH">✏️</button>
-            `}
-            <select class="select-status-quick" onchange="updateStatusQuick(${h.id}, this.value, '${h.trangThai}')">
-              ${trangThaiOptions}
-            </select>
+            <button class="btn-icon" onclick="location.href='hoa-don-chi-tiet.html?id=${h.id}'" title="Xem chi tiết" aria-label="Xem chi tiết">
+                <svg viewBox="0 0 24 24">
+                    <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+            </button>
           </div>
         </td>
       </tr>`;
         }).join("");
     }
 
-    // Chỉ hiện các lựa chọn hợp lệ theo luồng
-    function getTrangThaiOptions(trangThai) {
-        const all = [
-            "Chờ xác nhận",
-            "Đã xác nhận",
-            "Đang chuẩn bị hàng",
-            "Đang giao hàng",
-            "Hoàn thành",
-            "Đã thanh toán",
-            "Đã hủy"
-        ];
-        return all.map(opt =>
-            `<option value="${opt}" ${opt === trangThai ? 'selected' : ''}>${opt}</option>`
-        ).join("");
+    function employeeRole(nhanVien) {
+        if (!nhanVien) return "";
+        const raw = (nhanVien.vaiTro || "").trim();
+        if (!raw) return "";
+        const normalized = raw
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/đ/g, "d")
+            .replace(/Đ/g, "D")
+            .replace(/[_-]+/g, " ")
+            .toLowerCase();
+        if (normalized.includes("quan") || normalized.includes("admin") || normalized.includes("manager")) return "Quản lý";
+        if (normalized.includes("nhan") || normalized.includes("staff") || normalized.includes("employee")) return "Nhân viên";
+        return raw;
     }
 
-    function turnOnInlineEdit(id) { editingId = id; renderTable(); }
-    function cancelInlineEdit() { editingId = null; renderTable(); }
+    function getTrangThaiOptions(trangThai) {
+        const all = ["Chờ xác nhận","Đã xác nhận","Đang chuẩn bị hàng","Đang giao hàng","Chờ hàng hoàn","Hoàn thành","Đã thanh toán","Đã hủy"];
+        return all.map(opt => `<option value="${opt}" ${opt === trangThai ? 'selected' : ''}>${opt}</option>`).join("");
+    }
 
-    async function saveInlineUpdate(id) {
-        const newTenKH = document.getElementById(`editTenKH_${id}`).value.trim();
-        const newSdtKH = document.getElementById(`editSdtKH_${id}`).value.trim();
-        if (!newTenKH) { alert("Tên khách hàng không được để trống!"); return; }
-        if (newSdtKH !== "") {
-            const vnf_regex = /((03|05|07|08|09)+([0-9]{8})\b)/g;
-            if (!vnf_regex.test(newSdtKH)) { alert("Số điện thoại không đúng định dạng VN!"); return; }
-        }
+    async function readApiError(response, fallback) {
         try {
-            const res = await fetch(`/hoa-don/update-thong-tin/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ tenKhachHang: newTenKH, soDienThoai: newSdtKH })
-            });
-            if (res.ok) { alert("Cập nhật thành công!"); editingId = null; loadData(); }
-            else { alert("Cập nhật thất bại."); }
-        } catch (err) { console.error(err); }
+            const contentType = response.headers.get("content-type") || "";
+            if (contentType.includes("application/json")) {
+                const body = await response.json();
+                return body?.message || Object.values(body || {}).find(Boolean) || fallback;
+            }
+            const text = await response.text();
+            return text || fallback;
+        } catch (_) {
+            return fallback;
+        }
     }
 
     async function updateStatusQuick(id, trangThaiMoi, trangThaiCu) {
         if (trangThaiMoi === trangThaiCu) return;
-
-        // Khi chọn "Đã thanh toán" → mở modal chọn phương thức
         if (trangThaiMoi === "Đã thanh toán") {
             _pendingThanhToanId = id;
             document.getElementById("modalPhuongThuc").style.display = "flex";
             document.querySelector('input[name="pttt"][value="Tiền mặt"]').checked = true;
             return;
         }
-
-        if (!confirm(`Xác nhận chuyển trạng thái sang "${trangThaiMoi}"?`)) {
-            loadData(); return;
-        }
-
+        if (!confirm(`Xác nhận chuyển trạng thái sang "${trangThaiMoi}"?`)) { loadData(); return; }
         try {
             const res = await fetch(`/hoa-don/${id}/trang-thai`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                method: "PUT", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ trangThai: trangThaiMoi })
             });
-            if (res.ok) { alert("Cập nhật thành công!"); }
-            else { alert("Cập nhật thất bại!"); }
+            if (!res.ok) {
+                throw new Error(await readApiError(res, "Cập nhật trạng thái thất bại"));
+            }
+            alert("Cập nhật thành công!");
             loadData();
-        } catch (err) { console.error(err); loadData(); }
+        } catch (err) {
+            console.error(err);
+            alert(err.message || "Cập nhật trạng thái thất bại");
+            loadData();
+        }
     }
 
     function dongModalPhuongThuc() {
         document.getElementById("modalPhuongThuc").style.display = "none";
-        _pendingThanhToanId = null;
-        loadData();
+        _pendingThanhToanId = null; loadData();
     }
 
     async function xacNhanThanhToan() {
         const phuongThuc = document.querySelector('input[name="pttt"]:checked')?.value || "Tiền mặt";
         document.getElementById("modalPhuongThuc").style.display = "none";
         try {
-            const res = await fetch(`/hoa-don/${_pendingThanhToanId}/thanh-toan?hinhThucThanhToan=${encodeURIComponent(phuongThuc)}`, {
-                method: "POST"
-            });
-            if (res.ok) { alert(`Thanh toán thành công! Phương thức: ${phuongThuc}`); }
-            else { alert("Thanh toán thất bại!"); }
-        } catch (err) { console.error(err); }
+            const res = await fetch(`/hoa-don/${_pendingThanhToanId}/thanh-toan?hinhThucThanhToan=${encodeURIComponent(phuongThuc)}`, { method: "POST" });
+            if (!res.ok) {
+                throw new Error(await readApiError(res, "Thanh toán thất bại"));
+            }
+            alert(`Thanh toán thành công! Phương thức: ${phuongThuc}`);
+        } catch (err) {
+            console.error(err);
+            alert(err.message || "Thanh toán thất bại");
+        }
         finally { _pendingThanhToanId = null; loadData(); }
     }
 
-    function renderPagination() {
-        const p = document.getElementById("pagination");
-        let html = "";
-        html += `<button class="page-btn" onclick="goPage(1)" ${currentPage === 1 ? "disabled" : ""}>«</button>`;
-        html += `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>‹</button>`;
-        for (let i = 1; i <= totalPages; i++) {
-            html += `<button class="page-btn ${i === currentPage ? "active" : ""}" onclick="goPage(${i})">${i}</button>`;
+    function renderPg() {
+        const area = document.getElementById("pgArea");
+        area.style.display = "flex";
+        let s = Math.max(0, curPage - 2), e = Math.min(totalPg, s + 5);
+        if (e - s < 5) s = Math.max(0, e - 5);
+        let nums = "";
+        if (s > 0) {
+            nums += `<button class="pg-btn" onclick="load(0)">1</button>`;
+            if (s > 1) nums += `<span style="padding:0 4px;color:var(--text-light)">…</span>`;
         }
-        html += `<button class="page-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? "disabled" : ""}>›</button>`;
-        html += `<button class="page-btn" onclick="goPage(${totalPages})" ${currentPage === totalPages ? "disabled" : ""}>»</button>`;
-        p.innerHTML = html;
+        for (let i = s; i < e; i++) nums += `<button class="pg-btn ${i === curPage ? "active" : ""}" onclick="load(${i})">${i + 1}</button>`;
+        if (e < totalPg) {
+            if (e < totalPg - 1) nums += `<span style="padding:0 4px;color:var(--text-light)">…</span>`;
+            nums += `<button class="pg-btn" onclick="load(${totalPg - 1})">${totalPg}</button>`;
+        }
+        area.innerHTML = `<div class="pg-info">Trang ${curPage + 1}/${totalPg} • ${totalEl} hóa đơn</div>
+      <div class="pg-nav"><button class="pg-btn" onclick="load(0)" ${curPage === 0 ? "disabled" : ""}>«</button><button class="pg-btn" onclick="load(${curPage - 1})" ${curPage === 0 ? "disabled" : ""}>← Trước</button>${nums}<button class="pg-btn" onclick="load(${curPage + 1})" ${curPage >= totalPg - 1 ? "disabled" : ""}>Sau →</button><button class="pg-btn" onclick="load(${totalPg - 1})" ${curPage >= totalPg - 1 ? "disabled" : ""}>»</button></div>`;
     }
 
-    function goPage(page) { if (page < 1 || page > totalPages) return; currentPage = page; loadData(); }
-    function changePageSize() { pageSize = parseInt(document.getElementById("pageSize").value); currentPage = 1; loadData(); }
-    function applyFilter() { currentPage = 1; loadData(); }
+    function load(page = 0) { loadData(page); }
+    function applyFilter() { loadData(0); }
     function filterStatus(btn, status) {
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentStatus = status;
-        currentPage = 1;
-        loadData();
+        btn.classList.add("active"); currentStatus = status; loadData(0);
     }
     function xuatExcel() {
         let maHD = document.getElementById("filterMaHD").value.trim();
@@ -398,7 +642,16 @@
         window.location.href = `/hoa-don/api/xuat-excel?maHD=${encodeURIComponent(maHD)}&tuNgay=${tuNgay}&denNgay=${denNgay}&loaiDon=${encodeURIComponent(loaiDon)}&trangThai=${encodeURIComponent(currentStatus)}`;
     }
 
-    document.addEventListener("DOMContentLoaded", () => { loadData(); });
+    document.addEventListener("DOMContentLoaded", async () => {
+        await loadGiaMax();
+        loadData(0);
+
+        // Gắn auto filter cho tất cả các input/select
+        document.getElementById("filterMaHD").addEventListener("input", autoFilter);
+        document.getElementById("filterFrom").addEventListener("change", autoFilter);
+        document.getElementById("filterTo").addEventListener("change", autoFilter);
+        document.getElementById("filterLoai").addEventListener("change", autoFilter);
+    });
 </script>
 
 <!-- Modal chọn phương thức thanh toán -->
@@ -417,8 +670,8 @@
             </label>
         </div>
         <div style="display:flex; gap:10px; justify-content:flex-end;">
-            <button onclick="dongModalPhuongThuc()" style="padding:8px 20px; border:1.5px solid #ccc; border-radius:7px; background:#fff; cursor:pointer;">Hủy</button>
-            <button onclick="xacNhanThanhToan()" style="padding:8px 20px; border:none; border-radius:7px; background:#b8860b; color:#fff; font-weight:600; cursor:pointer;">Xác nhận</button>
+            <button onclick="dongModalPhuongThuc()" style="padding:8px 20px; border:1.5px solid var(--navy); border-radius:7px; background:var(--navy); color:#fff; cursor:pointer;">Hủy</button>
+            <button onclick="xacNhanThanhToan()" style="padding:8px 20px; border:none; border-radius:7px; background:var(--navy); color:#fff; font-weight:600; cursor:pointer;">Xác nhận</button>
         </div>
     </div>
 </div>

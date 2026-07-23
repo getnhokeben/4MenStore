@@ -14,7 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="/js/app-shell.js" defer></script>
+    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
     <style>
         /* ===== GIỮ NGUYÊN TOÀN BỘ CSS NHƯ CŨ ===== */
         *,
@@ -37,6 +37,10 @@
             --r: 8px;
             --success: #16a34a;
             --danger: #dc2626;
+            --navy: #0b2a4a;
+            --navy-hover: #061d36;
+            --navy-active: #174d7d;
+            --navy-soft: #eaf1f8;
         }
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -303,7 +307,7 @@
             width: 100%;
             height: 5px;
             border-radius: 3px;
-            background: linear-gradient(to right, #c8a474 0%, #c8a474 var(--pct, 100%), #e5e7eb var(--pct, 100%), #e5e7eb 100%);
+            background: linear-gradient(to right, var(--navy) 0%, var(--navy) var(--pct, 100%), #e5e7eb var(--pct, 100%), #e5e7eb 100%);
             outline: none;
             cursor: pointer;
         }
@@ -312,10 +316,10 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background: #7a5230;
+            background: var(--navy);
             cursor: pointer;
             border: 2px solid #fff;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+            box-shadow: 0 1px 4px rgba(16, 42, 86, .28);
         }
         .price-range-info {
             display: flex;
@@ -334,44 +338,38 @@
             gap: 8px;
             margin-bottom: 14px;
         }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1.5px solid var(--border);
-            font-size: 13px;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all .15s;
-            background: #fff;
-            color: var(--text);
-            white-space: nowrap;
-        }
-        .btn:hover {
-            border-color: #aaa;
-        }
-        .btn-primary {
-            background: var(--gold);
-            color: #fff;
-            border-color: var(--gold);
-        }
-        .btn-primary:hover {
-            background: #a8895a;
-            border-color: #a8895a;
-        }
+        .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}
+        .btn:hover{background:var(--navy-hover);border-color:var(--navy-hover);color:#fff}
+        .btn-primary{background:var(--navy);border-color:var(--navy);color:#fff}
+        .btn-primary:hover{background:var(--navy-hover);border-color:var(--navy-hover)}
         .table-card {
             background: var(--white);
             border: 1px solid var(--border);
             border-radius: var(--r);
             overflow: auto;
         }
+        #tblWrap > table {
+            min-width: 1500px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed;
         }
+        .col-stt{width:78px}
+        .col-img{width:76px}
+        .col-ma-sp{width:132px}
+        .col-ten-sp{width:104px}
+        .col-ma-ctsp{width:190px}
+        .col-kich-co{width:78px}
+        .col-mau-sac{width:86px}
+        .col-loai-ao{width:150px}
+        .col-kieu-dang{width:108px}
+        .col-phong-cach{width:110px}
+        .col-sl{width:74px}
+        .col-price{width:136px}
+        .col-status{width:112px}
+        .col-actions{width:148px}
         thead tr {
             background: #f9fafb;
             border-bottom: 1.5px solid var(--border);
@@ -385,6 +383,8 @@
             text-transform: uppercase;
             letter-spacing: .5px;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         tbody tr {
             border-bottom: 1px solid var(--border);
@@ -397,15 +397,48 @@
             background: #fafafa;
         }
         td {
-            padding: 10px 12px;
+            padding: 10px 11px;
             font-size: 13px;
             vertical-align: middle;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cell-center {
+            text-align: center;
+        }
+        .cell-code,
+        .cell-name,
+        .cell-text {
+            white-space: nowrap;
+        }
+        .cell-code .td-code {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+        }
+        .cell-name {
+            color: var(--text);
+            font-weight: 500;
         }
         .td-num {
             color: var(--muted);
             font-size: 12px;
             font-weight: 600;
             text-align: center;
+        }
+        .stt-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .qr-select {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--navy);
+            cursor: pointer;
+            flex: 0 0 auto;
         }
         .td-code {
             font-family: monospace;
@@ -415,6 +448,7 @@
             padding: 2px 6px;
             border-radius: 4px;
             color: #374151;
+            display: inline-block;
         }
         .img-thumb {
             width: 50px;
@@ -448,6 +482,29 @@
             font-weight: 700;
             color: #dc2626;
             white-space: nowrap;
+        }
+        .th-price,
+        .td-price {
+            text-align: right;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+        .td-price .new-p,
+        .td-price .price-placeholder {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 100%;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+        .td-price .new-p {
+            color: #dc2626;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+        .td-price .price-placeholder {
+            color: var(--muted);
         }
         .badge-on {
             display: inline-flex;
@@ -490,26 +547,27 @@
         .act-btns {
             display: flex;
             align-items: center;
-            gap: 4px;
+            justify-content: flex-end;
+            gap: 5px;
         }
         .ib {
             width: 30px;
             height: 30px;
             border-radius: 6px;
-            border: 1.5px solid var(--border);
-            background: #fff;
+            border: 1.5px solid var(--navy);
+            background: var(--navy);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 13px;
-            color: var(--muted);
+            color: #fff;
             transition: all .13s;
         }
         .ib:hover {
-            background: #f3f4f6;
-            color: var(--text);
-            border-color: #aaa;
+            background: var(--navy-hover);
+            color: #fff;
+            border-color: var(--navy-hover);
         }
         .toggle {
             position: relative;
@@ -561,17 +619,14 @@
             font-size: 13px;
             color: var(--muted);
         }
-        .pg-nav {
-            display: flex;
-            gap: 3px;
-        }
+        .pg-nav{display:flex;gap:5px;align-items:center;justify-content:flex-end;margin-left:auto;flex-wrap:wrap}
         .pg-btn {
             min-width: 32px;
             height: 32px;
             padding: 0 8px;
             border-radius: 6px;
-            border: 1.5px solid var(--border);
-            background: #fff;
+            border: 1.5px solid var(--navy);
+            background: var(--navy);
             font-size: 13px;
             font-weight: 600;
             font-family: inherit;
@@ -579,18 +634,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--muted);
+            color: #fff;
             transition: all .13s;
         }
-        .pg-btn:hover:not(:disabled):not(.active) {
-            border-color: var(--gold);
-            color: var(--gold);
-        }
-        .pg-btn.active {
-            background: var(--gold);
-            color: #fff;
-            border-color: var(--gold);
-        }
+        .pg-btn:hover:not(:disabled):not(.active){border-color:var(--navy);color:var(--navy);background:#eef4fb}
+        .pg-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}
         .pg-btn:disabled {
             opacity: .4;
             cursor: not-allowed;
@@ -651,17 +699,17 @@
             height: 30px;
             border-radius: 7px;
             border: none;
-            background: #f3f4f6;
+            background: var(--navy);
             cursor: pointer;
             font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--muted);
+            color: #fff;
         }
         .modal-close:hover {
-            background: #fee2e2;
-            color: #dc2626;
+            background: var(--navy-hover);
+            color: #fff;
         }
         .modal-body {
             padding: 22px 24px;
@@ -677,6 +725,70 @@
             flex-shrink: 0;
             background: #f9fafb;
             border-radius: 0 0 12px 12px;
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 180px minmax(0, 1fr);
+            gap: 16px;
+            align-items: start;
+        }
+        .detail-main-image {
+            width: 180px;
+            aspect-ratio: 1;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #f8fafc;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+        }
+        .detail-main-image img,
+        .detail-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .detail-info {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .detail-item {
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 8px 10px;
+            background: #fafafa;
+        }
+        .detail-item label {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .detail-item span {
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .detail-section-title {
+            margin: 16px 0 8px;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 800;
+        }
+        .detail-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .detail-gallery .img-thumb {
+            width: 88px;
+            height: 88px;
         }
         .fg {
             display: flex;
@@ -708,6 +820,16 @@
         .fg input:read-only {
             background: #f3f4f6;
             cursor: not-allowed;
+        }
+        /* Keep formatted prices visible even when they contain many digits. */
+        .fg input.price-input {
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            overflow-x: auto;
+            text-overflow: clip;
         }
         .form-grid {
             display: grid;
@@ -803,75 +925,138 @@
 
         /* QR code button nhỏ */
         .btn-qr {
-            background: #f0f7ff;
-            border-color: #b6d4fe;
-            color: #0a58ca;
+            background: var(--navy-active);
+            border-color: var(--navy-active);
+            color: #fff;
         }
         .btn-qr:hover {
-            background: #cfe2ff;
-            border-color: #9ec5fe;
+            background: var(--navy-hover);
+            border-color: var(--navy-hover);
+            color: #fff;
+        }
+    </style>
+    <style>
+        /* Ảnh sản phẩm: bảng chỉ hiển thị ảnh đại diện, màn hình sửa hiển thị tối đa 3 ảnh */
+        #mdVariant .modal-box { max-width: 760px; }
+
+        .variant-images-note {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 11.5px;
+        }
+
+        .variant-image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .variant-image-slot {
+            position: relative;
+            min-height: 132px;
+            border: 2px dashed #e0cfae;
+            border-radius: 10px;
+            background: #fffaf0;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color .15s, background .15s, transform .15s;
+        }
+
+        .variant-image-slot:hover {
+            border-color: var(--gold);
+            background: #fbf1da;
+            transform: translateY(-1px);
+        }
+
+        .variant-image-slot.has-image {
+            border-style: solid;
+            border-color: var(--border);
+            background: #fff;
+        }
+
+        .variant-image-slot input[type=file] { display: none; }
+
+        .variant-image-slot img {
+            width: 100%;
+            height: 132px;
+            display: block;
+            object-fit: cover;
+        }
+
+        .variant-image-empty {
+            min-height: 132px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            color: #6b7d6b;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .variant-image-empty i {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,.8);
+            border: 1px solid rgba(122,82,48,.14);
+            font-size: 18px;
+        }
+
+        .variant-image-badge {
+            position: absolute;
+            top: 7px;
+            left: 7px;
+            z-index: 2;
+            padding: 3px 7px;
+            border-radius: 999px;
+            background: rgba(17,24,39,.78);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .variant-image-remove {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            z-index: 3;
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 50%;
+            background: var(--navy);
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .variant-image-remove:hover { background: var(--navy-hover); }
+
+        @media (max-width: 620px) {
+            #mdVariant .modal-box { width: 95%; }
+            .variant-image-grid { grid-template-columns: 1fr; }
+            .variant-image-slot, .variant-image-slot img, .variant-image-empty { min-height: 150px; height: 150px; }
         }
     </style>
 </head>
 <body>
 <div class="app">
-
-    <!-- SIDEBAR (giữ nguyên) -->
-    <aside class="sidebar">
-        <div class="sb-logo">
-            <img src="/images/logo-4menstore.jpg" alt="4MenStore">
-        </div>
-        <nav class="sb-nav">
-            <a href="/san-pham/trang-chu" class="ni"><span class="ico"><i class="fas fa-home"></i></span> Trang chủ</a>
-            <a href="/ban-hang-tai-quay" class="ni"><span class="ico"><i class="fas fa-store-alt"></i></span> Bán hàng tại quầy</a>
-            <a href="/hoa-don" class="ni"><span class="ico"><i class="fas fa-file-invoice"></i></span> Quản lý hóa đơn</a>
-
-            <!-- QUẢN LÝ SẢN PHẨM -->
-            <div class="ni active-row open-parent" onclick="toggleSub('sub-sp','arr-sp')">
-                <span class="ico"><i class="fas fa-box"></i></span> Quản lý sản phẩm
-                <span class="arr" id="arr-sp" style="transform:rotate(90deg)"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="submenu open" id="sub-sp">
-                <a href="/san-pham/quan-ly" class="si-lnk">Sản phẩm</a>
-                <a href="/san-pham/bien-the" class="si-lnk active">Biến thể sản phẩm</a>
-            </div>
-
-            <!-- QUẢN LÝ THUỘC TÍNH -->
-            <div class="ni" onclick="toggleSub('sub-tt','arr-tt')">
-                <span class="ico"><i class="fas fa-list-alt"></i></span> Quản lý thuộc tính
-                <span class="arr" id="arr-tt"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="submenu" id="sub-tt">
-                <a href="/thuoc-tinh/loai-ao" class="si-lnk">Loại áo</a>
-                <a href="/thuoc-tinh/kich-co" class="si-lnk">Kích cỡ</a>
-                <a href="/thuoc-tinh/mau-sac" class="si-lnk">Màu sắc</a>
-                <a href="/thuoc-tinh/phong-cach-mac" class="si-lnk">Phong cách mặc</a>
-                <a href="/thuoc-tinh/kieu-dang" class="si-lnk">Kiểu dáng</a>
-                <a href="/thuoc-tinh/xuat-xu" class="si-lnk">Xuất xứ</a>
-                <a href="/thuoc-tinh/chat-lieu" class="si-lnk">Chất liệu</a>
-            </div>
-
-            <!-- QUẢN LÝ GIẢM GIÁ -->
-            <div class="ni" onclick="toggleSub('sub-gd','arr-gd')">
-                <span class="ico"><i class="fas fa-tags"></i></span> Quản lý giảm giá
-                <span class="arr" id="arr-gd"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="submenu" id="sub-gd">
-                <a href="#" class="si-lnk">Đợt giảm giá</a>
-                <a href="#" class="si-lnk">Voucher</a>
-            </div>
-
-            <a href="#" class="ni"><span class="ico"><i class="fas fa-user-cog"></i></span> Tài khoản <span class="arr"><i class="fas fa-chevron-right"></i></span></a>
-        </nav>
-    </aside>
+    <aside class="sidebar"></aside>
 
     <!-- MAIN -->
     <div class="main">
-        <header class="topbar">
-            <span class="tb-lbl">Quản trị hệ thống</span>
-            <span class="tb-bell"><i class="fas fa-bell"></i><span class="tb-dot"></span></span>
-            <div class="tb-av">T</div>
-        </header>
+        <header class="topbar"></header>
 
         <div class="content">
             <div class="page-title">Danh sách tất cả biến thể sản phẩm</div>
@@ -881,32 +1066,32 @@
                 <span class="search-lbl">Tìm kiếm</span>
                 <div class="search-box">
                     <i class="fas fa-search s-ico"></i>
-                    <input type="text" id="kw" placeholder="Tìm biến thể theo mã biến thể hoặc mã sản phẩm" oninput="deb()">
+                    <input type="text" id="kw" placeholder="Tìm biến thể theo mã biến thể hoặc mã sản phẩm" oninput="clearUpdatedVariantOverride(); deb()">
                 </div>
                 <div class="filter-row">
                     <div class="filt">
                         <label>Màu sắc</label>
-                        <select id="fMau" onchange="go(0)"><option value="">Chọn màu sắc</option></select>
+                        <select id="fMau" onchange="clearUpdatedVariantOverride(); go(0)"><option value="">Chọn màu sắc</option></select>
                     </div>
                     <div class="filt">
                         <label>Kích cỡ</label>
-                        <select id="fKich" onchange="go(0)"><option value="">Chọn kích cỡ</option></select>
+                        <select id="fKich" onchange="clearUpdatedVariantOverride(); go(0)"><option value="">Chọn kích cỡ</option></select>
                     </div>
                     <div class="filt">
                         <label>Loại áo</label>
-                        <select id="fLoai" onchange="go(0)"><option value="">Chọn loại áo</option></select>
+                        <select id="fLoai" onchange="clearUpdatedVariantOverride(); go(0)"><option value="">Chọn loại áo</option></select>
                     </div>
                     <div class="filt">
                         <label>Kiểu dáng</label>
-                        <select id="fKieu" onchange="go(0)"><option value="">Chọn kiểu dáng</option></select>
+                        <select id="fKieu" onchange="clearUpdatedVariantOverride(); go(0)"><option value="">Chọn kiểu dáng</option></select>
                     </div>
                     <div class="filt">
                         <label>Phong cách</label>
-                        <select id="fPhongCach" onchange="go(0)"><option value="">Chọn phong cách</option></select>
+                        <select id="fPhongCach" onchange="clearUpdatedVariantOverride(); go(0)"><option value="">Chọn phong cách</option></select>
                     </div>
                     <div class="filt">
                         <label>Trạng thái</label>
-                        <select id="fTT" onchange="go(0)">
+                        <select id="fTT" onchange="clearUpdatedVariantOverride(); go(0)">
                             <option value="">Tất cả</option>
                             <option value="true">Đang bán</option>
                             <option value="false">Ngừng bán</option>
@@ -915,7 +1100,8 @@
                     <div class="price-range-wrap">
                         <label>Khoảng giá: <span id="priceLabel">Đang tải...</span></label>
                         <input type="range" id="priceRange" min="0" max="0" step="50000" value="0"
-                               oninput="updatePrice(this.value)" onchange="go(0)">
+                               oninput="clearUpdatedVariantOverride(); updatePrice(this.value)"
+                               onchange="clearUpdatedVariantOverride(); go(0)">
                         <div class="price-range-info">
                             <span>Giá lớn nhất: <span id="maxPriceLabel" class="max-label">0 đ</span></span>
                         </div>
@@ -923,13 +1109,13 @@
                 </div>
             </div>
 
-            <!-- ACTION BAR – thêm nút Quét QR và Tải ảnh QR -->
+            <!-- ACTION BAR – nút Quét QR, xuất Excel và tải QR đã chọn -->
             <div class="act-bar">
                 <button class="btn" onclick="scanQR()"><i class="fas fa-qrcode"></i> Quét QR</button>
                 <button class="btn" onclick="exportExcel()">
                     <i class="fas fa-file-excel"></i> Tải excel
                 </button>
-                <button class="btn" onclick="downloadAllQR()"><i class="fas fa-download"></i> Tải ảnh QR</button>
+                <button class="btn" onclick="downloadAllQR()"><i class="fas fa-download"></i> Tải QR đã chọn</button>
             </div>
 
             <!-- TABLE -->
@@ -954,7 +1140,7 @@
             <input type="hidden" id="variantId">
             <div class="fg">
                 <label>Mã CTSP <span style="color:#dc2626">*</span></label>
-                <input type="text" id="vMaCTSP">
+                <input type="text" id="vMaCTSP" readonly>
             </div>
             <div class="form-grid" style="margin-top:12px">
                 <div class="fg">
@@ -981,8 +1167,13 @@
                 <select id="vSize"></select>
             </div>
             <div class="fg" style="margin-top:12px">
-                <label>Đơn giá (VND)  <span style="color:#dc2626">*</span></label>
-                <input type="text" inputmode="numeric" id="vDonGia" oninput="formatMoneyInput(this)" placeholder="VD: 150.000">
+                <label>Đơn giá (đ)  <span style="color:#dc2626">*</span></label>
+                <input class="price-input" type="text" inputmode="numeric" id="vDonGia" oninput="formatMoneyInput(this)" placeholder="VD: 150.000" autocomplete="off">
+            </div>
+            <div class="fg" style="margin-top:12px">
+                <label>Ảnh riêng biến thể</label>
+                <span class="variant-images-note">Tối đa 3 ảnh riêng. Ảnh đầu tiên là ảnh đại diện hiển thị trong bảng.</span>
+                <div class="variant-image-grid" id="vImageSlots"></div>
             </div>
             <div class="fg" style="margin-top:12px">
                 <label>Số lượng tồn  <span style="color:#dc2626">*</span></label>
@@ -1002,6 +1193,20 @@
         <div class="modal-foot">
             <button class="btn" onclick="closeModal('mdVariant')">Hủy</button>
             <button class="btn btn-primary" onclick="saveVariant()">💾 Lưu biến thể</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL XEM CHI TIẾT BIẾN THỂ -->
+<div class="modal-bg" id="mdVariantDetail">
+    <div class="modal-box" style="max-width:780px;">
+        <div class="modal-head">
+            <h2>Chi tiết biến thể</h2>
+            <button class="modal-close" onclick="closeModal('mdVariantDetail')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="variantDetailBody"></div>
+        <div class="modal-foot">
+            <button class="btn" onclick="closeModal('mdVariantDetail')">Đóng</button>
         </div>
     </div>
 </div>
@@ -1028,10 +1233,18 @@
 
 <script>
     const API = '/san-pham';
+    // Phân trang 10 SPCT mỗi trang.
     const PG = 10;
     let page = 0, totalPg = 0, totalEl = 0, dbT = null;
     let allData = [];
+    const selectedQrVariantIds = new Set();
     let dynamicMaxPrice = 0;
+    // ID biến thể vừa cập nhật: dùng để giữ dòng vừa lưu không bị lọc giá cũ che mất.
+    let lastUpdatedVariantId = null;
+    // Chỉ dùng ngay sau khi lưu. SPCT vừa cập nhật được giữ hiển thị
+    // kể cả khi nó tạm thời không khớp bộ lọc cũ.
+    // Khi người dùng thay đổi bộ lọc, cờ này sẽ được tắt để lọc hoạt động bình thường.
+    let forceShowUpdatedVariant = false;
     let kichCoOptions = [], mauSacOptions = [], loaiAoOptions = [], phongCachOptions = [], kieuDangOptions = [];
     let scanner = null;
 
@@ -1055,11 +1268,46 @@
 
     // -- UTILS --
     function esc(s) { if (!s) return ''; return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
-    function fmt(n) { return Number(n || 0).toLocaleString('vi-VN') }
+    function fmt(n) { return (Math.round(Number(n || 0) / 1000) * 1000).toLocaleString('vi-VN') }
     function moneyRaw(v) { return String(v || '').replace(/[^\d]/g, '') }
     function formatMoney(v) { const raw = moneyRaw(v); return raw ? Number(raw).toLocaleString('vi-VN') : '' }
     function isPositiveMoney(v) { return Number(moneyRaw(v)) > 0 }
     function isNonNegativeInt(v) { return String(v ?? '').trim() !== '' && Number.isInteger(Number(v)) && Number(v) >= 0 }
+
+    async function apiFetch(url, options = {}) {
+        const headers = {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            ...(options.headers || {})
+        };
+        return fetch(url, { ...options, credentials: 'same-origin', headers });
+    }
+
+    async function apiJson(url, options = {}) {
+        const res = await apiFetch(url, options);
+        const contentType = res.headers.get('content-type') || '';
+        const text = await res.text();
+
+        if (!res.ok) {
+            let message = text || `HTTP ${res.status}`;
+            if (contentType.includes('application/json')) {
+                try {
+                    const data = JSON.parse(text);
+                    message = data.message || data.error || JSON.stringify(data);
+                } catch {}
+            } else if (/<!doctype html|<html/i.test(text)) {
+                message = 'API trả về trang HTML. Vui lòng đăng nhập lại hoặc kiểm tra endpoint.';
+            }
+            throw new Error(message);
+        }
+
+        if (!text) return null;
+        if (/<!doctype html|<html/i.test(text)) {
+            throw new Error('API trả về trang HTML. Vui lòng đăng nhập lại hoặc kiểm tra endpoint.');
+        }
+        return JSON.parse(text);
+    }
+
     function formatMoneyInput(input) {
         const caret = input.selectionStart || 0;
         const digitsBeforeCaret = moneyRaw(input.value.slice(0, caret)).length;
@@ -1074,37 +1322,307 @@
             }
         }
         input.setSelectionRange(nextCaret, nextCaret);
+        if (!input.dataset.roundMoneyBound) {
+            input.dataset.roundMoneyBound = 'true';
+            input.addEventListener('blur', () => {
+                const value = Number(moneyRaw(input.value) || 0);
+                input.value = value ? formatMoney(Math.round(value / 1000) * 1000) : '';
+            });
+        }
     }
+    // Mỗi biến thể có tối đa 3 ảnh. Ảnh đầu tiên là ảnh đại diện trong bảng.
+    let variantImages = [];
+    let variantImagesChanged = false;
+
+    function imageUrlFromValue(value) {
+        if (!value) return '';
+        if (typeof value === 'string') return normalizeImageUrl(value);
+        if (typeof value === 'object') {
+            return normalizeImageUrl(value.url || value.hinhAnh || value.hinhAnhUrl || value.duongDan || value.path || '');
+        }
+        return '';
+    }
+
+    function normalizeImageUrl(value) {
+        const raw = String(value || '').trim();
+        if (!raw) return '';
+        if (raw.startsWith('blob:') || raw.startsWith('data:') || raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/')) {
+            return raw;
+        }
+        if (raw.startsWith('uploads/')) return '/' + raw;
+        return '/uploads/' + raw;
+    }
+
+    function getVariantImageUrls(variant, includeProductFallback = true) {
+        const images = [];
+        const add = value => {
+            const url = imageUrlFromValue(value);
+            if (url && !images.includes(url)) images.push(url);
+        };
+        const addMany = value => {
+            if (!value) return;
+            if (typeof value === 'string') {
+                const text = value.trim();
+                if (!text) return;
+                if (text.startsWith('[')) {
+                    try {
+                        const parsed = JSON.parse(text);
+                        (Array.isArray(parsed) ? parsed : [parsed]).forEach(add);
+                        return;
+                    } catch {
+                        add(text);
+                        return;
+                    }
+                }
+                add(text);
+                return;
+            }
+            (Array.isArray(value) ? value : [value]).forEach(add);
+        };
+
+        add(variant?.hinhAnh);
+        add(variant?.hinhAnhChinh);
+        add(variant?.imageUrl);
+
+        const extras = variant?.danhSachHinhAnh || variant?.danhSachHinhAnhPhu || variant?.hinhAnhPhu || [];
+        addMany(extras);
+
+        // Dữ liệu cũ chỉ có ảnh ở sản phẩm: vẫn hiển thị được để không mất ảnh cũ.
+        if (includeProductFallback && !images.length) {
+            add(variant?.sanPham?.hinhAnhChinh);
+            add(variant?.sanPham?.hinhAnh);
+            const productExtras = variant?.sanPham?.danhSachHinhAnhPhu || variant?.sanPham?.danhSachHinhAnh || [];
+            addMany(productExtras);
+        }
+
+        return images.slice(0, 3);
+    }
+
+    function detailValue(value) {
+        const text = String(value ?? '').trim();
+        return text ? esc(text) : '–';
+    }
+
+    function openVariantDetail(id) {
+        const variant = allData.find(v => Number(v.idSpct) === Number(id));
+        if (!variant) {
+            toast2('Không tìm thấy biến thể', 'error');
+            return;
+        }
+
+        const images = getVariantImageUrls(variant, false);
+        const mainImage = images[0];
+        const mainImageHtml = mainImage
+            ? `<img src="${esc(mainImage)}" alt="Ảnh riêng biến thể" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\'></i>'">`
+            : `<i class="fas fa-image"></i>`;
+        const galleryHtml = images.length
+            ? images.map((url, index) => `
+                <div class="img-thumb" title="Ảnh riêng ${index + 1}">
+                    <img src="${esc(url)}" alt="Ảnh riêng biến thể ${index + 1}">
+                </div>
+            `).join('')
+            : '<div class="detail-item"><span>Biến thể này chưa có ảnh riêng.</span></div>';
+
+        document.getElementById('variantDetailBody').innerHTML = `
+            <div class="detail-grid">
+                <div class="detail-main-image">${mainImageHtml}</div>
+                <div class="detail-info">
+                    <div class="detail-item"><label>Mã CTSP</label><span>${detailValue(variant.maChiTietSanPham)}</span></div>
+                    <div class="detail-item"><label>Mã SP</label><span>${detailValue(variant.sanPham?.maSp)}</span></div>
+                    <div class="detail-item"><label>Tên SP</label><span>${detailValue(variant.sanPham?.tenSp)}</span></div>
+                    <div class="detail-item"><label>Kích cỡ</label><span>${detailValue(variant.kichCo?.tenKichCo)}</span></div>
+                    <div class="detail-item"><label>Màu sắc</label><span>${detailValue(variant.mauSac?.tenMauSac)}</span></div>
+                    <div class="detail-item"><label>Loại áo</label><span>${detailValue(variant.loaiAo?.tenLoai)}</span></div>
+                    <div class="detail-item"><label>Kiểu dáng</label><span>${detailValue(variant.kieuDang?.tenKieuDang)}</span></div>
+                    <div class="detail-item"><label>Phong cách</label><span>${detailValue(variant.phongCachMac?.tenPhongCach)}</span></div>
+                    <div class="detail-item"><label>SL tồn</label><span>${variant.soLuongTon ?? 0}</span></div>
+                    <div class="detail-item"><label>Đơn giá</label><span>${fmt(Number(variant.donGia || 0))} đ</span></div>
+                    <div class="detail-item"><label>Trạng thái</label><span>${variant.trangThai !== false ? 'Đang bán' : 'Ngừng bán'}</span></div>
+                </div>
+            </div>
+            <div class="detail-section-title">Ảnh riêng biến thể (${images.length}/3)</div>
+            <div class="detail-gallery">${galleryHtml}</div>
+        `;
+        document.getElementById('mdVariantDetail').classList.add('show');
+    }
+
+    function clearLocalImagePreview(image) {
+        if (image?.previewUrl && String(image.previewUrl).startsWith('blob:')) {
+            URL.revokeObjectURL(image.previewUrl);
+        }
+    }
+
+    function resetVariantImageEditor(variant) {
+        variantImages.forEach(clearLocalImagePreview);
+        variantImages = getVariantImageUrls(variant).map(url => ({
+            url,
+            previewUrl: url,
+            file: null
+        }));
+        variantImagesChanged = false;
+        renderVariantImageSlots();
+    }
+
+    function renderVariantImageSlots() {
+        const wrap = document.getElementById('vImageSlots');
+        if (!wrap) return;
+
+        wrap.innerHTML = [0, 1, 2].map(index => {
+            const image = variantImages[index];
+            const label = index === 0 ? 'Ảnh đại diện' : `Ảnh ${index + 1}`;
+
+            if (image) {
+                const src = esc(image.previewUrl || image.url || '');
+                return `
+                    <label class="variant-image-slot has-image" title="Bấm để thay ${label.toLowerCase()}">
+                        ${index === 0 ? '<span class="variant-image-badge">Ảnh đại diện</span>' : ''}
+                        <img src="${src}" alt="${label}" onerror="this.closest('.variant-image-slot').classList.remove('has-image');this.remove()">
+                        <input type="file" accept="image/*" onchange="replaceVariantImage(this, ${index})">
+                        <button type="button" class="variant-image-remove" onclick="event.preventDefault(); event.stopPropagation(); removeVariantImage(${index})" title="Xóa ảnh">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </label>
+                `;
+            }
+
+            return `
+                <label class="variant-image-slot" title="Bấm để tải ${label.toLowerCase()}">
+                    ${index === 0 ? '<span class="variant-image-badge">Ảnh đại diện</span>' : ''}
+                    <span class="variant-image-empty">
+                        <i class="fas fa-image"></i>
+                        <span>${index === 0 ? 'Tải ảnh đại diện' : `Thêm ảnh ${index + 1}`}</span>
+                    </span>
+                    <input type="file" accept="image/*" onchange="replaceVariantImage(this, ${index})">
+                </label>
+            `;
+        }).join('');
+    }
+
+    function replaceVariantImage(input, index) {
+        const file = input?.files?.[0];
+        if (!file) return;
+
+        clearLocalImagePreview(variantImages[index]);
+        variantImages[index] = {
+            url: '',
+            previewUrl: URL.createObjectURL(file),
+            file
+        };
+        variantImagesChanged = true;
+        renderVariantImageSlots();
+    }
+
+    function removeVariantImage(index) {
+        clearLocalImagePreview(variantImages[index]);
+        variantImages.splice(index, 1);
+        variantImagesChanged = true;
+        renderVariantImageSlots();
+    }
+
+    async function uploadVariantImages() {
+        const uploadedUrls = [];
+
+        for (const image of variantImages) {
+            if (image?.file) {
+                const fd = new FormData();
+                fd.append('file', image.file);
+
+                const r = await apiFetch(`${API}/upload-anh`, {
+                    method: 'POST',
+                    body: fd
+                });
+                const responseText = await r.text();
+
+                if (!r.ok) throw new Error(responseText || 'Không thể upload ảnh');
+                const data = responseText ? JSON.parse(responseText) : {};
+                const url = imageUrlFromValue(data);
+
+                if (!url) throw new Error('Server không trả về đường dẫn ảnh');
+                uploadedUrls.push(url);
+            } else {
+                const url = imageUrlFromValue(image);
+                if (url) uploadedUrls.push(url);
+            }
+        }
+
+        return uploadedUrls.slice(0, 3);
+    }
+
     function closeModal(id) { document.getElementById(id).classList.remove('show') }
     document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show') }));
 
-    // -- PRICE RANGE --
-    function setupPriceRange() {
-        dynamicMaxPrice = Math.max(...allData.map(v => Number(v.donGia || 0)), 0);
-        const range = document.getElementById('priceRange');
-        const max = dynamicMaxPrice || 0;
-        range.max = String(max);
-        range.step = max > 10000000 ? '100000' : '50000';
-        range.value = String(max);
-        updatePrice(max);
-        document.getElementById('maxPriceLabel').textContent = fmt(max) + ' đ';
+    // -- LỌC KHOẢNG GIÁ --
+    function toSafePrice(value) {
+        const price = Number(value ?? 0);
+        return Number.isFinite(price) && price >= 0 ? price : 0;
     }
 
-    function updatePrice(val) {
+    function priceSliderStep(maxPrice) {
+        return 1000;
+    }
+
+    function priceSliderMax(maxPrice) {
+        const safeMax = toSafePrice(maxPrice);
+        return safeMax;
+    }
+
+    function setupPriceRange(options = {}) {
+        const { includeUpdatedPrice = false, resetToMax = false } = options;
         const range = document.getElementById('priceRange');
-        const max = Number(range.max || 0);
-        const current = Number(val || 0);
+        const priceLabel = document.getElementById('priceLabel');
+        const maxPriceLabel = document.getElementById('maxPriceLabel');
+
+        const oldMax = toSafePrice(range?.max);
+        const oldValue = toSafePrice(range?.value);
+        const wasAtOldMax = oldMax === 0 || oldValue >= oldMax;
+
+        const actualMaxPrice = allData.reduce(
+            (max, variant) => Math.max(max, toSafePrice(variant?.donGia)),
+            0
+        );
+        dynamicMaxPrice = priceSliderMax(actualMaxPrice);
+
+        const updatedVariant = lastUpdatedVariantId == null
+            ? null
+            : allData.find(v => Number(v.idSpct) === Number(lastUpdatedVariantId));
+        const updatedPrice = toSafePrice(updatedVariant?.donGia);
+
+        let nextValue = oldValue;
+        // Lần đầu tải, người dùng đang để mức tối đa, hoặc vừa sửa giá cao hơn
+        // khoảng đang chọn: mở rộng mức lọc để SPCT đó không bị ẩn.
+        if (resetToMax || oldMax === 0 || wasAtOldMax || (includeUpdatedPrice && updatedPrice > oldValue)) {
+            nextValue = dynamicMaxPrice;
+        } else {
+            nextValue = Math.min(oldValue, dynamicMaxPrice);
+        }
+
+        if (range) {
+            range.disabled = false;
+            range.min = '0';
+            range.max = String(dynamicMaxPrice || 0);
+            range.step = String(priceSliderStep(dynamicMaxPrice));
+            range.value = String(nextValue);
+            range.title = 'Kéo để lọc các SPCT có đơn giá không vượt quá mức đã chọn';
+        }
+        if (maxPriceLabel) maxPriceLabel.textContent = fmt(dynamicMaxPrice) + ' đ';
+        if (priceLabel) updatePrice(nextValue);
+    }
+
+    function updatePrice(value) {
+        const range = document.getElementById('priceRange');
+        const max = toSafePrice(range?.max);
+        const current = Math.min(toSafePrice(value), max || 0);
         const pct = max ? (current / max * 100).toFixed(1) : 100;
-        range.style.setProperty('--pct', pct + '%');
-        document.getElementById('priceLabel').textContent = max
-            ? `0 đ - ${fmt(current)} đ`
-            : 'Tất cả';
+
+        if (range) range.style.setProperty('--pct', pct + '%');
+        const priceLabel = document.getElementById('priceLabel');
+        if (priceLabel) {
+            priceLabel.textContent = max ? `0 đ - ${fmt(current)} đ` : 'Tất cả';
+        }
     }
 
     async function fetchCatalog(path) {
-        const r = await fetch(`${API}/danh-muc/${path}`);
-        if (!r.ok) throw new Error(`Không tải được danh mục ${path}`);
-        const data = await r.json();
+        const data = await apiJson(`${API}/danh-muc/${path}`);
         return Array.isArray(data) ? data : (data.content || []);
     }
 
@@ -1144,28 +1662,82 @@
     }
 
     // -- LOAD TẤT CẢ BIẾN THỂ --
-    async function loadAll() {
-        document.getElementById('tblWrap').innerHTML = '<div class="load-st"><div class="spin"></div><div style="margin-top:10px">Đang tải biến thể...</div></div>';
-        try {
-            const r = await fetch(`${API}/hien-thi?page=0&size=9999&sort=idSp,asc`);
-            if (!r.ok) throw new Error('HTTP ' + r.status);
-            const d = await r.json();
-            const products = d.content || [];
+    function asArray(payload) {
+        if (Array.isArray(payload)) return payload;
+        if (!payload || typeof payload !== 'object') return [];
 
-            const results = await Promise.all(
-                products.map(async p => {
-                    try {
-                        const vr = await fetch(`${API}/bien-the/${p.idSp}`);
-                        if (!vr.ok) return [];
-                        const vs = await vr.json();
-                        return vs.map(v => ({ ...v, sanPham: p }));
-                    } catch { return []; }
-                })
-            );
-            allData = results.flat();
+        // Chấp nhận các kiểu phản hồi thường gặp: Page của Spring, data/content,
+        // result/content hoặc danh sách nằm trực tiếp trong data/result/items.
+        for (const key of ['content', 'data', 'result', 'items']) {
+            const value = payload[key];
+            if (Array.isArray(value)) return value;
+            if (value && typeof value === 'object') {
+                const nested = asArray(value);
+                if (nested.length) return nested;
+            }
+        }
+        return [];
+    }
+
+    async function fetchAllProducts() {
+        const size = 200;
+        const products = [];
+        const pageSignatures = new Set();
+        let currentPage = 0;
+        let totalPages = 1;
+
+        do {
+            const data = await apiJson(`${API}/hien-thi?page=${currentPage}&size=${size}&sort=idSp,asc`);
+            const currentItems = asArray(data);
+            const signature = currentItems.map(item => item?.idSp ?? '').join('|');
+
+            // Tránh vòng lặp nếu server bỏ qua tham số page và trả cùng một trang.
+            if (signature && pageSignatures.has(signature)) break;
+            if (signature) pageSignatures.add(signature);
+            products.push(...currentItems);
+
+            const serverTotalPages = Number(data?.totalPages ?? data?.data?.totalPages ?? data?.result?.totalPages);
+            if (Number.isFinite(serverTotalPages) && serverTotalPages > 0) {
+                totalPages = serverTotalPages;
+            } else if (currentItems.length < size) {
+                break;
+            } else {
+                totalPages = currentPage + 2;
+            }
+            currentPage++;
+        } while (currentPage < totalPages && currentPage < 1000);
+
+        // Loại dữ liệu lặp khi API trả về trùng trang.
+        return [...new Map(products.filter(p => p?.idSp != null).map(p => [p.idSp, p])).values()];
+    }
+
+    async function loadAll() {
+        document.getElementById('tblWrap').innerHTML = '<div class="load-st"><div class="spin"></div><div style="margin-top:10px">Đang tải toàn bộ biến thể...</div></div>';
+        try {
+            const products = await fetchAllProducts();
+            const failedProducts = [];
+
+            const results = await Promise.all(products.map(async p => {
+                try {
+                    const variants = asArray(await apiJson(`${API}/bien-the/${p.idSp}`));
+                    return variants.map(v => ({ ...v, sanPham: p }));
+                } catch (e) {
+                    failedProducts.push(p.maSp || p.idSp);
+                    return [];
+                }
+            }));
+
+            // Khử trùng theo idSpct và ẩn biến thể đã hết tồn.
+            allData = [...new Map(results.flat()
+                .filter(v => v?.idSpct != null && isVisibleVariant(v))
+                .map(v => [v.idSpct, v])).values()];
             fillFilters();
             setupPriceRange();
             go(0);
+
+            if (failedProducts.length) {
+                toast2(`Không tải được biến thể của ${failedProducts.length} sản phẩm. Kiểm tra endpoint /bien-the/{idSp}.`, 'error');
+            }
         } catch (e) {
             document.getElementById('tblWrap').innerHTML = `<div class="empty-st"><span>⚠️</span><p>Không kết nối được server.<br><small>${esc(e.message)}</small></p></div>`;
         }
@@ -1202,8 +1774,20 @@
         arr.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; if (v === cur) o.selected = true; el.appendChild(o) });
     }
 
+    function isVisibleVariant(v) {
+        return Number(v?.soLuongTon || 0) > 0;
+    }
+
     // -- DEBOUNCE + FILTER --
-    function deb() { clearTimeout(dbT); dbT = setTimeout(() => go(0), 350) }
+    function clearUpdatedVariantOverride() {
+        forceShowUpdatedVariant = false;
+        lastUpdatedVariantId = null;
+    }
+
+    function deb() {
+        clearTimeout(dbT);
+        dbT = setTimeout(() => go(0), 350);
+    }
 
     function getFiltered() {
         const kw = document.getElementById('kw').value.trim().toLowerCase();
@@ -1213,9 +1797,11 @@
         const fKieu = document.getElementById('fKieu').value;
         const fPhongCach = document.getElementById('fPhongCach').value;
         const fTT = document.getElementById('fTT').value;
-        const maxPrice = Number(document.getElementById('priceRange').value || 0);
+        const maxPrice = toSafePrice(document.getElementById('priceRange').value);
+        const shouldFilterByPrice = dynamicMaxPrice > 0 && maxPrice < dynamicMaxPrice;
 
-        return allData.filter(v => {
+        const filtered = allData.filter(v => {
+            if (!isVisibleVariant(v)) return false;
             if (kw) {
                 const ma = (v.maChiTietSanPham || '').toLowerCase();
                 const maSp = (v.sanPham?.maSp || '').toLowerCase();
@@ -1230,10 +1816,11 @@
                 const active = fTT === 'true';
                 if (v.trangThai !== active) return false;
             }
-            const gia = Number(v.donGia || 0);
-            if (dynamicMaxPrice && gia > maxPrice) return false;
+            if (shouldFilterByPrice && toSafePrice(v.donGia) > maxPrice) return false;
             return true;
         });
+
+        return filtered;
     }
 
     function go(pg = 0) {
@@ -1256,20 +1843,22 @@
         const rows = list.map((v, i) => {
             const stt = page * PG + i + 1;
             const sp = v.sanPham || {};
-            const imgUrl = sp.hinhAnh || sp.hinhAnhChinh || '';
-            const imgHtml = imgUrl ?
-                `<div class="img-thumb"><img src="${esc(imgUrl)}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\'></i>'"></div>` :
+            // Bảng chỉ lấy ảnh đầu tiên của chính biến thể làm ảnh đại diện.
+            const representativeImage = getVariantImageUrls(v)[0] || '';
+            const imgHtml = representativeImage ?
+                `<div class="img-thumb"><img src="${esc(representativeImage)}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\'></i>'"></div>` :
                 `<div class="img-thumb"><i class="fas fa-image"></i></div>`;
             const donGia = Number(v.donGia || 0);
             const priceHtml = donGia ?
                 `<span class="new-p">${fmt(donGia)} đ</span>` :
-                `<span style="color:var(--muted)">–</span>`;
+                `<span class="price-placeholder">–</span>`;
             const badge = (v.trangThai !== false) ?
                 `<span class="badge-on">Đang bán</span>` :
                 `<span class="badge-off">Ngừng bán</span>`;
             // Các button hành động: Sửa, Toggle, QR
             const actions = `
                 <div class="act-btns">
+                    <button class="ib" title="Xem chi tiết" onclick="openVariantDetail(${v.idSpct})"><i class="fas fa-eye"></i></button>
                     <button class="ib" title="Sửa" onclick="openEditVariant(${v.idSpct})"><i class="fas fa-pen"></i></button>
                     <button class="ib btn-qr" title="Tải QR" onclick="downloadSingleQR(${v.idSpct})"><i class="fas fa-qrcode"></i></button>
                     <label class="toggle" title="Đổi trạng thái">
@@ -1279,37 +1868,90 @@
                 </div>
             `;
             return `<tr>
-                <td class="td-num">${stt}</td>
-                <td>${imgHtml}</td>
-                <td><span class="td-code">${esc(sp.maSp||'–')}</span></td>
-                <td>${esc(sp.tenSp||'–')}</td>
-                <td><span class="td-code">${esc(v.maChiTietSanPham||'–')}</span></td>
-                <td>${esc(v.kichCo?.tenKichCo||'–')}</td>
-                <td>${esc(v.mauSac?.tenMauSac||'–')}</td>
-                <td>${esc(v.loaiAo?.tenLoai||'–')}</td>
-                <td>${esc(v.kieuDang?.tenKieuDang||'–')}</td>
-                <td>${esc(v.phongCachMac?.tenPhongCach||'–')}</td>
+                <td class="td-num">
+                    <div class="stt-cell">
+                        <input class="qr-select" type="checkbox" aria-label="Chọn biến thể ${stt}"
+                               ${selectedQrVariantIds.has(v.idSpct) ? 'checked' : ''}
+                               onclick="event.stopPropagation()"
+                               onchange="toggleQrSelection(${v.idSpct}, this.checked)">
+                        <span>${stt}</span>
+                    </div>
+                </td>
+                <td class="cell-center">${imgHtml}</td>
+                <td class="cell-code"><span class="td-code">${esc(sp.maSp||'–')}</span></td>
+                <td class="cell-name" title="${esc(sp.tenSp||'–')}">${esc(sp.tenSp||'–')}</td>
+                <td class="cell-code"><span class="td-code">${esc(v.maChiTietSanPham||'–')}</span></td>
+                <td class="cell-center">${esc(v.kichCo?.tenKichCo||'–')}</td>
+                <td class="cell-center">${esc(v.mauSac?.tenMauSac||'–')}</td>
+                <td class="cell-text" title="${esc(v.loaiAo?.tenLoai||'–')}">${esc(v.loaiAo?.tenLoai||'–')}</td>
+                <td class="cell-text" title="${esc(v.kieuDang?.tenKieuDang||'–')}">${esc(v.kieuDang?.tenKieuDang||'–')}</td>
+                <td class="cell-text" title="${esc(v.phongCachMac?.tenPhongCach||'–')}">${esc(v.phongCachMac?.tenPhongCach||'–')}</td>
                 <td class="td-num">${v.soLuongTon??'–'}</td>
-                <td>${priceHtml}</td>
-                <td>${badge}</td>
+                <td class="td-price">${priceHtml}</td>
+                <td class="cell-center">${badge}</td>
                 <td>${actions}</td>
             </tr>`;
         }).join('');
 
         const html = `
             <table>
+                <colgroup>
+                    <col class="col-stt"><col class="col-img"><col class="col-ma-sp"><col class="col-ten-sp">
+                    <col class="col-ma-ctsp"><col class="col-kich-co"><col class="col-mau-sac">
+                    <col class="col-loai-ao"><col class="col-kieu-dang"><col class="col-phong-cach">
+                    <col class="col-sl"><col class="col-price"><col class="col-status"><col class="col-actions">
+                </colgroup>
                 <thead><tr>
-                    <th>STT</th><th>Ảnh</th><th>Mã SP</th><th>Tên SP</th><th>Mã CTSP</th>
-                    <th>Kích cỡ</th><th>Màu sắc</th>
+                    <th class="cell-center">
+                        <div class="stt-cell">
+                            <input id="qrSelectPage" class="qr-select" type="checkbox"
+                                   title="Chọn tất cả trên trang này"
+                                   onchange="toggleCurrentPageSelection(this.checked)">
+                            <span>STT</span>
+                        </div>
+                    </th>
+                    <th class="cell-center">Ảnh</th><th>Mã SP</th><th>Tên SP</th><th>Mã CTSP</th>
+                    <th class="cell-center">Kích cỡ</th><th class="cell-center">Màu sắc</th>
                     <th>Loại áo</th><th>Kiểu dáng</th><th>Phong cách</th>
-                    <th>SL tồn</th>
-                    <th>Đơn giá</th>
-                    <th>Trạng thái</th>
-                    <th>Hành động</th>
+                    <th class="cell-center">SL tồn</th>
+                    <th class="th-price">Đơn giá</th>
+                    <th class="cell-center">Trạng thái</th>
+                    <th style="text-align:right">Hành động</th>
                 </tr></thead>
                 <tbody>${rows}</tbody>
             </table>`;
         document.getElementById('tblWrap').innerHTML = html;
+        syncQrSelectPageCheckbox(list);
+    }
+
+    function toggleQrSelection(id, checked) {
+        if (checked) selectedQrVariantIds.add(id);
+        else selectedQrVariantIds.delete(id);
+        syncQrSelectPageCheckbox();
+    }
+
+    function toggleCurrentPageSelection(checked) {
+        const pageVariants = getFiltered().slice(page * PG, page * PG + PG);
+        pageVariants.forEach(v => {
+            if (v?.idSpct == null) return;
+            if (checked) selectedQrVariantIds.add(v.idSpct);
+            else selectedQrVariantIds.delete(v.idSpct);
+        });
+        go(page);
+    }
+
+    function syncQrSelectPageCheckbox(list = getFiltered().slice(page * PG, page * PG + PG)) {
+        const selectAll = document.getElementById('qrSelectPage');
+        if (!selectAll) return;
+        const ids = list.map(v => v.idSpct).filter(id => id != null);
+        const checkedCount = ids.filter(id => selectedQrVariantIds.has(id)).length;
+        selectAll.checked = ids.length > 0 && checkedCount === ids.length;
+        selectAll.indeterminate = checkedCount > 0 && checkedCount < ids.length;
+    }
+
+    function getSelectedQrVariants() {
+        const selectedIds = new Set(selectedQrVariantIds);
+        return allData.filter(v => selectedIds.has(v.idSpct));
     }
 
     // -- PAGINATION (giữ nguyên) --
@@ -1326,9 +1968,11 @@
         area.innerHTML = `
             <div class="pg-info">Trang ${page+1}/${totalPg} • ${totalEl} biến thể</div>
             <div class="pg-nav">
+                <button class="pg-btn" onclick="go(0)" ${page===0?'disabled':''}>«</button>
                 <button class="pg-btn" onclick="go(${page-1})" ${page===0?'disabled':''}>← Trước</button>
                 ${nums}
                 <button class="pg-btn" onclick="go(${page+1})" ${page>=totalPg-1?'disabled':''}>Sau →</button>
+                <button class="pg-btn" onclick="go(${totalPg-1})" ${page>=totalPg-1?'disabled':''}>»</button>
             </div>`;
     }
 
@@ -1380,6 +2024,9 @@
         const checked = variant.trangThai !== false;
         document.getElementById('vTrangThai').checked = checked;
         document.getElementById('vTrangThaiLabel').textContent = checked ? 'Đang bán' : 'Ngừng bán';
+
+        // Hiển thị đủ tối đa 3 ảnh của biến thể, giống màn hình thêm sản phẩm.
+        resetVariantImageEditor(variant);
         document.getElementById('mdVariant').classList.add('show');
     }
 
@@ -1389,9 +2036,15 @@
 
     async function toggleVariantStatus(id, cb) {
         const status = cb.checked;
+        const variant = allData.find(v => Number(v.idSpct) === Number(id));
+        if (status && !isVisibleVariant(variant)) {
+            cb.checked = false;
+            toast2('Biến thể đã hết tồn nên không thể bật bán.', 'error');
+            return;
+        }
         cb.disabled = true;
         try {
-            const r = await fetch(`${API}/bien-the/${id}`, {
+            const r = await apiFetch(`${API}/bien-the/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ trangThai: status, nguoiThucHien: 'Admin' })
@@ -1411,24 +2064,23 @@
         }
     }
 
+    function resetAllListFilters() {
+        const keyword = document.getElementById('kw');
+        if (keyword) keyword.value = '';
+
+        ['fMau', 'fKich', 'fLoai', 'fKieu', 'fPhongCach', 'fTT'].forEach(id => {
+            const select = document.getElementById(id);
+            if (!select) return;
+            select.value = '';
+            if (typeof syncSearchCombo === 'function') syncSearchCombo(select);
+        });
+        setupPriceRange({ resetToMax: true });
+    }
+
+    // ========== ĐÃ SỬA LẠI SAVE VARIANT ==========
     async function saveVariant() {
         const id = document.getElementById('variantId').value;
         if (!id) { toast2('Không có ID biến thể', 'error'); return; }
-        const maChiTietSanPham = document.getElementById('vMaCTSP').value.trim();
-        if (!maChiTietSanPham) { toast2('Vui lòng nhập mã CTSP', 'error'); return; }
-        if (maChiTietSanPham.length < 3 || maChiTietSanPham.length > 80) {
-            toast2('Mã CTSP phải từ 3 đến 80 ký tự', 'error');
-            return;
-        }
-        if (!/^[A-Za-z0-9_-]+$/.test(maChiTietSanPham)) {
-            toast2('Mã CTSP chỉ được chứa chữ, số, dấu gạch ngang hoặc gạch dưới', 'error');
-            return;
-        }
-        const duplicateCode = allData.some(v => String(v.idSpct) !== String(id) && String(v.maChiTietSanPham || '').trim().toLowerCase() === maChiTietSanPham.toLowerCase());
-        if (duplicateCode) {
-            toast2('Mã CTSP đã tồn tại', 'error');
-            return;
-        }
 
         const requiredSelects = [
             ['vLoaiAo', 'loại áo'],
@@ -1453,7 +2105,6 @@
         }
 
         const payload = {
-            maChiTietSanPham,
             idLoaiAo: parseInt(document.getElementById('vLoaiAo').value),
             idKieuDang: parseInt(document.getElementById('vKieuDang').value),
             idPhongCachMac: parseInt(document.getElementById('vPhongCach').value),
@@ -1461,12 +2112,24 @@
             idKichCo: parseInt(document.getElementById('vSize').value),
             donGia: parseFloat(moneyRaw(document.getElementById('vDonGia').value)) || 0,
             soLuongTon: parseInt(document.getElementById('vSoLuong').value) || 0,
-            trangThai: document.getElementById('vTrangThai').checked,
+            trangThai: (parseInt(document.getElementById('vSoLuong').value) || 0) > 0 && document.getElementById('vTrangThai').checked,
             nguoiThucHien: 'Admin'
         };
 
+        let savedImageUrls = null;
+        if (variantImagesChanged) {
+            try {
+                savedImageUrls = await uploadVariantImages();
+            } catch (e) {
+                toast2('Không thể upload ảnh: ' + (e.message || e), 'error');
+                return;
+            }
+            payload.hinhAnh = savedImageUrls[0] || null;
+            payload.danhSachHinhAnh = savedImageUrls;
+        }
+
         try {
-            const r = await fetch(`${API}/bien-the/${id}`, {
+            const r = await apiFetch(`${API}/bien-the/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -1477,15 +2140,43 @@
                 try { updated = text ? JSON.parse(text) : null; } catch {}
                 toast2('Cập nhật biến thể thành công!');
                 closeModal('mdVariant');
-                const idx = allData.findIndex(v => v.idSpct === parseInt(id));
-                if (idx !== -1 && updated) {
-                    allData[idx] = { ...updated, sanPham: allData[idx].sanPham };
-                }
-                if (!updated) {
-                    await loadAll();
-                } else {
-                    setupPriceRange();
+
+                const idx = allData.findIndex(v => Number(v.idSpct) === Number(id));
+                if (idx !== -1) {
+                    const oldVariant = allData[idx];
+                    const serverVariant = updated && typeof updated === 'object' && !Array.isArray(updated)
+                        ? (updated.data || updated.result || updated)
+                        : {};
+
+                    const localUpdatedVariant = {
+                        ...oldVariant,
+                        ...(serverVariant && typeof serverVariant === 'object' ? serverVariant : {}),
+                        donGia: payload.donGia,
+                        soLuongTon: payload.soLuongTon,
+                        trangThai: payload.trangThai,
+                        sanPham: oldVariant.sanPham
+                    };
+
+                    if (savedImageUrls !== null) {
+                        localUpdatedVariant.hinhAnh = savedImageUrls[0] || null;
+                        localUpdatedVariant.danhSachHinhAnh = savedImageUrls;
+                    }
+
+                    if (isVisibleVariant(localUpdatedVariant)) {
+                        // Giữ nguyên vị trí dòng để cập nhật giá không làm dòng khác bị đẩy khỏi trang hiện tại.
+                        allData[idx] = localUpdatedVariant;
+                    } else {
+                        allData.splice(idx, 1);
+                    }
+                    lastUpdatedVariantId = null;
+                    forceShowUpdatedVariant = false;
+
+                    setupPriceRange({ resetToMax: true });
+
                     go(page);
+                } else {
+                    // Nếu không tìm thấy trong allData (hiếm), tải lại toàn bộ
+                    await loadAll();
                 }
             } else {
                 const err = await r.text();
@@ -1559,14 +2250,17 @@
         }
     }
 
-    // ======================== TẢI TẤT CẢ QR (ZIP) ========================
+    // ======================== TẢI QR ĐÃ CHỌN (ZIP) ========================
     async function downloadAllQR() {
-        const filtered = getFiltered();
-        if (!filtered.length) { toast2('Không có biến thể nào để tải QR', 'info'); return; }
-        toast2('Đang tạo ảnh QR...', 'info');
+        const selected = getSelectedQrVariants();
+        if (!selected.length) {
+            toast2('Vui lòng chọn ít nhất một biến thể để tải QR', 'info');
+            return;
+        }
+        toast2(`Đang tạo ${selected.length} ảnh QR...`, 'info');
         const zip = new JSZip();
         let count = 0;
-        for (const v of filtered) {
+        for (const v of selected) {
             const text = v.maChiTietSanPham || `SP-${v.idSpct}`;
             try {
                 const dataUrl = await generateQRDataURL(text, 300);
@@ -1632,7 +2326,7 @@
             if(select.classList.contains('search-combo-source')){syncSearchCombo(select);return;}
             const combo=document.createElement('div');
             combo.className='search-combo';
-            combo.innerHTML='<div class="search-combo-display" tabindex="0"></div><div class="search-combo-panel"><input class="search-combo-search" type="text" autocomplete="off" placeholder="Tim kiem..."><div class="search-combo-list"></div></div>';
+            combo.innerHTML='<div class="search-combo-display" tabindex="0"></div><div class="search-combo-panel"><input class="search-combo-search" type="text" autocomplete="off" placeholder="Tìm kiếm..."><div class="search-combo-list"></div></div>';
             select.classList.add('search-combo-source');
             select.parentNode.insertBefore(combo, select.nextSibling);
             combo._select=select;
@@ -1661,7 +2355,7 @@
         const combo=select.nextElementSibling?.classList?.contains('search-combo')?select.nextElementSibling:null;
         if(!combo)return;
         const selected=select.options[select.selectedIndex];
-        combo.querySelector('.search-combo-display').textContent=selected?.textContent||select.querySelector('option')?.textContent||'Chon';
+        combo.querySelector('.search-combo-display').textContent=selected?.textContent||select.querySelector('option')?.textContent||'Chọn';
         renderSearchComboOptions(combo, combo.querySelector('.search-combo-search')?.value||'');
     }
     function renderSearchComboOptions(combo, keyword){
@@ -1669,7 +2363,7 @@
         const list=combo.querySelector('.search-combo-list');
         const kw=String(keyword||'').trim().toLowerCase();
         const options=[...select.options].filter(o=>!o.disabled&&(!kw||o.textContent.toLowerCase().includes(kw)));
-        if(!options.length){list.innerHTML='<div class="search-combo-empty">Khong tim thay</div>';return;}
+        if(!options.length){list.innerHTML='<div class="search-combo-empty">Không tìm thấy</div>';return;}
         list.innerHTML=options.map(o=>'<div class="search-combo-option '+(o.selected?'active':'')+'" data-value="'+comboEscapeHtml(o.value)+'">'+comboEscapeHtml(o.textContent)+'</div>').join('');
         list.querySelectorAll('.search-combo-option').forEach(item=>item.addEventListener('click',()=>{
             select.value=item.dataset.value;
@@ -1680,6 +2374,20 @@
     document.addEventListener('click',e=>{if(!e.target.closest('.search-combo'))document.querySelectorAll('.search-combo.open').forEach(closeSearchCombo)});
     document.addEventListener('DOMContentLoaded',()=>initSearchableComboboxes());
     if(!window._searchComboAutoSync){window._searchComboAutoSync=setInterval(()=>document.querySelectorAll('select.search-combo-source').forEach(syncSearchCombo),300)}
+
+    function bindImgUploadClicks(root=document){
+        root.querySelectorAll('.img-upload').forEach(el=>{
+            el.style.cursor='pointer';
+            try{ if(el._imgClickHandler) el.removeEventListener('click', el._imgClickHandler); }catch(e){}
+            const h = (e)=>{
+                if(e.target && e.target.tagName && e.target.tagName.toLowerCase()==='input') return;
+                const inp = el.querySelector('input[type=file]'); if(inp) inp.click();
+            };
+            el.addEventListener('click', h);
+            el._imgClickHandler = h;
+        });
+    }
+    document.addEventListener('DOMContentLoaded', ()=>bindImgUploadClicks());
 </script>
 </body>
 </html>

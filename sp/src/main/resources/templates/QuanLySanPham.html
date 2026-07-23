@@ -9,10 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <script src="/js/app-shell.js" defer></script>
+    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
-        /* ===== GIỮ NGUYÊN CÁC CSS CŨ ===== */
         *,
         *::before,
         *::after {
@@ -20,11 +19,11 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         :root {
-            --sw: 220px;
-            --sbg: #2b1d0e;
-            --sact: #7a5230;
-            --gold: #c8a474;
+            --navy: #102a56;
+            --navy-hover:#173d78;
+            --navy-2: #1a4a8a;
             --bg: #f3f4f6;
             --white: #fff;
             --border: #e5e7eb;
@@ -34,6 +33,7 @@
             --success: #16a34a;
             --danger: #dc2626;
         }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: var(--bg);
@@ -44,109 +44,104 @@
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
         }
-        .app { display: flex; min-height: 100vh; }
 
-        .sidebar {
-            width: var(--sw);
-            background: var(--sbg);
-            position: fixed;
-            inset: 0 auto 0 0;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            z-index: 100;
-            scrollbar-width: none;
-        }
-        .sidebar::-webkit-scrollbar { display: none; }
-        .sb-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, .08);
-        }
-        .sb-logo img {
-            width: 66px;
-            height: 66px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(200, 164, 116, .35);
-        }
-        .sb-nav { padding: 4px 0; flex: 1; }
-        .ni {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 16px;
-            color: rgba(255,255,255,.65);
-            cursor: pointer; font-size: 13px; font-weight: 500;
-            text-decoration: none;
-            border-left: 3px solid transparent;
-            transition: all .13s; user-select: none;
-        }
-        .ni .ico { width: 18px; text-align: center; font-size: 15px; flex-shrink: 0; }
-        .ni .arr { margin-left: auto; font-size: 10px; opacity: .4; transition: transform .2s; }
-        .ni:hover { background: rgba(255,255,255,.06); color: #fff; }
-        .ni.open-parent { color: var(--gold); }
-        .submenu { overflow: hidden; max-height: 0; transition: max-height .25s ease; }
-        .submenu.open { max-height: 400px; }
-        .si {
-            display: flex; align-items: center; gap: 8px;
-            padding: 9px 16px 9px 42px;
-            color: rgba(255,255,255,.5); font-size: 12.5px;
-            text-decoration: none; transition: all .12s;
-            border-left: 3px solid transparent;
-        }
-        .si:hover { color: #fff; background: rgba(255,255,255,.05); }
-        .si.active {
-            color: var(--gold); font-weight: 600;
-            border-left-color: var(--gold);
-            background: rgba(122,82,48,.2);
-        }
-        .active-row {
-            background: var(--sact) !important;
-            color: #fff !important;
-            border-left-color: var(--gold) !important;
+        .page-shell {
+            padding: 20px 24px;
+            min-height: calc(100vh - 52px);
         }
 
-        .main { margin-left: var(--sw); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
-        .topbar {
-            background: var(--white); border-bottom: 1px solid var(--border);
-            height: 52px; display: flex; align-items: center; justify-content: flex-end;
-            padding: 0 24px; gap: 14px; position: sticky; top: 0; z-index: 50;
+        .page-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--text);
+            letter-spacing: .3px;
         }
-        .topbar-label { font-size: 13px; color: var(--muted); font-weight: 500; }
-        .topbar-bell { font-size: 18px; color: var(--muted); position: relative; cursor: pointer; }
-        .topbar-badge { position: absolute; top: -4px; right: -4px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; }
-        .topbar-avatar {
-            width: 34px; height: 34px; border-radius: 50%;
-            background: var(--gold); color: #fff; font-weight: 700;
-            font-size: 13px; display: flex; align-items: center; justify-content: center; cursor: pointer;
-        }
-        .content { padding: 20px 24px; flex: 1; }
-        .page-title { font-size: 18px; font-weight: 700; margin-bottom: 18px; color: var(--text); letter-spacing: .3px; }
 
         /* FILTER */
         .filter-card {
-            background: var(--white); border: 1px solid var(--border);
-            border-radius: var(--r); padding: 16px 18px; margin-bottom: 16px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 16px 18px;
+            margin-bottom: 16px;
         }
-        .search-wrap { position: relative; margin-bottom: 14px; }
-        .search-wrap label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
+
+        .search-wrap {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .search-wrap label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 5px;
+        }
+
         .search-wrap input {
-            width: 100%; padding: 8px 12px 8px 36px; border: 1px solid var(--border);
-            border-radius: 6px; font-size: 13px; font-family: inherit; outline: none;
-            transition: border-color .15s; background: #f9fafb;
+            width: 100%;
+            padding: 8px 12px 8px 36px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color .15s;
+            background: #f9fafb;
         }
-        .search-wrap input:focus { border-color: var(--gold); background: #fff; }
-        .search-wrap .si-ico { position: absolute; left: 11px; bottom: 9px; color: var(--muted); font-size: 14px; }
-        .filter-row { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
-        .filt { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 130px; }
-        .filt label { font-size: 11.5px; font-weight: 600; color: var(--muted); }
+
+        .search-wrap input:focus {
+            border-color: var(--navy);
+            background: #fff;
+        }
+
+        .search-wrap .si-ico {
+            position: absolute;
+            left: 11px;
+            bottom: 9px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .filter-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filt {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+            min-width: 130px;
+        }
+
+        .filt label {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
         .filt select {
-            padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px;
-            font-size: 13px; font-family: inherit; background: #f9fafb; color: var(--text);
-            outline: none; cursor: pointer;
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            background: #f9fafb;
+            color: var(--text);
+            outline: none;
+            cursor: pointer;
         }
-        .filt select:focus { border-color: var(--gold); }
+
+        .filt select:focus {
+            border-color: var(--navy);
+        }
+
         .price-range-wrap {
             display: flex;
             flex-direction: column;
@@ -154,204 +149,601 @@
             flex: 1.5;
             min-width: 180px;
         }
+
         .price-range-wrap .range-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .price-range-wrap .range-header label {
-            font-size: 11.5px;
-            font-weight: 600;
-            color: var(--muted);
-        }
+
+        .price-range-wrap .range-header label,
         .price-range-wrap .range-header .max-label {
             font-size: 11.5px;
             font-weight: 600;
             color: var(--muted);
         }
+
         input[type=range] {
-            -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
-            background: linear-gradient(to right, #c8a474 0%, #c8a474 var(--pct, 100%), #e5e7eb var(--pct, 100%), #e5e7eb 100%);
-            outline: none; cursor: pointer;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 5px;
+            border-radius: 3px;
+            background: linear-gradient(to right, var(--navy) 0%, var(--navy) var(--pct, 100%), #e5e7eb var(--pct, 100%), #e5e7eb 100%);
+            outline: none;
+            cursor: pointer;
         }
+
         input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
-            background: #7a5230; cursor: pointer; border: 2px solid #fff;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--navy);
+            cursor: pointer;
+            border: 2px solid #fff;
             box-shadow: 0 1px 4px rgba(0,0,0,.2);
         }
-        .filter-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-        .btn {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 8px 14px; border-radius: 6px; border: 1.5px solid var(--border);
-            font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer;
-            transition: all .15s; background: #fff; color: var(--text); white-space: nowrap;
+
+        .filter-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
-        .btn:hover { border-color: #aaa; }
-        .btn-primary { background: var(--gold); color: #fff; border-color: var(--gold); }
-        .btn-primary:hover { background: #a8895a; border-color: #a8895a; }
-        .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
-        .btn-danger:hover { background: #b91c1c; border-color: #b91c1c; }
+
+        .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}
+
+        .btn:hover{background:var(--navy-hover);border-color:var(--navy-hover);color:#fff}
+
+        .btn-primary{background:var(--navy);border-color:var(--navy);color:#fff}
+
+        .btn-primary:hover{background:var(--navy-hover);border-color:var(--navy-hover)}
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+            border-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+            border-color: #b91c1c;
+        }
 
         /* TABLE */
-        .table-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; }
-        thead tr { background: #f9fafb; border-bottom: 1.5px solid var(--border); }
+        .table-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            overflow: hidden;
+        }
+
+        #tblWrap {
+            overflow-x: auto;
+        }
+
+        #tblWrap > table {
+            min-width: 1360px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .col-stt{width:54px}
+        .col-img{width:82px}
+        .col-ma-sp{width:150px}
+        .col-ten-sp{width:150px}
+        .col-xuat-xu{width:136px}
+        .col-chat-lieu{width:120px}
+        .col-so-luong{width:60px}
+        .col-price{width:120px}
+        .col-status{width:124px}
+        .col-actions{width:104px}
+
+        thead tr {
+            background: #f9fafb;
+            border-bottom: 1.5px solid var(--border);
+        }
+
         th {
-            padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700;
-            color: var(--muted); text-transform: uppercase; letter-spacing: .5px; white-space: nowrap;
+            padding: 10px 13px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
-        tbody tr:last-child { border-bottom: none; }
-        tbody tr:hover { background: #fafafa; }
-        td { padding: 10px 14px; font-size: 13px; vertical-align: middle; }
-        .td-num { color: var(--muted); font-size: 12px; font-weight: 600; text-align: center; }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background .1s;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        td {
+            padding: 10px 13px;
+            font-size: 13px;
+            vertical-align: middle;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-name-cell {
+            color: var(--text);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .cell-center{text-align:center}
+        .cell-code,
+        .cell-text{white-space:nowrap}
+        .cell-code .td-code{
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+        }
+
+        .td-num {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
         .td-code {
-            font-family: 'Courier New', monospace; font-size: 12px; font-weight: 700;
-            background: #f3f4f6; padding: 2px 6px; border-radius: 4px; color: #374151;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #374151;
+            display: inline-block;
         }
+
         .img-thumb {
-            width: 46px; height: 46px; border-radius: 6px; object-fit: cover;
-            background: #f3f4f6; border: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; overflow: hidden; position: relative;
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            overflow: hidden;
+            background: #f8fafc;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
         }
-        .img-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .price-col .price { font-size: 13px; font-weight: 700; color: var(--muted); }
-        .price-range-display { font-weight: 600; color:var(--muted); }
-        .price-range-display .sep { color: var(--muted); margin: 0 4px; }
-        .badge-on {
-            display: inline-flex; align-items: center; gap: 4px;
-            padding: 3px 9px; border-radius: 20px; font-size: 11.5px; font-weight: 700;
-            background: #dcfce7; color: #16a34a;
+
+        .img-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
+
+        .th-price,
+        .price-col {
+            text-align: right;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .price-col .price,
+        .price-col .price-placeholder,
+        .price-range-display {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 100%;
+            text-align: right;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .price-col .price {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .price-col .price-placeholder {
+            color: var(--muted);
+        }
+
+        .price-range-display {
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .price-range-display .sep {
+            color: var(--muted);
+            margin: 0 4px;
+        }
+
+        .badge-on,
         .badge-off {
-            display: inline-flex; align-items: center; gap: 4px;
-            padding: 3px 9px; border-radius: 20px; font-size: 11.5px; font-weight: 700;
-            background: #fee2e2; color: #dc2626;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            font-weight: 700;
         }
-        .badge-on::before, .badge-off::before { content: ''; width: 6px; height: 6px; border-radius: 50%; display: block; }
-        .badge-on::before { background: #16a34a; }
-        .badge-off::before { background: #dc2626; }
-        .act-btns { display: flex; align-items: center; gap: 3px; }
+
+        .badge-on {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .badge-off {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge-on::before,
+        .badge-off::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .badge-on::before {
+            background: #16a34a;
+        }
+
+        .badge-off::before {
+            background: #dc2626;
+        }
+
+        .act-btns {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+
         .ib {
-            width: 28px; height: 28px; border-radius: 6px; border: none;
-            background: transparent; cursor: pointer; display: flex;
-            align-items: center; justify-content: center; font-size: 14px;
-            color: var(--muted); transition: all .13s;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--muted);
+            transition: all .13s;
         }
-        .ib:hover { background: #f3f4f6; color: var(--text); }
-        .ib.edit:hover { background: rgba(200,164,116,.12); color: #a8895a; }
-        .ib.delete:hover { background: #fee2e2; color: #dc2626; }
-        .toggle { position: relative; width: 36px; height: 20px; cursor: pointer; }
-        .toggle input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; inset: 0; background: #d1d5db; border-radius: 20px; transition: .3s; }
+
+        .ib:hover {
+            background: #f3f4f6;
+            color: var(--text);
+        }
+
+        .ib.edit:hover {
+            background: rgba(16,42,86,.12);
+            color: var(--navy);
+        }
+
+        .ib.view:hover {
+            background: rgba(37,99,235,.12);
+            color: #2563eb;
+        }
+
+        .ib.delete:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .toggle {
+            position: relative;
+            width: 36px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: #d1d5db;
+            border-radius: 20px;
+            transition: .3s;
+        }
+
         .slider::before {
-            content: ''; position: absolute; width: 14px; height: 14px;
-            left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .3s;
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: .3s;
         }
-        .toggle input:checked+.slider { background: #16a34a; }
-        .toggle input:checked+.slider::before { transform: translateX(16px); }
+
+        .toggle input:checked + .slider {
+            background: #16a34a;
+        }
+
+        .toggle input:checked + .slider::before {
+            transform: translateX(16px);
+        }
 
         /* PAGINATION */
-        .pagination {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 16px; border-top: 1px solid var(--border);
-            background: #f9fafb; flex-wrap: wrap; gap: 8px;
+        .pagination{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap;margin-left:auto}
+
+        .pg-info {
+            font-size: 13px;
+            color: var(--muted);
         }
-        .pg-info { font-size: 13px; color: var(--muted); }
-        .pg-nav { display: flex; gap: 3px; }
+
+        .pg-nav{display:flex;gap:5px;align-items:center;justify-content:flex-end;margin-left:auto;flex-wrap:wrap}
+
         .pg-btn {
-            min-width: 32px; height: 32px; padding: 0 8px; border-radius: 6px;
-            border: 1.5px solid var(--border); background: #fff; font-size: 13px;
-            font-weight: 600; font-family: inherit; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--muted); transition: all .13s;
+            min-width: 32px;
+            height: 32px;
+            padding: 0 8px;
+            border-radius: 6px;
+            border: 1.5px solid var(--border);
+            background: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            transition: all .13s;
         }
-        .pg-btn:hover:not(:disabled):not(.active) { border-color: var(--gold); color: var(--gold); }
-        .pg-btn.active { background: var(--gold); color: #fff; border-color: var(--gold); }
-        .pg-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+        .pg-btn:hover:not(:disabled):not(.active){border-color:var(--navy);color:var(--navy);background:#eef4fb}
+
+        .pg-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}
+
+        .pg-btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
 
         /* MODAL */
         .modal-bg {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5);
-            z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(2px);
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
         }
-        .modal-bg.show { display: flex; }
+
+        .modal-bg.show {
+            display: flex;
+        }
+
         .modal-box {
-            background: #fff; border-radius: 12px; width: 92%; max-width: 920px;
-            max-height: 90vh; display: flex; flex-direction: column;
-            box-shadow: 0 20px 60px rgba(0,0,0,.2); animation: mIn .2s ease;
+            background: #fff;
+            border-radius: 12px;
+            width: 92%;
+            max-width: 920px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,.2);
+            animation: mIn .2s ease;
         }
-        .modal-box.variant-modal { max-width: 1040px; }
-        .modal-box.quick-fill-modal { max-width: 520px; }
-        .modal-box.quick-add-modal { max-width: 400px; }
+
+        .modal-box.variant-modal {
+            width: min(1180px, 96vw);
+            max-width: 1180px;
+            max-height: 94vh;
+        }
+
+        .modal-box.quick-fill-modal {
+            max-width: 520px;
+        }
+
+        .modal-box.quick-add-modal {
+            max-width: 400px;
+        }
+
         @keyframes mIn {
             from { opacity: 0; transform: translateY(14px) scale(.98); }
             to { opacity: 1; transform: none; }
         }
+
         .modal-head {
-            padding: 18px 22px; border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: center;
-            position: relative; flex-shrink: 0;
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
         }
-        .modal-head h2 { font-size: 16px; font-weight: 700; letter-spacing: .5px; }
+
+        .modal-head h2 {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: .5px;
+        }
+
         .modal-close {
-            position: absolute; right: 18px; top: 14px; width: 30px; height: 30px;
-            border-radius: 7px; border: none; background: #f3f4f6; cursor: pointer;
-            font-size: 16px; display: flex; align-items: center; justify-content: center;
+            position: absolute;
+            right: 18px;
+            top: 14px;
+            width: 30px;
+            height: 30px;
+            border-radius: 7px;
+            border: none;
+            background: #f3f4f6;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: var(--muted);
         }
-        .modal-close:hover { background: #fee2e2; color: #dc2626; }
-        .modal-body { padding: 22px 24px; overflow-y: auto; flex: 1; }
+
+        .modal-close:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-body {
+            padding: 22px 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
         .modal-foot {
-            padding: 14px 22px; border-top: 1px solid var(--border);
-            display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0;
-            background: #f9fafb; border-radius: 0 0 12px 12px;
+            padding: 14px 22px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-shrink: 0;
+            background: #f9fafb;
+            border-radius: 0 0 12px 12px;
         }
-        .sec-label { font-size: 13.5px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
-        .top-grid { display: grid; grid-template-columns: 1fr 220px; gap: 24px; margin-bottom: 6px; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; }
-        .form-full { grid-column: 1/-1; }
-        .fg { display: flex; flex-direction: column; gap: 5px; }
-        .fg label { font-size: 12.5px; font-weight: 600; color: var(--text); }
-        .fg label .req { color: #dc2626; margin-left: 3px; }
-        .fg input, .fg textarea {
-            padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 7px;
-            font-size: 13px; font-family: inherit; outline: none;
-            transition: border-color .15s; color: var(--text); background: #fff;
+
+        .sec-label {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 14px;
         }
-        .fg input:focus, .fg textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,164,116,.12); }
-        .fg textarea { resize: vertical; min-height: 66px; }
-        .fg.err input { border-color: #dc2626; }
-        .fg .em { font-size: 11px; color: #dc2626; }
-        .sel-with-add { display: flex; align-items: center; gap: 8px; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 18px;
+        }
+
+        .form-full {
+            grid-column: 1 / -1;
+        }
+
+        .fg {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .fg label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .fg label .req {
+            color: #dc2626;
+            margin-left: 3px;
+        }
+
+        .fg input,
+        .fg textarea {
+            padding: 9px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 7px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color .15s;
+            color: var(--text);
+            background: #fff;
+        }
+
+        .fg input:focus,
+        .fg textarea:focus {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(16,42,86,.12);
+        }
+
+        .fg textarea {
+            resize: vertical;
+            min-height: 66px;
+        }
+
+        .fg.err input {
+            border-color: #dc2626;
+        }
+
+        .fg .em {
+            font-size: 11px;
+            color: #dc2626;
+        }
+
+        .sel-with-add {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .sel-with-add select {
-            flex: 1; padding: 9px 12px; border: 1.5px solid var(--border);
-            border-radius: 7px; font-size: 13px; font-family: inherit;
-            background: #fff; color: var(--text); outline: none; cursor: pointer;
+            flex: 1;
+            padding: 9px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 7px;
+            font-size: 13px;
+            font-family: inherit;
+            background: #fff;
+            color: var(--text);
+            outline: none;
+            cursor: pointer;
             transition: border-color .15s;
         }
-        .sel-with-add select:focus { border-color: var(--gold); }
+
+        .sel-with-add select:focus {
+            border-color: var(--navy);
+        }
+
         .add-circle {
-            width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--gold);
-            background: #fff; color: var(--gold); font-size: 15px; font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; flex-shrink: 0; transition: all .15s;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1.5px solid var(--navy);
+            background: #fff;
+            color: var(--navy);
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all .15s;
         }
-        .add-circle:hover { background: var(--gold); color: #fff; }
-        .img-upload {
-            width: 220px; height: 184px; border: 2px dashed #d8c5a8;
-            border-radius: 10px; background: #fbf6ec; display: flex;
-            align-items: center; justify-content: center; cursor: pointer;
-            flex-shrink: 0; overflow: hidden; position: relative; transition: all .15s;
+
+        .add-circle:hover {
+            background: var(--navy);
+            color: #fff;
         }
-        .img-upload:hover { border-color: var(--gold); background: #f7efdd; }
-        .img-upload img { width: 100%; height: 100%; object-fit: cover; }
-        .img-upload .plus-circle {
-            width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid #9aa89a;
-            color: #6b7d6b; font-size: 22px; display: flex; align-items: center; justify-content: center;
-        }
-        .img-upload input[type=file] { display: none; }
 
         #extraFields {
             display: grid;
@@ -360,64 +752,269 @@
             align-items: start;
             margin-top: 14px;
         }
-        #extraFields .fg { margin-top: 0 !important; }
+
+        #extraFields .fg {
+            margin-top: 0 !important;
+        }
+
         #extraFields .sel-with-add {
             max-width: none !important;
             width: 100%;
         }
+
         #extraFields .btn-create-variant {
             grid-column: 1 / -1;
             justify-self: start;
         }
 
-        /* CHIPS & VARIANTS */
-        .chip-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+        .chip-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
         .color-chip {
-            display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px;
-            border-radius: 20px; border: 1.5px solid var(--border); font-size: 12.5px;
-            font-weight: 600; cursor: pointer; background: #fff; transition: all .15s; user-select: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1.5px solid var(--border);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #fff;
+            transition: all .15s;
+            user-select: none;
         }
-        .color-chip:hover { border-color: var(--gold); }
-        .color-chip.selected { border-color: var(--gold); background: rgba(200,164,116,.08); }
-        .color-dot { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; border: 1px solid rgba(0,0,0,.1); }
+
+        .color-chip:hover {
+            border-color: var(--navy);
+        }
+
+        .color-chip.selected {
+            border-color: var(--navy);
+            background: rgba(16,42,86,.08);
+        }
+
+        .color-dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 1px solid rgba(0,0,0,.1);
+        }
+
         .size-chip {
-            display: inline-flex; align-items: center; justify-content: center;
-            min-width: 38px; padding: 7px 12px; border-radius: 7px;
-            border: 1.5px solid var(--border); font-size: 12.5px; font-weight: 700;
-            cursor: pointer; background: #fff; transition: all .15s; user-select: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 38px;
+            padding: 7px 12px;
+            border-radius: 7px;
+            border: 1.5px solid var(--border);
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            background: #fff;
+            transition: all .15s;
+            user-select: none;
         }
-        .size-chip:hover { border-color: var(--gold); }
-        .size-chip.selected { border-color: var(--gold); background: var(--gold); color: #fff; }
+
+        .size-chip:hover {
+            border-color: var(--navy);
+        }
+
+        .size-chip.selected {
+            border-color: var(--navy);
+            background: var(--navy);
+            color: #fff;
+        }
+
+        .search-combo {
+            position: relative;
+            width: 100%;
+            flex: 1;
+            font-family: inherit;
+        }
+
+        .search-combo-display {
+            width: 100%;
+            min-height: 36px;
+            padding: 8px 34px 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: #fff;
+            color: var(--text);
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+        }
+
+        .search-combo-display::after {
+            content: "v";
+            position: absolute;
+            right: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .search-combo.open .search-combo-display {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(15, 45, 82, .1);
+        }
+
+        .search-combo-panel {
+            display: none;
+            position: absolute;
+            z-index: 700;
+            left: 0;
+            right: 0;
+            top: calc(100% + 4px);
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 14px 32px rgba(15, 23, 42, .16);
+            overflow: hidden;
+        }
+
+        .search-combo.open .search-combo-panel {
+            display: block;
+        }
+
+        .search-combo-search {
+            width: calc(100% - 14px);
+            margin: 7px;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            background: #fff;
+        }
+
+        .search-combo-search:focus {
+            border-color: var(--navy);
+        }
+
+        .search-combo-list {
+            max-height: 220px;
+            overflow: auto;
+            padding: 4px 0;
+        }
+
+        .search-combo-option {
+            padding: 8px 11px;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .search-combo-option:hover,
+        .search-combo-option.active {
+            background: rgba(15, 45, 82, .1);
+            color: var(--navy);
+        }
+
+        .search-combo-empty {
+            padding: 9px 11px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        select.search-combo-source {
+            display: none !important;
+        }
+
         .btn-create-variant {
-            margin-top: 16px; background: var(--gold); color: #fff; border: none;
-            padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 700;
-            cursor: pointer; font-family: inherit; transition: all .15s;
+            margin-top: 16px;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all .15s;
         }
-        .btn-create-variant:hover { background: #a8895a; }
+
+        .btn-create-variant:hover {
+            background: var(--navy-2);
+        }
+
         .variant-block {
             border: 1px solid var(--border);
-            border-radius: 10px; overflow: hidden;
+            border-radius: 10px;
+            overflow: hidden;
         }
-        .variant-header {
-            background: linear-gradient(90deg, #3a2a16, #9a7038); color: #fff;
-            padding: 12px 18px; display: flex; align-items: center; justify-content: space-between;
-        }
-        .variant-header h4 { font-size: 13.5px; font-weight: 700; letter-spacing: .3px; }
-        .btn-add-fast {
-            background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.4);
-            color: #fff; padding: 6px 13px; border-radius: 6px; font-size: 12px;
-            font-weight: 700; cursor: pointer; font-family: inherit; transition: all .15s;
-        }
-        .btn-add-fast:hover { background: rgba(255,255,255,.28); }
-        .color-group { border-bottom: 1px solid var(--border); }
-        .color-group:last-child { border-bottom: none; }
-        .color-group-title {
-            padding: 11px 18px 6px; font-size: 12.5px; font-weight: 700;
-            color: #374151; display: flex; align-items: center; gap: 7px;
-        }
-        .vtable { width: 100%; border-collapse: collapse; }
 
-        /* ===== CẬP NHẬT BỐ CỤC BẢNG BIẾN THỂ ===== */
+        .variant-header {
+            background: linear-gradient(90deg, #3a2a16, #9a7038);
+            color: #fff;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .variant-header h4 {
+            font-size: 13.5px;
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+
+        .btn-add-fast {
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.4);
+            color: #fff;
+            padding: 6px 13px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all .15s;
+        }
+
+        .btn-add-fast:hover {
+            background: rgba(255,255,255,.28);
+        }
+
+        .color-group {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .color-group:last-child {
+            border-bottom: none;
+        }
+
+        .color-group-title {
+            padding: 11px 18px 6px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .vtable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
         .vtable th {
             padding: 7px 12px;
             text-align: left;
@@ -427,22 +1024,24 @@
             text-transform: none;
             white-space: nowrap;
         }
-        /* Các cột được chia đều */
+
         .vtable th,
         .vtable td {
             width: auto;
             min-width: 60px;
         }
-        .vtable td:first-child { min-width: 80px; } /* Kích cỡ */
-        .vtable td:nth-child(2) { min-width: 120px; } /* Đơn giá */
-        .vtable td:nth-child(3) { min-width: 80px; } /* Số lượng */
-        .vtable td:last-child { min-width: 50px; } /* Hành động */
+
+        .vtable td:first-child { min-width: 80px; }
+        .vtable td:nth-child(2) { min-width: 190px; }
+        .vtable td:nth-child(3) { min-width: 80px; }
+        .vtable td:last-child { min-width: 50px; }
 
         .vtable td {
             padding: 8px 12px;
             font-size: 13px;
             vertical-align: middle;
         }
+
         .vtable .input-with-suffix {
             display: flex;
             align-items: center;
@@ -450,14 +1049,17 @@
             border: 1.5px solid var(--border);
             border-radius: 7px;
             transition: border-color .15s, box-shadow .15s;
-            width: 100%; /* chiếm hết chiều rộng cột */
+            width: 100%;
         }
+
         .vtable .input-with-suffix:focus-within {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(200,164,116,.12);
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(16,42,86,.12);
         }
+
         .vtable .input-with-suffix input {
             flex: 1;
+            width: 100%;
             padding: 6px 8px;
             border: none;
             outline: none;
@@ -466,7 +1068,12 @@
             color: var(--text);
             background: transparent;
             min-width: 0;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            overflow-x: auto;
+            text-overflow: clip;
         }
+
         .vtable .input-with-suffix .suffix {
             padding: 0 8px 0 2px;
             font-size: 13px;
@@ -475,6 +1082,7 @@
             white-space: nowrap;
             user-select: none;
         }
+
         .vtable .v-input {
             width: 100%;
             padding: 7px 10px;
@@ -486,19 +1094,368 @@
             transition: border-color .15s;
             background: #fff;
         }
-        .vtable .v-input:focus { border-color: var(--gold); }
+
+        .vtable .v-input:focus {
+            border-color: var(--navy);
+        }
+
         .vtable .v-sl {
             width: 100%;
             max-width: 100%;
         }
-        .vremove {
-            background: none; border: none; color: #dc2626; font-size: 15px;
-            cursor: pointer; width: 26px; height: 26px; border-radius: 6px;
-            display: flex; align-items: center; justify-content: center; transition: all .13s;
-        }
-        .vremove:hover { background: #fee2e2; }
 
-        /* ===== INPUT CÓ SUFFIX CHO MODAL THÊM NHANH ===== */
+        .vremove {
+            background: none;
+            border: none;
+            color: #dc2626;
+            font-size: 15px;
+            cursor: pointer;
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .13s;
+        }
+
+        .vremove:hover {
+            background: #fee2e2;
+        }
+
+        .variant-workspace-note {
+            margin-bottom: 14px;
+            padding: 11px 13px;
+            border: 1px solid #dbe7fb;
+            border-radius: 8px;
+            background: #f7fbff;
+            color: #4b6386;
+            font-size: 12.5px;
+            line-height: 1.55;
+        }
+
+        .variant-selector-card {
+            margin-bottom: 16px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .variant-selector-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 13px;
+        }
+
+        .variant-selector-head h3 {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .variant-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .variant-selector-section {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .variant-selector-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+
+        .variant-selector-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-height: 38px;
+        }
+
+        .variant-option {
+            min-width: 42px;
+            padding: 8px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 7px;
+            background: #fff;
+            color: var(--text);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 600;
+            transition: all .15s;
+        }
+
+        .variant-option:hover {
+            border-color: var(--navy);
+            background: #f7faff;
+        }
+
+        .variant-option.selected {
+            border-color: var(--navy);
+            background: var(--navy);
+            color: #fff;
+        }
+
+        .variant-option.color-option {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .variant-selector-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
+
+        .variant-summary {
+            margin-top: 9px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .variant-summary strong {
+            color: var(--text);
+        }
+
+        .variant-content {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 300px;
+            gap: 12px;
+            padding: 8px 12px 12px;
+            align-items: stretch;
+        }
+
+        .variant-table-wrap {
+            min-width: 0;
+            overflow-x: auto;
+        }
+
+        .variant-image-panel {
+            min-height: 168px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .variant-image-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: #f8fafc;
+            color: #4b6386;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .variant-image-count {
+            padding: 2px 6px;
+            border-radius: 999px;
+            background: #e8f0ff;
+            color: #3567b8;
+            font-size: 10px;
+            text-transform: none;
+        }
+
+        .variant-image-hint {
+            padding: 8px 10px 0;
+            color: var(--muted);
+            font-size: 10.5px;
+            line-height: 1.4;
+        }
+
+        .variant-image-body {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 10px;
+        }
+
+        .variant-image-thumb {
+            position: relative;
+            width: 78px;
+            height: 78px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: #f8fafc;
+        }
+
+        .variant-image-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .variant-image-primary {
+            position: absolute;
+            left: 3px;
+            bottom: 3px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            background: rgba(22, 101, 52, .92);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .variant-image-remove {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(220, 38, 38, .92);
+            color: #fff;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .variant-image-upload {
+            display: flex;
+            width: 78px;
+            height: 78px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 7px;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .variant-image-upload:hover {
+            border-color: var(--navy);
+            background: #f7faff;
+            color: var(--navy);
+        }
+
+        .variant-image-upload.disabled {
+            opacity: .45;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .variant-image-upload input[type=file] {
+            display: none;
+        }
+
+        .product-image-panel {
+            margin-top: 14px;
+            max-width: 340px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .product-image-panel .variant-image-body {
+            min-height: 98px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 180px minmax(0, 1fr);
+            gap: 16px;
+            align-items: start;
+        }
+
+        .detail-main-image {
+            width: 180px;
+            aspect-ratio: 1;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #f8fafc;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+        }
+
+        .detail-main-image img,
+        .detail-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .detail-info {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .detail-item {
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 8px 10px;
+            background: #fafafa;
+        }
+
+        .detail-item label {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .detail-item span {
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .detail-section-title {
+            margin: 16px 0 8px;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .detail-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .detail-gallery .variant-image-thumb {
+            width: 88px;
+            height: 88px;
+        }
+
         .input-with-suffix {
             display: flex;
             align-items: center;
@@ -507,12 +1464,15 @@
             border-radius: 7px;
             transition: border-color .15s, box-shadow .15s;
         }
+
         .input-with-suffix:focus-within {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(200,164,116,.12);
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(16,42,86,.12);
         }
+
         .input-with-suffix input {
             flex: 1;
+            width: 100%;
             padding: 9px 10px;
             border: none;
             outline: none;
@@ -521,7 +1481,12 @@
             color: var(--text);
             background: transparent;
             min-width: 0;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            overflow-x: auto;
+            text-overflow: clip;
         }
+
         .input-with-suffix .suffix {
             padding: 0 10px 0 4px;
             font-size: 13px;
@@ -531,160 +1496,180 @@
             user-select: none;
         }
 
-        .confirm-body { padding: 22px; text-align: center; }
-        .confirm-body .ci { font-size: 42px; display: block; margin-bottom: 10px; }
-        .confirm-body h3 { font-size: 15px; margin-bottom: 7px; }
-        .confirm-body p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+        .confirm-body {
+            padding: 22px;
+            text-align: center;
+        }
+
+        .confirm-body .ci {
+            font-size: 42px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .confirm-body h3 {
+            font-size: 15px;
+            margin-bottom: 7px;
+        }
+
+        .confirm-body p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
 
         .toast-wrap {
-            position: fixed; bottom: 22px; right: 22px; z-index: 9999;
-            display: flex; flex-direction: column; gap: 7px; pointer-events: none;
+            position: fixed;
+            bottom: 22px;
+            right: 22px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            pointer-events: none;
         }
+
         .toast {
-            display: flex; align-items: center; gap: 9px; background: #1f2937;
-            color: #fff; padding: 11px 16px; border-radius: 9px; font-size: 13px;
-            font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,.2);
-            pointer-events: all; animation: tIn .22s ease; min-width: 190px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: #1f2937;
+            color: #fff;
+            padding: 11px 16px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,.2);
+            pointer-events: all;
+            animation: tIn .22s ease;
+            min-width: 190px;
         }
-        @keyframes tIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+        @keyframes tIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: none; }
+        }
+
         .toast.success { background: #166534; }
         .toast.error { background: #991b1b; }
         .toast.info { background: #1e40af; }
+
         .spin {
-            display: inline-block; width: 28px; height: 28px;
-            border: 3px solid var(--border); border-top-color: var(--gold);
-            border-radius: 50%; animation: rot .7s linear infinite;
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border: 3px solid var(--border);
+            border-top-color: var(--navy);
+            border-radius: 50%;
+            animation: rot .7s linear infinite;
         }
-        @keyframes rot { to { transform: rotate(360deg); } }
-        .load-state { text-align: center; padding: 40px; color: var(--muted); }
-        .empty-state { text-align: center; padding: 40px; color: var(--muted); }
-        .empty-state .ei { font-size: 36px; display: block; margin-bottom: 8px; }
 
-        @media (max-width:760px) {
-            .top-grid { grid-template-columns: 1fr; }
+        @keyframes rot {
+            to { transform: rotate(360deg); }
+        }
+
+        .load-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+        }
+
+        .empty-state .ei {
+            font-size: 36px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 760px) {
             .form-grid { grid-template-columns: 1fr; }
-            .img-upload { width: 100%; }
+            .variant-content { grid-template-columns: 1fr; }
+            .variant-selector-grid { grid-template-columns: 1fr; }
         }
-
-        .search-combo{position:relative;width:100%;flex:1;font-family:inherit}
-        .search-combo-display{width:100%;min-height:34px;padding:7px 32px 7px 10px;border:1px solid var(--border);border-radius:6px;background:#f9fafb;color:var(--text);font-size:13px;cursor:pointer;display:flex;align-items:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;position:relative}
-        .search-combo-display::after{content:'v';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:11px}
-        .search-combo.open .search-combo-display{border-color:var(--gold);background:#fff;box-shadow:0 0 0 3px rgba(200,164,116,.12)}
-        .search-combo-panel{display:none;position:absolute;z-index:500;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--border);border-radius:7px;box-shadow:0 12px 28px rgba(0,0,0,.16);overflow:hidden}
-        .search-combo.open .search-combo-panel{display:block}
-        .search-combo-search{width:calc(100% - 14px);margin:7px;padding:7px 9px;border:1px solid var(--border);border-radius:5px;font-size:13px;font-family:inherit;outline:none;background:#fff}
-        .search-combo-search:focus{border-color:var(--gold)}
-        .search-combo-list{max-height:220px;overflow:auto;padding:4px 0}
-        .search-combo-option{padding:8px 10px;font-size:13px;cursor:pointer;color:var(--text)}
-        .search-combo-option:hover,.search-combo-option.active{background:rgba(200,164,116,.14);color:#7a5230}
-        .search-combo-empty{padding:9px 10px;font-size:13px;color:var(--muted)}
-        select.search-combo-source{display:none!important}
     </style>
 </head>
 <body>
-<div class="app">
-    <aside class="sidebar">
-        <div class="sb-logo">
-            <img src="/images/logo-4menstore.jpg" alt="4MenStore" />
-        </div>
-        <nav class="sb-nav">
-            <a href="/san-pham/trang-chu" class="ni"><span class="ico"><i class="fas fa-home"></i></span> Trang chủ</a>
-            <a href="/ban-hang-tai-quay" class="ni"><span class="ico"><i class="fas fa-store-alt"></i></span> Bán hàng tại quầy</a>
-            <a href="/hoa-don" class="ni"><span class="ico"><i class="fas fa-file-invoice"></i></span> Quản lý hóa đơn</a>
-            <div class="ni active-row open-parent" onclick="toggleSub('sub-sp','arr-sp')">
-                <span class="ico"><i class="fas fa-box"></i></span> Quản lý sản phẩm
-                <span class="arr" id="arr-sp" style="transform:rotate(90deg)"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="submenu open" id="sub-sp">
-                <a href="/san-pham/quan-ly" class="si active">Sản phẩm</a>
-                <a href="/san-pham/bien-the" class="si">Biến thể sản phẩm</a>
-            </div>
-            <div class="ni" onclick="toggleSub('sub-tt','arr-tt')">
-                <span class="ico"><i class="fas fa-list-alt"></i></span> Quản lý thuộc tính
-                <span class="arr" id="arr-tt"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="submenu" id="sub-tt">
-                <a href="/thuoc-tinh/loai-ao" class="si">Loại áo</a>
-                <a href="/thuoc-tinh/kich-co" class="si">Kích cỡ</a>
-                <a href="/thuoc-tinh/mau-sac" class="si">Màu sắc</a>
-                <a href="/thuoc-tinh/phong-cach-mac" class="si">Phong cách mặc</a>
-                <a href="/thuoc-tinh/kieu-dang" class="si">Kiểu dáng</a>
-                <a href="/thuoc-tinh/xuat-xu" class="si">Xuất xứ</a>
-                <a href="/thuoc-tinh/chat-lieu" class="si">Chất liệu</a>
-            </div>
-            <div class="ni" onclick="toggleSub('sub-giam','arr-giam')">
-                <span class="ico"><i class="fas fa-tags"></i></span> Quản lý giảm giá
-                <span class="arr" id="arr-giam"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="submenu" id="sub-giam">
-                <a href="#" class="si">Đợt giảm giá</a>
-                <a href="#" class="si">Voucher</a>
-            </div>
-            <a href="#" class="ni"><span class="ico"><i class="fas fa-user-cog"></i></span> Tài khoản <span class="arr"><i class="fas fa-chevron-right"></i></span></a>
-        </nav>
-    </aside>
+<aside class="sidebar"></aside>
 
-    <div class="main">
-        <header class="topbar">
-            <span class="topbar-label">Quản trị hệ thống</span>
-            <span class="topbar-bell"><i class="fas fa-bell"></i><span class="topbar-badge"></span></span>
-            <div class="topbar-avatar">T</div>
-        </header>
-        <div class="content">
-            <div class="page-title">QUẢN LÝ SẢN PHẨM</div>
+<main class="main">
+    <section class="page-shell">
+        <div class="page-title">QUẢN LÝ SẢN PHẨM</div>
 
-            <div class="filter-card">
-                <div class="search-wrap">
-                    <label>Tìm kiếm</label>
-                    <i class="fas fa-search si-ico"></i>
-                    <input type="text" id="searchKw" placeholder="Tìm kiếm sản phẩm theo tên" oninput="debounce()" />
+        <div class="filter-card">
+            <div class="search-wrap">
+                <label>Tìm kiếm</label>
+                <i class="fas fa-search si-ico"></i>
+                <input type="text" id="searchKw" placeholder="Tìm kiếm sản phẩm theo tên" oninput="debounce()" />
+            </div>
+
+            <div class="filter-row">
+                <div class="filt">
+                    <label>Xuất xứ</label>
+                    <select id="fXuatXu" onchange="applyFilter()">
+                        <option value="">Chọn xuất xứ</option>
+                    </select>
                 </div>
-                <div class="filter-row">
-                    <div class="filt">
-                        <label>Xuất xứ</label>
-                        <select id="fXuatXu" onchange="applyFilter()"><option value="">Chọn xuất xứ</option></select>
-                    </div>
-                    <div class="filt">
-                        <label>Chất liệu</label>
-                        <select id="fChatLieu" onchange="applyFilter()"><option value="">Chọn chất liệu</option></select>
-                    </div>
-                    <div class="filt">
-                        <label>Trạng thái</label>
-                        <select id="fTrangThai" onchange="applyFilter()">
-                            <option value="">Tất cả</option>
-                            <option value="true">Đang bán</option>
-                            <option value="false">Ngừng bán</option>
-                        </select>
-                    </div>
-                    <div class="price-range-wrap">
-                        <div class="range-header">
-                            <label>Khoảng giá: <span id="productPriceLabel">Đang tải...</span></label>
 
-                        </div>
-                        <input type="range" id="productPriceRange" min="0" max="0" step="50000" value="0"
-                               oninput="updateProductPrice(this.value)" onchange="load(0)" />
-                        <span class="max-label">Giá lớn nhất: <span id="maxPriceLabel">0 đ</span></span>
-                    </div>
+                <div class="filt">
+                    <label>Chất liệu</label>
+                    <select id="fChatLieu" onchange="applyFilter()">
+                        <option value="">Chọn chất liệu</option>
+                    </select>
+                </div>
 
-                    <div class="filter-actions">
-                        <button class="btn" onclick="openQRScanner()">
-                            <i class="fas fa-qrcode"></i> Quét QR
-                        </button>
-                        <button class="btn" onclick="exportExcel()"><i class="fas fa-file-excel"></i> Tải excel</button>
-                        <button class="btn btn-primary" onclick="openCreate()"><i class="fas fa-plus"></i> Thêm sản phẩm</button>
+                <div class="filt">
+                    <label>Trạng thái</label>
+                    <select id="fTrangThai" onchange="applyFilter()">
+                        <option value="">Tất cả</option>
+                        <option value="true">Đang bán</option>
+                        <option value="false">Ngừng bán</option>
+                    </select>
+                </div>
 
+                <div class="price-range-wrap">
+                    <div class="range-header">
+                        <label>Khoảng giá: <span id="productPriceLabel">Đang tải...</span></label>
                     </div>
+                    <input
+                            type="range"
+                            id="productPriceRange"
+                            min="0"
+                            max="0"
+                            step="50000"
+                            value="0"
+                            oninput="updateProductPrice(this.value)"
+                            onchange="load(0)"
+                    />
+                    <span class="max-label">Giá lớn nhất: <span id="maxPriceLabel">0 đ</span></span>
+                </div>
+
+                <div class="filter-actions">
+                    <button class="btn" onclick="exportExcel()">
+                        <i class="fas fa-file-excel"></i> Tải excel
+                    </button>
+                    <button class="btn btn-primary" onclick="openCreate()">
+                        <i class="fas fa-plus"></i> Thêm sản phẩm
+                    </button>
                 </div>
             </div>
-
-            <div class="table-card">
-                <div id="tblWrap"><div class="load-state"><div class="spin"></div><div style="margin-top:10px">Đang tải...</div></div></div>
-                <div id="pgArea" style="display:none"></div>
-            </div>
         </div>
-    </div>
-</div>
 
+        <div class="table-card">
+            <div id="tblWrap">
+                <div class="load-state">
+                    <div class="spin"></div>
+                    <div style="margin-top:10px">Đang tải...</div>
+                </div>
+            </div>
+            <div id="pgArea" style="display:none"></div>
+        </div>
+    </section>
+</main>
 <!-- MODAL THÊM / SỬA -->
 <div class="modal-bg" id="mdProduct">
     <div class="modal-box">
@@ -695,39 +1680,42 @@
         <div class="modal-body">
             <input type="hidden" id="productId" />
             <div class="sec-label">Thông tin cơ bản:</div>
-            <div class="top-grid">
-                <div class="form-grid">
-                    <div class="fg form-full" id="fg-ten">
-                        <label>Tên sản phẩm <span class="req">*</span></label>
-                        <input type="text" id="inTen" placeholder="Nhập tên sản phẩm" oninput="clearE('fg-ten')" />
-                        <span class="em" id="em-ten"></span>
+            <div class="form-grid">
+                <div class="fg form-full" id="fg-ten">
+                    <label>Tên sản phẩm <span class="req">*</span></label>
+                    <input type="text" id="inTen" placeholder="Nhập tên sản phẩm" oninput="clearE('fg-ten')" />
+                    <span class="em" id="em-ten"></span>
+                </div>
+                <div class="fg" id="fg-xuat">
+                    <label>Xuất xứ <span class="req">*</span></label>
+                    <div class="sel-with-add">
+                        <select id="inXuat" onchange="clearE('fg-xuat')"><option value="">Chọn xuất xứ</option></select>
+                        <button type="button" class="add-circle" title="Thêm xuất xứ mới" onclick="showQuickAddModal('xuatxu')">+</button>
                     </div>
-                    <div class="fg" id="fg-xuat">
-                        <label>Xuất xứ <span class="req">*</span></label>
-                        <div class="sel-with-add">
-                            <select id="inXuat" onchange="clearE('fg-xuat')"><option value="">Chọn xuất xứ</option></select>
-                            <button type="button" class="add-circle" title="Thêm xuất xứ mới" onclick="showQuickAddModal('xuatxu')">+</button>
-                        </div>
-                        <span class="em" id="em-xuat"></span>
+                    <span class="em" id="em-xuat"></span>
+                </div>
+                <div class="fg" id="fg-chat">
+                    <label>Chất liệu <span class="req">*</span></label>
+                    <div class="sel-with-add">
+                        <select id="inChat" onchange="clearE('fg-chat')"><option value="">Chọn chất liệu</option></select>
+                        <button type="button" class="add-circle" title="Thêm chất liệu mới" onclick="showQuickAddModal('chatlieu')">+</button>
                     </div>
-                    <div class="fg" id="fg-chat">
-                        <label>Chất liệu <span class="req">*</span></label>
-                        <div class="sel-with-add">
-                            <select id="inChat" onchange="clearE('fg-chat')"><option value="">Chọn chất liệu</option></select>
-                            <button type="button" class="add-circle" title="Thêm chất liệu mới" onclick="showQuickAddModal('chatlieu')">+</button>
-                        </div>
-                        <span class="em" id="em-chat"></span>
-                    </div>
-                    <div class="fg form-full">
-                        <label>Mô tả sản phẩm</label>
-                        <textarea id="inMota" placeholder="Nhập thông tin mô tả"></textarea>
+                    <span class="em" id="em-chat"></span>
+                </div>
+                <div class="fg form-full">
+                    <label>Mô tả sản phẩm</label>
+                    <textarea id="inMota" placeholder="Nhập thông tin mô tả"></textarea>
+                </div>
+                <div class="fg form-full">
+                    <label>Ảnh chung sản phẩm</label>
+                    <div class="product-image-panel">
+                        <div class="variant-image-title"><span>Ảnh chung</span><span class="variant-image-count" id="productImageCount">0/1 ảnh</span></div>
+                        <div class="variant-image-hint">Ảnh đại diện chung của sản phẩm, không phụ thuộc màu/kích cỡ.</div>
+                        <div class="variant-image-body" id="productImageBody"></div>
                     </div>
                 </div>
-                <label class="img-upload" id="imgUploadBox">
-                    <input type="file" id="inAnhFile" accept="image/*" onchange="previewMainImg(this)" />
-                    <span class="plus-circle" id="imgPlus">+</span>
-                </label>
             </div>
+
 
             <div id="extraFields">
                 <div class="fg" id="fg-loai" style="margin-top:14px">
@@ -754,25 +1742,16 @@
                     </div>
                     <span class="em" id="em-pc"></span>
                 </div>
-                <div class="fg" id="fg-mau" style="margin-top:14px">
-                    <label>Màu sắc <span class="req">*</span></label>
-                    <div class="sel-with-add" style="max-width:260px">
-                        <select id="selMauThem" onchange="clearE('fg-mau')"><option value="">Chọn màu sắc</option></select>
-                        <button type="button" class="add-circle" title="Thêm màu sắc mới" onclick="showQuickAddModal('mausac')">+</button>
-                    </div>
-                    <div class="chip-row" id="chipMauRow"></div>
-                    <span class="em" id="em-mau"></span>
+                <div class="fg form-full" id="fg-variant" style="margin-top:14px">
+                    <label>Biến thể sản phẩm <span class="req">*</span></label>
+                    <button type="button" class="btn btn-primary" onclick="openVariantManager()">
+                        <i class="fas fa-layer-group"></i> Chọn màu sắc, kích cỡ và ảnh biến thể
+                    </button>
+                    <div class="variant-summary" id="variantSelectionSummary">Chưa chọn biến thể.</div>
+                    <span class="em" id="em-variant"></span>
+                    <select id="selMauThem" style="display:none"></select>
+                    <select id="selSizeThem" style="display:none"></select>
                 </div>
-                <div class="fg" id="fg-size" style="margin-top:14px">
-                    <label>Kích cỡ <span class="req">*</span></label>
-                    <div class="sel-with-add" style="max-width:260px">
-                        <select id="selSizeThem" onchange="clearE('fg-size')"><option value="">Chọn kích cỡ</option></select>
-                        <button type="button" class="add-circle" title="Thêm kích cỡ mới" onclick="showQuickAddModal('kichco')">+</button>
-                    </div>
-                    <div class="chip-row" id="chipSizeRow"></div>
-                    <span class="em" id="em-size"></span>
-                </div>
-                <button type="button" class="btn-create-variant" onclick="generateVariants()">Tạo biến thể</button>
             </div>
         </div>
         <div class="modal-foot">
@@ -782,14 +1761,59 @@
     </div>
 </div>
 
-<!-- MODAL BIẾN THỂ -->
+<!-- MODAL XEM CHI TIẾT SẢN PHẨM -->
+<div class="modal-bg" id="mdProductDetail">
+    <div class="modal-box" style="max-width: 860px;">
+        <div class="modal-head">
+            <h2>CHI TIẾT SẢN PHẨM</h2>
+            <button class="modal-close" onclick="closeModal('mdProductDetail')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="productDetailBody"></div>
+        <div class="modal-foot">
+            <button class="btn" onclick="closeModal('mdProductDetail')">Đóng</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BIẾN THỂ: MÀN HÌNH CHÍNH ĐỂ CHỌN MÀU, KÍCH CỠ VÀ ẢNH -->
 <div class="modal-bg" id="mdVariants">
     <div class="modal-box variant-modal">
         <div class="modal-head">
-            <h2>DANH SÁCH BIẾN THỂ</h2>
+            <h2>CHỌN BIẾN THỂ SẢN PHẨM</h2>
             <button class="modal-close" onclick="closeModal('mdVariants')"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
+            <div class="variant-workspace-note">
+                Chọn trực tiếp màu sắc và kích cỡ bên dưới. Sau đó nhấn <b>Tạo biến thể</b> để nhập giá, số lượng và thêm tối đa <b>3 ảnh riêng cho mỗi màu</b>. Ảnh đầu tiên là ảnh chính của biến thể. Khu vực này chỉ dùng khi thêm mới sản phẩm.
+            </div>
+
+            <div class="variant-selector-card">
+                <div class="variant-selector-head">
+                    <h3>Chọn thuộc tính biến thể</h3>
+                </div>
+                <div class="variant-selector-grid">
+                    <div class="variant-selector-section">
+                        <div class="variant-selector-title">
+                            <span>Màu sắc</span>
+                            <button type="button" class="add-circle" title="Thêm màu sắc mới" onclick="showQuickAddModal('mausac')">+</button>
+                        </div>
+                        <div class="variant-selector-options" id="variantColorOptions"></div>
+                    </div>
+                    <div class="variant-selector-section">
+                        <div class="variant-selector-title">
+                            <span>Kích cỡ</span>
+                            <button type="button" class="add-circle" title="Thêm kích cỡ mới" onclick="showQuickAddModal('kichco')">+</button>
+                        </div>
+                        <div class="variant-selector-options" id="variantSizeOptions"></div>
+                    </div>
+                </div>
+                <div class="variant-selector-actions">
+                    <button type="button" class="btn btn-primary" onclick="generateVariants()">
+                        <i class="fas fa-plus"></i> Tạo biến thể
+                    </button>
+                </div>
+            </div>
+
             <div class="variant-block" id="variantBlock" style="display:none">
                 <div class="variant-header">
                     <h4>Danh sách biến thể</h4>
@@ -799,7 +1823,8 @@
             </div>
         </div>
         <div class="modal-foot">
-            <button class="btn" onclick="closeModal('mdVariants')">Đóng</button>
+            <button class="btn" onclick="closeModal('mdVariants')">Hủy</button>
+            <button class="btn btn-primary" onclick="applyVariantManager()">Áp dụng biến thể</button>
         </div>
     </div>
 </div>
@@ -814,10 +1839,10 @@
         <div class="modal-body">
             <div class="form-grid">
                 <div class="fg form-full" id="fg-q-dg">
-                    <label>Đơn giá (VND)</label>
+                    <label>Đơn giá (đ)</label>
                     <div class="input-with-suffix">
                         <input type="text" inputmode="numeric" id="quickDonGia" placeholder="Nhập số tiền" oninput="formatMoneyInput(this)" />
-                        <span class="suffix">₫</span>
+                        <span class="suffix">đ</span>
                     </div>
                 </div>
                 <div class="fg form-full" id="fg-q-sl">
@@ -890,7 +1915,7 @@
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script>
-    // ===== GIỮ NGUYÊN TOÀN BỘ SCRIPT, CHỈ SỬA HÀM SINH MÃ =====
+    // ===== QUẢN LÝ SẢN PHẨM VÀ BIẾN THỂ =====
     const API = '/san-pham';
     const PG = 10;
     let curPage = 0, totalPg = 0, totalEl = 0, dbTimer = null;
@@ -905,6 +1930,11 @@
 
     window._editVariants = null;
     window._originalProduct = null;
+    window._variantImages = {};
+    window._productCommonImage = null;
+    window._productCommonImageChanged = false;
+    window._presetVariantValues = {};
+    window._variantsNeedRefresh = false;
     let _quickAddType = null;
 
     function toast(msg, type='success'){
@@ -936,7 +1966,7 @@
             .replace(/\r?\n/g, ' ');
     }
     function txtOf(v,k){ if(!v) return ''; return typeof v==='object'? (v[k]||'') : String(v) }
-    function fmt(n){ return Number(n||0).toLocaleString('vi-VN') }
+    function fmt(n){ return (Math.round(Number(n||0) / 1000) * 1000).toLocaleString('vi-VN') }
     function isPositiveMoney(v){ return Number(moneyRaw(v)) > 0 }
     function isNonNegativeInt(v){ return String(v ?? '').trim() !== '' && Number.isInteger(Number(v)) && Number(v) >= 0 }
     function moneyRaw(v){ return String(v || '').replace(/[^\d]/g, '') }
@@ -956,15 +1986,29 @@
             }
         }
         input.setSelectionRange(nextCaret, nextCaret);
+        if (!input.dataset.roundMoneyBound) {
+            input.dataset.roundMoneyBound = 'true';
+            input.addEventListener('blur', () => {
+                const value = Number(moneyRaw(input.value) || 0);
+                input.value = value ? formatMoney(Math.round(value / 1000) * 1000) : '';
+            });
+        }
     }
     function clearE(id){ const g=document.getElementById(id); if(g){ g.classList.remove('err'); const e=g.querySelector('.em'); if(e) e.textContent='' } }
     function setE(id,msg){ const g=document.getElementById(id); if(g){ g.classList.add('err'); const e=g.querySelector('.em'); if(e) e.textContent=msg } }
+    function productPriceSliderStep(maxPrice) {
+        return 1000;
+    }
+    function productPriceSliderMax(maxPrice) {
+        const safeMax = Number(maxPrice || 0);
+        return Number.isFinite(safeMax) && safeMax > 0 ? safeMax : 0;
+    }
     function setupProductPriceRange(){
         const maxPrice = allProducts.reduce((max, p) => Math.max(max, p._maxPrice || 0), 0);
-        dynamicProductMaxPrice = Math.max(maxPrice, 0);
+        dynamicProductMaxPrice = productPriceSliderMax(maxPrice);
         const range = document.getElementById('productPriceRange');
         range.max = String(dynamicProductMaxPrice);
-        range.step = dynamicProductMaxPrice > 10000000 ? '100000' : '50000';
+        range.step = String(productPriceSliderStep(dynamicProductMaxPrice));
         range.value = String(dynamicProductMaxPrice);
         updateProductPrice(dynamicProductMaxPrice);
         document.getElementById('maxPriceLabel').textContent = fmt(dynamicProductMaxPrice) + ' đ';
@@ -976,6 +2020,10 @@
         const pct = max ? (current / max * 100).toFixed(1) : 100;
         range.style.setProperty('--pct', pct + '%');
         document.getElementById('productPriceLabel').textContent = max ? `0 đ - ${fmt(current)} đ` : 'Tất cả';
+    }
+    function productMatchesPrice(product, maxPrice){
+        const prices = Array.isArray(product._variantPrices) ? product._variantPrices : [];
+        return prices.some(price => Number(price || 0) <= maxPrice);
     }
     function toggleSub(subId,arrId){
         const sub=document.getElementById(subId), arr=document.getElementById(arrId);
@@ -1016,6 +2064,59 @@
         fillSelect('inChat',chOpts,'idChatLieu','tenChatLieu','Chọn chất liệu');
         fillSelect('selMauThem',clOpts,'idMauSac','tenMauSac','Chọn màu sắc');
         fillSelect('selSizeThem',szOpts,'idKichCo','tenKichCo','Chọn kích cỡ');
+        renderVariantSelector();
+        renderVariantSummary();
+    }
+
+    function renderVariantSelector(){
+        const colorWrap = document.getElementById('variantColorOptions');
+        if (colorWrap) {
+            colorWrap.innerHTML = (clOpts || []).map(c => {
+                const id = c.idMauSac;
+                const selected = selectedColors.some(item => String(item.idMauSac) === String(id));
+                const hex = colorHexMap[c.tenMauSac] || '#999';
+                return `<button type="button" class="variant-option color-option ${selected ? 'selected' : ''}" onclick="toggleVariantColor(${id})">
+                    <span class="color-dot" style="background:${hex}"></span>${esc(c.tenMauSac)}
+                </button>`;
+            }).join('') || '<span style="color:var(--muted);font-size:12px">Chưa có màu sắc.</span>';
+        }
+
+        const sizeWrap = document.getElementById('variantSizeOptions');
+        if (sizeWrap) {
+            sizeWrap.innerHTML = (szOpts || []).map(s => {
+                const id = s.idKichCo;
+                const selected = selectedSizes.some(item => String(item.idKichCo) === String(id));
+                return `<button type="button" class="variant-option ${selected ? 'selected' : ''}" onclick="toggleVariantSize(${id})">${esc(s.tenKichCo)}</button>`;
+            }).join('') || '<span style="color:var(--muted);font-size:12px">Chưa có kích cỡ.</span>';
+        }
+    }
+
+    function toggleVariantColor(id){
+        const item = clOpts.find(c => String(c.idMauSac) === String(id));
+        if (!item) return;
+        const index = selectedColors.findIndex(c => String(c.idMauSac) === String(id));
+        if (index >= 0) {
+            removeColor(id);
+        } else {
+            selectedColors.push(item);
+            window._variantsNeedRefresh = true;
+            renderVariantSelector();
+            renderVariantSummary();
+        }
+    }
+
+    function toggleVariantSize(id){
+        const item = szOpts.find(s => String(s.idKichCo) === String(id));
+        if (!item) return;
+        const index = selectedSizes.findIndex(s => String(s.idKichCo) === String(id));
+        if (index >= 0) {
+            removeSize(id);
+        } else {
+            selectedSizes.push(item);
+            window._variantsNeedRefresh = true;
+            renderVariantSelector();
+            renderVariantSummary();
+        }
     }
 
     function fillSelect(id,arr,idK,lbK,placeholder){
@@ -1114,6 +2215,7 @@
                 const newItem = items.find(it => String(it[cfg.idK]) === String(sel.value));
                 if (newItem && !selectedColors.find(c => String(c[cfg.idK]) === String(sel.value))) {
                     selectedColors.push(newItem);
+                    window._variantsNeedRefresh = true;
                     renderColorChips();
                 }
                 sel.dispatchEvent(new Event('change', {bubbles: true}));
@@ -1121,6 +2223,7 @@
                 const newItem = items.find(it => String(it[cfg.idK]) === String(sel.value));
                 if (newItem && !selectedSizes.find(s => String(s[cfg.idK]) === String(sel.value))) {
                     selectedSizes.push(newItem);
+                    window._variantsNeedRefresh = true;
                     renderSizeChips();
                 }
                 sel.dispatchEvent(new Event('change', {bubbles: true}));
@@ -1134,114 +2237,382 @@
         }
     }
 
-    function previewMainImg(input){
-        const box=document.getElementById('imgUploadBox');
-        if(input.files&&input.files[0]){
-            const reader=new FileReader();
-            reader.onload=e=>{
-                box.querySelector('#imgPlus')?.remove();
-                let img=box.querySelector('img');
-                if(!img){ img=document.createElement('img'); box.insertBefore(img,box.firstChild) }
-                img.src=e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
+    function clearVariantImages(){
+        Object.values(window._variantImages || {}).forEach(record => {
+            (record?.images || []).forEach(image => {
+                if (image?.previewUrl?.startsWith('blob:')) URL.revokeObjectURL(image.previewUrl);
+            });
+        });
+        window._variantImages = {};
     }
 
-    async function resolveMainImageUrl() {
-        const fileInput = document.getElementById('inAnhFile');
-        if (fileInput?.files?.[0]) {
-            const fd = new FormData();
-            fd.append('file', fileInput.files[0]);
-            const r = await fetch(`${API}/upload-anh`, { method: 'POST', body: fd });
-            const text = await r.text();
-            if (!r.ok) throw new Error(text || 'Không thể upload ảnh');
-            try {
-                const data = JSON.parse(text);
-                return data.url || '';
-            } catch {
-                throw new Error('Server upload ảnh trả về dữ liệu không hợp lệ');
+    function getVariantImages(colorId){
+        const record = window._variantImages[String(colorId)];
+        return Array.isArray(record?.images) ? record.images : [];
+    }
+
+    function normalizeImageUrl(value) {
+        const raw = String(value || '').trim();
+        if (!raw) return '';
+        if (raw.startsWith('blob:') || raw.startsWith('data:') || raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/')) {
+            return raw;
+        }
+        if (raw.startsWith('uploads/')) return '/' + raw;
+        return '/uploads/' + raw;
+    }
+
+    function productImageUrl(product) {
+        return normalizeImageUrl(product?.hinhAnhChinh || product?.hinhAnh || product?.imageUrl || '');
+    }
+
+    function resetProductCommonImage(url = '') {
+        clearProductCommonPreview();
+        const normalized = normalizeImageUrl(url);
+        window._productCommonImage = normalized ? { file: null, previewUrl: normalized, url: normalized } : null;
+        window._productCommonImageChanged = false;
+        renderProductCommonImage();
+    }
+
+    function clearProductCommonPreview() {
+        const image = window._productCommonImage;
+        if (image?.previewUrl?.startsWith('blob:')) URL.revokeObjectURL(image.previewUrl);
+    }
+
+    function renderProductCommonImage() {
+        const body = document.getElementById('productImageBody');
+        const count = document.getElementById('productImageCount');
+        if (!body) return;
+        const image = window._productCommonImage;
+        if (count) count.textContent = image ? '1/1 ảnh' : '0/1 ảnh';
+
+        if (image) {
+            body.innerHTML = `
+                <div class="variant-image-thumb">
+                    <img src="${esc(image.previewUrl || image.url || '')}" alt="Ảnh chung sản phẩm">
+                    <span class="variant-image-primary">Ảnh chung</span>
+                    <button type="button" class="variant-image-remove" title="Xóa ảnh" onclick="removeProductCommonImage()"><i class="fas fa-times"></i></button>
+                </div>
+                <label class="variant-image-upload" title="Thay ảnh chung">
+                    <i class="fas fa-image"></i><span>Thay ảnh</span>
+                    <input type="file" accept="image/*" onchange="previewProductCommonImage(this)">
+                </label>
+            `;
+            return;
+        }
+
+        body.innerHTML = `
+            <label class="variant-image-upload" title="Thêm ảnh chung sản phẩm">
+                <i class="fas fa-image"></i><span>Thêm ảnh</span>
+                <input type="file" accept="image/*" onchange="previewProductCommonImage(this)">
+            </label>
+        `;
+    }
+
+    function previewProductCommonImage(input) {
+        const file = input?.files?.[0];
+        if (!file) return;
+        clearProductCommonPreview();
+        window._productCommonImage = { file, previewUrl: URL.createObjectURL(file), url: '' };
+        window._productCommonImageChanged = true;
+        input.value = '';
+        renderProductCommonImage();
+    }
+
+    function removeProductCommonImage() {
+        clearProductCommonPreview();
+        window._productCommonImage = null;
+        window._productCommonImageChanged = true;
+        renderProductCommonImage();
+    }
+
+    async function uploadProductCommonImage() {
+        const image = window._productCommonImage;
+        if (!image) return '';
+        if (!image.file) return image.url || image.previewUrl || null;
+
+        const fd = new FormData();
+        fd.append('file', image.file);
+        const r = await fetch(`${API}/upload-anh`, { method: 'POST', body: fd });
+        const text = await r.text();
+        if (!r.ok) throw new Error(text || 'Không thể upload ảnh chung sản phẩm');
+        let data;
+        try { data = JSON.parse(text); }
+        catch { throw new Error('Server upload ảnh trả về dữ liệu không hợp lệ'); }
+        if (!data?.url) throw new Error('Server không trả về đường dẫn ảnh');
+        image.url = data.url;
+        image.previewUrl = data.url;
+        image.file = null;
+        window._productCommonImageChanged = false;
+        return data.url;
+    }
+
+    function previewVariantImages(input) {
+        const colorId = String(input.dataset.color || '');
+        const files = Array.from(input.files || []);
+        if (!colorId || !files.length) return;
+
+        const current = window._variantImages[colorId] || { images: [] };
+        current.images = Array.isArray(current.images) ? current.images : [];
+        const remaining = Math.max(0, 3 - current.images.length);
+
+        if (!remaining) {
+            toast('Mỗi màu chỉ được thêm tối đa 3 ảnh', 'error');
+            input.value = '';
+            return;
+        }
+
+        const accepted = files.slice(0, remaining);
+        accepted.forEach(file => current.images.push({
+            file,
+            previewUrl: URL.createObjectURL(file),
+            url: ''
+        }));
+        window._variantImages[colorId] = current;
+
+        if (files.length > remaining) toast('Chỉ thêm ' + remaining + ' ảnh; mỗi màu tối đa 3 ảnh', 'info');
+        input.value = '';
+        generateVariants();
+    }
+
+    function removeVariantImage(colorId, imageIndex) {
+        const key = String(colorId);
+        const current = window._variantImages[key];
+        if (!current?.images?.[imageIndex]) return;
+        const image = current.images[imageIndex];
+        if (image?.previewUrl?.startsWith('blob:')) URL.revokeObjectURL(image.previewUrl);
+        current.images.splice(imageIndex, 1);
+        if (!current.images.length) delete window._variantImages[key];
+        generateVariants();
+    }
+
+    async function uploadVariantImages() {
+        const imagesByColor = {};
+        for (const [colorId, record] of Object.entries(window._variantImages || {})) {
+            const urls = [];
+            for (const image of (record?.images || [])) {
+                if (image?.file) {
+                    const fd = new FormData();
+                    fd.append('file', image.file);
+                    const r = await fetch(`${API}/upload-anh`, { method: 'POST', body: fd });
+                    const text = await r.text();
+                    if (!r.ok) throw new Error(text || 'Không thể upload ảnh biến thể');
+                    let data;
+                    try { data = JSON.parse(text); }
+                    catch { throw new Error('Server upload ảnh trả về dữ liệu không hợp lệ'); }
+                    if (!data?.url) throw new Error('Server không trả về đường dẫn ảnh');
+                    image.url = data.url;
+                    urls.push(data.url);
+                } else if (image?.url) {
+                    urls.push(image.url);
+                }
             }
+            imagesByColor[colorId] = urls;
         }
-
-        const currentImgEl = document.querySelector('#imgUploadBox img');
-        return currentImgEl ? (currentImgEl.getAttribute('src') || currentImgEl.src || '') : (window._originalProduct?.hinhAnh || '');
+        return imagesByColor;
     }
 
-    document.addEventListener('change',e=>{
-        if(e.target.id==='selMauThem'&&e.target.value){
-            const id=e.target.value;
-            const item=clOpts.find(c=>String(c.idMauSac)===String(id));
-            if(item&&!selectedColors.find(c=>String(c.idMauSac)===String(id))){ selectedColors.push(item); renderColorChips() }
-            e.target.value='';
-        }
-        if(e.target.id==='selSizeThem'&&e.target.value){
-            const id=e.target.value;
-            const item=szOpts.find(s=>String(s.idKichCo)===String(id));
-            if(item&&!selectedSizes.find(s=>String(s.idKichCo)===String(id))){ selectedSizes.push(item); renderSizeChips() }
-            e.target.value='';
-        }
-    });
+    function renderColorChips(){ renderVariantSelector(); renderVariantSummary(); }
+    function renderSizeChips(){ renderVariantSelector(); renderVariantSummary(); }
 
-    function renderColorChips(){
-        const row=document.getElementById('chipMauRow');
-        row.innerHTML=selectedColors.map(c=>{
-            const hex=colorHexMap[c.tenMauSac]||'#999';
-            return `<span class="color-chip selected" onclick="removeColor(${c.idMauSac})"><span class="color-dot" style="background:${hex}"></span>${esc(c.tenMauSac)} ✕</span>`;
-        }).join('');
+    function removeColor(id){
+        const key = String(id);
+        const record = window._variantImages[key];
+        (record?.images || []).forEach(image => {
+            if (image?.previewUrl?.startsWith('blob:')) URL.revokeObjectURL(image.previewUrl);
+        });
+        delete window._variantImages[key];
+        selectedColors = selectedColors.filter(c => String(c.idMauSac) !== key);
+        window._variantsNeedRefresh = true;
+        renderVariantSelector();
+        renderVariantSummary();
     }
-    function removeColor(id){ selectedColors=selectedColors.filter(c=>String(c.idMauSac)!==String(id)); renderColorChips() }
-    function renderSizeChips(){
-        const row=document.getElementById('chipSizeRow');
-        row.innerHTML=selectedSizes.map(s=>`<span class="size-chip selected" onclick="removeSize(${s.idKichCo})">${esc(s.tenKichCo)} ✕</span>`).join('');
-    }
-    function removeSize(id){ selectedSizes=selectedSizes.filter(s=>String(s.idKichCo)!==String(id)); renderSizeChips() }
 
-    // ===== HÀM GENERATE VARIANTS ĐÃ CẬP NHẬT BỐ CỤC =====
+    function removeSize(id){
+        selectedSizes = selectedSizes.filter(s => String(s.idKichCo) !== String(id));
+        window._variantsNeedRefresh = true;
+        renderVariantSelector();
+        renderVariantSummary();
+    }
+
+    function renderVariantSummary(){
+        const target = document.getElementById('variantSelectionSummary');
+        if (!target) return;
+        const totalVariants = selectedColors.length * selectedSizes.length;
+        const totalImages = Object.values(window._variantImages || {}).reduce((sum, record) => sum + (record?.images?.length || 0), 0);
+        if (!selectedColors.length || !selectedSizes.length) {
+            target.textContent = 'Chưa chọn đủ màu sắc và kích cỡ.';
+            return;
+        }
+        target.innerHTML = `Đã chọn <strong>${selectedColors.length} màu</strong>, <strong>${selectedSizes.length} kích cỡ</strong> — sẽ tạo <strong>${totalVariants} biến thể</strong>. Đã thêm <strong>${totalImages}/${selectedColors.length * 3}</strong> ảnh.`;
+    }
+
+    function hydrateExistingVariants(variants){
+        clearVariantImages();
+        window._presetVariantValues = {};
+        selectedColors = [];
+        selectedSizes = [];
+
+        (variants || []).forEach(v => {
+            const colorId = v?.idMauSac ?? v?.mauSac?.idMauSac;
+            const sizeId = v?.idKichCo ?? v?.kichCo?.idKichCo;
+            if (colorId != null) {
+                const color = clOpts.find(c => String(c.idMauSac) === String(colorId));
+                if (color && !selectedColors.some(c => String(c.idMauSac) === String(colorId))) selectedColors.push(color);
+            }
+            if (sizeId != null) {
+                const size = szOpts.find(item => String(item.idKichCo) === String(sizeId));
+                if (size && !selectedSizes.some(item => String(item.idKichCo) === String(sizeId))) selectedSizes.push(size);
+            }
+            if (colorId != null && sizeId != null) {
+                const key = String(colorId) + '_' + String(sizeId);
+                window._presetVariantValues[key] = {
+                    dg: v?.donGia ?? 0,
+                    sl: v?.soLuongTon ?? 0,
+                    sku: v?.maChiTietSanPham || '',
+                    idspct: v?.idChiTietSanPham ?? v?.idCtsp ?? v?.idSpct ?? ''
+                };
+            }
+
+            if (colorId != null) {
+                let imageValues = v?.danhSachHinhAnh ?? v?.hinhAnhList ?? v?.images ?? v?.hinhAnhs ?? v?.hinhAnh ?? [];
+                if (typeof imageValues === 'string') {
+                    try {
+                        const parsed = JSON.parse(imageValues);
+                        imageValues = Array.isArray(parsed) ? parsed : [imageValues];
+                    } catch {
+                        imageValues = imageValues ? [imageValues] : [];
+                    }
+                }
+                if (!Array.isArray(imageValues)) imageValues = [];
+                const colorKey = String(colorId);
+                const record = window._variantImages[colorKey] || { images: [] };
+                imageValues.filter(Boolean).forEach(url => {
+                    const normalizedUrl = normalizeImageUrl(url);
+                    if (record.images.length < 3 && normalizedUrl && !record.images.some(image => image.url === normalizedUrl)) {
+                        record.images.push({ file: null, previewUrl: normalizedUrl, url: normalizedUrl });
+                    }
+                });
+                if (record.images.length) window._variantImages[colorKey] = record;
+            }
+        });
+
+        renderVariantSelector();
+        if (selectedColors.length && selectedSizes.length) generateVariants();
+        else {
+            document.getElementById('variantBlock').style.display = 'none';
+            document.getElementById('variantGroups').innerHTML = '';
+        }
+        renderVariantSummary();
+    }
+
+    function openVariantManager(){
+        if (document.getElementById('productId').value) {
+            toast('Biến thể chỉ được tạo khi thêm mới sản phẩm. Hãy dùng màn hình Biến thể sản phẩm để chỉnh sửa biến thể.', 'info');
+            return;
+        }
+        renderVariantSelector();
+        renderVariantSummary();
+        document.getElementById('mdVariants').classList.add('show');
+    }
+
+    function applyVariantManager(){
+        if (document.getElementById('productId').value) {
+            toast('Không thể cập nhật biến thể tại màn hình chỉnh sửa sản phẩm.', 'info');
+            return;
+        }
+        if (!selectedColors.length || !selectedSizes.length) {
+            setE('fg-variant', 'Chọn ít nhất 1 màu sắc và 1 kích cỡ');
+            return;
+        }
+        generateVariants();
+        clearE('fg-variant');
+        renderVariantSummary();
+        closeModal('mdVariants');
+        toast('Đã áp dụng biến thể');
+    }
+
+    // ===== TẠO BIẾN THỂ KÈM TỐI ĐA 3 ẢNH THEO MÀU =====
     function generateVariants(){
-        if(!selectedColors.length){ setE('fg-mau','Chọn ít nhất 1 màu sắc'); return }
-        clearE('fg-mau');
-        if(!selectedSizes.length){ setE('fg-size','Chọn ít nhất 1 kích cỡ'); return }
-        clearE('fg-size');
-        const block=document.getElementById('variantBlock'), groupsWrap=document.getElementById('variantGroups');
-        const existing={};
-        groupsWrap.querySelectorAll('tr[data-color][data-size]').forEach(tr=>{
-            const key=tr.dataset.color+'_'+tr.dataset.size;
+        if (document.getElementById('productId').value) {
+            toast('Màn hình này không hỗ trợ cập nhật biến thể sản phẩm.', 'info');
+            return false;
+        }
+        if(!selectedColors.length){ setE('fg-variant','Chọn ít nhất 1 màu sắc'); return false; }
+        if(!selectedSizes.length){ setE('fg-variant','Chọn ít nhất 1 kích cỡ'); return false; }
+        clearE('fg-variant');
+
+        const block = document.getElementById('variantBlock');
+        const groupsWrap = document.getElementById('variantGroups');
+        const existing = {};
+
+        groupsWrap.querySelectorAll('tr[data-color][data-size]').forEach(tr => {
+            const key = tr.dataset.color + '_' + tr.dataset.size;
             const dgInput = tr.querySelector('.v-dg-input');
             const slInput = tr.querySelector('.v-sl');
-            existing[key]={
+            existing[key] = {
                 dg: dgInput ? moneyRaw(dgInput.value) || 0 : 0,
                 sl: slInput ? slInput.value || 0 : 0,
-                sku: tr.dataset.sku||'',
-                idspct: tr.dataset.idspct||''
+                sku: tr.dataset.sku || '',
+                idspct: tr.dataset.idspct || ''
             };
         });
-        groupsWrap.innerHTML=selectedColors.map(c=>{
-            const hex=colorHexMap[c.tenMauSac]||'#999';
-            const rows=selectedSizes.map(s=>{
-                const key=c.idMauSac+'_'+s.idKichCo;
-                const ex=existing[key]||{dg:0,sl:0,sku:'',idspct:''};
-                const skuAttr=ex.sku?` data-sku="${esc(ex.sku)}"`:'';
-                const idAttr=ex.idspct?` data-idspct="${esc(ex.idspct)}"`:'';
-                return `<tr data-color="${c.idMauSac}" data-size="${s.idKichCo}"${skuAttr}${idAttr}>
-          <td style="font-weight:600">${esc(s.tenKichCo)}</td>
-          <td>
-            <div class="input-with-suffix">
-              <input type="text" inputmode="numeric" class="v-input v-dg-input" value="${formatMoney(ex.dg)}" oninput="formatMoneyInput(this)" placeholder="0" />
-              <span class="suffix">₫</span>
-            </div>
-          </td>
-          <td><input type="number" class="v-input v-sl" min="0" value="${ex.sl}" placeholder="0"></td>
-          <td><button type="button" class="vremove" onclick="this.closest('tr').remove()"><i class="fas fa-trash-alt"></i></button></td>
-        </tr>`;
+
+        groupsWrap.innerHTML = selectedColors.map(c => {
+            const colorId = String(c.idMauSac);
+            const colorName = esc(c.tenMauSac);
+            const hex = colorHexMap[c.tenMauSac] || '#999';
+            const images = getVariantImages(colorId);
+            const rows = selectedSizes.map(s => {
+                const key = c.idMauSac + '_' + s.idKichCo;
+                const ex = existing[key] || window._presetVariantValues[key] || {dg:0, sl:0, sku:'', idspct:''};
+                const skuAttr = ex.sku ? ` data-sku="${esc(ex.sku)}"` : '';
+                const idAttr = ex.idspct ? ` data-idspct="${esc(ex.idspct)}"` : '';
+                return `<tr data-color="${esc(c.idMauSac)}" data-size="${esc(s.idKichCo)}"${skuAttr}${idAttr}>
+                    <td style="font-weight:600">${esc(s.tenKichCo)}</td>
+                    <td><div class="input-with-suffix"><input type="text" inputmode="numeric" class="v-input v-dg-input" value="${formatMoney(ex.dg)}" oninput="formatMoneyInput(this)" placeholder="0"><span class="suffix">đ</span></div></td>
+                    <td><input type="number" class="v-input v-sl" min="0" value="${ex.sl}" placeholder="0"></td>
+                    <td><button type="button" class="vremove" onclick="this.closest('tr').remove()"><i class="fas fa-trash-alt"></i></button></td>
+                </tr>`;
             }).join('');
-            return `<div class="color-group" data-group-color="${c.idMauSac}">
-        <div class="color-group-title"><span class="color-dot" style="background:${hex};width:11px;height:11px;display:inline-block;border-radius:50%"></span>${esc(c.tenMauSac)}</div>
-        <table class="vtable"><thead><tr><th>Kích cỡ</th><th>Đơn giá (VND)</th><th>Số lượng</th><th>Hành động</th></tr></thead><tbody>${rows}</tbody></table>
-      </div>`;
+
+            const thumbs = images.map((image, index) => {
+                const src = normalizeImageUrl(image.previewUrl || image.url || '');
+                return `<div class="variant-image-thumb">
+                    <img src="${esc(src)}" alt="Ảnh ${index + 1} màu ${colorName}">
+                    ${index === 0 ? '<span class="variant-image-primary">Ảnh chính</span>' : ''}
+                    <button type="button" class="variant-image-remove" title="Xóa ảnh" onclick="removeVariantImage('${colorId}', ${index})"><i class="fas fa-times"></i></button>
+                </div>`;
+            }).join('');
+            const canAdd = images.length < 3;
+
+            return `<div class="color-group" data-group-color="${esc(c.idMauSac)}">
+                <div class="color-group-title"><span class="color-dot" style="background:${hex};width:11px;height:11px;display:inline-block;border-radius:50%"></span>${colorName}</div>
+                <div class="variant-content">
+                    <div class="variant-table-wrap">
+                        <table class="vtable">
+                            <thead><tr><th>Kích cỡ</th><th>Đơn giá (đ)</th><th>Số lượng</th><th>Hành động</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>
+                    <div class="variant-image-panel">
+                        <div class="variant-image-title"><span>Ảnh riêng biến thể</span><span class="variant-image-count">${images.length}/3 ảnh</span></div>
+                        <div class="variant-image-hint">Tối đa 3 ảnh riêng cho màu này. Ảnh đầu tiên là ảnh chính của biến thể.</div>
+                        <div class="variant-image-body">
+                            ${thumbs}
+                            <label class="variant-image-upload ${canAdd ? '' : 'disabled'}" title="${canAdd ? 'Thêm ảnh' : 'Đã đủ 3 ảnh'}">
+                                <i class="fas fa-image"></i><span>${canAdd ? 'Thêm ảnh' : 'Đã đủ 3 ảnh'}</span>
+                                <input type="file" accept="image/*" multiple data-color="${esc(c.idMauSac)}" onchange="previewVariantImages(this)">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
         }).join('');
-        block.style.display='block';
-        document.getElementById('mdVariants').classList.add('show');
+
+        block.style.display = 'block';
+        window._variantsNeedRefresh = false;
+        renderVariantSummary();
+        return true;
     }
 
     function openQuickFillModal(){
@@ -1318,7 +2689,10 @@
         const cl=document.getElementById('fChatLieu').value;
         const tt=document.getElementById('fTrangThai').value;
         const maxPrice = Number(document.getElementById('productPriceRange').value || 0);
+        const shouldFilterByPrice = dynamicProductMaxPrice > 0 && maxPrice < dynamicProductMaxPrice;
         return allProducts.filter(p=>{
+            const availableQty = Number(p._tongSL ?? p._soLuongTon ?? 0);
+            if (availableQty <= 0) return false;
             if(kw){
                 const ma=(p.maSp||'').toLowerCase(); const ten=(p.tenSp||'').toLowerCase();
                 if(!ma.includes(kw)&&!ten.includes(kw)) return false;
@@ -1329,7 +2703,7 @@
                 const active=tt==='true';
                 if(p.trangThai!==active) return false;
             }
-            if(dynamicProductMaxPrice && (p._maxPrice || 0) > maxPrice) return false;
+            if(shouldFilterByPrice && !productMatchesPrice(p, maxPrice)) return false;
             return true;
         });
     }
@@ -1347,39 +2721,45 @@
                     if(vr.ok){
                         const vs=await vr.json();
                         if(vs&&vs.length>0){
-                            const activeVariants = vs.filter(v => v.trangThai !== false);
-                            const variantsToUse = activeVariants.length ? activeVariants : vs;
+                            const variantsToUse = vs.filter(v => v.trangThai !== false && Number(v.soLuongTon || 0) > 0);
                             let minPrice = Infinity, maxPrice = -Infinity;
                             let totalQty = 0;
                             variantsToUse.forEach(v => {
-                                const dg = v.donGia || 0;
+                                const dg = Number(v.donGia || 0);
                                 if (dg < minPrice) minPrice = dg;
                                 if (dg > maxPrice) maxPrice = dg;
                                 totalQty += (v.soLuongTon || 0);
                             });
+                            p._variantPrices = variantsToUse
+                                .map(v => Number(v.donGia || 0))
+                                .filter(price => Number.isFinite(price) && price > 0);
                             if (minPrice === Infinity) minPrice = 0;
                             if (maxPrice === -Infinity) maxPrice = 0;
                             p._minPrice = minPrice;
                             p._maxPrice = maxPrice;
                             p._tongSL = totalQty;
                         } else {
+                            p._variantPrices = [];
                             p._minPrice = 0;
                             p._maxPrice = 0;
                             p._tongSL = 0;
                         }
                     } else {
+                        p._variantPrices = [];
                         p._minPrice = 0;
                         p._maxPrice = 0;
                         p._tongSL = 0;
                     }
                 }catch(e){
+                    p._variantPrices = [];
                     p._minPrice = 0;
                     p._maxPrice = 0;
                     p._tongSL = 0;
                 }
                 return p;
             });
-            allProducts=await Promise.all(variantPromises);
+            allProducts=(await Promise.all(variantPromises))
+                .filter(p => Number(p._tongSL || 0) > 0);
             fillFilters();
             setupProductPriceRange();
             load(0);
@@ -1404,40 +2784,151 @@
             const stt=curPage*PG+i+1;
             const xuat=esc(txtOf(p.xuatXu,'tenXuatXu'));
             const chatLieu=esc(txtOf(p.chatLieu,'tenChatLieu'));
-            const imgUrl=p.hinhAnh||p.hinhAnhChinh||'';
-            const imgHtml=imgUrl?`<div class="img-thumb"><img src="${esc(imgUrl)}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\'></i>'"></div>`:`<div class="img-thumb"><i class="fas fa-image"></i></div>`;
             const minPrice = p._minPrice || 0;
             const maxPrice = p._maxPrice || 0;
             let priceHtml;
             if (minPrice === 0 && maxPrice === 0) {
-                priceHtml = `<span style="color:var(--muted)">–</span>`;
+                priceHtml = `<span class="price-placeholder">–</span>`;
             } else if (minPrice === maxPrice) {
-                priceHtml = `<span class="price">${fmt(minPrice)} ₫</span>`;
+                priceHtml = `<span class="price">${fmt(minPrice)} đ</span>`;
             } else {
-                priceHtml = `<span class="price-range-display">${fmt(minPrice)} ₫<span class="sep">–</span>${fmt(maxPrice)} ₫</span>`;
+                priceHtml = `<span class="price-range-display">${fmt(minPrice)} đ<span class="sep">–</span>${fmt(maxPrice)} đ</span>`;
             }
             const badge=p.trangThai?`<span class="badge-on">Đang bán</span>`:`<span class="badge-off">Ngừng bán</span>`;
             const soLuong=p._tongSL!==undefined?p._tongSL:(p._soLuongTon||0);
+            const commonImage = productImageUrl(p);
+            const imageHtml = commonImage
+                ? `<div class="img-thumb"><img src="${esc(commonImage)}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\'></i>'"></div>`
+                : `<div class="img-thumb"><i class="fas fa-image"></i></div>`;
             return `<tr>
         <td class="td-num">${stt}</td>
-        <td>${imgHtml}</td>
-        <td><span class="td-code">${esc(p.maSp)||'–'}</span></td>
-        <td>${esc(p.tenSp)||'–'}</td>
-        <td>${xuat||'–'}</td>
-        <td>${chatLieu||'–'}</td>
+        <td class="cell-center">${imageHtml}</td>
+        <td class="cell-code"><span class="td-code">${esc(p.maSp)||'–'}</span></td>
+        <td class="product-name-cell" title="${esc(p.tenSp)||'–'}">${esc(p.tenSp)||'–'}</td>
+        <td class="cell-text" title="${xuat||'–'}">${xuat||'–'}</td>
+        <td class="cell-text" title="${chatLieu||'–'}">${chatLieu||'–'}</td>
         <td class="td-num">${soLuong}</td>
-        <td>${priceHtml}</td>
-        <td>${badge}</td>
+        <td class="price-col">${priceHtml}</td>
+        <td class="cell-center">${badge}</td>
         <td><div class="act-btns">
+          <button class="ib view" title="Xem chi tiết" onclick="openProductDetail(${p.idSp})"><i class="fas fa-eye"></i></button>
           <button class="ib edit" title="Sửa" onclick="openEdit(${p.idSp})"><i class="fas fa-pen"></i></button>
           <label class="toggle" title="Đổi trạng thái"><input type="checkbox" ${p.trangThai?'checked':''} onchange="confirmToggleStatus(${p.idSp}, this, '${jsAttrStr(p.tenSp)}')"><span class="slider"></span></label>
         </div></td>
       </tr>`;
         }).join('');
         document.getElementById('tblWrap').innerHTML=`<table>
-      <thead><tr><th style="text-align:center">STT</th><th>Hình ảnh</th><th>Mã SP</th><th>Tên SP</th><th>Xuất xứ</th><th>Chất liệu</th><th style="text-align:center">Số lượng</th><th>Giá (VNĐ)</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+      <colgroup>
+        <col class="col-stt"><col class="col-img"><col class="col-ma-sp"><col class="col-ten-sp"><col class="col-xuat-xu"><col class="col-chat-lieu">
+        <col class="col-so-luong"><col class="col-price"><col class="col-status"><col class="col-actions">
+      </colgroup>
+      <thead><tr><th class="cell-center">STT</th><th class="cell-center">Ảnh chung</th><th>Mã SP</th><th>Tên SP</th><th>Xuất xứ</th><th>Chất liệu</th><th class="cell-center">Số lượng</th><th class="th-price">Giá (đ)</th><th class="cell-center">Trạng thái</th><th style="text-align:right">Hành động</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
+    }
+
+    function detailValue(value) {
+        const text = String(value ?? '').trim();
+        return text ? esc(text) : '–';
+    }
+
+    function variantImageUrls(variant) {
+        const urls = [];
+        const add = value => {
+            const url = normalizeImageUrl(value);
+            if (url && !urls.includes(url)) urls.push(url);
+        };
+        const addMany = value => {
+            if (!value) return;
+            if (typeof value === 'string') {
+                const text = value.trim();
+                if (!text) return;
+                if (text.startsWith('[')) {
+                    try {
+                        const parsed = JSON.parse(text);
+                        (Array.isArray(parsed) ? parsed : [parsed]).forEach(add);
+                        return;
+                    } catch {
+                        add(text);
+                        return;
+                    }
+                }
+                add(text);
+                return;
+            }
+            (Array.isArray(value) ? value : [value]).forEach(add);
+        };
+
+        add(variant?.hinhAnh);
+        addMany(variant?.danhSachHinhAnh || variant?.hinhAnhList || variant?.images || []);
+        return urls.slice(0, 3);
+    }
+
+    async function openProductDetail(id) {
+        const body = document.getElementById('productDetailBody');
+        body.innerHTML = '<div class="load-state"><div class="spin"></div><div style="margin-top:10px">Đang tải chi tiết...</div></div>';
+        document.getElementById('mdProductDetail').classList.add('show');
+
+        try {
+            const [productRes, variantsRes] = await Promise.all([
+                fetch(`${API}/${id}`),
+                fetch(`${API}/bien-the/${id}`)
+            ]);
+            if (!productRes.ok) throw new Error('Không tải được sản phẩm');
+            const product = await productRes.json();
+            const variants = variantsRes.ok ? await variantsRes.json() : [];
+            renderProductDetail(product, Array.isArray(variants) ? variants : []);
+        } catch (e) {
+            body.innerHTML = `<div class="empty-state"><span class="ei">⚠️</span><p>${esc(e.message || e)}</p></div>`;
+        }
+    }
+
+    function renderProductDetail(product, variants) {
+        const commonImage = productImageUrl(product);
+        const imageBlock = commonImage
+            ? `<img src="${esc(commonImage)}" alt="Ảnh chung sản phẩm" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\'></i>'">`
+            : `<i class="fas fa-image"></i>`;
+        const activeVariants = variants.filter(v => v.trangThai !== false);
+        const variantRows = variants.length ? variants.map((v, index) => {
+            const images = variantImageUrls(v);
+            const thumbs = images.length
+                ? images.map(url => `<div class="variant-image-thumb"><img src="${esc(url)}" alt="Ảnh biến thể ${index + 1}"></div>`).join('')
+                : '<span class="price-placeholder">Chưa có ảnh riêng</span>';
+            return `<tr>
+                <td class="td-num">${index + 1}</td>
+                <td class="cell-code"><span class="td-code">${detailValue(v.maChiTietSanPham)}</span></td>
+                <td>${detailValue(v.mauSac?.tenMauSac)}</td>
+                <td>${detailValue(v.kichCo?.tenKichCo)}</td>
+                <td class="td-num">${v.soLuongTon ?? 0}</td>
+                <td class="price-col"><span class="price">${fmt(Number(v.donGia || 0))} đ</span></td>
+                <td><div class="detail-gallery">${thumbs}</div></td>
+            </tr>`;
+        }).join('') : '';
+
+        document.getElementById('productDetailBody').innerHTML = `
+            <div class="detail-grid">
+                <div class="detail-main-image">${imageBlock}</div>
+                <div class="detail-info">
+                    <div class="detail-item"><label>Mã SP</label><span>${detailValue(product.maSp)}</span></div>
+                    <div class="detail-item"><label>Tên sản phẩm</label><span>${detailValue(product.tenSp)}</span></div>
+                    <div class="detail-item"><label>Xuất xứ</label><span>${detailValue(product.xuatXu?.tenXuatXu)}</span></div>
+                    <div class="detail-item"><label>Chất liệu</label><span>${detailValue(product.chatLieu?.tenChatLieu)}</span></div>
+                    <div class="detail-item"><label>Trạng thái</label><span>${product.trangThai !== false ? 'Đang bán' : 'Ngừng bán'}</span></div>
+                    <div class="detail-item"><label>Số biến thể đang bán</label><span>${activeVariants.length}/${variants.length}</span></div>
+                </div>
+            </div>
+            <div class="detail-section-title">Mô tả</div>
+            <div class="detail-item"><span>${detailValue(product.moTa)}</span></div>
+            <div class="detail-section-title">Biến thể và ảnh riêng</div>
+            ${variantRows ? `
+                <div class="variant-table-wrap">
+                    <table class="vtable">
+                        <thead><tr><th>STT</th><th>Mã CTSP</th><th>Màu sắc</th><th>Kích cỡ</th><th>SL tồn</th><th>Đơn giá</th><th>Ảnh riêng</th></tr></thead>
+                        <tbody>${variantRows}</tbody>
+                    </table>
+                </div>
+            ` : '<div class="empty-state"><p>Chưa có biến thể.</p></div>'}
+        `;
     }
 
     function confirmToggleStatus(id, cb, name) {
@@ -1517,12 +3008,17 @@
         for(let i=s;i<e;i++) nums+=`<button class="pg-btn ${i===curPage?'active':''}" onclick="load(${i})">${i+1}</button>`;
         if(e<totalPg){ if(e<totalPg-1) nums+=`<span style="padding:0 4px;color:var(--muted)">…</span>`; nums+=`<button class="pg-btn" onclick="load(${totalPg-1})">${totalPg}</button>` }
         area.innerHTML=`<div class="pg-info">Trang ${curPage+1}/${totalPg} • ${totalEl} sản phẩm</div>
-      <div class="pg-nav"><button class="pg-btn" onclick="load(${curPage-1})" ${curPage===0?'disabled':''}>← Trước</button>${nums}<button class="pg-btn" onclick="load(${curPage+1})" ${curPage>=totalPg-1?'disabled':''}>Sau →</button></div>`;
+      <div class="pg-nav"><button class="pg-btn" onclick="load(0)" ${curPage===0?'disabled':''}>«</button><button class="pg-btn" onclick="load(${curPage-1})" ${curPage===0?'disabled':''}>← Trước</button>${nums}<button class="pg-btn" onclick="load(${curPage+1})" ${curPage>=totalPg-1?'disabled':''}>Sau →</button><button class="pg-btn" onclick="load(${totalPg-1})" ${curPage>=totalPg-1?'disabled':''}>»</button></div>`;
     }
 
     // CREATE / EDIT
     function setExtraFieldsVisible(visible){
-        document.getElementById('extraFields').style.display = visible ? 'grid' : 'none';
+        const extra = document.getElementById('extraFields');
+        if (!extra) return;
+
+        // Loại áo, kiểu dáng, phong cách và toàn bộ phần biến thể chỉ được thiết lập khi thêm mới.
+        // Khi cập nhật sản phẩm, màn hình này chỉ cho phép sửa thông tin cơ bản.
+        extra.style.display = visible ? 'grid' : 'none';
     }
 
     function openCreate(){
@@ -1531,17 +3027,22 @@
         delete document.getElementById('productId').dataset.maSp;
         window._originalProduct = null;
         window._editVariants = null;
+        window._presetVariantValues = {};
+        window._variantsNeedRefresh = false;
         document.getElementById('inTen').value = '';
         document.getElementById('inMota').value = '';
-        ['fg-ten','fg-xuat','fg-chat','fg-mau','fg-size'].forEach(clearE);
+        resetProductCommonImage('');
+        ['fg-ten','fg-xuat','fg-chat','fg-variant'].forEach(clearE);
         document.getElementById('inXuat').value = '';
         document.getElementById('inChat').value = '';
+        document.getElementById('inLoai').value = '';
+        document.getElementById('inKieu').value = '';
+        document.getElementById('inPC').value = '';
         selectedColors = []; selectedSizes = [];
-        renderColorChips(); renderSizeChips();
+        renderVariantSelector(); renderVariantSummary();
         document.getElementById('variantBlock').style.display = 'none';
         document.getElementById('variantGroups').innerHTML = '';
-        const box = document.getElementById('imgUploadBox');
-        box.innerHTML = `<input type="file" id="inAnhFile" accept="image/*" onchange="previewMainImg(this)"><span class="plus-circle" id="imgPlus">+</span>`;
+        clearVariantImages();
         setExtraFieldsVisible(true);
         document.getElementById('mdProduct').classList.add('show');
     }
@@ -1551,47 +3052,42 @@
             const r = await fetch(`${API}/${id}`);
             if (!r.ok) throw new Error();
             const p = await r.json();
+
             window._originalProduct = p;
+            window._editVariants = null;
+            window._presetVariantValues = {};
+            window._variantsNeedRefresh = false;
+            clearVariantImages();
+            selectedColors = [];
+            selectedSizes = [];
+            document.getElementById('variantBlock').style.display = 'none';
+            document.getElementById('variantGroups').innerHTML = '';
+
             document.getElementById('mdTitle').textContent = 'CHỈNH SỬA THÔNG TIN SẢN PHẨM';
             document.getElementById('productId').value = p.idSp;
             document.getElementById('inTen').value = p.tenSp || '';
             document.getElementById('inMota').value = p.moTa || '';
+            resetProductCommonImage(productImageUrl(p));
             document.getElementById('productId').dataset.maSp = p.maSp || '';
 
-            const box = document.getElementById('imgUploadBox');
-            const imgUrl = p.hinhAnh || p.hinhAnhChinh || '';
-            box.innerHTML = `<input type="file" id="inAnhFile" accept="image/*" onchange="previewMainImg(this)">` +
-                (imgUrl ? `<img src="${esc(imgUrl)}">` : `<span class="plus-circle" id="imgPlus">+</span>`);
-
             const xuatId = p.xuatXu?.idXuatXu ?? p.idXuatXu ?? null;
-            if (xuatId) { const sel = document.getElementById('inXuat'); if (sel) sel.value = xuatId; }
-            const chatId = p.chatLieu?.idChatLieu ?? p.idChatLieu ?? null;
-            if (chatId) { const sel = document.getElementById('inChat'); if (sel) sel.value = chatId; }
-
-            setExtraFieldsVisible(false);
-
-            selectedColors = [];
-            selectedSizes = [];
-            renderColorChips();
-            renderSizeChips();
-            document.getElementById('variantBlock').style.display = 'none';
-            document.getElementById('variantGroups').innerHTML = '';
-
-            try {
-                const vr = await fetch(`${API}/bien-the/${id}`);
-                if (vr.ok) {
-                    const vs = await vr.json();
-                    window._editVariants = (vs && vs.length) ? vs : [];
-                } else {
-                    window._editVariants = p.danhSachBienThe || [];
-                }
-            } catch (e) {
-                window._editVariants = p.danhSachBienThe || [];
+            if (xuatId) {
+                const sel = document.getElementById('inXuat');
+                if (sel) sel.value = xuatId;
             }
 
+            const chatId = p.chatLieu?.idChatLieu ?? p.idChatLieu ?? null;
+            if (chatId) {
+                const sel = document.getElementById('inChat');
+                if (sel) sel.value = chatId;
+            }
+
+            // Không hiển thị và không nạp biến thể ở màn hình cập nhật.
+            // Biến thể hiện có sẽ được giữ nguyên ở backend.
+            setExtraFieldsVisible(false);
             document.getElementById('mdProduct').classList.add('show');
         } catch (e) {
-            toast('Không tải được sản phẩm: ' + e.message, 'error');
+            toast('Không tải được sản phẩm: ' + (e.message || e), 'error');
         }
     }
 
@@ -1604,79 +3100,125 @@
         else if (ten.length < 2 || ten.length > 150) { setE('fg-ten', 'Tên sản phẩm phải từ 2 đến 150 ký tự'); ok = false; }
         if (!document.getElementById('inXuat').value) { setE('fg-xuat', 'Chọn xuất xứ'); ok = false; }
         if (!document.getElementById('inChat').value) { setE('fg-chat', 'Chọn chất liệu'); ok = false; }
-        const duplicateName = allProducts.some(p => String(p.tenSp || '').trim().toLowerCase() === ten.toLowerCase() && String(p.idSp || '') !== String(pid || ''));
+
+        const duplicateName = allProducts.some(p =>
+            String(p.tenSp || '').trim().toLowerCase() === ten.toLowerCase() &&
+            String(p.idSp || '') !== String(pid || '')
+        );
         if (duplicateName) { setE('fg-ten', 'Tên sản phẩm đã tồn tại'); ok = false; }
 
         if (!pid) {
             if (!document.getElementById('inLoai').value) { setE('fg-loai', 'Chọn loại áo'); ok = false; }
             if (!document.getElementById('inKieu').value) { setE('fg-kieu', 'Chọn kiểu dáng'); ok = false; }
             if (!document.getElementById('inPC').value) { setE('fg-pc', 'Chọn phong cách'); ok = false; }
-            if (!selectedColors.length) { setE('fg-mau', 'Chọn ít nhất 1 màu sắc'); ok = false; }
-            if (!selectedSizes.length) { setE('fg-size', 'Chọn ít nhất 1 kích cỡ'); ok = false; }
+            if (!selectedColors.length || !selectedSizes.length) {
+                setE('fg-variant', 'Chọn ít nhất 1 màu sắc và 1 kích cỡ');
+                ok = false;
+            }
         }
 
         if (!ok) return;
 
-        const maSp = document.getElementById('productId').dataset.maSp || (pid ? window._originalProduct?.maSp : genMaSp(ten));
-        let variants = [];
+        const maSp = document.getElementById('productId').dataset.maSp ||
+            (pid ? window._originalProduct?.maSp : genMaSp(ten));
 
+        // Cập nhật sản phẩm chỉ sửa thông tin cơ bản, tuyệt đối không gửi/động vào biến thể.
         if (pid) {
-            variants = [];
-        } else {
-            document.querySelectorAll('#variantGroups tr[data-color][data-size]').forEach(tr => {
-                const colorName = tr.closest('.color-group')?.querySelector('.color-group-title')?.textContent.trim() || '';
-                const sizeName = tr.querySelector('td')?.textContent.trim() || '';
-                const dgInput = tr.querySelector('.v-dg-input');
-                const dgRaw = dgInput ? moneyRaw(dgInput.value) : '0';
-                const slInput = tr.querySelector('.v-sl');
-                const slRaw = slInput ? slInput.value : '0';
-                if (!dgRaw || Number(dgRaw) <= 0) ok = false;
-                if (!isNonNegativeInt(slRaw)) ok = false;
-                variants.push({
-                    maChiTietSanPham: tr.dataset.sku || genMaSku(maSp, colorName, sizeName),
-                    idMauSac: parseInt(tr.dataset.color),
-                    idKichCo: parseInt(tr.dataset.size),
-                    donGia: parseFloat(dgRaw) || 0,
-                    soLuongTon: parseInt(slRaw) || 0,
-                    idLoaiAo: parseInt(document.getElementById('inLoai').value) || 1,
-                    idPhongCachMac: parseInt(document.getElementById('inPC').value) || 1,
-                    idKieuDang: parseInt(document.getElementById('inKieu').value) || 1,
-                });
-            });
-            if (!ok) {
-                toast('Kiểm tra biến thể: đơn giá phải lớn hơn 0, số lượng là số nguyên không âm', 'error');
-                return;
-            }
-            if (!variants.length) {
-                toast('Vui lòng bấm "Tạo biến thể" trước khi lưu', 'error');
-                return;
-            }
+            showProductConfirm(
+                'Xác nhận cập nhật',
+                `Bạn có chắc chắn muốn cập nhật thông tin sản phẩm "${ten}"? Biến thể và ảnh biến thể sẽ được giữ nguyên.`,
+                'Xác nhận',
+                () => submitProduct(pid, maSp, ten, null)
+            );
+            return;
         }
 
-        const actionText = pid ? 'cập nhật' : 'thêm';
+        if (window._variantsNeedRefresh) {
+            setE('fg-variant', 'Bạn vừa thay đổi màu sắc hoặc kích cỡ. Hãy mở màn hình biến thể và bấm "Tạo biến thể".');
+            return;
+        }
+
+        const existingVariantsByKey = {};
+        (window._editVariants || []).forEach(v => {
+            const colorId = v?.idMauSac ?? v?.mauSac?.idMauSac;
+            const sizeId = v?.idKichCo ?? v?.kichCo?.idKichCo;
+            if (colorId != null && sizeId != null) {
+                existingVariantsByKey[String(colorId) + '_' + String(sizeId)] = v;
+            }
+        });
+
+        const variants = [];
+        document.querySelectorAll('#variantGroups tr[data-color][data-size]').forEach(tr => {
+            const colorName = tr.closest('.color-group')?.querySelector('.color-group-title')?.textContent.trim() || '';
+            const sizeName = tr.querySelector('td')?.textContent.trim() || '';
+            const dgInput = tr.querySelector('.v-dg-input');
+            const dgRaw = dgInput ? moneyRaw(dgInput.value) : '0';
+            const slInput = tr.querySelector('.v-sl');
+            const slRaw = slInput ? slInput.value : '0';
+
+            if (!dgRaw || Number(dgRaw) <= 0) ok = false;
+            if (!isNonNegativeInt(slRaw)) ok = false;
+
+            const key = String(tr.dataset.color) + '_' + String(tr.dataset.size);
+            const oldVariant = existingVariantsByKey[key] || {};
+            const item = {
+                maChiTietSanPham: tr.dataset.sku || oldVariant.maChiTietSanPham || genMaSku(maSp, colorName, sizeName),
+                idMauSac: parseInt(tr.dataset.color),
+                idKichCo: parseInt(tr.dataset.size),
+                donGia: parseFloat(dgRaw) || 0,
+                soLuongTon: parseInt(slRaw) || 0,
+                idLoaiAo: parseInt(document.getElementById('inLoai').value) || 1,
+                idPhongCachMac: parseInt(document.getElementById('inPC').value) || 1,
+                idKieuDang: parseInt(document.getElementById('inKieu').value) || 1
+            };
+            variants.push(item);
+        });
+
+        if (!ok) {
+            toast('Kiểm tra biến thể: đơn giá phải lớn hơn 0, số lượng là số nguyên không âm', 'error');
+            return;
+        }
+        if (!variants.length) {
+            setE('fg-variant', 'Vui lòng mở màn hình biến thể và tạo danh sách biến thể trước khi lưu');
+            return;
+        }
+
         showProductConfirm(
-            pid ? 'Xác nhận cập nhật' : 'Xác nhận thêm sản phẩm',
-            `Bạn có chắc chắn muốn ${actionText} sản phẩm "${ten}"?`,
+            'Xác nhận thêm sản phẩm',
+            `Bạn có chắc chắn muốn thêm sản phẩm "${ten}"?`,
             'Xác nhận',
-            () => submitProduct(pid, maSp, ten, variants)
+            () => submitProduct('', maSp, ten, variants)
         );
     }
 
     async function submitProduct(pid, maSp, ten, variants) {
         const btn = document.getElementById('confirmDeleteBtn');
         btn.disabled = true;
+
         try {
-            const currentImage = await resolveMainImageUrl();
             const payload = {
                 maSp,
                 tenSp: ten,
                 moTa: document.getElementById('inMota').value,
-                hinhAnhChinh: currentImage,
                 idXuatXu: parseInt(document.getElementById('inXuat').value),
                 idChatLieu: parseInt(document.getElementById('inChat').value),
-                nguoiThucHien: 'Admin',
-                danhSachBienThe: variants
+                nguoiThucHien: 'Admin'
             };
+
+            if (!pid || window._productCommonImageChanged) {
+                payload.hinhAnhChinh = await uploadProductCommonImage();
+            }
+
+            // Chỉ lúc thêm mới mới upload ảnh và gửi danh sách biến thể.
+            if (!pid) {
+                const imagesByColor = await uploadVariantImages();
+                variants.forEach(variant => {
+                    const imageUrls = imagesByColor[String(variant.idMauSac)] || [];
+                    variant.hinhAnh = imageUrls[0] || null;
+                    variant.danhSachHinhAnh = imageUrls;
+                });
+                payload.danhSachBienThe = variants;
+            }
 
             const url = pid ? `${API}/sua/${pid}` : `${API}/them`;
             const method = pid ? 'PUT' : 'POST';
@@ -1685,24 +3227,24 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
+
             if (r.ok) {
-                toast(pid ? 'Cập nhật thành công' : 'Thêm sản phẩm thành công');
+                toast(pid ? 'Cập nhật thông tin sản phẩm thành công' : 'Thêm sản phẩm thành công');
                 closeModal('mdConfirm');
                 closeModal('mdProduct');
                 await loadFilters();
             } else {
-                const text = await r.text();
+                const responseText = await r.text();
                 try {
-                    const obj = JSON.parse(text);
-                    const msgs = Object.values(obj).filter(v => typeof v === 'string');
-                    if (msgs.length) toast(msgs.join(' • '), 'error');
-                    else toast('Lỗi: ' + text, 'error');
+                    const obj = JSON.parse(responseText);
+                    const messages = Object.values(obj).filter(value => typeof value === 'string');
+                    toast(messages.length ? messages.join(' • ') : 'Lỗi: ' + responseText, 'error');
                 } catch {
-                    toast('Lỗi: ' + text, 'error');
+                    toast('Lỗi: ' + responseText, 'error');
                 }
             }
         } catch (e) {
-            toast('Lỗi kết nối: ' + e.message, 'error');
+            toast('Lỗi kết nối: ' + (e.message || e), 'error');
         } finally {
             btn.disabled = false;
         }
@@ -1715,12 +3257,24 @@
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
         const month = String(now.getMonth() + 1).padStart(2, '0');
-        const year = now.getFullYear();
+        const year = String(now.getFullYear()).slice(-2);
         const base = slugCode(ten) || 'SP';
-        // Lấy 4 ký tự đầu, nếu ít hơn thì thêm 'X' cho đủ 4
-        let prefix = base.slice(0, 4);
+        let prefix = base.slice(0, 8);
         while (prefix.length < 4) prefix += 'X';
-        return `${prefix}-${day}/${month}/${year}`; // tổng 4 + 1 + 10 = 15 ký tự
+
+        const suffix = `${day}${month}${year}`;
+        const usedCodes = new Set((allProducts || []).map(p => String(p.maSp || '').trim().toUpperCase()));
+        let code = `${prefix}-${suffix}`;
+        let counter = 2;
+
+        while (usedCodes.has(code.toUpperCase())) {
+            const tail = `-${counter}`;
+            const maxPrefixLength = Math.max(4, 20 - suffix.length - tail.length - 1);
+            code = `${prefix.slice(0, maxPrefixLength)}-${suffix}${tail}`;
+            counter++;
+        }
+
+        return code;
     }
 
     function genMaSku(maSp, tenMau, tenSize){
@@ -1750,16 +3304,19 @@
         }catch{ toast('Xuất Excel thất bại','error'); }
     }
 
-    async function init(){ await loadMaster(); await loadFilters(); }
-    init();
-
     function comboEscapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
     function initSearchableComboboxes(root=document){
         root.querySelectorAll('select').forEach(select=>{
+            const isHidden = select.hidden || select.type === 'hidden' || select.style.display === 'none' || select.closest('[hidden]');
+            if (isHidden) {
+                select.nextElementSibling?.classList?.contains('search-combo') && select.nextElementSibling.remove();
+                select.classList.remove('search-combo-source');
+                return;
+            }
             if(select.classList.contains('search-combo-source')){syncSearchCombo(select);return;}
             const combo=document.createElement('div');
             combo.className='search-combo';
-            combo.innerHTML='<div class="search-combo-display" tabindex="0"></div><div class="search-combo-panel"><input class="search-combo-search" type="text" autocomplete="off" placeholder="Tim kiem..."><div class="search-combo-list"></div></div>';
+            combo.innerHTML='<div class="search-combo-display" tabindex="0"></div><div class="search-combo-panel"><input class="search-combo-search" type="text" autocomplete="off" placeholder="Tìm kiếm..."><div class="search-combo-list"></div></div>';
             select.classList.add('search-combo-source');
             select.parentNode.insertBefore(combo, select.nextSibling);
             combo._select=select;
@@ -1788,7 +3345,7 @@
         const combo=select.nextElementSibling?.classList?.contains('search-combo')?select.nextElementSibling:null;
         if(!combo)return;
         const selected=select.options[select.selectedIndex];
-        combo.querySelector('.search-combo-display').textContent=selected?.textContent||select.querySelector('option')?.textContent||'Chon';
+        combo.querySelector('.search-combo-display').textContent=selected?.textContent||select.querySelector('option')?.textContent||'Chọn';
         renderSearchComboOptions(combo, combo.querySelector('.search-combo-search')?.value||'');
     }
     function renderSearchComboOptions(combo, keyword){
@@ -1796,7 +3353,7 @@
         const list=combo.querySelector('.search-combo-list');
         const kw=String(keyword||'').trim().toLowerCase();
         const options=[...select.options].filter(o=>!o.disabled&&(!kw||o.textContent.toLowerCase().includes(kw)));
-        if(!options.length){list.innerHTML='<div class="search-combo-empty">Khong tim thay</div>';return;}
+        if(!options.length){list.innerHTML='<div class="search-combo-empty">Không tìm thấy</div>';return;}
         list.innerHTML=options.map(o=>'<div class="search-combo-option '+(o.selected?'active':'')+'" data-value="'+comboEscapeHtml(o.value)+'">'+comboEscapeHtml(o.textContent)+'</div>').join('');
         list.querySelectorAll('.search-combo-option').forEach(item=>item.addEventListener('click',()=>{
             select.value=item.dataset.value;
@@ -1805,9 +3362,10 @@
         }));
     }
     document.addEventListener('click',e=>{if(!e.target.closest('.search-combo'))document.querySelectorAll('.search-combo.open').forEach(closeSearchCombo)});
-    document.addEventListener('DOMContentLoaded',()=>initSearchableComboboxes());
-    if(!window._searchComboAutoSync){window._searchComboAutoSync=setInterval(()=>document.querySelectorAll('select.search-combo-source').forEach(syncSearchCombo),300)}
+    if(!window._productSearchComboAutoSync){window._productSearchComboAutoSync=setInterval(()=>document.querySelectorAll('select.search-combo-source').forEach(syncSearchCombo),300)}
 
+    async function init(){ await loadMaster(); await loadFilters(); initSearchableComboboxes(); }
+    init();
 
 
     let qrScannerInstance = null;

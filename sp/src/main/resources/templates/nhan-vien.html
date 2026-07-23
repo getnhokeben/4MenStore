@@ -3,1286 +3,562 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý nhân viên</title>
-    <script src="/js/app-shell.js" defer></script>
-    <!-- QR libraries: generate and scan -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <style>
-        *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f3f4f6;color:#172033}.page{min-height:100vh;padding:22px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:14px}.title h1{font-size:22px;margin:0 0 4px;font-weight:800}.title p{margin:0;color:#6b7280;font-size:13px}.toolbar{display:flex;gap:8px;align-items:center}.btn{height:36px;border:1px solid #dde3ea;border-radius:8px;background:#fff;color:#172033;font-weight:700;font-size:13px;padding:0 13px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;text-decoration:none}.btn:hover{background:#f8fafc}.btn.primary{background:#c8a474;border-color:#c8a474;color:#fff}.btn.danger{color:#dc2626}.btn.icon{width:34px;padding:0;justify-content:center}.btn:disabled{opacity:0.5;cursor:not-allowed}.panel{background:#fff;border:1px solid #dde3ea;border-radius:8px;overflow:hidden}.filters{display:grid;grid-template-columns:minmax(240px,1fr) 170px 170px;gap:12px;padding:16px;border-bottom:1px solid #e5e7eb;align-items:end}.field label{display:block;font-size:12px;color:#64748b;font-weight:800;margin-bottom:6px;text-transform:uppercase}.field input,.field select{width:100%;height:38px;border:1px solid #d8dee8;border-radius:8px;padding:0 11px;font-size:14px;background:#fff}.field input:focus,.field select:focus{outline:2px solid rgba(200,164,116,.25);border-color:#c8a474}.field input:disabled,.field select:disabled{background:#f1f5f9;cursor:not-allowed}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:950px}th{height:44px;background:#f8fafc;border-bottom:1px solid #e5e7eb;color:#64748b;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.02em;padding:0 14px}td{height:50px;border-bottom:1px solid #edf0f4;padding:0 14px;font-size:14px;vertical-align:middle}tr:hover td{background:#fcfcfd}.code{display:inline-flex;background:#f1f5f9;border-radius:5px;padding:3px 7px;font-size:12px;font-weight:800;color:#334155}.badge{display:inline-flex;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:800}.badge.on{background:#dcfce7;color:#16a34a}.badge.off{background:#fee2e2;color:#dc2626}.role{background:#fef3c7;color:#b45309}.actions{display:flex;align-items:center;gap:7px}.switch{position:relative;display:inline-flex;width:40px;height:22px;margin-right:4px}.switch input{display:none}.switch span{position:absolute;inset:0;background:#cbd5e1;border-radius:999px;cursor:pointer;transition:.15s}.switch span:before{content:"";position:absolute;width:18px;height:18px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.15s}.switch input:checked+span{background:#16a34a}.switch input:checked+span:before{transform:translateX(18px)}.action-btn{background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:4px;font-size:15px;transition:background .15s;display:inline-flex;align-items:center;justify-content:center}.action-btn:hover{background:#f1f5f9}.action-btn.edit{color:#2563eb}.empty{padding:42px 18px;text-align:center;color:#64748b}.modal{position:fixed;inset:0;background:rgba(15,23,42,.48);z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px}.modal[hidden]{display:none}.modal-box{width:min(850px,100%);background:#fff;border-radius:8px;box-shadow:0 20px 60px rgba(15,23,42,.22);overflow:hidden;max-height:90vh;overflow-y:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e7eb}.modal-head h2{font-size:18px;margin:0}.modal-body{padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:14px}.modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid #e5e7eb}.full{grid-column:1/-1}.toast{position:fixed;right:18px;bottom:18px;z-index:1200;background:#172033;color:#fff;padding:12px 14px;border-radius:8px;font-size:13px;max-width:380px;box-shadow:0 12px 30px rgba(15,23,42,.24)}.toast.error{background:#b91c1c}.toast.success{background:#15803d}.debug-info{background:#f1f5f9;padding:8px 16px;font-size:12px;color:#64748b;border-bottom:1px solid #e5e7eb;font-family:monospace}.filter-actions{display:flex;gap:8px;align-items:end}.btn-clear{background:#fee2e2;color:#dc2626;border-color:#fecaca}.btn-clear:hover{background:#fecaca}.required{color:#dc2626;margin-left:2px}.field-note{font-size:11px;color:#94a3b8;margin-top:4px;font-style:italic}.info-box{background:#f0fdf4;padding:10px 14px;border-radius:8px;border:1px solid #86efac;display:flex;align-items:center;gap:10px}.info-box .icon{font-size:18px}.info-box .label{font-weight:600;color:#166534}.info-box .code{font-weight:700;color:#c8a474;font-size:16px}.info-box .note{font-size:12px;color:#166534;margin-top:2px}@media(max-width:980px){.filters{grid-template-columns:1fr}.topbar{align-items:flex-start;flex-direction:column}.modal-body{grid-template-columns:1fr}.page{padding:16px}}
+    <title>Quản lý nhân viên | 4MenStore</title>
 
-        /* Scanner styles */
-        #qrReader {
-            width: 100%;
-            min-height: 300px;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
+    <!-- Google Font: Inter hỗ trợ tiếng Việt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <style>
+        :root{--navy:#102a56;
+            --navy-hover:#173d78;--blue:#1a4a8a;--bg:#f2f5f9;--line:#e3eaf2;--ink:#263a56;--muted:#74839a;--bad:#d04452;--ok:#13815d}
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            background:var(--bg);
+            color:var(--ink);
+            font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
+            font-size:13px;
+            font-weight:400;
+            line-height:1.5;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
         }
-        #qrReader video {
-            width: 100% !important;
-            height: auto !important;
-            max-height: 400px;
-            object-fit: cover;
-        }
-        .scanner-status {
-            text-align: center;
-            padding: 10px;
-            color: #64748b;
-            font-size: 13px;
-        }
-        .scanner-controls {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-        .btn-success {
-            background: #16a34a;
-            border-color: #16a34a;
-            color: #fff;
-        }
-        .btn-success:hover {
-            background: #15803d;
-        }
-        .btn-warning {
-            background: #f59e0b;
-            border-color: #f59e0b;
-            color: #fff;
-        }
-        .btn-warning:hover {
-            background: #d97706;
-        }
-        .upload-area {
-            border: 2px dashed #c8a474;
-            border-radius: 8px;
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: #faf8f6;
-        }
-        .upload-area:hover {
-            background: #f5f0eb;
-            border-color: #b8946a;
-        }
-        .upload-area .icon {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 8px;
-        }
-        .upload-area .text {
-            color: #172033;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .upload-area .sub-text {
-            color: #94a3b8;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-        .upload-area input[type="file"] {
-            display: none;
-        }
-        .preview-image {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 8px;
-            margin-top: 10px;
-            border: 1px solid #e5e7eb;
-        }
-        .preview-container {
-            text-align: center;
-            padding: 10px;
-        }
-        .scan-result {
-            margin-top: 12px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            display: none;
-        }
-        .scan-result.success {
-            display: block;
-            background: #f0fdf4;
-            border: 1px solid #86efac;
-        }
-        .scan-result.error {
-            display: block;
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-        }
-        .scan-result .label {
-            font-weight: 600;
-            font-size: 13px;
-        }
-        .scan-result .value {
-            font-size: 16px;
-            font-weight: 700;
-            color: #166534;
-            margin-top: 4px;
-            word-break: break-all;
-        }
-        .scan-result.error .value {
-            color: #dc2626;
-        }
-        .btn-group {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        .method-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 10px;
-        }
-        .method-tab {
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            background: #f1f5f9;
-            color: #64748b;
-            transition: all 0.2s;
-            border: none;
-        }
-        .method-tab:hover {
-            background: #e2e8f0;
-        }
-        .method-tab.active {
-            background: #c8a474;
-            color: #fff;
-        }
-        .scanner-section {
-            display: none;
-        }
-        .scanner-section.active {
-            display: block;
-        }
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            padding: 12px 0;
-            flex-wrap: wrap;
-        }
-        .pagination .btn {
-            min-width: 36px;
-            justify-content: center;
-            font-size: 13px;
-        }
-        .pagination .btn.primary {
-            background: #c8a474;
-            border-color: #c8a474;
-            color: #fff;
-        }
-        .pagination .btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .pagination .page-info {
-            color: #64748b;
-            font-size: 13px;
-            padding: 0 10px;
-        }
-        .summary-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 16px;
-            background: #f8fafc;
-            border-bottom: 1px solid #e5e7eb;
-            font-size: 13px;
-            color: #64748b;
-        }
-        .summary-bar .total {
-            font-weight: 600;
-            color: #172033;
-        }
-        .page-size-selector {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .page-size-selector select {
-            height: 32px;
-            border: 1px solid #d8dee8;
-            border-radius: 6px;
-            padding: 0 8px;
-            font-size: 13px;
-            background: #fff;
-        }
-        /* Clear filter button styling - đã xóa */
+        button,input,select,textarea{font:inherit}
+        button{cursor:pointer}
+        .page{padding:30px 26px 42px}.crumb{margin:0 0 16px;font-size:19px;font-weight:800}.crumb b{color:var(--navy)}
+        .card{background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 7px 20px rgba(40,66,101,.08)}
+        .toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px;flex-wrap:wrap}.tools{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.search{position:relative;width:285px}.search span{position:absolute;left:10px;top:8px;color:#93a1b4}.input,.select,.control{height:35px;border:1px solid #dce5ef;border-radius:5px;background:#fff;color:#40546e;outline:0}.input{width:100%;padding:0 10px 0 30px}.select{padding:0 25px 0 9px;min-width:125px}.control{width:100%;padding:0 10px}.input:focus,.select:focus,.control:focus,textarea:focus{border-color:#7d9bc6;box-shadow:0 0 0 3px rgba(60,110,180,.12)}
+        .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}.btn:hover{background:var(--navy-hover);border-color:var(--navy-hover);color:#fff}.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}.btn.primary:hover{background:var(--navy-hover);border-color:var(--navy-hover)}.btn:disabled{opacity:.55;cursor:not-allowed}
+        .table-card{margin-top:14px;overflow:auto}table{width:100%;min-width:1180px;border-collapse:collapse}th{height:39px;padding:0 12px;background:#f7f9fb;border-bottom:1px solid var(--line);font-size:10px;letter-spacing:.03em;text-transform:uppercase;text-align:left}td{padding:9px 12px;border-bottom:1px solid #edf2f6;color:#516178;vertical-align:middle}tbody tr:hover{background:#fbfdff}.strong{font-weight:750;color:#273b57}.muted{color:#9aa7b8}.address{max-width:230px;white-space:normal}.badge{display:inline-block;border-radius:99px;padding:4px 9px;font-size:10px;font-weight:800}.on{color:#0b895c;background:#ddf8ed}.off{color:#cc4652;background:#fff0f1}.role1{color:#315999;background:#e8efff}.role2{color:#986413;background:#fff3db}.acts{display:flex;align-items:center;gap:6px}.icon{height:28px;width:29px;border:1px solid #e1e8f0;border-radius:5px;background:#fff;color:#60738c}.icon:hover{color:var(--navy);border-color:#b6c7da}.toggle{width:30px;height:17px;position:relative;display:block}.toggle input{opacity:0}.toggle i{position:absolute;inset:0;border-radius:20px;background:#c4cfdd;cursor:pointer}.toggle i:before{content:"";position:absolute;width:13px;height:13px;left:2px;top:2px;border-radius:50%;background:#fff;transition:.2s}.toggle input:checked+i{background:#23ad84}.toggle input:checked+i:before{transform:translateX(13px)}.footer{padding:11px 15px;display:flex;justify-content:space-between;align-items:center;gap:12px}.pages{display:flex;gap:5px;align-items:center;justify-content:flex-end;margin-left:auto;flex-wrap:wrap}.pg{height:29px;min-width:29px;border:1px solid #dfe7f0;background:#fff;border-radius:5px}.pg.active{background:var(--navy);border-color:var(--navy);color:#fff}.empty{text-align:center;padding:45px;color:#7d8da1}
+        .modal{position:fixed;inset:0;z-index:1000;background:rgba(13,31,56,.45);padding:22px;overflow:auto;display:flex;align-items:flex-start;justify-content:center}.modal[hidden]{display:none}.dialog{width:min(100%,980px);margin:auto;border-radius:10px;background:#fff;overflow:hidden;box-shadow:0 22px 70px rgba(9,25,50,.28)}.head{display:flex;align-items:center;justify-content:space-between;padding:13px 19px;border-bottom:1px solid #e7edf3}.title{font-size:17px;font-weight:800;color:#233d64}.sub{font-size:11px;color:#7d8da0;margin-top:3px}.close{border:0;background:transparent;color:#62748c;font-size:25px;line-height:1}.close:hover{color:#102a56}.form-grid{display:grid;grid-template-columns:250px 1fr;min-height:520px}.side{padding:21px;border-right:1px solid #ecf0f4}.avatar{width:86px;height:86px;border:2px dashed #d4deea;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:#f7f9fb;color:#708099;font-size:28px;font-weight:800}.side-note{text-align:center;color:#738197;font-size:11px;font-weight:700;margin:0 0 18px}.work{padding:22px 25px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}.full{grid-column:1/-1}.group{margin-bottom:12px}.label{display:block;margin-bottom:5px;font-size:10px;text-transform:uppercase;font-weight:800;color:#6c7b90}.req{color:var(--bad)}.err{display:block;min-height:13px;margin-top:4px;color:var(--bad);font-size:10px}.invalid{border-color:var(--bad)!important;box-shadow:0 0 0 3px rgba(208,68,82,.12)!important}.gender{height:35px;border:1px solid #dce5ef;border-radius:5px;padding:0 10px;display:flex;align-items:center;gap:16px}.gender label{font-size:12px;color:#506078}.rule{height:1px;background:#e9eef3;margin:18px 0 13px}.section{margin:0 0 10px;font-size:14px;color:#273e62}.note{border:1px solid #d6e3f3;background:#f6faff;border-radius:6px;padding:10px 11px;font-size:11px;line-height:1.5;color:#51667f}.form-foot{display:flex;justify-content:flex-end;gap:9px;padding:13px 19px;border-top:1px solid #e7edf3}.cccd-row{display:flex;gap:7px}.scan-btn{min-width:106px;border:1px solid #bdd0e8;background:#f6faff;color:#244f89;border-radius:5px;font-size:11px;font-weight:800}.scan-summary{border:1px solid #cce0f4;background:#f7fbff;border-radius:7px;padding:11px;margin-bottom:14px}.scan-summary[hidden]{display:none}.summary-head{display:flex;justify-content:space-between;gap:12px;color:#29496f;font-size:11px;font-weight:800;margin-bottom:9px}.summary-source{color:#657890;font-size:10px;text-align:right}.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 13px}.summary-item.full{grid-column:1/-1}.summary-item span{display:block;text-transform:uppercase;font-size:9px;font-weight:800;color:#8191a6;margin-bottom:2px}.summary-item b{font-size:11px;color:#40546c;overflow-wrap:anywhere}
+        .scanner{width:min(100%,640px)}.scanner-body{padding:18px}.scanner-body p{color:#66778d;font-size:12px;line-height:1.5}.cccd-upload-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}.cccd-upload-slot{position:relative;min-height:245px;border:2px dashed #d6c29a;border-radius:10px;background:#fffaf0;overflow:hidden;cursor:pointer;transition:.15s}.cccd-upload-slot:hover{border-color:#bb8744;background:#fcf1dc;transform:translateY(-1px)}.cccd-upload-slot.has-image{border-style:solid;border-color:#dce5ef;background:#fff}.cccd-upload-slot input[type=file]{display:none}.cccd-upload-empty{min-height:245px;padding:20px;display:flex;flex-direction:column;gap:9px;align-items:center;justify-content:center;text-align:center;color:#6b7d6b;font-size:12px;font-weight:700}.cccd-upload-icon{width:48px;height:48px;border:1px solid rgba(122,82,48,.14);border-radius:50%;background:rgba(255,255,255,.86);display:flex;align-items:center;justify-content:center;font-size:22px}.cccd-upload-hint{font-size:10px;color:#8a7352;font-weight:600}.cccd-upload-slot img,.cccd-upload-slot video{width:100%;height:245px;display:block;object-fit:cover}.cccd-upload-badge{position:absolute;top:8px;left:8px;z-index:3;padding:3px 8px;border-radius:99px;background:rgba(17,24,39,.78);color:#fff;font-size:10px;font-weight:800}.cccd-upload-remove{position:absolute;right:8px;top:8px;z-index:4;width:29px;height:29px;border:0;border-radius:50%;background:rgba(220,38,38,.94);color:#fff;font-size:17px}.cccd-upload-live{position:absolute;inset:0;display:none;background:#111827}.cccd-upload-live.active{display:block}.cccd-upload-frame{position:absolute;inset:18%;border:2px solid #83ceff;border-radius:8px;box-shadow:0 0 0 999px rgba(0,0,0,.16);pointer-events:none}.status{min-height:18px;margin-top:8px;color:#5d7190;font-size:11px;font-weight:700}.scan-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}.manual{width:100%;height:78px;padding:8px;border:1px solid #dce5ef;border-radius:5px;resize:vertical;outline:0}.detail{width:min(100%,860px)}.detail-main{padding:18px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.detail-item label{display:block;color:#8191a4;text-transform:uppercase;font-size:9px;font-weight:800;margin-bottom:4px}.detail-item p{margin:0;color:#465a74}.toast{position:fixed;right:20px;bottom:20px;z-index:2000;background:#16815e;color:#fff;border-radius:7px;padding:12px 14px;font-size:12px;font-weight:700;max-width:390px;box-shadow:0 12px 28px rgba(10,31,60,.25)}.toast.bad{background:#c9424c}
+        .qr-reader-wrap{border:1px solid #dce5ef;border-radius:8px;overflow:hidden;background:#f7f9fb;min-height:280px;display:flex;align-items:center;justify-content:center}.qr-reader-wrap video,.qr-reader-wrap img{width:100%!important;max-height:360px;object-fit:contain}.qr-result{margin-top:10px;border:1px solid #d6e3f3;background:#f6faff;border-radius:6px;padding:10px 11px;color:#51667f;font-size:12px;line-height:1.5}.qr-upload-label{height:34px;padding:0 12px;border:1px solid #d9e3ee;border-radius:5px;background:#fff;color:#435771;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer}.qr-upload-label:hover{background:#f7f9fc;border-color:#b8c9dd}.qr-upload-label input{display:none}
+        @media(max-width:850px){.page{padding:20px 12px}.form-grid{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid #edf1f5}.fields,.summary-grid,.detail-grid{grid-template-columns:1fr}.full,.summary-item.full{grid-column:1}.search{width:100%}.footer{align-items:flex-start;flex-direction:column}.modal{padding:8px}}
     </style>
 </head>
 <body>
+<script>
+    function isManagerRole(role) {
+        const value = String(role || '')
+            .trim()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase();
+
+        return Boolean(value)
+            && !value.includes('nhan vien')
+            && !value.includes('nhanvien')
+            && !value.includes('staff')
+            && !value.includes('employee');
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const response = await fetch('/api/nhanvien/auth/me');
+        if (!response.ok) {
+            location.href = '/dang-nhap';
+            return;
+        }
+
+        const user = await response.json();
+        if (!isManagerRole(user.vaiTro)) {
+            alert('Bạn không có quyền truy cập màn hình này');
+            location.href = '/trang-chu';
+        }
+    });
+</script>
 <aside class="sidebar"></aside>
-<main class="main page">
-    <div class="topbar">
-        <div class="title">
-            <h1>Quản lý nhân viên</h1>
+<main class="main"><section class="page">
+    <h1 class="crumb">Quản lý tài khoản / <b>Quản lý nhân viên</b></h1>
+    <section class="card toolbar">
+        <div class="tools">
+            <div class="search"><span>⌕</span><input id="keyword" class="input" placeholder="Tìm tên, mã NV, SĐT, email..."></div>
+            <select id="filterRole" class="select"><option value="">-- Vai trò --</option><option>Quản lý</option><option>Nhân viên</option></select>
+            <select id="filterStatus" class="select"><option value="">-- Trạng thái --</option><option value="true">Đang làm</option><option value="false">Nghỉ việc</option></select>
         </div>
-        <div class="toolbar">
-            <button class="btn" id="exportBtn">⬇ Tải Excel</button>
-            <button class="btn" id="scanCccdToolbarBtn">📷 Quét CCCD</button>
-            <button class="btn primary" id="addBtn">＋ Thêm</button>
-        </div>
-    </div>
-
-    <section class="panel">
-        <form class="filters" id="filterForm">
-            <div class="field">
-                <label>Tìm kiếm</label>
-                <input name="keyword" placeholder="Tên, email, số điện thoại, mã NV..." id="keywordInput">
-            </div>
-            <div class="field">
-                <label>Vai trò</label>
-                <select name="vaiTro" id="vaiTroSelect">
-                    <option value="">Tất cả</option>
-                    <option value="Quản lý">Quản lý</option>
-                    <option value="Nhân viên">Nhân viên</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Trạng thái</label>
-                <select name="trangThai" id="trangThaiSelect">
-                    <option value="">Tất cả</option>
-                    <option value="true">Đang làm</option>
-                    <option value="false">Nghỉ việc</option>
-                </select>
-            </div>
-        </form>
-        <div id="debugInfo" class="debug-info"></div>
-
-        <!-- Summary Bar -->
-        <div class="summary-bar">
-            <span>Tổng: <span class="total" id="totalCount">0</span> nhân viên</span>
-            <div class="page-size-selector">
-                <span>Hiển thị:</span>
-                <select id="pageSizeSelect">
-                    <option value="5">5</option>
-                    <option value="10" selected>10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="table-wrap">
-            <table>
-                <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Mã NV</th>
-                    <th>Họ tên</th>
-                    <th>Email</th>
-                    <th>Số điện thoại</th>
-                    <th>Vai trò</th>
-                    <th>Ngày vào làm</th>
-                    <th>Trạng thái</th>
-                    <th>Hành động</th>
-                </tr>
-                </thead>
-                <tbody id="rows"></tbody>
-            </table>
-            <div class="empty" id="empty" hidden>Không có nhân viên</div>
-            <div id="pagination" class="pagination"></div>
-        </div>
+        <div class="tools"><button class="btn" id="reset">↻ Đặt lại</button><button class="btn" id="export">▣ Xuất Excel</button><button class="btn primary" id="add">＋ Thêm mới</button></div>
     </section>
-</main>
+    <section class="card table-card">
+        <table><thead><tr><th>STT</th><th>Mã NV</th><th>Họ tên</th><th>Email</th><th>SĐT</th><th>Vai trò</th><th>Ngày vào làm</th><th>Địa chỉ</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="rows"></tbody></table>
+        <div id="empty" class="empty" hidden>Chưa có nhân viên phù hợp.</div>
+        <div class="footer"><span>Tổng cộng: <b id="total">0</b> nhân viên</span><div id="pages" class="pages"></div></div>
+    </section>
+</section></main>
 
-<div class="modal" id="employeeModal" hidden>
-    <form class="modal-box" id="employeeForm">
-        <div class="modal-head">
-            <h2 id="modalTitle">Thêm nhân viên</h2>
-            <button class="btn icon" type="button" id="closeModal">×</button>
-        </div>
-        <div class="modal-body">
-
-            <input type="hidden" name="id" id="employeeId">
-
-            <div class="full info-box">
-                <span class="icon">🔑</span>
-                <div>
-                    <span class="label">Mã nhân viên sẽ được tạo tự động:</span>
-                    <span class="code" id="maNvPreview">NV001</span>
-                    <div class="note">Hệ thống tự động tạo mã theo thứ tự NV001, NV002, NV003...</div>
+<div id="formModal" class="modal" hidden>
+    <form id="form" class="dialog" novalidate>
+        <div class="head"><div><div id="formTitle" class="title">Thêm nhân viên</div><div id="formSub" class="sub">Mật khẩu tạm thời 6 ký tự sẽ được gửi đến email nhân viên.</div></div><button type="button" class="close" data-close="formModal">×</button></div>
+        <div class="form-grid">
+            <aside class="side">
+                <div id="avatar" class="avatar">NV</div><p class="side-note">Thông tin liên hệ</p>
+                <div class="group"><label class="label">Họ và tên <i class="req">*</i></label><input id="name" class="control" maxlength="255" placeholder="Nhập họ tên"><small class="err"></small></div>
+                <div class="group"><label class="label">Email <i class="req">*</i></label><input id="email" type="email" class="control" maxlength="255" placeholder="example@gmail.com"><small class="err"></small></div>
+                <div class="group"><label class="label">Số điện thoại <i class="req">*</i></label><input id="phone" inputmode="numeric" maxlength="10" class="control" placeholder="Nhập SĐT"><small class="err"></small></div>
+                <div class="group"><label class="label">CCCD <i class="req">*</i></label><div class="cccd-row"><input id="cccd" inputmode="numeric" maxlength="12" class="control" placeholder="12 chữ số"><button id="scan" type="button" class="scan-btn">⌁ Quét QR</button></div><small class="err"></small></div>
+            </aside>
+            <section class="work">
+                <section id="scanSummary" class="scan-summary" hidden>
+                    <div class="summary-head"><span>KẾT QUẢ QUÉT CCCD</span><span id="scanSource" class="summary-source"></span></div>
+                    <div class="summary-grid">
+                        <div class="summary-item"><span>CCCD</span><b id="sumCccd">—</b></div><div class="summary-item"><span>Họ và tên</span><b id="sumName">—</b></div>
+                        <div class="summary-item"><span>Email</span><b id="sumEmail">—</b></div><div class="summary-item"><span>Ngày sinh</span><b id="sumBirth">—</b></div>
+                        <div class="summary-item"><span>Giới tính</span><b id="sumGender">—</b></div><div class="summary-item full"><span>Địa chỉ</span><b id="sumAddress">—</b></div>
+                    </div>
+                </section>
+                <div class="fields">
+                    <div class="group"><label class="label">Ngày sinh <i class="req">*</i></label><input id="birth" type="date" class="control"><small class="err"></small></div>
+                    <div class="group"><label class="label">Ngày vào làm <i class="req">*</i></label><input id="start" type="date" class="control"><small class="err"></small></div>
+                    <div class="group"><label class="label">Giới tính <i class="req">*</i></label><div id="genderBox" class="gender"><label><input name="gender" type="radio" value="Nam" checked> Nam</label><label><input name="gender" type="radio" value="Nữ"> Nữ</label></div><small class="err"></small></div>
+                    <div class="group"><label class="label">Vai trò <i class="req">*</i></label><select id="role" class="control"><option value="">-- Chọn vai trò --</option><option value="Nhân viên">Nhân viên</option><option value="Quản lý">Quản lý</option></select><small class="err"></small></div>
                 </div>
-            </div>
-
-            <div class="field">
-                <label>Họ tên <span class="required">*</span></label>
-                <input name="hoTen" id="inputHoTen" required placeholder="Nhập họ tên">
-            </div>
-            <div class="field">
-                <label>Email <span class="required">*</span></label>
-                <input name="email" id="inputEmail" type="email" required placeholder="example@email.com">
-            </div>
-            <div class="field">
-                <label>Số điện thoại</label>
-                <input name="soDienThoai" id="inputSoDienThoai" placeholder="Nhập số điện thoại">
-            </div>
-            <div class="field">
-                <label>Địa chỉ</label>
-                <input name="diaChi" id="inputDiaChi" placeholder="Nhập địa chỉ">
-            </div>
-
-            <div class="field">
-                <label>CCCD</label>
-                <div style="display:flex;gap:8px;align-items:center">
-                    <input name="cccd" id="inputCccd" placeholder="Nhập CCCD (12 số)" maxlength="12" style="flex:1">
-                    <button type="button" class="btn" id="scanCccdBtn">📷 Quét</button>
+                <div class="rule"></div><h3 class="section">ĐỊA CHỈ</h3>
+                <div class="fields">
+                    <div class="group"><label class="label">Tỉnh / Thành <i class="req">*</i></label><select id="province" class="control"><option value="">-- Chọn --</option></select><small class="err"></small></div>
+                    <div class="group"><label class="label">Phường / Xã <i class="req">*</i></label><select id="ward" class="control"><option value="">-- Chọn --</option></select><small class="err"></small></div>
+                    <div class="group"><label class="label">Số nhà / Đường <i class="req">*</i></label><input id="addressDetail" class="control" maxlength="255" placeholder="Ví dụ: 12 Nguyễn Trãi"><small class="err"></small></div>
                 </div>
-            </div>
-            <div class="field">
-                <label>Ngày sinh</label>
-                <input name="ngaySinh" id="inputNgaySinh" type="date">
-            </div>
-            <div class="field">
-                <label>Giới tính</label>
-                <select name="gioiTinh" id="inputGioiTinh">
-                    <option value="">Chọn</option>
-                    <option>Nam</option>
-                    <option>Nữ</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Vai trò</label>
-                <select name="vaiTro" id="inputVaiTro">
-                    <option>Nhân viên</option>
-                    <option>Quản lý</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Ngày vào làm</label>
-                <input name="ngayVaoLam" id="inputNgayVaoLam" type="date">
-            </div>
-            <div class="field">
-                <label>Trạng thái</label>
-                <select name="trangThai" id="inputTrangThai">
-                    <option value="true">Đang làm</option>
-                    <option value="false">Nghỉ việc</option>
-                </select>
-            </div>
-
+                <div class="rule"></div><h3 class="section">TÀI KHOẢN ĐĂNG NHẬP</h3><div class="note"><b>Không cần nhập mật khẩu.</b> Hệ thống tạo mật khẩu tạm thời <b>6 ký tự</b>, mã hóa BCrypt và gửi đến email nhân viên sau khi lưu.</div>
+            </section>
         </div>
-        <div class="modal-foot">
-            <button class="btn" type="button" id="cancelBtn">Hủy</button>
-            <button class="btn primary" type="submit" id="saveBtn">Lưu</button>
-        </div>
+        <div class="form-foot"><button type="button" class="btn" data-close="formModal">Hủy</button><button id="save" type="submit" class="btn primary">Lưu nhân viên</button></div>
     </form>
 </div>
 
-<!-- Scanner Modal -->
-<div class="modal" id="scannerModal" hidden>
-    <div class="modal-box">
-        <div class="modal-head">
-            <h2>📷 Quét CCCD</h2>
-            <button class="btn icon" type="button" id="closeScanner">×</button>
-        </div>
-        <div style="padding:14px;">
-            <!-- Method Tabs -->
-            <div class="method-tabs">
-                <button class="method-tab active" data-method="camera" id="tabCamera">📷 Quét camera</button>
-                <button class="method-tab" data-method="upload" id="tabUpload">🖼️ Tải ảnh lên</button>
+<div id="scannerModal" class="modal" hidden>
+    <section class="dialog scanner">
+        <div class="head"><div><div class="title">Quét mã QR CCCD</div><div class="sub">Quét bằng camera hoặc tải ảnh mã QR CCCD.</div></div><button type="button" class="close" data-close="scannerModal">×</button></div>
+        <div class="scanner-body">
+            <div class="qr-reader-wrap">
+                <div id="cccdQrReader"></div>
             </div>
-
-            <!-- Camera Section -->
-            <div class="scanner-section active" id="sectionCamera">
-                <div id="qrReader"></div>
-                <div class="scanner-status" id="scannerStatus">📷 Đang khởi tạo camera...</div>
-                <div class="scanner-controls">
-                    <button class="btn btn-warning" id="toggleFlashBtn">💡 Bật đèn</button>
-                    <button class="btn" id="stopScannerBtn">⏹ Dừng quét</button>
-                </div>
-            </div>
-
-            <!-- Upload Section -->
-            <div class="scanner-section" id="sectionUpload">
-                <div class="upload-area" id="uploadArea">
-                    <span class="icon">📤</span>
-                    <div class="text">Nhấp để chọn ảnh CCCD</div>
-                    <div class="sub-text">Hỗ trợ JPG, PNG, WEBP (tối đa 10MB)</div>
-                    <input type="file" id="fileInput" accept="image/*">
-                </div>
-                <div id="previewContainer" class="preview-container" style="display:none;">
-                    <img id="previewImage" class="preview-image" alt="Preview">
-                    <div class="btn-group">
-                        <button class="btn btn-success" id="scanImageBtn">🔍 Quét ảnh</button>
-                        <button class="btn btn-outline" id="changeImageBtn">🔄 Chọn ảnh khác</button>
-                    </div>
-                </div>
-                <div id="scanResult" class="scan-result">
-                    <div class="label" id="resultLabel">✅ Kết quả quét:</div>
-                    <div class="value" id="resultValue"></div>
-                </div>
+            <div id="cccdQrResult" class="qr-result">Đưa mã QR CCCD vào khung hình để quét.</div>
+            <div class="scan-actions">
+                <label class="qr-upload-label">
+                    ▣ Tải ảnh QR
+                    <input type="file" id="cccdQrFile" accept="image/*">
+                </label>
             </div>
         </div>
-    </div>
+        <div class="form-foot"><button type="button" class="btn" data-close="scannerModal">Đóng</button></div>
+    </section>
 </div>
 
-<!-- QR Display Modal -->
-<div class="modal" id="qrModal" hidden>
-    <div class="modal-box">
-        <div class="modal-head">
-            <h2>Mã QR nhân viên</h2>
-            <button class="btn icon" type="button" id="closeQrModal">×</button>
-        </div>
-        <div style="padding:18px;text-align:center">
-            <div id="qrCanvasWrap"></div>
-            <div style="margin-top:12px">
-                <a id="downloadQrLink" class="btn" download="nhanvien_qr.png">⬇ Tải QR</a>
-            </div>
-        </div>
-    </div>
-</div>
+<div id="detailModal" class="modal" hidden><section class="dialog detail"><div class="head"><div><div class="title">Chi tiết nhân viên</div><div class="sub">Thông tin nhân viên</div></div><button type="button" class="close" data-close="detailModal">×</button></div><div id="detail" class="detail-main"></div></section></div>
 
 <script>
-    const API = '/api/nhan-vien';
 
-    const state = {
-        items: [],
-        currentPage: 1,
-        pageSize: 10
-    };
-    const $ = (id) => document.getElementById(id);
-    const form = $('employeeForm');
-    const filterForm = $('filterForm');
+    const API='/api/nhan-vien', PROVINCE_API='https://provinces.open-api.vn/api/v2';
+    const $=id=>document.getElementById(id);
+    const state={page:0,size:10,totalPages:0,items:[],editingId:null,provinces:null,scan:null,conflict:null,saving:false};
+    let cccdQrScanner = null;
+    let cccdQrBusy = false;
+    let timer;
 
-    let currentFilters = {
-        keyword: '',
-        vaiTro: '',
-        trangThai: ''
-    };
-
-    // Debounce timer
-    let searchTimeout = null;
-
-    function generateRandomPassword() {
-        return Math.floor(100000 + Math.random() * 900000).toString();
-    }
-
-    function predictNextMaNv() {
-        let maxNumber = 0;
-        state.items.forEach(nv => {
-            if (nv.maNv && nv.maNv.startsWith('NV')) {
-                try {
-                    const num = parseInt(nv.maNv.substring(2));
-                    if (num > maxNumber) maxNumber = num;
-                } catch (e) {}
-            }
-        });
-        return `NV${String(maxNumber + 1).padStart(3, '0')}`;
-    }
-
-    // ========== SỰ KIỆN ==========
-    document.addEventListener('DOMContentLoaded', () => {
-        $('addBtn').addEventListener('click', () => openModal());
-        $('closeModal').addEventListener('click', closeModal);
-        $('cancelBtn').addEventListener('click', closeModal);
-        $('employeeModal').addEventListener('click', (event) => { if (event.target.id === 'employeeModal') closeModal(); });
-
-        // Auto filter - khi gõ vào ô tìm kiếm
-        $('keywordInput').addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                applyFilters();
-            }, 300); // Debounce 300ms
-        });
-
-        // Auto filter - khi thay đổi select
-        $('vaiTroSelect').addEventListener('change', applyFilters);
-        $('trangThaiSelect').addEventListener('change', applyFilters);
-
-        form.addEventListener('submit', saveEmployee);
-        $('exportBtn').addEventListener('click', exportExcel);
-
-        // Scanner events
-        $('scanCccdBtn').addEventListener('click', openScannerModal);
-        $('scanCccdToolbarBtn').addEventListener('click', openScannerModal);
-        $('closeScanner').addEventListener('click', closeScannerModal);
-        $('stopScannerBtn').addEventListener('click', closeScannerModal);
-        $('closeQrModal').addEventListener('click', closeQrModal);
-        $('scannerModal').addEventListener('click', (event) => {
-            if (event.target.id === 'scannerModal') closeScannerModal();
-        });
-        $('qrModal').addEventListener('click', (event) => {
-            if (event.target.id === 'qrModal') closeQrModal();
-        });
-
-        // Method tabs
-        $('tabCamera').addEventListener('click', () => switchMethod('camera'));
-        $('tabUpload').addEventListener('click', () => switchMethod('upload'));
-
-        // Upload handlers
-        $('uploadArea').addEventListener('click', () => $('fileInput').click());
-        $('fileInput').addEventListener('change', handleFileSelect);
-        $('changeImageBtn').addEventListener('click', resetUpload);
-        $('scanImageBtn').addEventListener('click', scanImage);
-
-        // Flash toggle
-        $('toggleFlashBtn').addEventListener('click', toggleFlash);
-
-        // Page size change
-        $('pageSizeSelect').addEventListener('change', function() {
-            state.pageSize = parseInt(this.value);
-            state.currentPage = 1;
-            render();
-        });
-
-        loadData();
+    document.addEventListener('DOMContentLoaded',()=>{
+        $('keyword').addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(()=>{state.page=0;load()},300)});
+        $('filterRole').addEventListener('change',()=>{state.page=0;load()}); $('filterStatus').addEventListener('change',()=>{state.page=0;load()});
+        $('reset').onclick=()=>{ $('keyword').value='';$('filterRole').value='';$('filterStatus').value='';state.page=0;load() };
+        $('export').onclick=exportExcel; $('add').onclick=()=>openForm(); $('form').addEventListener('submit',saveForm);
+        $('name').addEventListener('input',()=>{updateAvatar();clearErr($('name'))}); $('email').addEventListener('input',()=>clearErr($('email')));
+        $('phone').addEventListener('input',()=>{$('phone').value=digits($('phone').value,10);clearErr($('phone'))});
+        $('cccd').addEventListener('input',()=>{$('cccd').value=digits($('cccd').value,12);state.scan=null;state.conflict=null;renderScan();clearErr($('cccd'))});
+        ['birth','start','role','province','ward','addressDetail'].forEach(id=>$(id).addEventListener(id==='addressDetail'?'input':'change',()=>clearErr($(id))));
+        document.querySelectorAll('input[name="gender"]').forEach(x=>x.addEventListener('change',()=>clearErr($('genderBox'))));
+        $('province').addEventListener('change',provinceChanged);
+        $('scan').onclick=openCccdScanner;
+        $('cccdQrFile').addEventListener('change', scanCccdQrFile);
+        document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeModal(b.dataset.close));
+        document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)}));
+        load();
     });
 
-    function applyFilters() {
-        currentFilters.keyword = $('keywordInput').value.trim();
-        currentFilters.vaiTro = $('vaiTroSelect').value;
-        currentFilters.trangThai = $('trangThaiSelect').value;
-        state.currentPage = 1;
-        loadData();
+    function query(paging=true){const q=new URLSearchParams();if($('keyword').value.trim())q.set('keyword',$('keyword').value.trim());if($('filterRole').value)q.set('vaiTro',$('filterRole').value);if($('filterStatus').value)q.set('trangThai',$('filterStatus').value);if(paging){q.set('page',state.page);q.set('size',state.size)}return q}
+    async function load(){try{state.page=Math.max(0,state.page);const d=await json(`${API}?${query().toString()}`),isList=Array.isArray(d),list=isList?d:(d.content||[]),meta=isList?{}:(d.page||{});state.total=isList?list.length:(d.totalElements??meta.totalElements??list.length);state.totalPages=state.total?Math.max(1,isList?Math.ceil(state.total/state.size):(d.totalPages??meta.totalPages??Math.ceil(state.total/state.size))):0;if(state.totalPages===0){state.page=0;state.items=[]}else if(state.page>=state.totalPages){state.page=state.totalPages-1;return load()}else{const start=state.page*state.size;state.items=isList?list.slice(start,start+state.size):list}renderRows()}catch(e){state.items=[];state.total=0;state.totalPages=0;renderRows();toast(e.message,true)}}
+    function renderRows(){ $('total').textContent=state.total||0;$('empty').hidden=state.items.length>0;$('rows').innerHTML=state.items.map((x,i)=>{const active=!!x.trangThai,addr=x.diaChiDisplay||x.diaChi||joinAddr(x);return `<tr><td>${state.page*state.size+i+1}</td><td><b>${esc(x.maNv)}</b></td><td class="strong">${esc(x.hoTen)}</td><td>${esc(x.email)||'<span class="muted">—</span>'}</td><td>${esc(x.soDienThoai)||'—'}</td><td><span class="badge ${x.vaiTro==='Quản lý'?'role1':'role2'}">${esc(x.vaiTro)||'—'}</span></td><td>${dateVN(x.ngayVaoLam)||'—'}</td><td class="address" title="${attr(addr)}">${esc(addr)||'—'}</td><td><span class="badge ${active?'on':'off'}">${active?'Đang làm':'Nghỉ việc'}</span></td><td><div class="acts"><button class="icon" onclick="showDetail(${x.id})" title="Xem">◉</button><button class="icon" onclick="openForm(${x.id})" title="Sửa">✎</button><label class="toggle"><input type="checkbox" ${active?'checked':''} onchange="toggleStatus(${x.id})"><i></i></label></div></td></tr>`}).join('');renderPages()}
+    function renderPages(){const el=$('pages');if(!state.total||!state.totalPages){el.innerHTML='';return}const total=Math.max(1,state.totalPages),current=Math.min(state.page,total-1),a=[],add=(label,page,disabled=false,active=false)=>a.push(`<button class="pg ${active?'active':''}" ${disabled?'disabled':''} onclick="goPage(${page})">${label}</button>`);add('«',0,current===0);add('‹',Math.max(0,current-1),current===0);const start=Math.max(0,current-2),end=Math.min(total-1,current+2);if(start>0){add('1',0);if(start>1)a.push('<span class="muted">…</span>')}for(let i=start;i<=end;i++)add(i+1,i,false,i===current);if(end<total-1){if(end<total-2)a.push('<span class="muted">…</span>');add(total,total-1)}add('›',Math.min(total-1,current+1),current===total-1);add('»',total-1,current===total-1);el.innerHTML=a.join('')}
+    function goPage(p){if(p<0||p>=state.totalPages||p===state.page)return;state.page=p;load()}
+    async function exportExcel(){try{const r=await fetch(`${API}/xuat-excel?${query(false)}`);if(!r.ok)throw new Error(await readError(r));const u=URL.createObjectURL(await r.blob()),a=document.createElement('a');a.href=u;a.download='danh_sach_nhan_vien.xlsx';a.click();URL.revokeObjectURL(u)}catch(e){toast(e.message,true)}}
+
+    async function openForm(id=null){state.editingId=id;state.scan=null;state.conflict=null;$('form').reset();clearAll();renderScan();$('formTitle').textContent=id?'Cập nhật nhân viên':'Thêm nhân viên';$('formSub').textContent=id?'Cập nhật thông tin cá nhân, công việc và địa chỉ.':'Mật khẩu tạm thời 6 ký tự sẽ được gửi đến email nhân viên.';let a={};if(id){try{const x=await json(`${API}/${id}`);$('name').value=x.hoTen||'';$('email').value=x.email||'';$('phone').value=x.soDienThoai||'';$('cccd').value=x.cccd||'';$('birth').value=toInput(x.ngaySinh);$('start').value=toInput(x.ngayVaoLam);$('role').value=x.vaiTro||'';$('addressDetail').value=x.diaChiChiTiet||x.diaChi||'';const g=document.querySelector(`input[name="gender"][value="${x.gioiTinh||'Nam'}"]`);if(g)g.checked=true;a={tinhThanh:x.tinhThanh||'',quanHuyen:x.quanHuyen||'',phuongXa:x.phuongXa||''}}catch(e){toast(e.message,true);return}}await setAddress(a);updateAvatar();$('formModal').hidden=false}
+    function updateAvatar(){const s=String($('name').value||'').trim().split(/\s+/).filter(Boolean);$('avatar').textContent=s.length?s.slice(-2).map(x=>x[0]).join('').toUpperCase():'NV'}
+    async function provinces(){if(state.provinces)return state.provinces;try{const r=await fetch(`${PROVINCE_API}/`);state.provinces=r.ok?await r.json():[];return state.provinces}catch{return state.provinces=[]}}
+    function options(el,items,value=''){el.innerHTML='<option value="">-- Chọn --</option>'+items.map(x=>`<option value="${attr(x.name)}" data-code="${x.code||''}">${esc(x.name)}</option>`).join('');if(value){if(![...el.options].some(o=>o.value===value))el.insertAdjacentHTML('beforeend',`<option value="${attr(value)}">${esc(value)}</option>`);el.value=value}}
+    async function fetchWards(c){try{const r=await fetch(`${PROVINCE_API}/p/${c}?depth=2`);return r.ok?(await r.json()).wards||[]:[]}catch{return []}}
+    async function setAddress(a={}){const ps=await provinces();options($('province'),ps,a.tinhThanh);options($('ward'),[],a.phuongXa);const p=ps.find(x=>x.name===a.tinhThanh);if(!p)return;options($('ward'),await fetchWards(p.code),a.phuongXa)}
+    async function provinceChanged(){options($('ward'),[]);const c=$('province').selectedOptions[0]?.dataset.code;if(c)options($('ward'),await fetchWards(c))}
+
+    function validate(){clearAll();let ok=true;const set=(e,m)=>{e.classList.add('invalid');e.closest('.group')?.querySelector('.err')&&(e.closest('.group').querySelector('.err').textContent=m);ok=false};const name=normalize($('name').value),email=$('email').value.trim(),phone=digits($('phone').value,10),cccd=digits($('cccd').value,12),detail=normalize($('addressDetail').value);$('name').value=name;$('phone').value=phone;$('cccd').value=cccd;$('addressDetail').value=detail;if(!/^[\p{L} .'-]{2,255}$/u.test(name))set($('name'),'Họ tên từ 2–255 ký tự, chỉ dùng chữ và dấu hợp lệ.');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))set($('email'),'Email không hợp lệ.');if(!/^(03|05|07|08|09)\d{8}$/.test(phone))set($('phone'),'SĐT Việt Nam gồm 10 số.');if(!/^\d{12}$/.test(cccd))set($('cccd'),'CCCD phải đúng 12 số.');else if(state.conflict)set($('cccd'),`CCCD đã thuộc nhân viên ${state.conflict.hoTen||''}.`);const today=new Date();today.setHours(0,0,0,0);const birth=$('birth').value?new Date(`${$('birth').value}T00:00:00`):null;if(!birth)set($('birth'),'Vui lòng chọn ngày sinh.');else{const adult=new Date(birth);adult.setFullYear(adult.getFullYear()+18);if(birth>=today||adult>today)set($('birth'),'Nhân viên phải đủ 18 tuổi.')}const start=$('start').value?new Date(`${$('start').value}T00:00:00`):null;if(!start)set($('start'),'Vui lòng chọn ngày vào làm.');else if(start>today||(birth&&start<new Date(birth.getFullYear()+18,birth.getMonth(),birth.getDate())))set($('start'),'Ngày vào làm không hợp lệ.');if(!$('role').value)set($('role'),'Vui lòng chọn vai trò.');if(!$('province').value)set($('province'),'Vui lòng chọn Tỉnh / Thành.');if(!$('ward').value)set($('ward'),'Vui lòng chọn Phường / Xã.');if(detail.length<2)set($('addressDetail'),'Vui lòng nhập số nhà / đường.');return ok}
+    async function saveForm(e){e.preventDefault();if(state.saving||!validate())return;const b=$('save');const data={hoTen:normalize($('name').value),email:$('email').value.trim().toLowerCase(),soDienThoai:digits($('phone').value,10),cccd:digits($('cccd').value,12),ngaySinh:$('birth').value,ngayVaoLam:$('start').value,gioiTinh:document.querySelector('input[name="gender"]:checked')?.value,vaiTro:$('role').value,tinhThanh:$('province').value,quanHuyen:null,phuongXa:$('ward').value,diaChiChiTiet:normalize($('addressDetail').value)};state.saving=true;b.disabled=true;b.textContent='Đang lưu...';try{await json(state.editingId?`${API}/${state.editingId}`:API,{method:state.editingId?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});closeModal('formModal');toast(state.editingId?'Đã cập nhật nhân viên.':'Đã tạo nhân viên và gửi mật khẩu 6 ký tự qua email.');load()}catch(e){toast(e.message,true)}finally{state.saving=false;b.disabled=false;b.textContent='Lưu nhân viên'}}
+
+    async function showDetail(id){try{const x=await json(`${API}/${id}`);const addr=x.diaChiDisplay||x.diaChi||joinAddr(x);$('detail').innerHTML=`<div class="detail-grid"><div class="detail-item"><label>Mã NV</label><p>${esc(x.maNv)}</p></div><div class="detail-item"><label>Họ tên</label><p>${esc(x.hoTen)}</p></div><div class="detail-item"><label>Email</label><p>${esc(x.email)}</p></div><div class="detail-item"><label>Số điện thoại</label><p>${esc(x.soDienThoai)}</p></div><div class="detail-item"><label>CCCD</label><p>${esc(x.cccd)}</p></div><div class="detail-item"><label>Vai trò</label><p>${esc(x.vaiTro)}</p></div><div class="detail-item"><label>Ngày sinh</label><p>${dateVN(x.ngaySinh)||'—'}</p></div><div class="detail-item"><label>Ngày vào làm</label><p>${dateVN(x.ngayVaoLam)||'—'}</p></div><div class="detail-item full"><label>Địa chỉ</label><p>${esc(addr)||'—'}</p></div></div>`;$('detailModal').hidden=false}catch(e){toast(e.message,true)}}
+    async function toggleStatus(id){try{await json(`${API}/${id}/trang-thai`,{method:'PATCH'});toast('Đã cập nhật trạng thái.');load()}catch(e){toast(e.message,true)}}
+    async function closeModal(id){if(id==='scannerModal')await closeCccdScanner();$(id).hidden=true}
+    function openCccdScanner(){
+        $('cccdQrResult').textContent='Đưa mã QR CCCD vào khung hình để quét.';
+        $('cccdQrReader').innerHTML='';
+        $('cccdQrFile').value='';
+        $('scannerModal').hidden=false;
+        setTimeout(startCccdScanner,120);
     }
-
-    async function loadData() {
-        const params = buildParams();
-        const url = params ? `${API}?${params}` : API;
-
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                const error = await readError(response);
-                return toast(error, true);
-            }
-            const data = await response.json();
-
-            if (Array.isArray(data)) {
-                state.items = data;
-                state.totalItems = data.length;
-            } else if (data && Array.isArray(data.content)) {
-                state.items = data.content;
-                state.totalItems = data.totalElements ?? data.total ?? state.items.length;
-            } else {
-                state.items = [];
-                state.totalItems = 0;
-            }
-
-            const pageSize = state.pageSize || 10;
-            const totalPages = Math.max(1, Math.ceil((state.totalItems || state.items.length) / pageSize));
-            if (!state.currentPage || state.currentPage > totalPages) state.currentPage = totalPages;
-
-            render();
-        } catch (error) {
-            toast('Lỗi kết nối đến server', true);
-            console.error('Lỗi:', error);
+    async function closeCccdScanner(){
+        await stopCccdScanner();
+        $('cccdQrReader').innerHTML='';
+        $('cccdQrFile').value='';
+        cccdQrBusy=false;
+    }
+    async function startCccdScanner(){
+        if(cccdQrBusy)return;
+        if(!window.Html5Qrcode){$('cccdQrResult').textContent='Không tải được thư viện quét QR. Kiểm tra lại kết nối Internet.';return}
+        try{
+            await stopCccdScanner();
+            $('cccdQrReader').innerHTML='';
+            $('cccdQrResult').textContent='Đang mở camera...';
+            cccdQrBusy=true;
+            cccdQrScanner=new Html5Qrcode('cccdQrReader');
+            await cccdQrScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:250},aspectRatio:1},decodedText=>handleCccdQrSuccess(decodedText));
+            $('cccdQrResult').textContent='Đang quét... đưa mã QR CCCD vào khung hình.';
+        }catch{
+            $('cccdQrResult').textContent='Không mở được camera. Bạn có thể dùng nút “Tải ảnh QR”.';
+        }finally{
+            cccdQrBusy=false;
         }
     }
-
-    function buildParams() {
-        const params = new URLSearchParams();
-        if (currentFilters.keyword) params.set('keyword', currentFilters.keyword);
-        if (currentFilters.vaiTro) params.set('vaiTro', currentFilters.vaiTro);
-        if (currentFilters.trangThai !== '') params.set('trangThai', currentFilters.trangThai);
-        return params.toString();
+    async function stopCccdScanner(){
+        const scanner=cccdQrScanner;
+        cccdQrScanner=null;
+        if(!scanner)return;
+        try{
+            const stateValue=scanner.getState?.();
+            if(stateValue===2||stateValue==='SCANNING')await scanner.stop();
+            await scanner.clear();
+        }catch{}
     }
-
-    function render() {
-        const total = state.items.length;
-        const pageSize = state.pageSize || 10;
-        const currentPage = Math.max(1, Math.min(state.currentPage || 1, Math.ceil(total / pageSize) || 1));
-        state.currentPage = currentPage;
-
-        const startIdx = (currentPage - 1) * pageSize;
-        const endIdx = Math.min(startIdx + pageSize, total);
-
-        // Update total count
-        document.getElementById('totalCount').textContent = total;
-
-        // Update page size selector
-        document.getElementById('pageSizeSelect').value = pageSize;
-
-        $('empty').hidden = total > 0;
-
-        if (total === 0) {
-            $('rows').innerHTML = '';
-            renderPagination();
+    async function scanCccdQrFile(event){
+        const file=event.target.files?.[0];
+        if(!file)return;
+        if(!window.Html5Qrcode){$('cccdQrResult').textContent='Không tải được thư viện quét QR.';return}
+        try{
+            await stopCccdScanner();
+            $('cccdQrReader').innerHTML='';
+            $('cccdQrResult').textContent='Đang đọc ảnh QR...';
+            const scanner=new Html5Qrcode('cccdQrReader');
+            const decodedText=await scanner.scanFile(file,true);
+            await scanner.clear();
+            await handleCccdQrSuccess(decodedText);
+        }catch{
+            $('cccdQrResult').textContent='Không đọc được mã QR trong ảnh. Hãy thử ảnh rõ nét hơn.';
+        }finally{
+            event.target.value='';
+        }
+    }
+    async function handleCccdQrSuccess(decodedText){
+        if(cccdQrBusy)return;
+        cccdQrBusy=true;
+        const qr=parseCccdQr(decodedText);
+        if(!qr.cccd){
+            $('cccdQrResult').textContent='Mã QR không có dữ liệu CCCD hợp lệ.';
+            cccdQrBusy=false;
             return;
         }
-
-        const pageItems = state.items.slice(startIdx, endIdx);
-        $('rows').innerHTML = pageItems.map((nv, idx) => {
-            const index = startIdx + idx + 1;
-            return `
-            <tr>
-                <td>${index}</td>
-                <td><span class="code">${esc(nv.maNv)}</span></td>
-                <td>${esc(nv.hoTen)}</td>
-                <td>${esc(nv.email)}</td>
-                <td>${esc(nv.soDienThoai)}</td>
-                <td><span class="badge role">${esc(nv.vaiTro)}</span></td>
-                <td>${formatDate(nv.ngayVaoLam)}</td>
-                <td><span class="badge ${nv.trangThai ? 'on' : 'off'}">${nv.trangThai ? 'Đang làm' : 'Nghỉ việc'}</span></td>
-                <td>
-                    <div class="actions">
-                        <button class="action-btn" onclick="showQrFor(${nv.id})" title="Mã QR">🔳</button>
-                        <button class="action-btn edit" onclick="openModal(${nv.id})" title="Sửa">✎</button>
-                        <label class="switch" title="${nv.trangThai ? 'Chuyển sang nghỉ việc' : 'Chuyển sang đang làm'}">
-                            <input type="checkbox" ${nv.trangThai ? 'checked' : ''} onchange="toggleStatus(${nv.id})">
-                            <span></span>
-                        </label>
-                    </div>
-                </td>
-            </tr>
-        `}).join('');
-        renderPagination();
+        await fillEmployeeFromCccdQr(qr);
+        cccdQrBusy=false;
     }
-
-    function renderPagination() {
-        const total = state.items.length;
-        const pageSize = state.pageSize || 10;
-        const totalPages = Math.max(1, Math.ceil(total / pageSize));
-        const currentPage = state.currentPage || 1;
-
-        const container = document.getElementById('pagination');
-        container.innerHTML = '';
-
-        if (totalPages <= 1) {
-            const info = document.createElement('span');
-            info.className = 'page-info';
-            info.textContent = `Trang 1 / 1`;
-            container.appendChild(info);
-            return;
-        }
-
-        const prev = document.createElement('button');
-        prev.className = 'btn';
-        prev.textContent = '‹ Trước';
-        prev.disabled = currentPage === 1;
-        prev.onclick = () => changePage(currentPage - 1);
-        container.appendChild(prev);
-
-        const start = Math.max(1, currentPage - 2);
-        const end = Math.min(totalPages, currentPage + 2);
-
-        if (start > 1) {
-            const first = document.createElement('button');
-            first.className = 'btn';
-            first.textContent = '1';
-            first.onclick = () => changePage(1);
-            container.appendChild(first);
-            if (start > 2) {
-                const dots = document.createElement('span');
-                dots.className = 'page-info';
-                dots.textContent = '…';
-                container.appendChild(dots);
-            }
-        }
-
-        for (let p = start; p <= end; p++) {
-            const b = document.createElement('button');
-            b.className = 'btn' + (p === currentPage ? ' primary' : '');
-            b.textContent = p;
-            b.onclick = () => changePage(p);
-            container.appendChild(b);
-        }
-
-        if (end < totalPages) {
-            if (end < totalPages - 1) {
-                const dots = document.createElement('span');
-                dots.className = 'page-info';
-                dots.textContent = '…';
-                container.appendChild(dots);
-            }
-            const last = document.createElement('button');
-            last.className = 'btn';
-            last.textContent = totalPages;
-            last.onclick = () => changePage(totalPages);
-            container.appendChild(last);
-        }
-
-        const next = document.createElement('button');
-        next.className = 'btn';
-        next.textContent = 'Tiếp ›';
-        next.disabled = currentPage === totalPages;
-        next.onclick = () => changePage(currentPage + 1);
-        container.appendChild(next);
-
-        const info = document.createElement('span');
-        info.className = 'page-info';
-        info.textContent = `Trang ${currentPage} / ${totalPages} (${total} nhân viên)`;
-        container.appendChild(info);
-    }
-
-    function changePage(page) {
-        const total = state.items.length;
-        const totalPages = Math.max(1, Math.ceil(total / (state.pageSize || 10)));
-        const p = Math.max(1, Math.min(page, totalPages));
-        state.currentPage = p;
-        render();
-        document.querySelector('.table-wrap').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function openModal(id) {
-        form.reset();
-        $('modalTitle').textContent = id ? 'Cập nhật nhân viên' : 'Thêm nhân viên';
-
-        $('inputHoTen').value = '';
-        $('inputEmail').value = '';
-        $('inputSoDienThoai').value = '';
-        $('inputNgaySinh').value = '';
-        $('inputGioiTinh').value = '';
-        $('inputDiaChi').value = '';
-        $('inputCccd').value = '';
-        $('inputNgayVaoLam').value = '';
-
-        const idInput = $('employeeId');
-        if (idInput) idInput.value = id || '';
-
-        if (id) {
-            const nv = state.items.find(item => item.id === id);
-            if (!nv) {
-                toast('Không tìm thấy nhân viên!', true);
-                return;
-            }
-
-            const fields = {
-                'hoTen': nv.hoTen,
-                'email': nv.email,
-                'soDienThoai': nv.soDienThoai,
-                'cccd': nv.cccd,
-                'diaChi': nv.diaChi,
-                'gioiTinh': nv.gioiTinh,
-                'vaiTro': nv.vaiTro
-            };
-
-            Object.keys(fields).forEach(key => {
-                const input = document.getElementById(`input${key.charAt(0).toUpperCase() + key.slice(1)}`);
-                if (input) input.value = fields[key] ?? '';
-            });
-
-            if (nv.ngaySinh) {
-                const input = $('inputNgaySinh');
-                if (input) input.value = nv.ngaySinh.substring(0, 10);
-            }
-            if (nv.ngayVaoLam) {
-                const input = $('inputNgayVaoLam');
-                if (input) input.value = nv.ngayVaoLam.substring(0, 10);
-            }
-
-            const trangThaiInput = $('inputTrangThai');
-            if (trangThaiInput) trangThaiInput.value = String(Boolean(nv.trangThai));
-
-            $('maNvPreview').textContent = nv.maNv || 'NV---';
-        } else {
-            const vaiTroInput = $('inputVaiTro');
-            if (vaiTroInput) vaiTroInput.value = 'Nhân viên';
-
-            const trangThaiInput = $('inputTrangThai');
-            if (trangThaiInput) trangThaiInput.value = 'true';
-
-            const nextMaNv = predictNextMaNv();
-            $('maNvPreview').textContent = nextMaNv;
-        }
-        $('employeeModal').hidden = false;
-    }
-
-    function closeModal() {
-        $('employeeModal').hidden = true;
-    }
-
-    async function saveEmployee(event) {
-        event.preventDefault();
-
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-
-        const id = data.id;
-        delete data.id;
-        delete data.maNv;
-
-        data.trangThai = data.trangThai === 'true';
-        ['ngaySinh', 'ngayVaoLam'].forEach(key => {
-            if (!data[key]) data[key] = null;
-        });
-        Object.keys(data).forEach(key => {
-            if (data[key] === '') data[key] = null;
-        });
-
-        let generatedPassword = null;
-        if (!id) {
-            generatedPassword = generateRandomPassword();
-            data.matKhau = generatedPassword;
-        } else {
-            data.matKhau = null;
-        }
-
-        try {
-            const url = id ? `${API}/${id}` : API;
-            const method = id ? 'PUT' : 'POST';
-
-            const response = await fetch(url, {
-                method: method,
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            });
-
-            if (!response.ok) {
-                const error = await readError(response);
-                return toast(error, true);
-            }
-
-            let returned = null;
-            try { returned = await response.json(); } catch {}
-
-            closeModal();
-            toast(id ? '✅ Đã cập nhật nhân viên thành công!' : '✅ Đã thêm nhân viên thành công!');
-            await loadData();
-
-            if (!id && returned) {
-                setTimeout(() => showQrObject(returned), 300);
-                if (returned.email) {
-                    sendAccountEmail(returned.email, generatedPassword, returned);
-                }
-            }
-        } catch (error) {
-            toast('❌ Lỗi khi lưu nhân viên', true);
-            console.error(error);
-        }
-    }
-
-    async function toggleStatus(id) {
-        try {
-            const response = await fetch(`${API}/${id}/trang-thai`, {method: 'PATCH'});
-            if (!response.ok) {
-                const error = await readError(response);
-                return toast(error, true);
-            }
-            await loadData();
-        } catch (error) {
-            toast('Lỗi khi thay đổi trạng thái', true);
-            console.error(error);
-        }
-    }
-
-    async function exportExcel() {
-        try {
-            const params = buildParams();
-            const response = await fetch(`${API}/xuat-excel?${params}`);
-            if (!response.ok) {
-                const error = await readError(response);
-                return toast(error, true);
-            }
-            const blob = await response.blob();
-            download(blob, 'danh_sach_nhan_vien.xlsx');
-            toast('Xuất Excel thành công');
-        } catch (error) {
-            toast('Lỗi khi xuất Excel', true);
-            console.error(error);
-        }
-    }
-
-    function download(blob, filename) {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
-    }
-
-    async function readError(response) {
-        try {
-            const text = await response.text();
-            const json = JSON.parse(text);
-            return json.message || json.error || text;
-        } catch {
-            return response.statusText || 'Có lỗi xảy ra';
-        }
-    }
-
-    function toast(message, error = false) {
-        const el = document.createElement('div');
-        el.className = `toast ${error ? 'error' : 'success'}`;
-        el.textContent = message;
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 3500);
-    }
-
-    function formatDate(value) {
-        if (!value) return '';
-        const [y, m, d] = value.split('-');
-        return d && m && y ? `${d}/${m}/${y}` : value;
-    }
-
-    function esc(value) {
-        return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
-    }
-
-    // ========== SCANNER LOGIC ==========
-    let html5QrCodeInstance = null;
-    let fileImageData = null;
-    let currentMethod = 'camera';
-    let flashOn = false;
-
-    function switchMethod(method) {
-        currentMethod = method;
-
-        document.querySelectorAll('.method-tab').forEach(el => el.classList.remove('active'));
-        document.getElementById(`tab${method.charAt(0).toUpperCase() + method.slice(1)}`).classList.add('active');
-
-        document.querySelectorAll('.scanner-section').forEach(el => el.classList.remove('active'));
-        document.getElementById(`section${method.charAt(0).toUpperCase() + method.slice(1)}`).classList.add('active');
-
-        if (method === 'camera') {
-            setTimeout(() => startScanner(), 300);
-        } else {
-            stopScanner();
-            resetUpload();
-        }
-    }
-
-    function openScannerModal() {
-        const modal = document.getElementById('scannerModal');
-        if (!modal) return;
-        modal.hidden = false;
-        document.getElementById('scannerStatus').textContent = '📷 Đang khởi tạo camera...';
-        resetUpload();
-        switchMethod('camera');
-    }
-
-    function closeScannerModal() {
-        stopScanner();
-        const modal = document.getElementById('scannerModal');
-        if (modal) modal.hidden = true;
-    }
-
-    async function startScanner() {
-        const readerId = 'qrReader';
-
-        if (html5QrCodeInstance) {
-            try {
-                await html5QrCodeInstance.stop();
-                await html5QrCodeInstance.clear();
-            } catch (e) {}
-            html5QrCodeInstance = null;
-        }
-
-        const readerElement = document.getElementById(readerId);
-        if (!readerElement) {
-            toast('Không tìm thấy khu vực quét', true);
-            return;
-        }
-
-        readerElement.innerHTML = '';
-
-        try {
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                throw new Error('Trình duyệt không hỗ trợ camera');
-            }
-
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                stream.getTracks().forEach(t => t.stop());
-            } catch (permErr) {
-                document.getElementById('scannerStatus').textContent = '⚠️ Vui lòng cho phép quyền camera';
-                toast('Vui lòng cho phép quyền camera', true);
-                return;
-            }
-
-            html5QrCodeInstance = new Html5Qrcode(readerId);
-
-            const config = {
-                fps: 20,
-                qrbox: { width: 300, height: 300 },
-                aspectRatio: 1.0
-            };
-
-            let cameraId = { facingMode: 'environment' };
-            try {
-                const devices = await Html5Qrcode.getCameras();
-                if (devices && devices.length > 0) {
-                    const backCamera = devices.find(d =>
-                        d.label.toLowerCase().includes('back') ||
-                        d.label.toLowerCase().includes('environment') ||
-                        d.label.toLowerCase().includes('rear')
-                    );
-                    cameraId = backCamera ? backCamera.id : devices[0].id;
-                    console.log('Using camera:', devices.find(d => d.id === cameraId)?.label || 'Unknown');
-                }
-            } catch (e) {
-                console.warn('Cannot get camera list, using facingMode:', e);
-            }
-
-            try {
-                await html5QrCodeInstance.start(cameraId, config, onScanSuccess, onScanError);
-            } catch (startErr) {
-                console.warn('Start with cameraId failed, trying alternatives', startErr);
-                document.getElementById('debugInfo').textContent = 'Start failed: ' + (startErr && startErr.message ? startErr.message : startErr);
-                let started = false;
-                if (typeof cameraId === 'string') {
-                    try {
-                        await html5QrCodeInstance.start({ deviceId: { exact: cameraId } }, config, onScanSuccess, onScanError);
-                        started = true;
-                    } catch (e2) {
-                        console.warn('Start with deviceId exact failed', e2);
-                    }
-                }
-                if (!started) {
-                    try {
-                        await html5QrCodeInstance.start({ facingMode: 'environment' }, config, onScanSuccess, onScanError);
-                        started = true;
-                    } catch (e3) {
-                        console.warn('Start with facingMode failed', e3);
-                    }
-                }
-                if (!started) throw startErr;
-            }
-
-            document.getElementById('scannerStatus').textContent = '📷 Đang quét... Đưa CCCD vào khung hình';
-            toast('✅ Camera đã sẵn sàng');
-
-        } catch (err) {
-            console.error('Scanner start error:', err);
-            document.getElementById('scannerStatus').textContent = '❌ Lỗi: ' + err.message;
-            document.getElementById('debugInfo').textContent = 'Scanner error: ' + err.message;
-
-            try {
-                const devices = await navigator.mediaDevices.enumerateDevices();
-                const videoDevices = devices.filter(d => d.kind === 'videoinput');
-
-                if (videoDevices.length > 0) {
-                    document.getElementById('scannerStatus').textContent = '🔄 Thử kết nối với camera khác...';
-                    for (const device of videoDevices) {
-                        try {
-                            const config = {
-                                fps: 20,
-                                qrbox: { width: 300, height: 300 },
-                                aspectRatio: 1.0
-                            };
-                            await html5QrCodeInstance.start(device.deviceId, config, onScanSuccess, onScanError);
-                            document.getElementById('scannerStatus').textContent = '📷 Đang quét với: ' + (device.label || 'Camera');
-                            toast('✅ Đã kết nối camera');
-                            return;
-                        } catch (e) {
-                            console.warn('Failed with camera:', device.label, e);
-                        }
-                    }
-                }
-                document.getElementById('scannerStatus').textContent = '❌ Không thể kết nối với bất kỳ camera nào';
-                toast('Không tìm thấy camera', true);
-            } catch (fallbackErr) {
-                console.error('Fallback failed:', fallbackErr);
-            }
-        }
-    }
-
-    function onScanSuccess(decodedText, decodedResult) {
-        console.log('✅ QR detected:', decodedText);
-        try {
-            const input = document.getElementById('inputCccd');
-            if (input) {
-                input.value = decodedText;
-                toast('✅ Đã quét CCCD: ' + decodedText);
-            }
-        } catch (e) {
-            console.error('Lỗi xử lý kết quả quét:', e);
-        } finally {
-            setTimeout(() => closeScannerModal(), 500);
-        }
-    }
-
-    function onScanError(errorMessage) {
-        if (errorMessage && errorMessage.includes('error')) {
-            console.debug('Scan error:', errorMessage);
-        }
-    }
-
-    function stopScanner() {
-        if (!html5QrCodeInstance) return;
-        try {
-            html5QrCodeInstance.stop().then(() => {
-                html5QrCodeInstance.clear();
-                html5QrCodeInstance = null;
-                document.getElementById('scannerStatus').textContent = '⏹ Đã dừng quét';
-            }).catch(() => {
-                html5QrCodeInstance = null;
-            });
-        } catch (e) {
-            console.warn('Lỗi khi dừng scanner:', e);
-            html5QrCodeInstance = null;
-        }
-    }
-
-    async function toggleFlash() {
-        if (!html5QrCodeInstance) {
-            toast('Camera chưa được khởi tạo', true);
-            return;
-        }
-
-        try {
-            flashOn = !flashOn;
-            await html5QrCodeInstance.toggleTorch(flashOn);
-            document.getElementById('toggleFlashBtn').textContent = flashOn ? '💡 Tắt đèn' : '💡 Bật đèn';
-            toast(flashOn ? '💡 Đã bật đèn flash' : '💡 Đã tắt đèn flash');
-        } catch (e) {
-            console.warn('Flash not supported:', e);
-            toast('⚠️ Thiết bị không hỗ trợ đèn flash', true);
-            flashOn = false;
-            document.getElementById('toggleFlashBtn').textContent = '💡 Bật đèn';
-        }
-    }
-
-    // ========== UPLOAD LOGIC ==========
-    function resetUpload() {
-        document.getElementById('uploadArea').style.display = 'block';
-        document.getElementById('previewContainer').style.display = 'none';
-        document.getElementById('scanResult').className = 'scan-result';
-        document.getElementById('scanResult').style.display = 'none';
-        document.getElementById('fileInput').value = '';
-        fileImageData = null;
-    }
-
-    function handleFileSelect(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        if (!file.type.startsWith('image/')) {
-            toast('Vui lòng chọn file ảnh', true);
-            return;
-        }
-
-        if (file.size > 10 * 1024 * 1024) {
-            toast('File ảnh quá lớn (tối đa 10MB)', true);
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            fileImageData = e.target.result;
-            document.getElementById('previewImage').src = fileImageData;
-            document.getElementById('uploadArea').style.display = 'none';
-            document.getElementById('previewContainer').style.display = 'block';
-            document.getElementById('scanResult').className = 'scan-result';
-            document.getElementById('scanResult').style.display = 'none';
-            toast('✅ Đã tải ảnh lên, nhấn "Quét ảnh" để quét');
+    async function fillEmployeeFromCccdQr(qr){
+        await stopCccdScanner();
+
+        let lookup = null;
+        try{
+            const q = state.editingId ? '?editingEmployeeId=' + state.editingId : '';
+            lookup = await json(API + '/tra-cuu-cccd/' + encodeURIComponent(qr.cccd) + q);
+        }catch{}
+
+        const d = {
+            cccd: qr.cccd || lookup?.cccd || '',
+            hoTen: qr.hoTen || lookup?.hoTen || '',
+            ngaySinh: qr.ngaySinh || lookup?.ngaySinh || '',
+            gioiTinh: qr.gioiTinh || lookup?.gioiTinh || '',
+            email: qr.email || lookup?.email || '',
+            soDienThoai: lookup?.soDienThoai || '',
+            diaChi: qr.diaChi || lookup?.diaChiDisplay || joinAddr(lookup || {})
         };
-        reader.readAsDataURL(file);
+
+        $('cccd').value = digits(d.cccd, 12);
+        clearErr($('cccd'));
+
+        if (d.hoTen) {
+            $('name').value = titleCase(d.hoTen);
+            clearErr($('name'));
+            updateAvatar();
+        }
+
+        if (d.ngaySinh) {
+            $('birth').value = d.ngaySinh;
+            clearErr($('birth'));
+        }
+
+        if (d.gioiTinh) {
+            document.querySelector(`input[name="gender"][value="${d.gioiTinh}"]`)?.click();
+        }
+
+        if (d.email) {
+            $('email').value = d.email.toLowerCase();
+            clearErr($('email'));
+        }
+
+        if (d.soDienThoai && !$('phone').value) {
+            $('phone').value = digits(d.soDienThoai, 10);
+            clearErr($('phone'));
+        }
+
+        if (lookup?.diaChiChiTiet) {
+            $('addressDetail').value = lookup.diaChiChiTiet;
+            await setAddress({
+                tinhThanh: lookup.tinhThanh || '',
+                quanHuyen: lookup.quanHuyen || '',
+                phuongXa: lookup.phuongXa || ''
+            });
+        } else {
+            await applyRawAddress(d.diaChi);
+        }
+
+        state.conflict =
+            lookup?.source === 'NHAN_VIEN' &&
+            lookup?.employeeId &&
+            Number(lookup.employeeId) !== Number(state.editingId || 0)
+                ? lookup
+                : null;
+
+        state.scan = { ...d, source: lookup?.source || 'QR' };
+        renderScan();
+
+        $('scannerModal').hidden = true;
+        $('cccdQrReader').innerHTML = '';
+
+        if (state.conflict) {
+            setErr($('cccd'), 'CCCD đã thuộc nhân viên ' + (state.conflict.hoTen || '') + '.');
+            toast('CCCD này đã có hồ sơ nhân viên.', true);
+        } else if (!d.email) {
+            $('email').focus();
+            toast('Đã quét CCCD. QR không có email, hãy nhập email thật.', true);
+        } else {
+            toast('Đã điền CCCD, họ tên, ngày sinh, giới tính và địa chỉ từ mã QR.');
+        }
     }
 
-    async function scanImage() {
-        if (!fileImageData) {
-            toast('Vui lòng chọn ảnh trước', true);
+    function parseCccdQr(rawText){
+        const parts = String(rawText || '')
+            .split('|')
+            .map(value => normalize(value));
+
+        const cccd = (parts[0] || '').replace(/\D/g, '').slice(0, 12);
+        const birthDigits = (parts[2] || '').replace(/\D/g, '');
+
+        let ngaySinh = '';
+        if (birthDigits.length === 8) {
+            const day = birthDigits.slice(0, 2);
+            const month = birthDigits.slice(2, 4);
+            const year = birthDigits.slice(4, 8);
+            ngaySinh = year + '-' + month + '-' + day;
+        }
+
+        const rawGender = String(parts[3] || '').toLowerCase();
+        let gioiTinh = '';
+        if (rawGender.includes('nam') || rawGender.includes('male')) gioiTinh = 'Nam';
+        if (rawGender.includes('nữ') || rawGender.includes('nu') || rawGender.includes('female')) gioiTinh = 'Nữ';
+
+        const email = parts.find(value => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) || '';
+
+        return {
+            cccd: /^\d{12}$/.test(cccd) ? cccd : '',
+            hoTen: parts[1] || '',
+            ngaySinh,
+            gioiTinh,
+            diaChi: parts[4] || '',
+            email
+        };
+    }
+
+    async function applyRawAddress(raw) {
+        const text = normalize(raw);
+        if (!text) return;
+
+        const parsed = await resolveAdministrativeAddress(text);
+
+        if (!parsed) {
+            $('addressDetail').value = text;
             return;
         }
 
-        const resultEl = document.getElementById('scanResult');
-        const resultLabel = document.getElementById('resultLabel');
-        const resultValue = document.getElementById('resultValue');
+        await setAddress({
+            tinhThanh: parsed.tinhThanh || '',
+            quanHuyen: parsed.quanHuyen || '',
+            phuongXa: parsed.phuongXa || ''
+        });
 
-        try {
-            toast('🔄 Đang quét ảnh...');
-            resultEl.style.display = 'none';
+        $('addressDetail').value = parsed.diaChiChiTiet || '';
+        clearErr($('province'));
+        clearErr($('ward'));
+        clearErr($('addressDetail'));
+    }
 
-            const result = await Html5Qrcode.scanImage(fileImageData, {
-                useBarCodeDetectorIfSupported: true,
-                experimentalFeatures: {
-                    useBarCodeDetector: true
-                }
+    async function resolveAdministrativeAddress(raw) {
+        const fullText = normalizeForMatch(raw);
+        if (!fullText) return null;
+
+        const parts = splitAddressParts(raw);
+        const provincesList = await provinces();
+
+        const province = findBestAdministrativeMatch(provincesList, fullText);
+        if (!province) {
+            return {
+                tinhThanh: '',
+                phuongXa: '',
+                diaChiChiTiet: normalize(raw)
+            };
+        }
+
+        const wards = await fetchWards(province.code);
+        const ward = findBestAdministrativeMatch(wards, fullText);
+
+        const adminNames = [
+            ward?.name || '',
+            province?.name || ''
+        ].filter(Boolean);
+
+        const detailParts = parts.filter(part => {
+            const normalizedPart = normalizeForMatch(part);
+
+            return !adminNames.some(name => {
+                const aliases = buildAdministrativeAliases(name);
+                return aliases.some(alias =>
+                    normalizedPart === alias || normalizedPart.includes(alias)
+                );
             });
+        });
 
-            if (result && result.decodedText) {
-                const cccdValue = result.decodedText.trim();
-                resultLabel.textContent = '✅ Kết quả quét:';
-                resultValue.textContent = cccdValue;
-                resultEl.className = 'scan-result success';
-                resultEl.style.display = 'block';
+        let diaChiChiTiet = normalize(detailParts.join(', '));
 
-                const input = document.getElementById('inputCccd');
-                if (input) {
-                    input.value = cccdValue;
-                    toast('✅ Đã quét CCCD: ' + cccdValue);
+        if (!diaChiChiTiet) {
+            diaChiChiTiet = parts.length ? normalize(parts[0]) : '';
+        }
+
+        return {
+            tinhThanh: province?.name || '',
+            quanHuyen: '',
+            phuongXa: ward?.name || '',
+            diaChiChiTiet
+        };
+    }
+
+    function splitAddressParts(value) {
+        return String(value || '')
+            .split(',')
+            .map(item => normalize(item))
+            .filter(Boolean);
+    }
+
+    function findBestAdministrativeMatch(items, fullText) {
+        if (!Array.isArray(items) || !items.length) return null;
+
+        const normalizedText = normalizeForMatch(fullText);
+        let bestItem = null;
+        let bestScore = -1;
+
+        for (const item of items) {
+            const aliases = buildAdministrativeAliases(item.name);
+            let score = -1;
+
+            for (const alias of aliases) {
+                if (!alias) continue;
+
+                if (normalizedText === alias) {
+                    score = Math.max(score, 1000 + alias.length);
+                } else if (normalizedText.includes(' ' + alias + ' ')) {
+                    score = Math.max(score, 800 + alias.length);
+                } else if (
+                    normalizedText.startsWith(alias + ' ') ||
+                    normalizedText.endsWith(' ' + alias) ||
+                    normalizedText.includes(alias)
+                ) {
+                    score = Math.max(score, 500 + alias.length);
                 }
-
-                setTimeout(() => closeScannerModal(), 1500);
-            } else {
-                resultLabel.textContent = '⚠️ Không tìm thấy mã QR';
-                resultValue.textContent = 'Vui lòng thử lại với ảnh khác';
-                resultEl.className = 'scan-result error';
-                resultEl.style.display = 'block';
-                toast('Không tìm thấy mã QR trong ảnh', true);
             }
-        } catch (error) {
-            console.error('Lỗi quét ảnh:', error);
-            resultLabel.textContent = '❌ Lỗi quét ảnh';
-            resultValue.textContent = error.message || 'Vui lòng thử lại với ảnh khác';
-            resultEl.className = 'scan-result error';
-            resultEl.style.display = 'block';
-            toast('Không thể quét ảnh. Vui lòng thử lại.', true);
-        }
-    }
 
-    // ========== QR GENERATION ==========
-    async function showQrObject(obj) {
-        try {
-            const text = JSON.stringify(obj, null, 2);
-            const dataUrl = await QRCode.toDataURL(text, { width: 400 });
-            const wrap = document.getElementById('qrCanvasWrap');
-            wrap.innerHTML = '';
-            const img = document.createElement('img');
-            img.src = dataUrl;
-            img.alt = 'QR code';
-            img.style.maxWidth = '100%';
-            wrap.appendChild(img);
-            const link = document.getElementById('downloadQrLink');
-            link.href = dataUrl;
-            const modal = document.getElementById('qrModal');
-            if (modal) modal.hidden = false;
-        } catch (e) {
-            console.error(e);
-            toast('Không thể tạo mã QR', true);
-        }
-    }
-
-    function closeQrModal() {
-        const modal = document.getElementById('qrModal');
-        if (modal) modal.hidden = true;
-    }
-
-    function showQrFor(id) {
-        const nv = state.items.find(item => item.id === id);
-        if (!nv) {
-            toast('Không tìm thấy nhân viên', true);
-            return;
-        }
-        showQrObject(nv);
-    }
-
-    // ========== SEND EMAIL ==========
-    async function sendAccountEmail(email, password, payload) {
-        try {
-            const body = { email: email, password: password, payload: payload };
-            const resp = await fetch(`${API}/send-account-email`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
-            if (!resp.ok) {
-                const err = await readError(resp);
-                toast('Gửi email thất bại: ' + err, true);
-                return;
+            if (score > bestScore) {
+                bestScore = score;
+                bestItem = item;
             }
-            toast('Đã gửi tài khoản và mã QR tới email');
-        } catch (e) {
-            console.error('sendAccountEmail error', e);
-            toast('Lỗi khi gửi email', true);
         }
+
+        return bestItem;
     }
+
+    function buildAdministrativeAliases(name) {
+        const base = normalizeForMatch(name);
+        const cleaned = stripAdministrativePrefix(base);
+
+        const aliases = new Set([base, cleaned]);
+
+        if (base.startsWith('thanh pho ')) aliases.add(base.replace(/^thanh pho\s+/, 'tp '));
+        if (base.startsWith('tinh ')) aliases.add(base.replace(/^tinh\s+/, ''));
+        if (base.startsWith('quan ')) aliases.add(base.replace(/^quan\s+/, 'q '));
+        if (base.startsWith('huyen ')) aliases.add(base.replace(/^huyen\s+/, 'h '));
+        if (base.startsWith('phuong ')) aliases.add(base.replace(/^phuong\s+/, 'p '));
+        if (base.startsWith('xa ')) aliases.add(base.replace(/^xa\s+/, 'x '));
+        if (base.startsWith('thi tran ')) aliases.add(base.replace(/^thi tran\s+/, 'tt '));
+        if (base.startsWith('thi xa ')) aliases.add(base.replace(/^thi xa\s+/, 'tx '));
+
+        if (cleaned) {
+            aliases.add('tp ' + cleaned);
+            aliases.add('q ' + cleaned);
+            aliases.add('h ' + cleaned);
+            aliases.add('p ' + cleaned);
+            aliases.add('x ' + cleaned);
+            aliases.add('tt ' + cleaned);
+            aliases.add('tx ' + cleaned);
+        }
+
+        return [...aliases].filter(Boolean);
+    }
+
+    function stripAdministrativePrefix(value) {
+        return String(value || '')
+            .replace(/^(thanh pho|tinh|quan|huyen|phuong|xa|thi tran|thi xa)\s+/, '')
+            .trim();
+    }
+
+    function normalizeForMatch(value) {
+        return String(value || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, ' ')
+            .trim()
+            .replace(/\s+/g, ' ');
+    }
+
+    function best(items, text) {
+        return findBestAdministrativeMatch(items, normalize(text));
+    }
+
+    function aliases(name) {
+        return buildAdministrativeAliases(name);
+    }
+
+    function normMatch(v) {
+        return normalizeForMatch(v);
+    }
+
+    function renderScan(){const s=state.scan;$('scanSummary').hidden=!s;if(!s)return;$('sumCccd').textContent=s.cccd||'—';$('sumName').textContent=s.hoTen||'—';$('sumEmail').textContent=s.email||'Chưa có email – cần nhập thủ công';$('sumBirth').textContent=dateVN(s.ngaySinh)||'—';$('sumGender').textContent=s.gioiTinh||'—';$('sumAddress').textContent=s.diaChi||'—';$('scanSource').textContent=s.source==='NHAN_VIEN'?'Email từ hồ sơ nhân viên':s.source==='KHACH_HANG'?'Email từ hồ sơ khách hàng':'Email không có trong QR'}
+    function setScanStatus(t){$('scanStatus').textContent=t}
+    function setErr(el,msg){el.classList.add('invalid');const e=el.closest('.group')?.querySelector('.err');if(e)e.textContent=msg}function clearErr(el){el?.classList.remove('invalid');const e=el?.closest('.group')?.querySelector('.err');if(e)e.textContent=''}function clearAll(){document.querySelectorAll('.invalid').forEach(x=>x.classList.remove('invalid'));document.querySelectorAll('.err').forEach(x=>x.textContent='')}
+    async function json(url,opt){const r=await fetch(url,opt);if(!r.ok)throw new Error(await readError(r));return r.status===204?null:r.json()}async function readError(r){const t=await r.text();try{const x=JSON.parse(t);return x.message||x.error||Object.values(x).join('. ')}catch{return t||'Có lỗi xảy ra.'}}
+    function digits(v,n){return String(v||'').replace(/\D/g,'').slice(0,n)}function normalize(v){return String(v||'').replace(/\s+/g,' ').trim()}function titleCase(v){return normalize(v).toLocaleLowerCase('vi-VN').replace(/(^|\s)(\S)/g,(m,a,b)=>a+b.toLocaleUpperCase('vi-VN'))}function toInput(v){return v?String(v).slice(0,10):''}function dateVN(v){if(!v)return'';const p=String(v).slice(0,10).split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:v}function joinAddr(x){return [x.diaChiChiTiet,x.phuongXa,x.tinhThanh].filter(Boolean).join(', ')}function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}function attr(v){return esc(v).replace(/`/g,'&#096;')}function toast(m,bad=false){const e=document.createElement('div');e.className=`toast ${bad?'bad':''}`;e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),3200)}
+    window.openForm=openForm;window.showDetail=showDetail;window.toggleStatus=toggleStatus;window.goPage=goPage;
 </script>
 </body>
 </html>

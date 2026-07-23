@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn phương thức thanh toán - VNPay</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --page: #f6f5fa;
+            --surface: #ffffff;
+            --panel: #f8f7fb;
+            --text: #20242a;
+            --muted: #68717d;
+            --line: #e6e7eb;
+            --blue: #0874aa;
+            --cyan: #129caf;
+            --red: #d71939;
+            --shadow: 0 4px 14px rgba(28, 36, 48, 0.16);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            background: var(--page);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button, a { font: inherit; }
+
+        .page {
+            width: min(820px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 14px 0 26px;
+        }
+
+        .utility-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 40px;
+            padding: 0 14px;
+        }
+
+        .back-button,
+        .language-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 4px;
+            color: #262b31;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .back-icon {
+            display: inline-grid;
+            width: 24px;
+            height: 24px;
+            place-items: center;
+            color: #fff;
+            background: #313740;
+            border-radius: 50%;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .flag {
+            position: relative;
+            width: 31px;
+            height: 20px;
+            background: #da251d;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+        }
+
+        .flag::after {
+            content: "★";
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            color: #ffea00;
+            font-size: 12px;
+        }
+
+        .gateway-shell {
+            overflow: hidden;
+            background: var(--surface);
+            border-radius: 5px;
+            box-shadow: var(--shadow);
+        }
+
+        .brand-header {
+            display: grid;
+            min-height: 90px;
+            place-items: center;
+            background: #fff;
+        }
+
+        .brand-logo {
+            width: 192px;
+            height: auto;
+        }
+
+        .method-panel {
+            padding: 34px 30px 38px;
+            background: var(--panel);
+            border-top: 1px solid #f1f1f4;
+        }
+
+        .method-panel h1 {
+            margin: 0 0 30px;
+            text-align: center;
+            font-size: clamp(23px, 3.5vw, 29px);
+            font-weight: 500;
+        }
+
+        .method-list {
+            display: grid;
+            gap: 9px;
+        }
+
+        .payment-method {
+            display: grid;
+            min-height: 96px;
+            grid-template-columns: minmax(0, 1fr) 92px;
+            align-items: center;
+            width: 100%;
+            padding: 18px 24px 18px 28px;
+            text-align: left;
+            color: var(--text);
+            background: #fff;
+            border: 1px solid #e1e3e7;
+            box-shadow: 0 1px 4px rgba(31, 40, 53, 0.09);
+            cursor: pointer;
+            transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+        }
+
+        .payment-method:hover,
+        .payment-method:focus-visible {
+            border-color: #83c8d1;
+            box-shadow: 0 5px 14px rgba(19, 82, 105, 0.14);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .method-copy {
+            min-width: 0;
+            font-size: 20px;
+            line-height: 1.35;
+        }
+
+        .method-copy strong { color: #d51c35; }
+
+        .method-subline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .brand-chip {
+            display: inline-grid;
+            min-width: 40px;
+            height: 27px;
+            padding: 0 7px;
+            place-items: center;
+            color: #0d4f8b;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .brand-chip.mc {
+            position: relative;
+            min-width: 42px;
+            color: transparent;
+        }
+
+        .brand-chip.mc::before,
+        .brand-chip.mc::after {
+            content: "";
+            position: absolute;
+            top: 6px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+
+        .brand-chip.mc::before { left: 8px; background: #ea001b; }
+        .brand-chip.mc::after { right: 8px; background: rgba(255, 174, 0, 0.9); }
+
+        .method-art {
+            display: grid;
+            justify-items: end;
+        }
+
+        .qr-mini {
+            display: grid;
+            width: 56px;
+            height: 56px;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            padding: 5px;
+            background: #fff;
+            border: 1px solid #dce1e6;
+        }
+
+        .qr-mini i { background: #26333d; }
+        .qr-mini i:nth-child(3n),
+        .qr-mini i:nth-child(5n + 1) { background: transparent; }
+
+        .bank-icon {
+            width: 66px;
+            height: 60px;
+            color: var(--cyan);
+        }
+
+        .card-stack {
+            position: relative;
+            width: 67px;
+            height: 48px;
+        }
+
+        .card-stack::before,
+        .card-stack::after {
+            content: "";
+            position: absolute;
+            width: 58px;
+            height: 36px;
+            border-radius: 4px;
+        }
+
+        .card-stack::before {
+            top: 0;
+            left: 0;
+            background: #d8e0e6;
+            box-shadow: inset 0 8px 0 #b7c4cf;
+        }
+
+        .card-stack::after {
+            right: 0;
+            bottom: 0;
+            background: #168fb4;
+            box-shadow: inset 0 8px 0 #08729d;
+        }
+
+        .app-mark {
+            display: grid;
+            justify-items: center;
+            color: var(--blue);
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .app-diamond {
+            position: relative;
+            width: 37px;
+            height: 28px;
+            margin-bottom: 4px;
+        }
+
+        .app-diamond::before,
+        .app-diamond::after {
+            content: "";
+            position: absolute;
+            top: 3px;
+            width: 24px;
+            height: 24px;
+            transform: rotate(45deg);
+            border-radius: 3px;
+        }
+
+        .app-diamond::before { left: 0; background: #0875ac; }
+        .app-diamond::after { right: 0; background: rgba(218, 26, 57, 0.9); }
+
+        .support-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            min-height: 92px;
+            padding: 18px 30px;
+            background: #fff;
+            border-top: 1px solid #edeef1;
+        }
+
+        .support-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            color: #258da1;
+            font-size: 17px;
+        }
+
+        .mail-icon {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            color: #566672;
+            border: 1px solid #e1e5e9;
+            border-radius: 3px;
+            font-size: 23px;
+        }
+
+        .trust-badges {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .secure-badge,
+        .pci-badge {
+            display: grid;
+            min-height: 38px;
+            place-items: center;
+            border-radius: 3px;
+            font-weight: 700;
+        }
+
+        .secure-badge {
+            grid-template-columns: 28px auto;
+            gap: 5px;
+            color: #27323b;
+            font-size: 11px;
+        }
+
+        .secure-badge::before {
+            content: "🔒";
+            display: grid;
+            width: 28px;
+            height: 32px;
+            place-items: center;
+            color: #fff;
+            background: #168abd;
+            border-radius: 16px 16px 5px 5px;
+        }
+
+        .pci-badge {
+            width: 58px;
+            padding: 3px;
+            color: #fff;
+            background: #b78542;
+            font-size: 8px;
+            text-align: center;
+        }
+
+        .copyright {
+            margin: 56px 0 0;
+            text-align: center;
+            color: #30343a;
+            font-size: 15px;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            display: none;
+            place-items: center;
+            padding: 20px;
+            background: rgba(21, 27, 35, 0.56);
+        }
+
+        .modal.open { display: grid; }
+
+        .qr-dialog {
+            width: min(620px, 100%);
+            padding: 34px;
+            text-align: center;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 16px 50px rgba(15, 24, 36, 0.3);
+        }
+
+        .qr-dialog h2 { margin: 0 0 10px; font-size: 30px; font-weight: 800; }
+        .qr-dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; font-size: 15px; }
+
+        .qr-code {
+            display: grid;
+            place-items: center;
+            width: 330px;
+            height: 330px;
+            margin: 0 auto 22px;
+            padding: 18px;
+            background: #fff;
+            border: 1px solid #d9dee4;
+            border-radius: 22px;
+            box-shadow: 0 18px 44px rgba(20, 40, 60, .14);
+        }
+
+        .qr-code canvas,
+        .qr-code img { display: block; width: 280px !important; height: 280px !important; }
+
+        .qr-amount { margin-bottom: 22px; color: var(--blue); font-size: 28px; font-weight: 900; }
+
+        .scan-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            min-height: 48px;
+            margin: -4px 0 18px;
+            padding: 12px 16px;
+            color: #0875aa;
+            background: #edf8fc;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .scan-status::before {
+            width: 9px;
+            height: 9px;
+            content: "";
+            background: #129caf;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(18, 156, 175, 0.45);
+            animation: scan-pulse 1.4s infinite;
+        }
+
+        .scan-status.success { color: #17815d; background: #eaf8f2; }
+        .scan-status.success::before { background: #17a673; animation: none; }
+        .scan-status.error { color: #b52f47; background: #fff0f2; }
+        .scan-status.error::before { background: #d9485f; animation: none; }
+
+        .scan-network-note {
+            min-height: 18px;
+            margin: -4px 0 18px !important;
+            color: #0875aa !important;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .scan-network-note{display:none}
+
+        @keyframes scan-pulse {
+            70% { box-shadow: 0 0 0 8px rgba(18, 156, 175, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(18, 156, 175, 0); }
+        }
+
+        .modal-button {
+            width: 100%;
+            height: 44px;
+            color: #fff;
+            background: linear-gradient(180deg, #0c8fc0, #0875aa);
+            border: 0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .modal-button.secondary {
+            color: #56616d;
+            background: #eef1f4;
+        }
+
+        .modal-button.primary {
+            background: linear-gradient(180deg, #0c8fc0, #0875aa);
+            color: #fff;
+        }
+
+        .modal-button:disabled {
+            cursor: wait;
+            opacity: 0.7;
+        }
+
+        #confirmPaymentBtn {
+            display: none !important;
+        }
+
+        .modal-actions #confirmPaymentBtn {
+            display: block !important;
+        }
+
+        @media (max-width: 650px) {
+            .page { width: min(100% - 18px, 820px); padding-top: 6px; }
+            .utility-bar { padding: 0 4px; }
+            .brand-header { min-height: 76px; }
+            .brand-logo { width: 165px; }
+            .method-panel { padding: 26px 12px 24px; }
+            .method-panel h1 { margin-bottom: 22px; }
+            .payment-method { min-height: 84px; grid-template-columns: minmax(0, 1fr) 66px; padding: 14px 13px 14px 17px; }
+            .method-copy { font-size: 16px; }
+            .support-footer { flex-direction: column; align-items: flex-start; padding: 20px; }
+            .trust-badges { align-self: flex-end; }
+            .copyright { margin-top: 30px; }
+            .modal-actions { grid-template-columns: 1fr; }
+            .qr-dialog{padding:24px}
+            .qr-code{width:270px;height:270px}
+            .qr-code canvas,.qr-code img{width:226px!important;height:226px!important}
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <nav class="utility-bar" aria-label="Điều hướng thanh toán">
+        <button class="back-button" id="backButton" type="button">
+            <span class="back-icon" aria-hidden="true">‹</span>
+            <span id="backLabel">Quay lại</span>
+        </button>
+        <button class="language-button" id="languageButton" type="button" aria-label="Đổi ngôn ngữ">
+            <span class="flag" aria-hidden="true"></span>
+            <span id="languageLabel">Vi</span>
+        </button>
+    </nav>
+
+    <main class="gateway-shell">
+        <header class="brand-header">
+            <svg class="brand-logo" viewBox="0 0 220 62" role="img" aria-label="VNPay QR">
+                <g transform="translate(9 15) rotate(45 16 16)">
+                    <rect width="29" height="29" rx="3" fill="#0875ad"></rect>
+                    <rect x="17" y="8" width="21" height="21" rx="3" fill="#d71939" opacity=".92"></rect>
+                </g>
+                <text x="63" y="20" fill="#16719c" font-family="Arial,sans-serif" font-size="8" font-weight="700">CỔNG THANH TOÁN</text>
+                <text x="62" y="44" fill="#d71939" font-family="Arial,sans-serif" font-size="25" font-weight="900">VN</text>
+                <text x="99" y="44" fill="#0875ad" font-family="Arial,sans-serif" font-size="25" font-weight="900">PAY</text>
+                <text x="153" y="31" fill="#d71939" font-family="Arial,sans-serif" font-size="9" font-weight="900">QR</text>
+            </svg>
+        </header>
+
+        <section class="method-panel" aria-labelledby="pageHeading">
+            <h1 id="pageHeading">Chọn phương thức thanh toán</h1>
+
+            <div class="method-list">
+                <button class="payment-method" type="button" data-method="qr">
+                    <span class="method-copy">App Ngân hàng và Ví điện tử (<strong>VNPAY<sup>QR</sup></strong>)</span>
+                    <span class="method-art" aria-hidden="true">
+                        <span class="qr-mini">
+                            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                        </span>
+                    </span>
+                </button>
+
+                <button class="payment-method" type="button" data-method="domestic">
+                    <span class="method-copy">Thẻ nội địa và tài khoản ngân hàng</span>
+                    <span class="method-art" aria-hidden="true">
+                        <svg class="bank-icon" viewBox="0 0 72 62">
+                            <path d="M36 3 5 17v6h62v-6L36 3Z" fill="#d8e4e8" stroke="currentColor" stroke-width="2"></path>
+                            <path d="M10 25h52M9 54h54M5 59h62" fill="none" stroke="#a9bac2" stroke-width="4"></path>
+                            <path d="M15 25v29M29 25v29M43 25v29M57 25v29" stroke="currentColor" stroke-width="7"></path>
+                        </svg>
+                    </span>
+                </button>
+
+                <button class="payment-method" type="button" data-method="international">
+                    <span class="method-copy">
+                        Thẻ thanh toán quốc tế
+                        <span class="method-subline" aria-label="VISA Mastercard JCB UnionPay American Express">
+                            <span class="brand-chip">VISA</span>
+                            <span class="brand-chip mc">MC</span>
+                            <span class="brand-chip">JCB</span>
+                            <span class="brand-chip">UP</span>
+                            <span class="brand-chip">AMEX</span>
+                        </span>
+                    </span>
+                    <span class="method-art" aria-hidden="true"><span class="card-stack"></span></span>
+                </button>
+
+                <button class="payment-method" type="button" data-method="app">
+                    <span class="method-copy">App <strong>VNPAY</strong></span>
+                    <span class="method-art" aria-hidden="true">
+                        <span class="app-mark"><span class="app-diamond"></span>VNPAY<sup>App</sup></span>
+                    </span>
+                </button>
+            </div>
+        </section>
+
+        <footer class="support-footer">
+            <a class="support-link" href="mailto:hotrovnpay@vnpay.vn">
+                <span class="mail-icon" aria-hidden="true">✉</span>
+                <span>hotrovnpay@vnpay.vn</span>
+            </a>
+            <div class="trust-badges" aria-label="Chứng nhận bảo mật">
+                <span class="secure-badge">secure<br>GlobalSign</span>
+                <span class="pci-badge">PCI DSS<br>COMPLIANT</span>
+            </div>
+        </footer>
+    </main>
+
+    <p class="copyright">Phát triển bởi VNPAY © 2026</p>
+</div>
+
+<div class="modal" id="qrModal" role="dialog" aria-modal="true" aria-labelledby="qrHeading">
+    <div class="qr-dialog">
+        <h2 id="qrHeading">Quét mã VNPay QR</h2>
+        <p id="qrDescription">Mở ứng dụng ngân hàng hoặc Ví VNPAY, sau đó quét mã để thanh toán.</p>
+        <div class="qr-code" id="qrCode" aria-label="Mã VNPay QR"></div>
+        <div class="qr-amount" id="qrAmount">10.000 VND</div>
+        <div class="scan-status" id="scanStatus" role="status">Quét mã và bấm xác nhận sau khi đã thanh toán</div>
+        <p class="scan-network-note" id="scanNetworkNote"></p>
+        <div class="modal-actions">
+            <button class="modal-button secondary" id="closeQrButton" type="button">Quay lại</button>
+            <button class="modal-button primary" id="confirmPaymentBtn" type="button">✅ Xác nhận đã thanh toán</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (() => {
+        const params = new URLSearchParams(window.location.search);
+        const amountParam = Number(params.get('vnp_Amount'));
+        const amount = Number.isFinite(amountParam) && amountParam > 0 ? amountParam / 100 : 10000;
+        const formatter = new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 });
+        const qrModal = document.getElementById('qrModal');
+        const qrCode = document.getElementById('qrCode');
+        const scanStatus = document.getElementById('scanStatus');
+        const scanNetworkNote = document.getElementById('scanNetworkNote');
+        let statusTimer = null;
+
+        function cardCheckoutUrl(type) {
+            const nextParams = new URLSearchParams(params);
+            nextParams.set('cardType', type);
+            const staticPreview = /VnPayMethodSelection\.html$/i.test(window.location.pathname);
+            const path = staticPreview
+                ? 'VnPayCheckout.html'
+                : '/api/shop/payments/vnpay/checkout/card';
+            return `${path}?${nextParams.toString()}`;
+        }
+
+        function signedParams() {
+            const signed = new URLSearchParams();
+            params.forEach((value, key) => {
+                if (key.startsWith('vnp_')) signed.append(key, value);
+            });
+            return signed;
+        }
+
+        async function renderQr() {
+            scanStatus.className = 'scan-status';
+            scanStatus.textContent = 'Đang tạo mã QR...';
+            qrCode.replaceChildren();
+
+            try {
+                const confirmationUrl = new URL(
+                    '/api/shop/payments/vnpay/checkout/scan-confirm',
+                    window.location.origin
+                );
+                confirmationUrl.search = signedParams().toString();
+
+                if (typeof QRCode !== 'function') {
+                    throw new Error('Không tải được thư viện tạo mã QR.');
+                }
+                new QRCode(qrCode, {
+                    text: confirmationUrl.toString(),
+                    width: 188,
+                    height: 188,
+                    colorDark: '#111820',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+
+                scanNetworkNote.textContent = '';
+                scanStatus.textContent = 'Quét mã và bấm xác nhận sau khi đã thanh toán';
+                startStatusPolling();
+            } catch (error) {
+                scanStatus.className = 'scan-status error';
+                scanStatus.textContent = error.message || 'Không thể tạo mã QR.';
+                scanNetworkNote.textContent = '';
+            }
+        }
+
+        function stopStatusPolling() {
+            if (statusTimer) window.clearInterval(statusTimer);
+            statusTimer = null;
+        }
+
+        function startStatusPolling() {
+            stopStatusPolling();
+            const statusUrl = `/api/shop/payments/vnpay/checkout/status?${signedParams().toString()}`;
+            const check = async () => {
+                try {
+                    const response = await fetch(statusUrl, {
+                        credentials: 'same-origin',
+                        cache: 'no-store'
+                    });
+                    if (!response.ok) throw new Error('Giao dịch không hợp lệ hoặc đã hết hạn.');
+                    const status = await response.json();
+                    if (!status.paid) return;
+
+                    stopStatusPolling();
+                    scanStatus.className = 'scan-status success';
+                    scanStatus.textContent = 'Đã xác nhận thanh toán.';
+                    const target = new URL('/shop', window.location.origin);
+                    target.searchParams.set('paymentResult', 'success');
+                    target.searchParams.set('gateway', 'VNPAY');
+                    target.searchParams.set('orderCode', status.orderCode || '');
+                    window.setTimeout(() => window.location.assign(target.toString()), 700);
+                } catch (error) {
+                    stopStatusPolling();
+                    scanStatus.className = 'scan-status error';
+                    scanStatus.textContent = error.message || 'Không thể kiểm tra giao dịch.';
+                }
+            };
+            check();
+            statusTimer = window.setInterval(check, 1200);
+        }
+
+        // Hàm xác nhận thủ công
+        async function confirmPaymentManually() {
+            const btn = document.getElementById('confirmPaymentBtn');
+            btn.disabled = true;
+            btn.textContent = 'Đang hoàn tất...';
+            try {
+                const confirmUrl = new URL('/api/shop/payments/vnpay/checkout/scan-confirm', window.location.origin);
+                confirmUrl.search = signedParams().toString();
+                window.location.assign(confirmUrl.toString());
+
+            } catch (error) {
+                alert(error.message);
+                btn.disabled = false;
+                btn.textContent = '✅ Xác nhận đã thanh toán';
+            }
+        }
+
+        document.getElementById('confirmPaymentBtn').addEventListener('click', confirmPaymentManually);
+
+        document.querySelectorAll('[data-method]').forEach((button) => {
+            button.addEventListener('click', async () => {
+                const method = button.dataset.method;
+                if (method === 'domestic' || method === 'international') {
+                    window.location.href = cardCheckoutUrl(method);
+                    return;
+                }
+                document.getElementById('qrHeading').textContent = method === 'app'
+                    ? 'Thanh toán bằng App VNPAY'
+                    : 'Quét mã VNPay QR';
+                document.getElementById('qrDescription').textContent = method === 'app'
+                    ? 'Mở ứng dụng VNPAY, chọn quét mã để thanh toán.'
+                    : 'Mở ứng dụng ngân hàng hoặc Ví VNPAY, sau đó quét mã để thanh toán.';
+                document.getElementById('qrAmount').textContent = `${formatter.format(amount)} VND`;
+                qrModal.classList.add('open');
+                await renderQr();
+            });
+        });
+
+        document.getElementById('closeQrButton').addEventListener('click', () => {
+            stopStatusPolling();
+            qrModal.classList.remove('open');
+        });
+
+        qrModal.addEventListener('click', (event) => {
+            if (event.target === qrModal) {
+                stopStatusPolling();
+                qrModal.classList.remove('open');
+            }
+        });
+
+        document.getElementById('backButton').addEventListener('click', () => {
+            if (window.history.length > 1) window.history.back();
+            else window.location.href = '/shop';
+        });
+
+        document.getElementById('languageButton').addEventListener('click', () => {
+            const language = document.getElementById('languageLabel');
+            const english = language.textContent === 'Vi';
+            language.textContent = english ? 'En' : 'Vi';
+            document.getElementById('backLabel').textContent = english ? 'Back' : 'Quay lại';
+            document.getElementById('pageHeading').textContent = english
+                ? 'Choose a payment method'
+                : 'Chọn phương thức thanh toán';
+        });
+    })();
+</script>
+</body>
+</html>

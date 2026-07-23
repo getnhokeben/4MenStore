@@ -6,10 +6,10 @@
     <title>Quản lý Màu sắc | 4MenStore</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
-    <script src="/js/app-shell.js" defer></script>
+    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
     <style>
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-        :root{--sw:220px;--sbg:#2b1d0e;--sact:#7a5230;--gold:#c8a474;--bg:#f3f4f6;--white:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;--r:8px;--success:#16a34a;--danger:#dc2626}
+        :root{--sw:220px;--sbg:#2b1d0e;--sact:#7a5230;--gold:#c8a474;--navy:#102a56;--navy-hover:#173d78;--bg:#f3f4f6;--white:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;--r:8px;--success:#16a34a;--danger:#dc2626}
         body{font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.45;font-synthesis:none;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
         .app{display:flex;min-height:100vh}
         .sidebar{width:var(--sw);background:var(--sbg);position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;overflow-y:auto;z-index:100;scrollbar-width:none}
@@ -42,15 +42,15 @@
         .search-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
         .search-wrap input{flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;outline:none;transition:.15s;background:#f9fafb}
         .search-wrap input:focus{border-color:var(--gold);background:#fff}
-        .search-wrap .btn{background:var(--gold);color:#fff;border:none;padding:8px 16px;border-radius:6px;font-weight:600;cursor:pointer}
-        .search-wrap .btn:hover{background:#a8895a}
+        .search-wrap .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;border:1.5px solid var(--navy);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;background:var(--navy);color:#fff;white-space:nowrap}
+        .search-wrap .btn:hover{background:var(--navy-hover);border-color:var(--navy-hover)}
         .action-bar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-        .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;border:1.5px solid var(--border);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;background:#fff;color:var(--text);white-space:nowrap}
-        .btn:hover{border-color:#aaa}
-        .btn-primary{background:var(--gold);color:#fff;border-color:var(--gold)}
-        .btn-primary:hover{background:#a8895a;border-color:#a8895a}
-        .btn-danger{background:#dc2626;color:#fff;border-color:#dc2626}
-        .btn-danger:hover{background:#b91c1c}
+        .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;border:1.5px solid var(--navy);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;background:var(--navy);color:#fff;white-space:nowrap}
+        .btn:hover{background:var(--navy-hover);border-color:var(--navy-hover)}
+        .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+        .btn-primary:hover{background:var(--navy-hover);border-color:var(--navy-hover)}
+        .btn-danger{background:var(--navy);color:#fff;border-color:var(--navy)}
+        .btn-danger:hover{background:var(--navy-hover);border-color:var(--navy-hover)}
         .table-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
         table{width:100%;border-collapse:collapse}
         thead tr{background:#f9fafb;border-bottom:1.5px solid var(--border)}
@@ -67,12 +67,12 @@
         .ib:hover{background:#f3f4f6;color:var(--text)}
         .ib.edit:hover{background:rgba(200,164,116,.12);color:#a8895a}
         .ib.del:hover{background:#fee2e2;color:#dc2626}
-        .pagination{display:flex;align-items:center;justify-content:flex-start;padding:10px 16px;border-top:1px solid var(--border);background:#f9fafb;flex-wrap:wrap;gap:8px}
+        .pagination{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--border);background:#f9fafb;flex-wrap:wrap;gap:8px}
         .pg-info{font-size:13px;color:var(--muted);white-space:nowrap}
-        .pg-nav{display:flex;gap:3px}
+        .pg-nav{display:flex;gap:5px;align-items:center;justify-content:flex-end;margin-left:auto;flex-wrap:wrap}
         .pg-btn{min-width:32px;height:32px;padding:0 8px;border-radius:6px;border:1.5px solid var(--border);background:#fff;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .13s}
-        .pg-btn:hover:not(:disabled):not(.active){border-color:var(--gold);color:var(--gold)}
-        .pg-btn.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+        .pg-btn:hover:not(:disabled):not(.active){border-color:var(--navy);color:var(--navy);background:#eef4fb}
+        .pg-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
         .pg-btn:disabled{opacity:.4;cursor:not-allowed}
         .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
         .modal-bg.show{display:flex}
@@ -120,53 +120,10 @@
 </head>
 <body>
 <div class="app">
-    <aside class="sidebar">
-        <div class="sb-logo">
-            <img src="/images/logo-4menstore.jpg" alt="4MenStore">
-        </div>
-        <nav class="sb-nav">
-            <a href="/san-pham/trang-chu" class="ni"><span class="ico">🏠</span> Trang chủ</a>
-            <a href="#" class="ni"><span class="ico">🛒</span> Bán hàng tại quầy</a>
-            <a href="/hoa-don" class="ni"><span class="ico">🧾</span> Quản lý hóa đơn</a>
-            <div class="ni" onclick="toggleSub('sub-sp','arr-sp')">
-                <span class="ico">📦</span> Quản lý sản phẩm
-                <span class="arr" id="arr-sp">▸</span>
-            </div>
-            <div class="submenu" id="sub-sp">
-                <a href="/san-pham/quan-ly" class="si">Sản phẩm</a>
-                <a href="/san-pham/bien-the" class="si">Biến thể sản phẩm</a>
-            </div>
-            <div class="ni active-row open-parent" onclick="toggleSub('sub-tt','arr-tt')">
-                <span class="ico">⚙️</span> Quản lý thuộc tính
-                <span class="arr" id="arr-tt" style="transform:rotate(90deg)">▸</span>
-            </div>
-            <div class="submenu open" id="sub-tt">
-                <a href="/thuoc-tinh/loai-ao" class="si">Loại áo</a>
-                <a href="/thuoc-tinh/kich-co" class="si">Kích cỡ</a>
-                <a href="/thuoc-tinh/mau-sac" class="si active">Màu sắc</a>
-                <a href="/thuoc-tinh/phong-cach-mac" class="si">Phong cách mặc</a>
-                <a href="/thuoc-tinh/kieu-dang" class="si">Kiểu dáng</a>
-                <a href="/thuoc-tinh/xuat-xu" class="si">Xuất xứ</a>
-                <a href="/thuoc-tinh/chat-lieu" class="si">Chất liệu</a>
-            </div>
-            <div class="ni" onclick="toggleSub('sub-gd','arr-gd')">
-                <span class="ico">🏷️</span> Quản lý giảm giá
-                <span class="arr" id="arr-gd">▸</span>
-            </div>
-            <div class="submenu" id="sub-gd">
-                <a href="#" class="si">Đợt giảm giá</a>
-                <a href="#" class="si">Voucher</a>
-            </div>
-            <a href="#" class="ni"><span class="ico">👤</span> Tài khoản <span class="arr">▸</span></a>
-        </nav>
-    </aside>
+    <aside class="sidebar"></aside>
 
     <div class="main">
-        <header class="topbar">
-            <span class="topbar-label">Quản trị hệ thống</span>
-            <span class="topbar-bell"><i class="fas fa-bell"></i><span class="topbar-badge"></span></span>
-            <div class="topbar-avatar">T</div>
-        </header>
+        <header class="topbar"></header>
 
         <div class="content">
             <div class="breadcrumb">Quản lý Thuộc tính / <span>Màu sắc</span></div>
@@ -204,21 +161,12 @@
         </div>
         <div class="modal-body">
             <input type="hidden" id="editId">
-            <div class="form-group">
-                <label>Mã màu <span style="color:#dc2626">*</span></label>
-                <input type="text" id="inMa" placeholder="VD: MS001">
-            </div>
+            <input type="hidden" id="inMa">
             <div class="form-group">
                 <label>Tên màu <span style="color:#dc2626">*</span></label>
                 <input type="text" id="inTen" placeholder="VD: Đỏ, Xanh dương...">
             </div>
-            <div class="form-group">
-                <label>Trạng thái</label>
-                <div style="display:flex;align-items:center;gap:10px;padding-top:4px;">
-                    <input type="checkbox" id="inStatus" checked>
-                    <label for="inStatus" style="font-weight:400;font-size:13px;">Hoạt động</label>
-                </div>
-            </div>
+            <input type="checkbox" id="inStatus" checked hidden>
         </div>
         <div class="modal-foot">
             <button class="btn" onclick="closeModal('mdForm')">Hủy</button>
@@ -270,6 +218,7 @@
     function debounce() { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => applyFilters(), 400); }
     function esc(s) { if (!s) return ''; return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
     function formatDate(d) { if (!d) return ''; const dt = new Date(d); return dt.toLocaleDateString('vi-VN') + ' ' + dt.toLocaleTimeString('vi-VN'); }
+    function generateAttributeCode(prefix) { return prefix + Date.now().toString().slice(-8) + Math.floor(Math.random() * 90 + 10); }
 
     async function loadData() {
         const wrap = document.getElementById('tblWrap');
@@ -341,7 +290,7 @@
     function openCreate() {
         document.getElementById('mdTitle').textContent = 'Thêm màu sắc';
         document.getElementById('editId').value = '';
-        document.getElementById('inMa').value = '';
+        document.getElementById('inMa').value = generateAttributeCode('MS');
         document.getElementById('inTen').value = '';
         document.getElementById('inStatus').checked = true;
         document.getElementById('mdForm').classList.add('show');
@@ -360,10 +309,9 @@
 
     async function save() {
         const id = document.getElementById('editId').value;
-        const ma = document.getElementById('inMa').value.trim();
+        const ma = document.getElementById('inMa').value.trim() || generateAttributeCode('MS');
         const ten = document.getElementById('inTen').value.trim();
         const trangThai = document.getElementById('inStatus').checked;
-        if (!ma) { toast('Vui lòng nhập mã màu!', 'error'); return; }
         if (!ten) { toast('Vui lòng nhập tên màu!', 'error'); return; }
         const payload = { maMauSac: ma, tenMauSac: ten, trangThai: trangThai };
         const url = id ? `${API}/sua/${id}` : `${API}/them`;
@@ -465,3 +413,5 @@
 </script>
 </body>
 </html>
+
+

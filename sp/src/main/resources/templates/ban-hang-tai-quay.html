@@ -1,439 +1,3087 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bán hàng tại quầy - 4MenStore</title>
-    <script src="/js/app-shell.js" defer></script>
+
+    <!-- Google Font: Inter hỗ trợ tiếng Việt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,700;14..32,900&display=swap" rel="stylesheet" />
+
+    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
     <style>
-        *{box-sizing:border-box;margin:0;padding:0}
-        :root{--gold:#b78a55;--gold-dark:#8f6536;--bg:#f5f5f5;--white:#fff;--line:#eee;--text:#252525;--muted:#777;--danger:#e65b43;--green:#16a05d;--shadow:0 8px 28px rgba(31,20,10,.10);--radius:8px}
-        body{font-family:"Inter","Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-        .main{min-height:100vh}
-        .topbar{height:52px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:0 24px;position:sticky;top:0;z-index:20}
-        .tb-label{font-size:13px;color:#6b4b2c;font-weight:700}.tb-bell{position:relative;color:#d44}.tb-bell:after{content:"";position:absolute;right:-2px;top:-2px;width:7px;height:7px;background:#ef4444;border-radius:50%}.tb-avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#6b421f;color:#fff;font-weight:800}
-        .content{padding:22px 26px}
-        .page-head{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px}
-        .page-title{font-size:16px;font-weight:800;text-transform:uppercase}.btn{border:none;border-radius:6px;padding:9px 13px;font-size:13px;font-weight:800;cursor:pointer;transition:.15s;background:#fff;color:var(--text);border:1px solid var(--line)}.btn:hover{border-color:var(--gold);color:var(--gold-dark)}.btn.primary{background:var(--gold);border-color:var(--gold);color:#fff}.btn.primary:hover{background:var(--gold-dark);color:#fff}.btn.danger{background:var(--danger);border-color:var(--danger);color:#fff}.btn.small{padding:6px 9px;font-size:12px}
-        .tabs{display:flex;gap:8px;margin:0 0 12px 10px;flex-wrap:wrap}.tab{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-bottom:none;background:#fff;padding:10px 14px;border-radius:8px 8px 0 0;font-size:12.5px;cursor:pointer}.tab.active{color:var(--gold-dark);font-weight:800}.tab .close{color:#aaa;font-weight:900}
-        .sale-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 2px 12px rgba(0,0,0,.03)}.panel-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}.panel-title{font-size:13px;font-weight:900;text-transform:uppercase}.panel-body{padding:16px}
-        .empty{min-height:260px;display:grid;place-items:center;text-align:center;color:#777}.empty .box{font-size:42px;margin-bottom:10px}.empty p{font-size:13.5px;margin-bottom:14px}
-        table{width:100%;border-collapse:collapse;font-size:13px}th{font-size:11px;text-transform:uppercase;color:#777;text-align:left;padding:10px;border-bottom:1px solid var(--line)}td{padding:12px 10px;border-bottom:1px solid #f2f2f2;vertical-align:middle}.product-cell{display:flex;gap:10px;align-items:center}.thumb{width:48px;height:58px;border-radius:6px;background:#f2eee9;display:grid;place-items:center;overflow:hidden;flex:none}.thumb img{width:100%;height:100%;object-fit:cover}.p-name{font-weight:800;margin-bottom:3px}.p-meta{font-size:11.5px;color:#777}.money{font-weight:900}.red{color:#d6422d}.qty{display:inline-flex;align-items:center;gap:7px}.qty button{width:24px;height:24px;border:1px solid var(--line);background:#fff;border-radius:50%;cursor:pointer}.qty span{min-width:22px;text-align:center;font-weight:800}
-        .side-card{padding:14px 16px;border-bottom:1px solid var(--line)}.side-card:last-child{border-bottom:none}.side-title{font-size:12px;font-weight:900;text-transform:uppercase;text-align:center;margin-bottom:12px}.form-row{margin-bottom:10px}.input{width:100%;border:1px solid var(--line);border-radius:6px;padding:10px 11px;font-size:13px;outline:none;background:#fff}.input:focus{border-color:var(--gold)}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.switch-row{display:flex;align-items:center;justify-content:space-between;color:#666;font-size:12.5px}.summary-row{display:flex;justify-content:space-between;gap:10px;margin:9px 0;font-size:13px}.summary-row.total{border-top:1px solid var(--line);padding-top:13px;margin-top:13px;font-size:16px;font-weight:900}.summary-row.total span:last-child{color:#d6422d}.checkout{width:100%;margin-top:12px;padding:13px;border:none;border-radius:6px;background:linear-gradient(90deg,#b78a55,#6e3e19);color:#fff;font-weight:900;cursor:pointer}
-        .modal{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:300;display:none;align-items:center;justify-content:center;padding:24px}.modal.open{display:flex}.dialog{background:#fff;border-radius:10px;box-shadow:var(--shadow);width:min(980px,calc(100vw - 36px));max-height:86vh;display:flex;flex-direction:column;overflow:hidden}.dialog.small{width:min(760px,calc(100vw - 36px))}.dialog-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line)}.dialog-title{font-size:14px;font-weight:900;text-transform:uppercase}.dialog-body{padding:16px;overflow:auto}.x{border:none;background:#c8a474;color:#fff;border-radius:6px;width:28px;height:28px;cursor:pointer;font-weight:900}.search-row{display:flex;gap:10px;margin-bottom:14px}.search-row .input{flex:1}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}.product-card{border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;gap:10px;background:#fff}.product-card .thumb{width:54px;height:66px}.variant-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.variant-chip{border:1px solid var(--line);border-radius:999px;padding:5px 8px;background:#fff;font-size:11.5px;cursor:pointer}.variant-chip:hover{border-color:var(--gold);color:var(--gold-dark)}.customer-table td,.customer-table th{padding:11px 9px}.toast{position:fixed;right:24px;top:70px;background:#dcfce7;color:#166534;border-left:5px solid #22c55e;padding:12px 18px;border-radius:4px;box-shadow:var(--shadow);font-size:13px;font-weight:700;z-index:500;display:none}.toast.show{display:block}.toast.error{background:#fee2e2;color:#991b1b;border-left-color:#ef4444}
-        @media(max-width:980px){.sale-layout{grid-template-columns:1fr}.main{margin-left:0}.content{padding:14px}.panel-body{overflow:auto}}
+        /* ===== RESET & ROOT ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --navy: #102a56;
+            --navy-hover:#173d78;
+            --navy-light: #17345b;
+            --blue: #1d58b8;
+            --sky: #e8f4ff;
+            --bg: #eef2f6;
+            --white: #fff;
+            --line: #e5ebf2;
+            --text: #1f2a3d;
+            --muted: #718096;
+            --red: #d92d20;
+            --green: #10a55a;
+            --shadow: 0 14px 34px rgba(15, 35, 65, .12);
+            --r: 8px;
+            --font: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            font-size: 14px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .main {
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 52px;
+            background: #fff;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 16px;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .ico {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: var(--navy);
+            background: #f5f7fb;
+            font-weight: 800;
+        }
+
+        .content {
+            padding: 24px 28px;
+        }
+
+        .hero {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pos-mark {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            color: var(--blue);
+            background: #f8fbff;
+        }
+
+        .title {
+            font-size: 17px;
+            font-weight: 900;
+        }
+
+        .sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 8px 12px;
+            background: #fff;
+            font-size: 12px;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #16c76f;
+            margin-right: 6px;
+        }
+
+        .btn {
+            height: 36px;
+            padding: 0 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            border: 1px solid var(--navy);
+            border-radius: 6px;
+            background: var(--navy);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .16s;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: var(--navy-hover);
+            border-color: var(--navy-hover);
+            color: #fff;
+        }
+
+        .btn.primary {
+            background: var(--navy);
+            border-color: var(--navy);
+            color: #fff;
+        }
+
+        .btn.primary:hover {
+            background: var(--navy-hover);
+            border-color: var(--navy-hover);
+        }
+
+        .btn.danger {
+            background: #fff;
+            border-color: #ffd2ce;
+            color: var(--red);
+        }
+
+        .btn.small {
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+        .btn.icon {
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+            line-height: 1;
+            background: transparent;
+            border: 0;
+            color: var(--muted);
+        }
+
+        .btn.icon:hover {
+            color: var(--text);
+            background: #f1f4f8;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 8px 0 14px;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 9px 12px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--navy);
+            cursor: pointer;
+            transition: .15s;
+        }
+
+        .tab.active {
+            background: var(--navy);
+            border-color: var(--navy);
+            color: #fff;
+        }
+
+        .tab .x {
+            opacity: .8;
+            cursor: pointer;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(15, 35, 65, .06);
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .panel-body {
+            padding: 18px 22px;
+        }
+
+        .sale-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 520px;
+            gap: 14px;
+        }
+
+        .customer-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .empty {
+            min-height: 122px;
+            border: 1px dashed #cfd8e3;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .empty b {
+            display: block;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .empty.big {
+            min-height: 280px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #667085;
+            text-align: left;
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--line);
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+
+        td {
+            padding: 13px 10px;
+            border-bottom: 1px solid #f1f4f8;
+            vertical-align: middle;
+        }
+
+        .p-name {
+            font-weight: 900;
+        }
+
+        .p-meta {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .money {
+            font-weight: 900;
+        }
+
+        .red {
+            color: var(--red);
+        }
+        .green {
+            color: var(--green);
+        }
+
+        .qty {
+            display: inline-grid;
+            grid-template-columns: 28px 52px 28px;
+            align-items: center;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .qty button {
+            height: 28px;
+            border: 0;
+            background: #f7faff;
+            color: var(--navy);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+        }
+
+        .qty input {
+            width: 100%;
+            height: 28px;
+            border: 0;
+            border-left: 1px solid #eef2f7;
+            border-right: 1px solid #eef2f7;
+            outline: 0;
+            text-align: center;
+            font: inherit;
+            font-weight: 900;
+            color: var(--navy);
+            background: #fff;
+        }
+
+        .qty input:focus {
+            background: #f7faff;
+        }
+
+        .qty input::-webkit-inner-spin-button,
+        .qty input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .remove {
+            border: 0;
+            background: #fff0f0;
+            color: var(--red);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+        }
+
+        .switch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--muted);
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle {
+            width: 40px;
+            height: 22px;
+            border-radius: 999px;
+            background: #d8dee8;
+            position: relative;
+            flex-shrink: 0;
+            transition: background .2s;
+        }
+
+        .toggle:after {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            left: 2px;
+            top: 2px;
+            transition: .15s;
+        }
+
+        .switch.active .toggle {
+            background: var(--navy);
+        }
+
+        .switch.active .toggle:after {
+            left: 20px;
+        }
+
+        .input {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            padding: 10px 11px;
+            font-size: 13px;
+            outline: none;
+            background: #fff;
+            font-family: inherit;
+            color: var(--text);
+        }
+
+        .input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(29, 88, 184, .08);
+        }
+
+        select.input {
+            appearance: auto;
+        }
+
+        .select-search {
+            width: 100%;
+            height: 38px;
+            margin-bottom: 7px;
+            padding: 9px 11px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: #fff;
+            color: var(--text);
+            outline: none;
+            font: inherit;
+        }
+
+        .select-search:focus {
+            border-color: #c8a474;
+            box-shadow: 0 0 0 3px rgba(200,164,116,.12);
+        }
+
+        .row {
+            margin-top: 12px;
+        }
+
+        .row.two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .row.three {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .label {
+            font-size: 12px;
+            font-weight: 800;
+            color: #526071;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .customer-card {
+            margin-top: 14px;
+            border: 1px solid #e4eaf2;
+            border-radius: 10px;
+            background: #f8fbff;
+            padding: 14px;
+        }
+
+        .customer-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .customer-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--navy);
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .customer-pill:before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, .12);
+        }
+
+        .customer-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn.ghost {
+            background: #fff;
+            color: var(--navy);
+            border-color: #d7e0ec;
+        }
+
+        .btn.ghost:hover {
+            background: #eef5ff;
+            border-color: #b9cbe2;
+            color: var(--navy);
+        }
+
+        .btn.ghost.active {
+            background: #e8f1ff;
+            border-color: #9ab8df;
+            color: var(--navy);
+            cursor: default;
+        }
+
+        .btn.ghost:disabled {
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        .customer-summary {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .customer-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--navy);
+            color: #fff;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .customer-name {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 3px;
+        }
+
+        .customer-note {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .customer-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e4eaf2;
+        }
+
+        .customer-info-item {
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .customer-info-item .label {
+            margin-bottom: 4px;
+        }
+
+        .customer-info-value {
+            font-weight: 800;
+            color: var(--text);
+            overflow-wrap: anywhere;
+        }
+
+        .summary {
+            border-top: 1px solid var(--line);
+            margin-top: 12px;
+            padding-top: 12px;
+        }
+
+        .sum-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 11px 0;
+            font-size: 13px;
+        }
+
+        .sum-row.total {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .sum-row.total span:last-child {
+            color: var(--red);
+        }
+
+        .voucher-box {
+            background: #effaf4;
+            border: 1px solid #c9efd9;
+            color: #19744a;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .hint-box {
+            background: #fff7e6;
+            border: 1px solid #ffd591;
+            color: #8a5300;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .voucher-actions {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: 8px;
+        }
+
+        .voucher-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .voucher-card {
+            display: grid;
+            grid-template-columns: 92px minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: stretch;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 10px;
+            background: #fff;
+        }
+
+        .voucher-card.disabled {
+            background: #f8fafc;
+            opacity: .78;
+        }
+
+        .voucher-ticket {
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            color: #fff;
+            background: linear-gradient(135deg, #d92d20, #f97316);
+            font-weight: 900;
+            text-align: center;
+            padding: 8px;
+            min-height: 78px;
+        }
+
+        .voucher-ticket small {
+            display: block;
+            font-size: 10px;
+            opacity: .9;
+            margin-top: 3px;
+        }
+
+        .voucher-info b {
+            display: block;
+            color: var(--text);
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .voucher-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .voucher-tag {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 3px 8px;
+            background: #eef4ff;
+            color: var(--navy);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .voucher-tag.warn {
+            background: #fff7e6;
+            color: #9a5b00;
+        }
+
+        .voucher-tag.ok {
+            background: #eafaf1;
+            color: #19744a;
+        }
+
+        .voucher-card .btn {
+            align-self: center;
+        }
+
+        .checkout {
+            width: 100%;
+            border: 0;
+            border-radius: 8px;
+            background: var(--navy);
+            color: #fff;
+            font-weight: 900;
+            padding: 13px;
+            margin-top: 14px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 15px;
+            transition: opacity .15s;
+        }
+
+        .checkout:hover {
+            opacity: .9;
+        }
+
+        .pay-tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .pay-tab {
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 7px;
+            padding: 10px;
+            font-weight: 900;
+            color: var(--navy);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 13px;
+            transition: .15s;
+        }
+
+        .pay-tab.active {
+            background: var(--navy);
+            color: #fff;
+            border-color: var(--navy);
+        }
+
+        .money-input {
+            text-align: right;
+            font-weight: 800;
+        }
+
+        .transfer-actions {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .transfer-actions .input {
+            flex: 1;
+        }
+
+        .qr-pay {
+            text-align: center;
+        }
+
+        .qr-pay img {
+            width: 240px;
+            max-width: 100%;
+            margin: 12px auto;
+            display: block;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .qr-pay .amount {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--red);
+            margin-top: 8px;
+        }
+
+        .bank-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid #eef2f6;
+            padding: 9px 0;
+            font-size: 13px;
+        }
+
+        .bank-line b {
+            color: var(--navy);
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(19, 27, 43, .58);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .dialog {
+            width: min(980px, calc(100vw - 36px));
+            max-height: 88vh;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .dialog.small {
+            width: min(760px, calc(100vw - 36px));
+        }
+
+        .dialog.qr {
+            width: min(520px, calc(100vw - 36px));
+        }
+
+        .dialog.confirm {
+            width: min(460px, calc(100vw - 36px));
+        }
+
+        .dialog-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--line);
+            flex-shrink: 0;
+        }
+
+        .dialog-title {
+            font-weight: 900;
+            font-size: 16px;
+        }
+
+        .dialog-body {
+            padding: 16px;
+            overflow: auto;
+            flex: 1;
+        }
+
+        .confirm-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #e8f4ff;
+            color: var(--blue);
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .confirm-message {
+            font-size: 14px;
+            line-height: 1.55;
+            color: #42526a;
+        }
+
+        .confirm-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 14px 16px;
+            border-top: 1px solid var(--line);
+            background: #f8fafc;
+            flex-shrink: 0;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .product-scroll {
+            max-height: 520px;
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+        }
+
+        .variant-chip {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: #fff;
+            padding: 7px 10px;
+            margin: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .15s;
+        }
+
+        .variant-chip:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .promo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+            padding: 2px 7px;
+            border-radius: 999px;
+            background: #fff1f2;
+            color: #d6293e;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .price-old {
+            color: #8a95a6;
+            font-size: 11px;
+            text-decoration: line-through;
+            white-space: nowrap;
+        }
+
+        .price-sale {
+            color: #d6293e;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .qr-reader {
+            width: 100%;
+            min-height: 310px;
+            border: 1px dashed #cfd8e3;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        .scan-result {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f7faff;
+            color: var(--navy);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .toast {
+            position: fixed;
+            right: 24px;
+            top: 70px;
+            background: #dcfce7;
+            color: #166534;
+            border-left: 5px solid #22c55e;
+            padding: 12px 18px;
+            border-radius: 5px;
+            box-shadow: var(--shadow);
+            font-size: 13px;
+            font-weight: 800;
+            z-index: 200;
+            display: none;
+            font-family: var(--font);
+            max-width: 400px;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left-color: #ef4444;
+        }
+
+        @media (max-width: 1100px) {
+            .sale-grid,
+            .customer-grid {
+                grid-template-columns: 1fr;
+            }
+            .filter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .content {
+                padding: 14px;
+            }
+            .panel-body {
+                overflow: auto;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .row.two,
+            .row.three,
+            .customer-info-grid {
+                grid-template-columns: 1fr;
+            }
+            .customer-card-head,
+            .customer-summary {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+            .customer-actions {
+                width: 100%;
+                justify-content: stretch;
+            }
+            .customer-actions .btn {
+                flex: 1;
+            }
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .hero-actions {
+                justify-content: stretch;
+            }
+            .hero-actions .btn {
+                height: 36px;
+                padding: 0 14px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 7px;
+                border: 1px solid var(--navy);
+                border-radius: 6px;
+                background: var(--navy);
+                color: #fff;
+                font-weight: 700;
+                cursor: pointer;
+                transition: .16s;
+                white-space: nowrap;
+            }
+            .topbar {
+                padding: 0 12px;
+            }
+            .dialog {
+                width: calc(100vw - 16px);
+            }
+            .qr-pay img {
+                width: 100%;
+                max-width: 240px;
+            }
+            .pay-tabs {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
+
 <aside class="sidebar"></aside>
+
 <main class="main">
-    <header class="topbar">
-        <span class="tb-label">Quản trị hệ thống</span>
-        <span class="tb-bell">●</span>
-        <div class="tb-avatar">T</div>
-    </header>
     <section class="content">
-        <div class="page-head">
-            <div class="page-title">Bán hàng tại quầy</div>
-            <button class="btn primary" onclick="createOrder()">+ Tạo đơn hàng</button>
-        </div>
-        <div class="tabs" id="orderTabs"></div>
-        <div id="orderArea">
-            <div class="panel empty">
+        <!-- HERO -->
+        <div class="hero">
+            <div class="hero-left">
+                <div class="pos-mark">POS</div>
                 <div>
-                    <div class="box">□</div>
-                    <p>Chưa có đơn hàng tại quầy</p>
-                    <button class="btn primary" onclick="createOrder()">Tạo đơn hàng ngay</button>
+                    <div class="title">Bán hàng tại quầy</div>
+                    <div class="sub">Quản lý đơn nhanh, tối đa 5 hóa đơn chờ cùng lúc</div>
                 </div>
             </div>
+            <div class="hero-actions">
+                <div class="status"><span class="dot"></span>Đang mở: <b id="orderCount">0/5</b></div>
+                <button class="btn primary" onclick="createOrder()">+ Tạo đơn hàng</button>
+            </div>
         </div>
+
+        <!-- TABS -->
+        <div class="tabs" id="orderTabs"></div>
+
+        <!-- ORDER AREA -->
+        <div id="orderArea"></div>
     </section>
 </main>
 
+<!-- ===== MODALS ===== -->
+<!-- Product Modal -->
 <div class="modal" id="productModal" onclick="closeModalOnBackdrop(event,'productModal')">
     <div class="dialog">
         <div class="dialog-head">
             <div class="dialog-title">Chọn sản phẩm</div>
-            <button class="x" onclick="closeProductModal()">×</button>
+            <button class="btn icon" onclick="closeProductModal()">×</button>
         </div>
         <div class="dialog-body">
-            <div class="search-row">
-                <input class="input" id="productKeyword" placeholder="Tìm theo mã, tên sản phẩm...">
-                <button class="btn primary" onclick="loadProductChoices()">Tìm kiếm</button>
+            <div class="filter-grid">
+                <div>
+                    <div class="label">Tìm mã / tên</div>
+                    <input class="input" id="productKeyword" placeholder="Nhập mã SP, SKU hoặc tên">
+                </div>
+                <div>
+                    <div class="label">Cổ áo</div>
+                    <select class="input"><option>Tất cả</option></select>
+                </div>
+                <div>
+                    <div class="label">Tay áo</div>
+                    <select class="input"><option>Tất cả</option></select>
+                </div>
+                <div>
+                    <div class="label">Xuất xứ</div>
+                    <select class="input"><option>Tất cả</option></select>
+                </div>
             </div>
-            <div class="grid" id="productChoices"></div>
+            <div class="product-scroll">
+                <table>
+                    <thead>
+                    <tr><th>Mã sản phẩm</th><th>Tên</th><th>Tồn kho</th><th>Giá</th><th>Biến thể</th></tr>
+                    </thead>
+                    <tbody id="productChoices"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- Customer Modal -->
 <div class="modal" id="customerModal" onclick="closeModalOnBackdrop(event,'customerModal')">
     <div class="dialog small">
         <div class="dialog-head">
             <div class="dialog-title">Chọn khách hàng</div>
-            <button class="x" onclick="closeCustomerModal()">×</button>
+            <button class="btn icon" onclick="closeCustomerModal()">×</button>
         </div>
         <div class="dialog-body">
-            <div class="search-row">
-                <input class="input" id="customerKeyword" placeholder="Tìm theo tên, email, số điện thoại...">
+            <div class="row two" style="margin-top:0">
+                <input class="input" id="customerKeyword" placeholder="Tìm tên, email, số điện thoại">
                 <button class="btn primary" onclick="loadCustomers()">Tìm kiếm</button>
             </div>
-            <table class="customer-table">
-                <thead><tr><th>STT</th><th>Khách hàng</th><th>Liên hệ</th><th>Địa chỉ</th><th></th></tr></thead>
+            <table>
+                <thead><tr><th>STT</th><th>Khách hàng</th><th>Liên hệ</th><th></th></tr></thead>
                 <tbody id="customerRows"></tbody>
             </table>
         </div>
     </div>
 </div>
 
+<!-- Scan QR Modal -->
+<div class="modal" id="scanModal" onclick="closeModalOnBackdrop(event,'scanModal')">
+    <div class="dialog qr">
+        <div class="dialog-head">
+            <div class="dialog-title">Quét mã QR sản phẩm</div>
+            <button class="btn icon" onclick="closeScanModal()">×</button>
+        </div>
+        <div class="dialog-body">
+            <div id="reader" class="qr-reader"></div>
+            <div id="scanResult" class="scan-result">Đưa mã QR biến thể vào camera để thêm sản phẩm</div>
+            <div class="row two">
+                <input class="input" id="manualQrCode" placeholder="Hoặc nhập mã biến thể">
+                <button class="btn primary" onclick="submitManualQr()">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Voucher Modal -->
+<div class="modal" id="voucherModal" onclick="closeModalOnBackdrop(event,'voucherModal')">
+    <div class="dialog small">
+        <div class="dialog-head">
+            <div>
+                <div class="dialog-title">Phiếu giảm giá có thể áp dụng</div>
+                <div class="p-meta" id="voucherModalSubtitle">Chọn phiếu phù hợp cho hóa đơn hiện tại</div>
+            </div>
+            <button class="btn icon" onclick="closeVoucherModal()">×</button>
+        </div>
+        <div class="dialog-body">
+            <div id="voucherList" class="voucher-list">
+                <div class="empty"><div><b>Đang tải phiếu giảm giá...</b></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal" id="transferModal" onclick="closeModalOnBackdrop(event,'transferModal')">
+    <div class="dialog qr">
+        <div class="dialog-head">
+            <div class="dialog-title">Thanh toán</div>
+            <button class="btn icon" onclick="closeTransferModal()">×</button>
+        </div>
+        <div class="dialog-body">
+            <div class="sum-row total">
+                <span>Tổng số tiền</span>
+                <span id="paymentModalTotal" data-total="0">0 đ</span>
+            </div>
+            <div class="pay-tabs">
+                <button id="payCashTab" class="pay-tab" type="button" onclick="setPayMode('CASH')">Tiền mặt</button>
+                <button id="payTransferTab" class="pay-tab" type="button" onclick="setPayMode('TRANSFER')">Chuyển khoản</button>
+                <button id="payMixedTab" class="pay-tab" type="button" onclick="setPayMode('MIXED')">Kết hợp</button>
+            </div>
+            <div class="row two">
+                <div>
+                    <div class="label">Tiền mặt</div>
+                    <input class="input money-input" id="cashInput" inputmode="numeric" value="0" oninput="formatPaymentInput(this);updatePaymentFields()">
+                </div>
+                <div>
+                    <div class="label">Chuyển khoản</div>
+                    <input class="input money-input" id="transferInput" inputmode="numeric" value="0" oninput="formatPaymentInput(this);updatePaymentFields()">
+                </div>
+            </div>
+            <div class="sum-row"><span>Tiền thiếu</span><b id="missingDisplay" class="red">0 đ</b></div>
+            <div class="sum-row"><span>Tiền thừa</span><b id="changeDisplay" class="green">0 đ</b></div>
+
+            <div class="qr-pay" id="transferQrPanel">
+                <div class="bank-line"><span>Ngân hàng</span><b id="transferBankName">Vietcom Bank</b></div>
+                <div class="bank-line"><span>Số tài khoản</span><b id="transferBankAccount">9921508504</b></div>
+                <div class="bank-line"><span>Nội dung</span><b id="transferContent">POS</b></div>
+                <img id="transferQrImage" src="" alt="QR chuyển khoản">
+                <div class="p-meta">Quét mã để thanh toán đúng số tiền</div>
+                <div class="amount" id="transferQrAmount">0 đ</div>
+            </div>
+        </div>
+        <div class="confirm-actions">
+            <button class="btn" type="button" onclick="closeTransferModal()">Đóng</button>
+            <button class="btn primary" type="button" onclick="checkout()">Thanh toán</button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal" id="confirmModal">
+    <div class="dialog confirm">
+        <div class="dialog-head">
+            <div class="dialog-title" id="confirmTitle">Xác nhận</div>
+            <button class="btn icon" onclick="resolveConfirm(false)">×</button>
+        </div>
+        <div class="dialog-body">
+            <div class="confirm-icon">?</div>
+            <div class="confirm-message" id="confirmMessage"></div>
+        </div>
+        <div class="confirm-actions">
+            <button class="btn" id="confirmCancelBtn" onclick="resolveConfirm(false)">Hủy</button>
+            <button class="btn primary" id="confirmOkBtn" onclick="resolveConfirm(true)">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<!-- ============================================================ -->
+<!-- ===== JAVASCRIPT ===== -->
 <script>
+    // ================================================================
+    //  STATE
+    // ================================================================
     let orders = [];
     let activeOrderId = null;
-    let paidAmount = 0; // lưu tạm số tiền khách thanh toán
+    let payMode = 'MIXED';
     let productSearchTimer;
     let customerSearchTimer;
+    let shippingFeeTimer = null;
+    let shippingFeeRequest = 0;
+    let qrScanner = null;
+    let qrBusy = false;
+    let confirmResolver = null;
 
+    const customerAddressesByCustomerId = new Map();
+    const selectedCustomerIdByOrderId = new Map();
+    const selectedAddressKeyByOrderId = new Map();
+    const selectedLocationByOrderId = new Map();
+
+    const BANK_CODE = 'VCB';
+    const BANK_ACCOUNT = '9921508504';
+    const BANK_NAME = 'Vietcom Bank';
+    const ADDRESS_API = 'https://provinces.open-api.vn/api/v2';
+    const ACTIVE_POS_ORDER_KEY = '4menstore.pos.activeOrderId';
+    const POS_ORDER_DRAFTS_KEY = '4menstore.pos.orderDrafts';
+
+    // ================================================================
+    //  HELPERS
+    // ================================================================
     const el = id => document.getElementById(id);
-    const fmt = value => new Intl.NumberFormat('vi-VN').format(Number(value || 0)) + ' đ';
-    const esc = value => (value ?? '').toString().replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
+    const moneyValue = v => Number(String(v || '').replace(/[^\d]/g, '')) || 0;
+    const roundMoney = v => Math.max(0, Math.round(Number(v || 0) / 1000) * 1000);
+    const moneyText = v => new Intl.NumberFormat('vi-VN').format(Math.max(0, Math.round(Number(v || 0))));
+    const fmt = v => new Intl.NumberFormat('vi-VN').format(roundMoney(v)) + ' đ';
+    const esc = v => (v ?? '').toString().replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+
+    function saveActiveOrderId(id = activeOrderId) {
+        if (id) localStorage.setItem(ACTIVE_POS_ORDER_KEY, String(id));
+        else localStorage.removeItem(ACTIVE_POS_ORDER_KEY);
+    }
+
+    function restoreActiveOrderId() {
+        const storedId = Number(localStorage.getItem(ACTIVE_POS_ORDER_KEY));
+        return Number.isFinite(storedId) && orders.some(order => order.id === storedId)
+            ? storedId
+            : null;
+    }
+
+    function setActiveOrder(id) {
+        activeOrderId = id || null;
+        saveActiveOrderId(activeOrderId);
+    }
+
+    function readOrderDrafts() {
+        try {
+            return JSON.parse(localStorage.getItem(POS_ORDER_DRAFTS_KEY) || '{}') || {};
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function writeOrderDrafts(drafts) {
+        localStorage.setItem(POS_ORDER_DRAFTS_KEY, JSON.stringify(drafts || {}));
+    }
+
+    function clearOrderDraft(id) {
+        const drafts = readOrderDrafts();
+        delete drafts[String(id)];
+        writeOrderDrafts(drafts);
+    }
+
+    function saveOrderDraft(order, draft) {
+        if (!order?.id || !draft) return;
+        const drafts = readOrderDrafts();
+        drafts[String(order.id)] = {
+            ...draft,
+            updatedAt: Date.now()
+        };
+        writeOrderDrafts(drafts);
+    }
+
+    function buildOrderDraft(order) {
+        if (!order?.id) return null;
+        const location = getLocationState(order);
+        const hasRenderedForm = activeOrderId === order.id && (
+            el('customerName') || el('customerPhone') || el('customerAddress') || el('shippingNote') || el('shippingFeeInput')
+        );
+        return {
+            loaiDon: order.loaiDon || 'Tại quầy',
+            selectedCustomerId: selectedCustomerIdByOrderId.has(order.id) ? selectedCustomerIdByOrderId.get(order.id) : getSelectedCustomerId(order),
+            selectedAddressKey: selectedAddressKeyByOrderId.get(order.id) || '',
+            tenKhachHang: hasRenderedForm ? (el('customerName')?.value ?? order.tenKhachHang ?? '') : (order.tenKhachHang ?? ''),
+            soDienThoai: hasRenderedForm ? (el('customerPhone')?.value ?? order.soDienThoai ?? '') : (order.soDienThoai ?? ''),
+            diaChiKhachHang: hasRenderedForm ? (el('customerAddress')?.value ?? order.diaChiKhachHang ?? '') : (order.diaChiKhachHang ?? ''),
+            ghiChu: hasRenderedForm ? (el('shippingNote')?.value ?? order.ghiChu ?? '') : (order.ghiChu ?? ''),
+            phiVanChuyen: hasRenderedForm && el('shippingFeeInput') ? moneyValue(el('shippingFeeInput').value) : Number(order.phiVanChuyen || 0),
+            location
+        };
+    }
+
+    function rememberActiveOrderDraft() {
+        const order = currentOrder();
+        const draft = buildOrderDraft(order);
+        if (order && draft) saveOrderDraft(order, draft);
+    }
+
+    function applyOrderDraft(order) {
+        if (!order?.id) return order;
+        const draft = readOrderDrafts()[String(order.id)];
+        if (!draft) return order;
+        const next = { ...order };
+        if (draft.selectedCustomerId !== undefined) selectedCustomerIdByOrderId.set(order.id, draft.selectedCustomerId || null);
+        if (draft.selectedAddressKey) selectedAddressKeyByOrderId.set(order.id, draft.selectedAddressKey);
+        if (draft.location) selectedLocationByOrderId.set(order.id, draft.location);
+        if (draft.loaiDon === 'Giao hàng') {
+            const shippingFee = Math.max(0, Number(draft.phiVanChuyen || 0));
+            const baseTotal = Math.max(0, Number(order.tongTienGoc || 0) - Number(order.soTienGiam || 0));
+            next.loaiDon = 'Giao hàng';
+            next.tenKhachHang = draft.tenKhachHang ?? order.tenKhachHang ?? '';
+            next.soDienThoai = draft.soDienThoai ?? order.soDienThoai ?? '';
+            next.diaChiKhachHang = draft.diaChiKhachHang ?? order.diaChiKhachHang ?? '';
+            next.ghiChu = draft.ghiChu ?? order.ghiChu ?? '';
+            next.phiVanChuyen = shippingFee;
+            next.tongTienThanhToan = baseTotal + shippingFee;
+            Object.assign(next, draft.location || {});
+        } else if (draft.loaiDon) {
+            next.loaiDon = draft.loaiDon;
+        }
+        return next;
+    }
+
+    function priceCell(item) {
+        const current = Number(item.donGia || 0);
+        const original = Number(item.giaGoc || current);
+        if (original > current) {
+            return `<div><span class="price-old">${fmt(original)}</span><br><span class="price-sale">${fmt(current)}</span></div>`;
+        }
+        return fmt(current);
+    }
+
+    function promoBadge(name) {
+        return name ? `<span class="promo-badge">Đang giảm: ${esc(name)}</span>` : '<span class="promo-badge">Đang giảm</span>';
+    }
+
+    function productPriceHtml(product) {
+        const current = Number(product.giaBanMin || 0);
+        const original = Number(product.giaGocMin || current);
+        if (product.dangGiamGia && original > current) {
+            return `<div>
+                <div><span class="price-old">${fmt(original)}</span></div>
+                <div class="price-sale">${fmt(current)}</div>
+                ${promoBadge(product.tenDotGiamGia)}
+            </div>`;
+        }
+        return `<span>${fmt(current)}</span>`;
+    }
+
+    function productMetaPrice(product) {
+        return product.dangGiamGia
+            ? `Giá giảm từ ${fmt(product.giaBanMin)}`
+            : `Giá từ ${fmt(product.giaBanMin)}`;
+    }
+
+    function variantChipHtml(variant) {
+        if (Number(variant.soLuongTon || 0) <= 0) return '';
+        const label = `${esc(variant.mauSac?.ten||'-')} / ${esc(variant.kichCo?.ten||'-')}`;
+        if (variant.dangGiamGia) {
+            return `<button class="variant-chip" onclick="addVariant(${variant.idSpct})">
+                <span>${label} · tồn ${variant.soLuongTon}</span><br>
+                <span class="price-old">${fmt(variant.giaGoc)}</span>
+                <span class="price-sale">${fmt(variant.donGia)}</span><br>
+                ${promoBadge(variant.tenDotGiamGia)}
+            </button>`;
+        }
+        return `<button class="variant-chip" onclick="addVariant(${variant.idSpct})">${label} · tồn ${variant.soLuongTon} · ${fmt(variant.donGia)}</button>`;
+    }
 
     function toast(message, type = 'success') {
         const box = el('toast');
         box.textContent = message;
         box.className = 'toast show' + (type === 'error' ? ' error' : '');
-        setTimeout(() => box.classList.remove('show'), 2600);
+        clearTimeout(box._hide);
+        box._hide = setTimeout(() => box.classList.remove('show'), 2600);
     }
 
+    function showConfirm({ title = 'Xác nhận', message = '', okText = 'Xác nhận', cancelText = 'Hủy' } = {}) {
+        el('confirmTitle').textContent = title;
+        el('confirmMessage').textContent = message;
+        el('confirmOkBtn').textContent = okText;
+        el('confirmCancelBtn').textContent = cancelText;
+        el('confirmModal').classList.add('open');
+        return new Promise(resolve => { confirmResolver = resolve; });
+    }
+
+    function resolveConfirm(value) {
+        el('confirmModal').classList.remove('open');
+        if (confirmResolver) { confirmResolver(Boolean(value));
+            confirmResolver = null; }
+    }
+
+    // ================================================================
+    //  API
+    // ================================================================
     async function api(url, options = {}) {
         const res = await fetch(url, {
             ...options,
-            headers: {'Content-Type':'application/json', ...(options.headers || {})}
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                ...(options.headers || {})
+            }
         });
         if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            throw new Error(err.message || 'Có lỗi xảy ra');
+            const contentType = res.headers.get('content-type') || '';
+            const err = contentType.includes('application/json')
+                ? await res.json().catch(() => ({}))
+                : { message: await res.text().catch(() => '') };
+            throw new Error(err.message || `Lỗi API ${res.status}`);
         }
         if (res.status === 204) return null;
+        const contentType = res.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            const text = await res.text();
+            if (/<!doctype html|<html/i.test(text)) {
+                throw new Error('API trả về HTML. Vui lòng đăng nhập lại hoặc kiểm tra endpoint.');
+            }
+            return text ? JSON.parse(text) : null;
+        }
         return res.json();
     }
 
-    function imageHtml(item) {
-        const src = item.imageUrl || item.hinhAnh;
-        if (!src) return '<span>□</span>';
-        const url = src.startsWith('/') || src.startsWith('http') ? src : '/uploads/' + src;
-        return `<img src="${esc(url)}" alt="${esc(item.tenSanPham || item.tenSp || '')}" onerror="this.remove()">`;
-    }
-
+    // ================================================================
+    //  ORDER CRUD
+    // ================================================================
     function currentOrder() {
-        return orders.find(order => order.id === activeOrderId) || null;
+        return orders.find(o => o.id === activeOrderId) || null;
     }
 
-    function upsertOrder(order) {
-        const index = orders.findIndex(item => item.id === order.id);
-        if (index >= 0) orders[index] = order;
-        else orders.push(order);
-        activeOrderId = order.id;
+    function snapshotShippingDraft(order) {
+        if (!order || order.loaiDon !== 'Giao hàng') return null;
+        const location = getLocationState(order);
+        const fee = el('shippingFeeInput')
+            ? moneyValue(el('shippingFeeInput').value)
+            : Number(order.phiVanChuyen || 0);
+        return {
+            tenKhachHang: el('customerName')?.value ?? order.tenKhachHang,
+            soDienThoai: el('customerPhone')?.value ?? order.soDienThoai,
+            diaChiKhachHang: el('customerAddress')?.value ?? order.diaChiKhachHang,
+            ghiChu: el('shippingNote')?.value ?? order.ghiChu,
+            phiVanChuyen: fee,
+            location
+        };
+    }
+
+    function keepLocalShippingDraft(existingOrder, updatedOrder) {
+        const draft = snapshotShippingDraft(existingOrder);
+        if (!draft) return updatedOrder;
+        const shippingFee = Math.max(0, Number(draft.phiVanChuyen || 0));
+        const subtotal = Number(updatedOrder.tongTienGoc || 0);
+        const discount = Number(updatedOrder.soTienGiam || 0);
+        const total = Math.max(0, subtotal - discount + shippingFee);
+        return {
+            ...updatedOrder,
+            loaiDon: 'Giao hàng',
+            tenKhachHang: draft.tenKhachHang,
+            soDienThoai: draft.soDienThoai,
+            diaChiKhachHang: draft.diaChiKhachHang,
+            ghiChu: draft.ghiChu,
+            phiVanChuyen: shippingFee,
+            tongTienThanhToan: total,
+            ...draft.location
+        };
+    }
+
+    function upsertOrder(order, options = {}) {
+        const i = orders.findIndex(o => o.id === order.id);
+        const nextOrder = options.keepLocalShippingDraft && i >= 0
+            ? keepLocalShippingDraft(orders[i], order)
+            : order;
+        if (i >= 0) orders[i] = nextOrder;
+        else orders.push(nextOrder);
+        setActiveOrder(order.id);
+        saveOrderDraft(nextOrder, buildOrderDraft(nextOrder));
         render();
+    }
+
+    // ================================================================
+    //  LOAD ORDERS WITH AUTO-CANCEL AT END OF DAY
+    // ================================================================
+    async function loadPendingOrders() {
+        try {
+            const rawOrders = await api('/api/pos/orders');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Mốc đầu ngày hôm nay
+            const ordersToKeep = [];
+
+            for (const order of rawOrders) {
+                const created = new Date(order.ngayTao || order.createdAt || order.thoiGianTao);
+                if (isNaN(created.getTime())) {
+                    ordersToKeep.push(order);
+                    continue;
+                }
+                // So sánh ngày: nếu ngày tạo < ngày hôm nay => đã hết ngày
+                const createdDate = new Date(created);
+                createdDate.setHours(0, 0, 0, 0);
+                if (createdDate.getTime() < today.getTime()) {
+                    try {
+                        await api(`/api/pos/orders/${order.id}/cancel`, { method: 'POST' });
+                        toast(`Đơn ${order.maHoaDon || order.id} đã tự động hủy do hết ngày`, 'error');
+                    } catch (e) {
+                        console.error('Không thể hủy đơn tự động:', e);
+                        ordersToKeep.push(order);
+                    }
+                } else {
+                    ordersToKeep.push(order);
+                }
+            }
+
+            orders = ordersToKeep.map(applyOrderDraft);
+            setActiveOrder(restoreActiveOrderId() || orders[0]?.id || null);
+            render();
+        } catch (e) {
+            toast(e.message, 'error');
+            render();
+        }
     }
 
     async function createOrder() {
         try {
-            const order = await api('/api/pos/orders', {method:'POST'});
-            upsertOrder(order);
-            toast(`Đã tạo tab cho ${order.maHoaDon}`);
+            upsertOrder(await api('/api/pos/orders', { method: 'POST' }));
+            toast('Đã tạo hóa đơn chờ');
         } catch (e) {
             toast(e.message, 'error');
         }
     }
 
+    // ================================================================
+    //  RENDER (giữ nguyên như cũ)
+    // ================================================================
     function render() {
         renderTabs();
+        el('orderCount').textContent = orders.length + '/5';
+
         const order = currentOrder();
         if (!order) {
-            el('orderArea').innerHTML = `<div class="panel empty"><div><div class="box">□</div><p>Chưa có đơn hàng tại quầy</p><button class="btn primary" onclick="createOrder()">Tạo đơn hàng ngay</button></div></div>`;
-            return;
-        }
-        el('orderArea').innerHTML = `
-            <div class="sale-layout">
-                <section class="panel">
-                    <div class="panel-head">
-                        <div class="panel-title">Sản phẩm</div>
+            el('orderArea').innerHTML = `
+                    <div class="panel empty big">
                         <div>
-                            <button class="btn small" onclick="scanCode()">Quét QR</button>
-                            <button class="btn primary small" onclick="openProductModal()">+ Chọn sản phẩm</button>
+                            <b>Chưa có hóa đơn tại quầy</b>
+                            <span>Tạo hóa đơn mới để bắt đầu bán hàng</span>
+                            <div style="margin-top:14px">
+                                <button class="btn primary" onclick="createOrder()">Tạo đơn hàng ngay</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="panel-body">${renderItems(order)}</div>
-                </section>
-                ${order.items.length ? renderPayment(order) : ''}
-            </div>`;
+                `;
+            return;
+        }
+
+        el('orderArea').innerHTML = `
+                <div class="panel">
+                    <div class="panel-head">
+                        <div class="panel-title">Sản phẩm trong hóa đơn</div>
+                        <div>
+                            <button class="btn small" onclick="scanCode()">▢ Quét QR</button>
+                            <button class="btn primary small" onclick="openProductModal()">+ Thêm sản phẩm</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        ${renderItems(order)}
+                    </div>
+                </div>
+                <div class="customer-grid">
+                    ${renderCustomer(order)}
+                    ${renderPayment(order)}
+                </div>
+            `;
+
+        const customerId = getSelectedCustomerId(order);
+
+        if (order.loaiDon === 'Giao hàng') loadProvinces();
+
+        if (customerId) {
+            loadSavedCustomerAddresses(order);
+        }
+
+        updatePaymentFields();
     }
 
     function renderTabs() {
-        el('orderTabs').innerHTML = orders.map((order, index) => `
-            <div class="tab ${order.id === activeOrderId ? 'active' : ''}" onclick="selectOrder(${order.id})">
-                <span>Đơn ${index + 1} - ${esc(order.maHoaDon)}</span>
-                <span>(${order.items.length} SP)</span>
-                <span class="close" onclick="event.stopPropagation();closeOrder(${order.id})">×</span>
-            </div>
-        `).join('');
+        el('orderTabs').innerHTML = orders.map((o, i) => `
+                <div class="tab ${o.id === activeOrderId ? 'active' : ''}" onclick="selectOrder(${o.id})">
+                    <span>${esc(o.maHoaDon || ('HD ' + (i+1)))}</span>
+                    <span>${o.items?.length || 0} SP</span>
+                    <span class="x" onclick="event.stopPropagation();closeOrder(${o.id})">×</span>
+                </div>
+            `).join('');
     }
 
     function renderItems(order) {
-        if (!order.items.length) {
-            return `<div class="empty"><div><div class="box">□</div><p>Chưa có sản phẩm nào trong đơn hàng</p><button class="btn" onclick="openProductModal()">Thêm sản phẩm ngay</button></div></div>`;
+        if (!order.items?.length) {
+            return `<div class="empty"><div><b>Giỏ hàng đang trống</b><span>Nhấn "Thêm sản phẩm" để bắt đầu</span></div></div>`;
         }
-        return `<table>
-            <thead><tr><th>Sản phẩm</th><th>Đơn giá</th><th>Số lượng</th><th>Thành tiền</th><th></th></tr></thead>
-            <tbody>${order.items.map(item => `
-                <tr>
-                    <td><div class="product-cell"><div class="thumb">${imageHtml(item)}</div><div><div class="p-name">${esc(item.tenSanPham)}</div><div class="p-meta">Mã: ${esc(item.maChiTietSanPham)}<br>Màu: ${esc(item.mauSac || '-')} / Size: ${esc(item.kichCo || '-')}</div></div></div></td>
-                    <td class="money">${fmt(item.donGia)}</td>
-                    <td><div class="qty"><button onclick="changeQty(${item.idHdct},${item.soLuong - 1})">-</button><span>${item.soLuong}</span><button onclick="changeQty(${item.idHdct},${item.soLuong + 1})">+</button></div></td>
-                    <td class="money red">${fmt(item.thanhTien)}</td>
-                    <td><button class="btn danger small" onclick="removeItem(${item.idHdct})">×</button></td>
-                </tr>`).join('')}</tbody>
-        </table>`;
+        return `
+                <table>
+                    <thead>
+                        <tr><th>Mã SP</th><th>Tên</th><th>Giá</th><th>SL</th><th>Thành tiền</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        ${order.items.map(item => `
+                            <tr>
+                                <td>${esc(item.maChiTietSanPham)}</td>
+                                <td>
+                                    <div class="p-name">${esc(item.tenSanPham)}</div>
+                                    <div class="p-meta">${esc(item.mauSac||'-')} · ${esc(item.kichCo||'-')} · tồn còn ${item.soLuongTon??0}</div>
+                                </td>
+                                <td class="money">${priceCell(item)}</td>
+                                <td>
+                                    <div class="qty">
+                                        <button onclick="changeQty(${item.idHdct},${item.soLuong-1})">−</button>
+                                        <input type="number" min="1" step="1" value="${item.soLuong}" aria-label="Số lượng" onchange="commitQty(${item.idHdct},this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}">
+                                        <button onclick="changeQty(${item.idHdct},${item.soLuong+1})">+</button>
+                                    </div>
+                                </td>
+                                <td class="money red">${fmt(item.thanhTien)}</td>
+                                <td><button class="remove" onclick="removeItem(${item.idHdct})">×</button></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+    }
+
+    function renderCustomer(order) {
+        const shipping = order.loaiDon === 'Giao hàng';
+        const customerId = getSelectedCustomerId(order);
+        const showAddress = shipping || Boolean(customerId);
+        const addressLabel = shipping ? 'Địa chỉ cụ thể' : 'Địa chỉ khách hàng';
+        const addressPlaceholder = shipping ?
+            (customerId ? 'Tự lấy từ địa chỉ mặc định hoặc nhập địa chỉ giao hàng' : 'Số nhà, tên đường') :
+            'Chọn địa chỉ đã lưu bên dưới';
+        const readonlyAtCounter = !shipping && Boolean(customerId);
+
+        if (!shipping) {
+            const customerName = order.tenKhachHang || 'Khách lẻ';
+            const phone = order.soDienThoai || '';
+            const address = order.diaChiKhachHang || '';
+            const isWalkIn = !customerId;
+            const initial = (customerName || 'K').trim().charAt(0).toUpperCase() || 'K';
+
+            return `
+                <section class="panel">
+                    <div class="panel-body">
+                        <div class="switch" onclick="toggleShipping(true)">
+                            <span class="toggle"></span><b>Tại quầy</b>
+                        </div>
+
+                        <div class="row">
+                            <div class="panel-title">Khách hàng</div>
+                            <div class="p-meta">Tại quầy có thể bán nhanh cho khách lẻ, không cần nhập thông tin.</div>
+                        </div>
+
+                        <input type="hidden" id="customerName" value="${esc(customerName)}">
+                        <input type="hidden" id="customerPhone" value="${esc(phone)}">
+                        <input type="hidden" id="customerAddress" value="${esc(address)}">
+
+                        <div class="customer-card">
+                            <div class="customer-card-head">
+                                <span class="customer-pill">${isWalkIn ? 'Bán cho khách lẻ' : 'Khách hàng đã chọn'}</span>
+                                <div class="customer-actions">
+                                    <button class="btn ghost small" onclick="openCustomerModal()">Chọn khách hàng</button>
+                                    <button class="btn ghost small ${isWalkIn ? 'active' : ''}" onclick="setWalkIn()" ${isWalkIn ? 'disabled' : ''}>Khách lẻ</button>
+                                </div>
+                            </div>
+
+                            <div class="customer-summary">
+                                <div class="customer-avatar">${esc(initial)}</div>
+                                <div>
+                                    <div class="customer-name">${esc(isWalkIn ? 'Khách lẻ' : customerName)}</div>
+                                    <div class="customer-note">
+                                        ${isWalkIn
+                ? 'Thanh toán tại quầy không cần nhập tên, số điện thoại hoặc địa chỉ.'
+                : 'Thông tin khách hàng được lấy từ hồ sơ đã chọn.'}
+                                    </div>
+                                </div>
+                            </div>
+
+                            ${!isWalkIn ? `
+                                <div class="customer-info-grid">
+                                    <div class="customer-info-item">
+                                        <div class="label">Số điện thoại</div>
+                                        <div class="customer-info-value">${esc(phone || 'Chưa có')}</div>
+                                    </div>
+                                    <div class="customer-info-item">
+                                        <div class="label">Địa chỉ</div>
+                                        <div class="customer-info-value">${esc(address || 'Chưa chọn địa chỉ')}</div>
+                                    </div>
+                                </div>
+                                ${renderSavedAddressPicker(order, customerId)}
+                            ` : ''}
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        return `
+                <section class="panel">
+                    <div class="panel-body">
+                        <div class="switch ${shipping ? 'active' : ''}" onclick="toggleShipping(${!shipping})">
+                            <span class="toggle"></span><b>${shipping ? 'Giao hàng' : 'Tại quầy'}</b>
+                        </div>
+
+                        <div class="row">
+                            <div class="panel-title">Khách hàng</div>
+                            <div class="p-meta">${customerId ? 'Thông tin khách hàng đã chọn. Địa chỉ mặc định sẽ tự điền nếu có.' : 'Nhập thông tin khách lẻ muốn giao hàng.'}</div>
+                        </div>
+
+                        <div class="row customer-actions" style="justify-content:flex-start">
+                            <button class="btn" onclick="openCustomerModal()">Chọn khách hàng</button>
+                            <button class="btn ghost" onclick="setShippingGuest()">Khách lẻ</button>
+                        </div>
+
+                        ${customerId ? `
+                            <div class="customer-card">
+                                <div class="customer-card-head">
+                                    <span class="customer-pill">Khách hàng đã chọn</span>
+                                    <div class="customer-actions">
+                                        <button class="btn ghost small" onclick="openCustomerModal()">Đổi khách hàng</button>
+                                    </div>
+                                </div>
+                                <div class="customer-summary">
+                                    <div class="customer-avatar">${esc((order.tenKhachHang || 'K').trim().charAt(0).toUpperCase() || 'K')}</div>
+                                    <div>
+                                        <div class="customer-name">${esc(order.tenKhachHang || 'Khách hàng')}</div>
+                                        <div class="customer-note">Thông tin giao hàng có thể chỉnh bên dưới trước khi thanh toán.</div>
+                                    </div>
+                                </div>
+                                <div class="customer-info-grid">
+                                    <div class="customer-info-item">
+                                        <div class="label">Số điện thoại</div>
+                                        <div class="customer-info-value">${esc(order.soDienThoai || 'Chưa có')}</div>
+                                    </div>
+                                    <div class="customer-info-item">
+                                        <div class="label">Địa chỉ đang dùng</div>
+                                        <div class="customer-info-value" id="customerSelectedAddressText">${esc(order.diaChiKhachHang || 'Đang chờ địa chỉ mặc định')}</div>
+                                    </div>
+                                </div>
+                                ${renderSavedAddressPicker(order, customerId)}
+                            </div>
+                        ` : ''}
+
+                        <div class="row">
+                            <div class="label">Tên khách hàng</div>
+                            <input class="input" id="customerName" value="${esc(order.tenKhachHang||'')}" placeholder="Khách lẻ">
+                        </div>
+
+                        <div class="row">
+                            <div>
+                                <div class="label">Số điện thoại ${shipping ? '<span class="red">*</span>' : ''}</div>
+                                <input class="input" id="customerPhone" value="${esc(order.soDienThoai||'')}" placeholder="Số điện thoại">
+                            </div>
+                        </div>
+
+                        ${shipping ? renderLocationFields({shipping}) : ''}
+                        ${showAddress ? `
+                        <div class="row">
+                            <div>
+                                <div class="label">${addressLabel} ${shipping ? '<span class="red">*</span>' : ''}</div>
+                                <input class="input" id="customerAddress" value="${esc(order.diaChiKhachHang||'')}" placeholder="${addressPlaceholder}" ${readonlyAtCounter ? 'readonly' : ''} oninput="onCustomerAddressInput()" onblur="onCustomerAddressBlur()">
+                            </div>
+                        </div>
+                        ` : ''}
+                        ${shipping ? renderShippingFields(order) : ''}
+
+                        <div class="row">
+                            <button class="btn small" onclick="${shipping ? 'saveShippingInfo()' : 'saveManualCustomer()'}">Lưu thông tin</button>
+                        </div>
+                    </div>
+                </section>
+            `;
+    }
+
+    function renderLocationFields({ shipping = false } = {}) {
+        return `
+                <div class="row two">
+                    <div>
+                        <div class="label">Tỉnh/Thành phố ${shipping ? '<span class="red">*</span>' : ''}</div>
+                        <input class="select-search" type="search" placeholder="Tìm kiếm tỉnh/thành..." oninput="filterPosSelectOptions(this,'provinceSelect')">
+                        <select class="input" id="provinceSelect" onchange="onProvinceChange()">
+                            <option value="">Chọn tỉnh/thành</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="label">Xã/Phường ${shipping ? '<span class="red">*</span>' : ''}</div>
+                        <input class="select-search" type="search" placeholder="Tìm kiếm xã/phường..." oninput="filterPosSelectOptions(this,'wardSelect')">
+                        <select class="input" id="wardSelect" onchange="onWardChange()">
+                            <option value="">Chọn xã/phường</option>
+                        </select>
+                    </div>
+                    <div class="p-meta" style="grid-column:1 / -1">
+                        Chọn tỉnh/thành và xã/phường theo địa giới hành chính mới để tự động tính phí vận chuyển.
+                    </div>
+                </div>
+            `;
+    }
+
+    function renderShippingFields(order) {
+        return `
+                <div class="row two">
+                    <textarea class="input" id="shippingNote" placeholder="Ghi chú giao hàng" rows="3">${esc(order.ghiChuGiaoHang||order.ghiChu||'')}</textarea>
+                    <div>
+                        <div class="label">Phí vận chuyển</div>
+                        <input class="input money-input" id="shippingFeeInput" value="${moneyText(order.phiVanChuyen||0)}" readonly>
+                        <div class="p-meta" id="shippingFeeHint" style="margin-top:6px">Chọn tỉnh/thành và xã/phường để hệ thống tự tính phí.</div>
+                    </div>
+                </div>
+            `;
+    }
+
+    function renderSavedAddressPicker(order, customerId) {
+        const addresses = customerId ? (customerAddressesByCustomerId.get(String(customerId)) || []) : [];
+        const selectedKey = selectedAddressKeyByOrderId.get(order.id) || '';
+        const loading = customerId && !customerAddressesByCustomerId.has(String(customerId));
+
+        if (!customerId) return '';
+
+        const options = addresses.map((address, index) => {
+            const key = getAddressKey(address, index);
+            return `<option value="${esc(key)}" ${String(key) === String(selectedKey) ? 'selected' : ''}>${esc(addressLabel(address))}</option>`;
+        }).join('');
+
+        return `
+                <div class="row">
+                    <div class="label">Địa chỉ đã lưu</div>
+                    <input class="select-search" type="search" placeholder="Tìm kiếm địa chỉ..." oninput="filterPosSelectOptions(this,'savedAddressSelect')">
+                    <select class="input" id="savedAddressSelect" onchange="applySavedAddress(this.value)" ${loading ? 'disabled' : ''}>
+                        <option value="">${loading ? 'Đang tải địa chỉ...' : '-- Chọn địa chỉ đã lưu --'}</option>
+                        ${options}
+                    </select>
+                    <div class="p-meta" style="margin-top:5px">${loading ? 'Đang lấy danh sách địa chỉ của khách hàng.' : 'Chọn một địa chỉ để tự điền thông tin người nhận.'}</div>
+                </div>
+            `;
     }
 
     function renderPayment(order) {
         const total = Number(order.tongTienThanhToan || 0);
-        const change = Math.max(0, paidAmount - total);
-        return `<aside class="panel">
-            <div class="side-card">
-                <div class="side-title">Thông tin khách hàng</div>
-                <button class="btn" style="width:100%;margin-bottom:10px" onclick="openCustomerModal()">Chọn khách hàng</button>
-                <div class="form-row"><input class="input" id="customerName" value="${esc(order.tenKhachHang || '')}" placeholder="Tên khách hàng"></div>
-                <div class="form-row"><input class="input" id="customerPhone" value="${esc(order.soDienThoai || '')}" placeholder="Số điện thoại"></div>
-                <div class="form-row"><input class="input" id="customerAddress" value="${esc(order.diaChiKhachHang || '')}" placeholder="Địa chỉ"></div>
-                <button class="btn small" onclick="saveManualCustomer()">Lưu thông tin</button>
-            </div>
-            <div class="side-card">
-                <div class="side-title">Thông tin thanh toán</div>
-                <div class="search-row" style="margin-bottom:8px">
-                    <input class="input" id="voucherInput" value="${esc(order.maVoucher || '')}" placeholder="Mã giảm giá">
-                    <button class="btn" onclick="applyVoucher()">Áp dụng</button>
-                </div>
-                ${order.maVoucher ? `<button class="btn small" onclick="removeVoucher()">Bỏ voucher ${esc(order.maVoucher)}</button>` : ''}
-                <div class="summary-row"><span>Tổng tiền hàng</span><b>${fmt(order.tongTienGoc)}</b></div>
-                <div class="summary-row"><span>Giảm giá</span><b>${fmt(order.soTienGiam)}</b></div>
-                <div class="summary-row total">
-                    <span>Tổng số tiền</span>
-                    <span id="totalDisplay" data-total="${total}">${fmt(total)}</span>
-                </div>
-                <div class="form-row">
-                    <input class="input" id="paidInput" type="number" min="0" value="${paidAmount || ''}" placeholder="Khách thanh toán" oninput="onPaidInput()">
-                </div>
-                <div class="summary-row"><span>Khách thanh toán</span><b id="paidDisplay">${fmt(paidAmount)}</b></div>
-                <div class="summary-row"><span>Tiền thừa</span><b id="changeDisplay" class="red">${fmt(change)}</b></div>
-                <button class="checkout" onclick="checkout()">Xác nhận đặt hàng</button>
-            </div>
-        </aside>`;
+        const showShippingFee = order.loaiDon === 'Giao hàng' || Number(order.phiVanChuyen || 0) > 0;
+        return `
+                <section class="panel">
+                    <div class="panel-body">
+                        <div class="panel-title">Thông tin thanh toán</div>
+                        <div class="row voucher-actions">
+                            <input class="input" id="voucherInput" value="${esc(order.maVoucher||'')}" placeholder="Mã phiếu giảm giá">
+                            <button class="btn" onclick="applyVoucher()">Áp dụng</button>
+                            <button class="btn" type="button" onclick="openVoucherModal()">Xem PGG</button>
+                        </div>
+                        ${order.maVoucher ? `<div class="voucher-box">Tự động áp dụng phiếu tốt nhất: <b>${esc(order.voucherDisplay || order.maVoucher)}</b> - giảm ${fmt(order.soTienGiam)}</div>` : ''}
+                        ${order.voucherHintCode ? `<div class="hint-box">Thêm ${fmt(order.voucherHintNeedMore)} để dùng phiếu <b>${esc(order.voucherHintCode)}</b>, có thể giảm ${fmt(order.voucherHintDiscount)}.</div>` : ''}
+                        <div class="summary">
+                            <div class="sum-row"><span>Tiền hàng</span><b>${fmt(order.tongTienGoc)}</b></div>
+                            <div class="sum-row"><span>Giảm giá${order.voucherDisplay ? ` (${esc(order.voucherDisplay)})` : ''}</span><b class="red">- ${fmt(order.soTienGiam)}</b></div>
+                            ${showShippingFee ? `<div class="sum-row"><span>Phí vận chuyển</span><b id="shippingFeeSummary">${fmt(order.phiVanChuyen||0)}</b></div>` : ''}
+                            <div class="sum-row total"><span>Tổng số tiền</span><span id="totalDisplay" data-total="${total}">${fmt(total)}</span></div>
+                        </div>
+                        <button class="checkout" onclick="openPaymentModal()">THANH TOÁN</button>
+                    </div>
+                </section>
+            `;
     }
 
-    // Xử lý khi người dùng nhập tiền
-    function onPaidInput() {
-        paidAmount = Number(el('paidInput')?.value || 0);
+    // ================================================================
+    //  PAYMENT (giữ nguyên)
+    // ================================================================
+    function vietQrUrl(amount, orderCode) {
+        const value = Math.max(0, Math.round(Number(amount || 0)));
+        const info = encodeURIComponent(`Thanh toán ${orderCode || 'POS'}`);
+        return `https://img.vietqr.io/image/${BANK_CODE}-${BANK_ACCOUNT}-compact2.png?amount=${value}&addInfo=${info}&accountName=4MenStore`;
+    }
+
+    function selectOrder(id) { rememberActiveOrderDraft();
+        setActiveOrder(id);
+        render(); }
+
+    async function closeOrder(id) {
+        const order = orders.find(o => o.id === id);
+        if (!order) return;
+        const ok = await showConfirm({
+            title: 'Hủy hóa đơn chờ',
+            message: 'Đóng và hủy đơn ' + order.maHoaDon + '? Tồn kho của sản phẩm trong đơn sẽ được hoàn lại.',
+            okText: 'Hủy hóa đơn',
+            cancelText: 'Giữ lại'
+        });
+        if (!ok) return;
+        try {
+            await api(`/api/pos/orders/${id}/cancel`, { method: 'POST' });
+            orders = orders.filter(o => o.id !== id);
+            clearOrderDraft(id);
+            setActiveOrder(restoreActiveOrderId() || orders[0]?.id || null);
+            render();
+        } catch (e) {
+            toast(e.message, 'error');
+        }
+    }
+
+    function setPayMode(mode) {
+        payMode = mode;
+        const total = paymentTotal();
+        if (el('cashInput') && el('transferInput')) {
+            el('cashInput').value = moneyText(mode === 'TRANSFER' ? 0 : total);
+            el('transferInput').value = moneyText(mode === 'CASH' ? 0 : (mode === 'TRANSFER' ? total : 0));
+        }
+        syncPayTabs();
         updatePaymentFields();
     }
 
-    // Chỉ cập nhật text hiển thị, không render lại
+    function formatPaymentInput(input) {
+        const value = moneyValue(input.value);
+        input.value = value ? moneyText(value) : '0';
+        if (!input.dataset.roundMoneyBound) {
+            input.dataset.roundMoneyBound = 'true';
+            input.addEventListener('blur', () => {
+                input.value = moneyText(roundMoney(moneyValue(input.value)));
+                updatePaymentFields();
+            });
+        }
+    }
+
+    function paymentTotal() {
+        return Number(el('paymentModalTotal')?.dataset.total || el('totalDisplay')?.dataset.total || currentOrder()
+            ?.tongTienThanhToan || 0);
+    }
+
+    function syncPayTabs() {
+        [
+            ['CASH', 'payCashTab'],
+            ['TRANSFER', 'payTransferTab'],
+            ['MIXED', 'payMixedTab']
+        ].forEach(([mode, id]) => el(id)?.classList.toggle('active', payMode === mode));
+    }
+
     function updatePaymentFields() {
-        const totalEl = document.getElementById('totalDisplay');
-        const total = Number(totalEl?.dataset.total || 0);
-        const change = Math.max(0, paidAmount - total);
-
-        const paidDisplay = document.getElementById('paidDisplay');
-        const changeDisplay = document.getElementById('changeDisplay');
-        if (paidDisplay) paidDisplay.textContent = fmt(paidAmount);
-        if (changeDisplay) changeDisplay.textContent = fmt(change);
+        const total = paymentTotal();
+        const paid = moneyValue(el('cashInput')?.value) + moneyValue(el('transferInput')?.value);
+        if (el('missingDisplay')) el('missingDisplay').textContent = fmt(Math.max(0, total - paid));
+        if (el('changeDisplay')) el('changeDisplay').textContent = fmt(Math.max(0, paid - total));
+        updateTransferModal();
     }
 
-    function selectOrder(id) {
-        // Khi chuyển tab, reset paidAmount về 0
-        paidAmount = 0;
-        activeOrderId = id;
-        render();
+    async function openPaymentModal() {
+        let order = currentOrder();
+        if (!order) return toast('Vui lòng tạo hóa đơn trước', 'error');
+        if (!order.items?.length) return toast('Đơn hàng chưa có sản phẩm', 'error');
+
+        if (order.loaiDon === 'Giao hàng' && el('provinceSelect')) {
+            const saved = await saveShippingInfo();
+            if (!saved) return;
+            order = currentOrder();
+        }
+
+        const total = Number(order.tongTienThanhToan || 0);
+        el('paymentModalTotal').dataset.total = String(total);
+        el('paymentModalTotal').textContent = fmt(total);
+        el('transferModal').classList.add('open');
+        setPayMode(payMode || 'CASH');
     }
 
-    async function closeOrder(id) {
-        const order = orders.find(item => item.id === id);
-        if (!order) return;
-        if (!confirm(`Đóng và hủy đơn ${order.maHoaDon}?`)) return;
-        try {
-            await api(`/api/pos/orders/${id}/cancel`, {method:'POST'});
-            orders = orders.filter(item => item.id !== id);
-            if (activeOrderId === id) {
-                paidAmount = 0;
-            }
-            activeOrderId = orders[0]?.id || null;
-            render();
-        } catch (e) { toast(e.message, 'error'); }
+    function closeTransferModal() { el('transferModal').classList.remove('open'); }
+
+    function updateTransferModal() {
+        const order = currentOrder();
+        if (!order || !el('transferQrImage')) return;
+        const transfer = moneyValue(el('transferInput')?.value);
+        const showQr = payMode !== 'CASH' && transfer > 0;
+        if (el('transferQrPanel')) el('transferQrPanel').style.display = showQr ? 'block' : 'none';
+        el('transferBankName').textContent = BANK_NAME;
+        el('transferBankAccount').textContent = BANK_ACCOUNT;
+        el('transferContent').textContent = `Thanh toán ${order.maHoaDon || 'POS'}`;
+        el('transferQrImage').src = vietQrUrl(transfer, order.maHoaDon);
+        el('transferQrAmount').textContent = fmt(transfer);
     }
 
+    // ================================================================
+    //  PRODUCT MODAL
+    // ================================================================
     function openProductModal() {
-        if (!currentOrder()) return toast('Vui lòng tạo đơn hàng trước', 'error');
+        if (!currentOrder()) return toast('Vui lòng tạo hóa đơn trước', 'error');
         el('productModal').classList.add('open');
         loadProductChoices();
     }
-    function closeProductModal(){ el('productModal').classList.remove('open'); }
-    function openCustomerModal(){ el('customerModal').classList.add('open'); loadCustomers(); }
-    function closeCustomerModal(){ el('customerModal').classList.remove('open'); }
-    function closeModalOnBackdrop(event,id){ if(event.target.id === id) event.target.classList.remove('open'); }
+
+    function closeProductModal() { el('productModal').classList.remove('open'); }
+
+    function openCustomerModal() { el('customerModal').classList.add('open');
+        loadCustomers(); }
+
+    function closeCustomerModal() { el('customerModal').classList.remove('open'); }
+
+    function closeModalOnBackdrop(e, id) { if (e.target.id === id) e.target.classList.remove('open'); }
 
     async function loadProductChoices() {
         const keyword = el('productKeyword').value.trim();
-        const params = new URLSearchParams({page:0,size:20,sort:'newest'});
+        const params = new URLSearchParams({ page: 0, size: 20, sort: 'newest' });
         if (keyword) params.set('keyword', keyword);
         try {
             const data = await api('/api/shop/products?' + params);
-            const products = data.content || [];
-            el('productChoices').innerHTML = products.map(product => `
-                <div class="product-card">
-                    <div class="thumb">${imageHtml(product)}</div>
-                    <div style="flex:1;min-width:0">
-                        <div class="p-name">${esc(product.tenSp)}</div>
-                        <div class="p-meta">${esc(product.maSp || '')} · ${fmt(product.giaBanMin)} · tồn ${product.tongTon || 0}</div>
-                        <div class="variant-list" id="variants-${product.idSp}">
-                            <button class="variant-chip" onclick="loadVariants(${product.idSp})">Xem biến thể</button>
-                        </div>
-                    </div>
-                </div>`).join('') || '<p>Không tìm thấy sản phẩm</p>';
-        } catch (e) { toast(e.message, 'error'); }
+            const rawProducts = Array.isArray(data) ? data : (data.content || data.data || []);
+            const products = rawProducts.filter(p => Number(p.tongTon || 0) > 0);
+            el('productChoices').innerHTML = products.map(p => `
+                    <tr>
+                        <td>${esc(p.maSp||'')}</td>
+                        <td><div class="p-name">${esc(p.tenSp)}</div><div class="p-meta">${productMetaPrice(p)}</div></td>
+                        <td>${p.tongTon||0}</td>
+                        <td class="money red">${productPriceHtml(p)}</td>
+                        <td><div id="variants-${p.idSp}"><button class="variant-chip" onclick="loadVariants(${p.idSp})">Xem biến thể</button></div></td>
+                    </tr>
+                `).join('') || '<tr><td colspan="5" style="text-align:center">Không tìm thấy sản phẩm</td></tr>';
+        } catch (e) {
+            toast(e.message, 'error');
+        }
     }
 
     async function loadVariants(idSp) {
         try {
-            const variants = await api(`/api/shop/products/${idSp}/variants`);
-            el(`variants-${idSp}`).innerHTML = variants.map(variant => `
-                <button class="variant-chip" onclick="addVariant(${variant.idSpct})">
-                    ${esc(variant.mauSac?.ten || '-')} / ${esc(variant.kichCo?.ten || '-')} · tồn ${variant.soLuongTon}
-                </button>`).join('') || '<span class="p-meta">Hết hàng</span>';
-        } catch (e) { toast(e.message, 'error'); }
+            const rawVariants = await api(`/api/shop/products/${idSp}/variants`);
+            const variants = (Array.isArray(rawVariants) ? rawVariants : [])
+                .filter(v => Number(v.soLuongTon || 0) > 0);
+            el(`variants-${idSp}`).innerHTML = variants.map(v => `
+                    ${variantChipHtml(v)}
+                `).join('') || '<span class="p-meta">Hết hàng</span>';
+        } catch (e) {
+            toast(e.message, 'error');
+        }
+    }
+
+    async function refreshProductModalStock() {
+        if (el('productModal')?.classList.contains('open')) await loadProductChoices();
     }
 
     async function addVariant(idSpct) {
         const order = currentOrder();
-        if (!order) return;
         try {
-            const updated = await api(`/api/pos/orders/${order.id}/items`, {method:'POST', body:JSON.stringify({idSpct, soLuong:1})});
-            upsertOrder(updated);
-            closeProductModal();
-            toast('Đã thêm sản phẩm');
-        } catch (e) { toast(e.message, 'error'); }
+            upsertOrder(await api(`/api/pos/orders/${order.id}/items`, {
+                method: 'POST',
+                body: JSON.stringify({ idSpct, soLuong: 1 })
+            }), { keepLocalShippingDraft: true });
+            await refreshProductModalStock();
+            toast('Đã thêm sản phẩm và trừ tồn kho');
+        } catch (e) {
+            toast(e.message, 'error');
+        }
     }
 
+    // ================================================================
+    //  SCAN QR (giữ nguyên)
+    // ================================================================
     async function scanCode() {
-        const code = prompt('Nhập mã SKU / mã QR sản phẩm');
-        if (!code) return;
+        if (!currentOrder()) return toast('Vui lòng tạo hóa đơn trước', 'error');
+        el('scanModal').classList.add('open');
+        el('scanResult').textContent = 'Đang mở camera...';
+        qrBusy = false;
+        if (!window.Html5Qrcode) {
+            el('scanResult').textContent = 'Không tải được thư viện quét QR. Hãy nhập mã thủ công bên dưới.';
+            return;
+        }
         try {
-            const variant = await api('/api/pos/variants/by-code?code=' + encodeURIComponent(code));
-            await addVariant(variant.idSpct);
-        } catch (e) { toast(e.message, 'error'); }
+            if (!qrScanner) qrScanner = new Html5Qrcode('reader');
+            await qrScanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: { width: 250, height: 250 } },
+                onScanSuccess, () => {});
+            el('scanResult').textContent = 'Đưa mã QR biến thể vào camera để thêm sản phẩm';
+        } catch (e) {
+            el('scanResult').textContent = 'Không mở được camera. Hãy cấp quyền camera hoặc nhập mã thủ công.';
+        }
     }
 
+    async function onScanSuccess(decodedText) {
+        if (qrBusy) return;
+        qrBusy = true;
+        const code = (decodedText || '').trim();
+        el('scanResult').textContent = 'Đã quét: ' + code;
+        try {
+            await addVariantByCode(code);
+            await closeScanModal();
+        } catch (e) {
+            toast(e.message, 'error');
+            qrBusy = false;
+        }
+    }
+
+    async function addVariantByCode(code) {
+        if (!code) return toast('Vui lòng nhập mã biến thể', 'error');
+        const variant = await api('/api/pos/variants/by-code?code=' + encodeURIComponent(code));
+        await addVariant(variant.idSpct);
+    }
+
+    async function submitManualQr() {
+        try {
+            await addVariantByCode(el('manualQrCode').value.trim());
+            await closeScanModal();
+        } catch (e) {
+            toast(e.message, 'error');
+        }
+    }
+
+    async function closeScanModal() {
+        el('scanModal').classList.remove('open');
+        el('manualQrCode').value = '';
+        qrBusy = false;
+        if (qrScanner) {
+            try { await qrScanner.stop(); } catch (e) {}
+            try { await qrScanner.clear(); } catch (e) {}
+        }
+    }
+
+    // ================================================================
+    //  QTY / ITEMS
+    // ================================================================
     async function changeQty(idHdct, soLuong) {
         const order = currentOrder();
-        if (!order) return;
+        const item = order?.items?.find(current => current.idHdct === idHdct);
         if (soLuong < 1) return removeItem(idHdct);
+        const maxQty = (item?.soLuong || 0) + (item?.soLuongTon || 0);
+        if (maxQty > 0 && soLuong > maxQty) {
+            soLuong = maxQty;
+            toast(`Số lượng tối đa có thể bán là ${maxQty}`, 'error');
+        }
         try {
-            upsertOrder(await api(`/api/pos/orders/${order.id}/items/${idHdct}`, {method:'PATCH', body:JSON.stringify({soLuong})}));
-        } catch (e) { toast(e.message, 'error'); }
+            upsertOrder(await api(`/api/pos/orders/${order.id}/items/${idHdct}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ soLuong })
+            }), { keepLocalShippingDraft: true });
+        } catch (e) {
+            toast(e.message, 'error');
+            render();
+        }
+    }
+
+    async function commitQty(idHdct, input) {
+        const soLuong = Number(input.value);
+        if (!Number.isInteger(soLuong) || soLuong < 1) {
+            toast('Số lượng phải là số nguyên lớn hơn 0', 'error');
+            render();
+            return;
+        }
+        await changeQty(idHdct, soLuong);
     }
 
     async function removeItem(idHdct) {
         const order = currentOrder();
-        if (!order) return;
         try {
-            upsertOrder(await api(`/api/pos/orders/${order.id}/items/${idHdct}`, {method:'DELETE'}));
-        } catch (e) { toast(e.message, 'error'); }
+            upsertOrder(await api(`/api/pos/orders/${order.id}/items/${idHdct}`, { method: 'DELETE' }), { keepLocalShippingDraft: true });
+        } catch (e) {
+            toast(e.message, 'error');
+        }
     }
 
+    // ================================================================
+    //  CUSTOMER
+    // ================================================================
     async function loadCustomers() {
         const keyword = el('customerKeyword').value.trim();
-        const params = new URLSearchParams({page:0,size:10,trangThai:true});
+        const params = new URLSearchParams({ page: 0, size: 10, trangThai: true });
         if (keyword) params.set('keyword', keyword);
         try {
             const data = await api('/api/khach-hang?' + params);
             const list = data.content || [];
-            el('customerRows').innerHTML = list.map((customer,index) => `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td><b>${esc(customer.tenKhachHang)}</b></td>
-                    <td>${esc(customer.soDienThoai || '')}<br><span class="p-meta">${esc(customer.email || '')}</span></td>
-                    <td>${esc(customer.diaChi || '')}</td>
-                    <td><button class="btn primary small" onclick='chooseCustomer(${JSON.stringify(customer).replaceAll("'","&#39;")})'>Chọn</button></td>
-                </tr>`).join('') || '<tr><td colspan="5" style="text-align:center">Không có khách hàng</td></tr>';
-        } catch (e) { toast(e.message, 'error'); }
+            el('customerRows').innerHTML = list.map((c, i) => `
+                    <tr>
+                        <td>${i+1}</td>
+                        <td><b>${esc(c.tenKhachHang)}</b></td>
+                        <td>${esc(c.soDienThoai||'')}<br><span class="p-meta">${esc(c.email||'')}</span></td>
+                        <td><button class="btn primary small" onclick='chooseCustomer(${JSON.stringify(c).replaceAll("'","&#39;")})'>Chọn</button></td>
+                    </tr>
+                `).join('') || '<tr><td colspan="4" style="text-align:center">Không có khách hàng</td></tr>';
+        } catch (e) {
+            toast(e.message, 'error');
+        }
     }
 
-    async function chooseCustomer(customer) {
+    async function chooseCustomer(c) {
         const order = currentOrder();
         if (!order) return;
+
+        const shipping = order.loaiDon === 'Giao hàng';
+        const selectedCustomerId = customerIdOf(c);
+        if (!selectedCustomerId) return toast('Không xác định được khách hàng đã chọn', 'error');
+
+        selectedCustomerIdByOrderId.set(order.id, selectedCustomerId);
+        selectedAddressKeyByOrderId.delete(order.id);
+        if (!shipping) selectedLocationByOrderId.delete(order.id);
+
         try {
             const updated = await api(`/api/pos/orders/${order.id}/customer`, {
-                method:'PUT',
-                body:JSON.stringify({idKh:customer.id})
+                method: 'PUT',
+                body: JSON.stringify({ idKh: selectedCustomerId })
             });
+
+            if (shipping) {
+                const selectedName = c.tenKhachHang || c.hoTen || c.ten || '';
+                const selectedPhone = c.soDienThoai || c.sdt || c.phone || '';
+                const selectedAddress = c.diaChiDisplay || c.diaChi || c.diaChiChiTiet || c.diaChiKhachHang || '';
+                updated.loaiDon = 'Giao hàng';
+                updated.tenKhachHang = selectedName || updated.tenKhachHang || '';
+                updated.soDienThoai = selectedPhone || updated.soDienThoai || '';
+                updated.diaChiKhachHang = order.diaChiKhachHang || selectedAddress || updated.diaChiKhachHang || '';
+                updated.provinceId = order.provinceId ?? updated.provinceId ?? null;
+                updated.wardCode = order.wardCode ?? updated.wardCode ?? '';
+                updated.provinceName = order.provinceName || updated.provinceName || '';
+                updated.wardName = order.wardName || updated.wardName || '';
+                updated.phiVanChuyen = order.phiVanChuyen || updated.phiVanChuyen || 0;
+            }
+
             upsertOrder(updated);
             closeCustomerModal();
-            toast('Đã chọn khách hàng');
-        } catch (e) { toast(e.message, 'error'); }
+
+            if (shipping) {
+                toast('Đã chọn khách hàng giao hàng. Thông tin đã được điền vào form.');
+                return;
+            }
+
+            toast('Đã chọn khách hàng cho hóa đơn tại quầy.');
+        } catch (e) {
+            toast(e.message, 'error');
+        }
     }
 
-    async function saveManualCustomer() {
+    async function toggleShipping(enabled) {
         const order = currentOrder();
         if (!order) return;
+
+        if (!enabled) {
+            try {
+                upsertOrder(await api(`/api/pos/orders/${order.id}/shipping`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ giaoHang: false })
+                }));
+            } catch (e) {
+                toast(e.message, 'error');
+            }
+            return;
+        }
+
+        selectedAddressKeyByOrderId.delete(order.id);
+        selectedLocationByOrderId.delete(order.id);
+        order.loaiDon = 'Giao hàng';
+        order.diaChiKhachHang = '';
+        order.provinceId = null;
+        order.wardCode = null;
+        order.provinceName = '';
+        order.wardName = '';
+        order.phiVanChuyen = 0;
+        saveOrderDraft(order, buildOrderDraft(order));
+        render();
+    }
+
+    function getSelectedCustomerId(order) {
+        if (!order) return null;
+        if (selectedCustomerIdByOrderId.has(order.id)) return selectedCustomerIdByOrderId.get(order.id);
+        return order.idKh ?? order.idKhachHang ?? order.idKhach ?? order.customerId ??
+            order.khachHang?.id ?? order.khachHang?.idKh ?? order.customer?.id ?? null;
+    }
+
+    function customerIdOf(customer) {
+        return customer?.id ?? customer?.idKh ?? customer?.idKhachHang ?? customer?.customerId ?? null;
+    }
+
+    function isDefaultAddress(address) {
+        return Boolean(
+            address?.macDinh === true ||
+            address?.laMacDinh === true ||
+            address?.isDefault === true ||
+            address?.defaultAddress === true ||
+            Number(address?.macDinh) === 1 ||
+            Number(address?.laMacDinh) === 1 ||
+            Number(address?.isDefault) === 1
+        );
+    }
+
+    function getLocationState(order) {
+        if (!order) return {};
+        const cached = selectedLocationByOrderId.get(order.id) || {};
+        return {
+            provinceId: cached.provinceId ?? order.provinceId ?? null,
+            wardCode: cached.wardCode ?? order.wardCode ?? null,
+            provinceName: cached.provinceName ?? order.provinceName ?? '',
+            wardName: cached.wardName ?? order.wardName ?? ''
+        };
+    }
+
+    function rememberLocationFromControls() {
+        const order = currentOrder();
+        if (!order) return;
+        const p = el('provinceSelect'),
+            w = el('wardSelect');
+        selectedLocationByOrderId.set(order.id, {
+            provinceId: p?.value ? Number(p.value) : null,
+            wardCode: w?.value || null,
+            provinceName: p?.selectedOptions?.[0]?.dataset?.name || '',
+            wardName: w?.selectedOptions?.[0]?.dataset?.name || ''
+        });
+    }
+
+    function resetLocationControls() {
+        const order = currentOrder();
+        if (order) selectedLocationByOrderId.delete(order.id);
+        if (el('provinceSelect')) el('provinceSelect').value = '';
+        if (el('wardSelect')) el('wardSelect').innerHTML = '<option value="">Chọn xã/phường</option>';
+    }
+
+    function onCustomerAddressInput() {}
+
+    function onCustomerAddressBlur() {
+        const order = currentOrder();
+        if (order?.loaiDon === 'Giao hàng') scheduleAutoShippingFee();
+    }
+
+    function unwrapList(data) {
+        const value = data?.content ?? data?.data ?? data?.items ?? data?.result ?? data;
+        return Array.isArray(value) ? value : [];
+    }
+
+    function getAddressKey(address, index) {
+        return String(
+            address?.idDc ??
+            address?.idDiaChi ??
+            address?.id ??
+            address?.maDiaChi ??
+            address?.maDc ??
+            index
+        );
+    }
+
+    function getAddressInfo(address) {
+        const detail = String(
+            address?.diaChiCuThe ??
+            address?.diaChiChiTiet ??
+            address?.diaChi ??
+            address?.soNha ??
+            ''
+        ).trim();
+
+        const wardName = String(
+            address?.phuong ??
+            address?.phuongXa ??
+            address?.wardName ??
+            address?.xaPhuong ??
+            address?.xa ??
+            address?.phuong ??
+            ''
+        ).trim();
+
+        const provinceName = String(
+            address?.thanhPho ??
+            address?.tinhThanh ??
+            address?.provinceName ??
+            address?.tinh ??
+            address?.tinhThanhPho ??
+            ''
+        ).trim();
+
+        const structuredAddress = [detail, wardName, provinceName].filter(Boolean).join(', ');
+        const fullAddress = String(structuredAddress || address?.diaChiDayDu || address?.fullAddress || '').trim();
+
+        return {
+            detail,
+            wardName,
+            provinceName,
+            provinceId: address?.provinceId ?? address?.idTinh ?? address?.idTinhThanh ?? address?.tinhThanhCode ??
+                address?.maTinh ?? null,
+            wardCode: address?.wardCode ?? address?.phuongXaCode ?? address?.maPhuong ?? address?.idPhuongXa ??
+                address?.idXa ?? address?.maXa ?? null,
+            fullAddress
+        };
+    }
+
+    function addressLabel(address) {
+        const info = getAddressInfo(address);
+        const label = String(address?.tenDiaChi ?? address?.ten ?? address?.maDiaChi ?? '').trim();
+        const defaultText = address?.macDinh === true ? ' (Mặc định)' : '';
+        return [label, info.fullAddress].filter(Boolean).join(' - ') + defaultText || 'Địa chỉ chưa có thông tin';
+    }
+
+    async function fetchCustomerAddresses(customerId) {
+        const urls = [
+            `/api/khach-hang/${customerId}/dia-chi`,
+            `/api/khach-hang/${customerId}/dia-chis`,
+            `/api/dia-chi/khach-hang/${customerId}`,
+            `/api/dia-chi?khachHangId=${customerId}`,
+            `/api/dia-chi?idKh=${customerId}`
+        ];
+        let lastError = null;
+        for (const url of urls) {
+            try {
+                const data = await api(url);
+                return unwrapList(data);
+            } catch (error) {
+                lastError = error;
+            }
+        }
+        throw lastError || new Error('Không tải được địa chỉ khách hàng');
+    }
+
+    function refreshSavedAddressPicker(orderId) {
+        const order = currentOrder();
+        const select = el('savedAddressSelect');
+        if (!order || order.id !== orderId || !select) return;
+        const customerId = getSelectedCustomerId(order);
+        if (!customerId) return;
+        const addresses = customerAddressesByCustomerId.get(String(customerId)) || [];
+        const selectedKey = selectedAddressKeyByOrderId.get(order.id) || '';
+        select.disabled = false;
+        select.innerHTML = '<option value="">-- Chọn địa chỉ đã lưu --</option>' +
+            addresses.map((address, index) => {
+                const key = getAddressKey(address, index);
+                return `<option value="${esc(key)}" ${String(key) === String(selectedKey) ? 'selected' : ''}>${esc(addressLabel(address))}</option>`;
+            }).join('');
+        const hint = select.parentElement?.querySelector('.p-meta');
+        if (hint) hint.textContent = addresses.length ?
+            'Chọn một địa chỉ để tự điền thông tin người nhận.' :
+            'Khách hàng này chưa có địa chỉ đã lưu.';
+    }
+
+    async function applyDefaultSavedAddress(order, addresses) {
+        if (!order || !addresses?.length || selectedAddressKeyByOrderId.has(order.id)) return;
+        const defaultIndex = addresses.findIndex(isDefaultAddress);
+        if (defaultIndex < 0) return;
+        const defaultKey = getAddressKey(addresses[defaultIndex], defaultIndex);
+        await applySavedAddress(defaultKey, { silent: true });
+        refreshSavedAddressPicker(order.id);
+    }
+
+    async function loadSavedCustomerAddresses(order) {
+        const customerId = getSelectedCustomerId(order);
+        if (!order || !customerId) return;
+        const cacheKey = String(customerId);
+        if (customerAddressesByCustomerId.has(cacheKey)) {
+            refreshSavedAddressPicker(order.id);
+            await applyDefaultSavedAddress(order, customerAddressesByCustomerId.get(cacheKey) || []);
+            return;
+        }
         try {
-            upsertOrder(await api(`/api/pos/orders/${order.id}/customer`, {
-                method:'PUT',
-                body:JSON.stringify({
-                    tenKhachHang: el('customerName').value,
-                    soDienThoai: el('customerPhone').value,
-                    diaChiKhachHang: el('customerAddress').value
+            const addresses = await fetchCustomerAddresses(customerId);
+            customerAddressesByCustomerId.set(cacheKey, addresses);
+            refreshSavedAddressPicker(order.id);
+            await applyDefaultSavedAddress(order, addresses);
+        } catch (error) {
+            customerAddressesByCustomerId.set(cacheKey, []);
+            refreshSavedAddressPicker(order.id);
+            console.warn('Không tải được địa chỉ khách hàng:', error);
+        }
+    }
+
+    function textKey(value) {
+        return String(value || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .replace(/Đ/g, 'D')
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '');
+    }
+
+    function selectOptionByIdOrName(select, id, name) {
+        if (!select) return false;
+        const idText = id == null ? '' : String(id);
+        if (idText && [...select.options].some(option => option.value === idText)) {
+            select.value = idText;
+            return true;
+        }
+        const target = textKey(name);
+        if (!target) return false;
+        const option = [...select.options].find(item => {
+            const candidate = textKey(item.dataset.name || item.textContent);
+            return candidate === target || candidate.includes(target) || target.includes(candidate);
+        });
+        if (!option) return false;
+        select.value = option.value;
+        return true;
+    }
+
+    function normalizePosSelectSearch(value) {
+        return String(value || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .replace(/Đ/g, 'D')
+            .toLowerCase();
+    }
+
+    function filterPosSelectOptions(input, selectId) {
+        const select = el(selectId);
+        if (!select) return;
+        const keyword = normalizePosSelectSearch(input?.value || '');
+        [...select.options].forEach((option, index) => {
+            const searchable = normalizePosSelectSearch(`${option.textContent || ''} ${option.dataset?.name || ''}`);
+            option.hidden = index > 0 && keyword && !searchable.includes(keyword);
+        });
+    }
+
+    async function fillLocationFromAddress(address) {
+        const info = getAddressInfo(address);
+        await loadProvinces();
+        const province = el('provinceSelect');
+        if (!selectOptionByIdOrName(province, info.provinceId, info.provinceName)) {
+            rememberLocationFromControls();
+            scheduleAutoShippingFee();
+            return false;
+        }
+        await onProvinceChange();
+        const ward = el('wardSelect');
+        const wardMatched = selectOptionByIdOrName(ward, info.wardCode, info.wardName);
+        rememberLocationFromControls();
+        scheduleAutoShippingFee();
+        return wardMatched;
+    }
+
+    async function applySavedAddress(addressKey, { silent = false } = {}) {
+        const order = currentOrder();
+        if (!order) return;
+        const customerId = getSelectedCustomerId(order);
+        const addresses = customerAddressesByCustomerId.get(String(customerId)) || [];
+        const index = addresses.findIndex((address, i) => String(getAddressKey(address, i)) === String(addressKey));
+        if (index < 0) return;
+        const address = addresses[index];
+        const info = getAddressInfo(address);
+        const shippingAddressDetail = info.detail || info.fullAddress || '';
+        const displayAddress = info.fullAddress || shippingAddressDetail;
+        selectedAddressKeyByOrderId.set(order.id, getAddressKey(address, index));
+        if (el('customerAddress')) el('customerAddress').value = order.loaiDon === 'Giao hàng'
+            ? shippingAddressDetail
+            : displayAddress;
+        order.diaChiKhachHang = order.loaiDon === 'Giao hàng' ? shippingAddressDetail : displayAddress;
+        if (el('customerSelectedAddressText')) el('customerSelectedAddressText').textContent = displayAddress || 'Chưa chọn địa chỉ';
+
+        if (order.loaiDon === 'Giao hàng') {
+            selectedLocationByOrderId.set(order.id, {
+                provinceId: info.provinceId,
+                wardCode: info.wardCode,
+                provinceName: info.provinceName,
+                wardName: info.wardName
+            });
+            await fillLocationFromAddress(address);
+            scheduleAutoShippingFee();
+        } else {
+            await saveManualCustomer({ silent: true });
+        }
+        if (!silent) toast('Đã chọn địa chỉ đã lưu của khách hàng.');
+    }
+
+    // ================================================================
+    //  SHIPPING / LOCATION (giữ nguyên)
+    // ================================================================
+    async function loadProvinces() {
+        const select = el('provinceSelect');
+        if (!select || select.dataset.loaded) return;
+        try {
+            const response = await fetch(`${ADDRESS_API}/p/`);
+            if (!response.ok) throw new Error('API địa chỉ không phản hồi');
+            const list = await response.json();
+            select.innerHTML = '<option value="">Chọn tỉnh/thành</option>' +
+                list.map(p => `<option value="${p.code}" data-name="${esc(p.name)}">${esc(p.name)}</option>`)
+                    .join('');
+            select.dataset.loaded = '1';
+            const saved = getLocationState(currentOrder());
+            if (selectOptionByIdOrName(select, saved.provinceId, saved.provinceName)) {
+                await onProvinceChange(true);
+            }
+        } catch (error) {
+            toast('Không tải được tỉnh/thành: ' + error.message, 'error');
+        }
+    }
+
+    async function onProvinceChange(restoreSaved = false) {
+        const provinceId = el('provinceSelect')?.value;
+        if (el('wardSelect')) el('wardSelect').innerHTML = '<option value="">Chọn xã/phường</option>';
+        if (!restoreSaved && currentOrder()?.loaiDon === 'Giao hàng') clearShippingFeeForAddressChange();
+        rememberLocationFromControls();
+        if (!provinceId) { scheduleAutoShippingFee(); return; }
+        try {
+            const response = await fetch(`${ADDRESS_API}/p/${encodeURIComponent(provinceId)}?depth=2`);
+            if (!response.ok) throw new Error('API địa chỉ không phản hồi');
+            const data = await response.json();
+            const list = data.wards || [];
+            el('wardSelect').innerHTML = '<option value="">Chọn xã/phường</option>' +
+                list.map(w => `<option value="${esc(w.code)}" data-name="${esc(w.name)}">${esc(w.name)}</option>`)
+                    .join('');
+            const saved = getLocationState(currentOrder());
+            if (restoreSaved) selectOptionByIdOrName(el('wardSelect'), saved.wardCode, saved.wardName);
+            rememberLocationFromControls();
+            scheduleAutoShippingFee();
+        } catch (error) {
+            toast('Không tải được xã/phường: ' + error.message, 'error');
+        }
+    }
+
+    function onWardChange() {
+        rememberLocationFromControls();
+        scheduleAutoShippingFee();
+    }
+
+    function shippingPayload(fee) {
+        const p = el('provinceSelect'),
+            w = el('wardSelect');
+        const saved = getLocationState(currentOrder());
+        return {
+            giaoHang: true,
+            tenKhachHang: el('customerName')?.value,
+            soDienThoai: el('customerPhone')?.value,
+            diaChiCuThe: el('customerAddress')?.value,
+            provinceId: Number(p?.value || saved.provinceId || 0),
+            wardCode: w?.value || saved.wardCode || '',
+            provinceName: p?.selectedOptions?.[0]?.dataset?.name || saved.provinceName || '',
+            wardName: w?.selectedOptions?.[0]?.dataset?.name || saved.wardName || '',
+            ghiChu: el('shippingNote')?.value,
+            phiVanChuyen: fee == null ? moneyValue(el('shippingFeeInput')?.value) : fee
+        };
+    }
+
+    function hasCompleteShippingAddress() {
+        return Boolean(
+            el('provinceSelect')?.value &&
+            el('wardSelect')?.value
+        );
+    }
+
+    function setShippingFeeHint(message) {
+        const hint = el('shippingFeeHint');
+        if (hint) hint.textContent = message;
+    }
+
+    function setShippingFeeLocally(fee) {
+        const order = currentOrder();
+        if (!order) return;
+        const normalized = Math.max(0, Number(fee || 0));
+        const baseTotal = Math.max(0, Number(order.tongTienGoc || 0) - Number(order.soTienGiam || 0));
+        order.phiVanChuyen = normalized;
+        order.tongTienThanhToan = baseTotal + normalized;
+        if (el('shippingFeeInput')) el('shippingFeeInput').value = moneyText(normalized);
+        if (el('shippingFeeSummary')) el('shippingFeeSummary').textContent = fmt(normalized);
+        const total = el('totalDisplay');
+        if (total) {
+            total.dataset.total = String(order.tongTienThanhToan);
+            total.textContent = fmt(order.tongTienThanhToan);
+        }
+        const modalTotal = el('paymentModalTotal');
+        if (modalTotal) {
+            modalTotal.dataset.total = String(order.tongTienThanhToan);
+            modalTotal.textContent = fmt(order.tongTienThanhToan);
+        }
+        updatePaymentFields();
+    }
+
+    function clearShippingFeeForAddressChange() {
+        setShippingFeeLocally(0);
+        setShippingFeeHint('Đang chờ chọn Tỉnh/Thành phố và Xã/Phường để tự tính lại phí.');
+    }
+
+    function scheduleAutoShippingFee() {
+        const order = currentOrder();
+        if (!order || order.loaiDon !== 'Giao hàng') return;
+        clearTimeout(shippingFeeTimer);
+        if (!hasCompleteShippingAddress()) {
+            setShippingFeeHint('Chọn tỉnh/thành và xã/phường để hệ thống tự tính phí.');
+            return;
+        }
+        setShippingFeeHint('Đang tự động tính phí vận chuyển...');
+        const orderId = order.id;
+        shippingFeeTimer = setTimeout(async () => {
+            if (currentOrder()?.id !== orderId) return;
+            try { await calculateShippingFee({ silent: true }); } catch (error) {}
+        }, 450);
+    }
+
+    async function calculateShippingFee({ silent = false } = {}) {
+        if (!hasCompleteShippingAddress()) {
+            setShippingFeeLocally(0);
+            setShippingFeeHint('Chọn tỉnh/thành và xã/phường để hệ thống tự tính phí.');
+            return 0;
+        }
+        const order = currentOrder();
+        const requestId = ++shippingFeeRequest;
+        try {
+            const data = await api('/api/pos/shipping/fee', {
+                method: 'POST',
+                body: JSON.stringify(shippingPayload(0))
+            });
+            const fee = Number(data.fee || 0);
+            if (requestId !== shippingFeeRequest || currentOrder()?.id !== order?.id) return fee;
+            setShippingFeeLocally(fee);
+            setShippingFeeHint('Phí vận chuyển đã được tự động cập nhật.');
+            if (!silent) toast('Đã tính phí vận chuyển: ' + fmt(fee));
+            return fee;
+        } catch (error) {
+            if (requestId === shippingFeeRequest) {
+                setShippingFeeHint('Không thể tính phí vận chuyển. Vui lòng kiểm tra lại Tỉnh/Thành phố và Xã/Phường.');
+                if (!silent) toast(error.message, 'error');
+            }
+            throw error;
+        }
+    }
+
+    async function saveShippingInfo({ silent = false } = {}) {
+        const order = currentOrder();
+        if (!order) return null;
+        try {
+            let fee = moneyValue(el('shippingFeeInput')?.value);
+            if (hasCompleteShippingAddress()) fee = await calculateShippingFee({ silent: true });
+            const location = getLocationState(order);
+            const updated = await api(`/api/pos/orders/${order.id}/shipping`, {
+                method: 'PUT',
+                body: JSON.stringify(shippingPayload(fee))
+            });
+            upsertOrder(updated);
+            selectedLocationByOrderId.set(updated.id, location);
+            if (!silent) toast('Đã lưu thông tin giao hàng');
+            return updated;
+        } catch (error) {
+            if (!silent) toast(error.message, 'error');
+            return null;
+        }
+    }
+
+    function buildWalkInCounterAddress() {
+        const order = currentOrder();
+        const detail = String(el('customerAddress')?.value || '').trim();
+        if (!order || order.loaiDon === 'Giao hàng' || getSelectedCustomerId(order)) return detail;
+        const location = getLocationState(order);
+        const parts = [detail];
+        [location.wardName, location.provinceName].forEach(part => {
+            const value = String(part || '').trim();
+            if (value && !parts.some(existing => textKey(existing).includes(textKey(value)))) parts.push(value);
+        });
+        return parts.filter(Boolean).join(', ');
+    }
+
+    async function saveManualCustomer({ silent = false } = {}) {
+        const order = currentOrder();
+        if (!order) return null;
+        rememberLocationFromControls();
+        try {
+            const updated = await api(`/api/pos/orders/${order.id}/customer`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    tenKhachHang: el('customerName')?.value,
+                    soDienThoai: el('customerPhone')?.value,
+                    diaChiKhachHang: buildWalkInCounterAddress()
                 })
-            }));
-            toast('Đã lưu thông tin khách hàng');
-        } catch (e) { toast(e.message, 'error'); }
+            });
+            const location = selectedLocationByOrderId.get(order.id);
+            upsertOrder(updated);
+            if (location) selectedLocationByOrderId.set(updated.id, location);
+            if (!silent) toast('Đã lưu thông tin khách hàng');
+            return updated;
+        } catch (error) {
+            if (!silent) toast(error.message, 'error');
+            return null;
+        }
     }
 
-    async function applyVoucher() {
+    function setWalkIn() {
         const order = currentOrder();
-        const code = el('voucherInput').value.trim();
-        if (!order || !code) return;
-        try {
-            upsertOrder(await api(`/api/pos/orders/${order.id}/voucher`, {method:'POST', body:JSON.stringify({maVoucher:code})}));
-            toast('Đã áp dụng mã giảm giá');
-        } catch (e) { toast(e.message, 'error'); }
+        if (order) {
+            selectedCustomerIdByOrderId.delete(order.id);
+            selectedAddressKeyByOrderId.delete(order.id);
+            selectedLocationByOrderId.delete(order.id);
+        }
+        if (el('customerName')) el('customerName').value = 'Khách lẻ';
+        if (el('customerPhone')) el('customerPhone').value = '';
+        if (el('customerAddress')) el('customerAddress').value = '';
+        resetLocationControls();
+        if (order?.loaiDon === 'Giao hàng') scheduleAutoShippingFee();
+        saveManualCustomer();
     }
 
-    async function removeVoucher() {
+    async function setShippingGuest() {
         const order = currentOrder();
         if (!order) return;
+        selectedCustomerIdByOrderId.set(order.id, null);
+        selectedAddressKeyByOrderId.delete(order.id);
+        selectedLocationByOrderId.delete(order.id);
+        order.loaiDon = 'Giao hàng';
+        order.tenKhachHang = '';
+        order.soDienThoai = '';
+        order.diaChiKhachHang = '';
+        order.provinceId = null;
+        order.wardCode = null;
+        order.provinceName = '';
+        order.wardName = '';
+        order.phiVanChuyen = 0;
         try {
-            upsertOrder(await api(`/api/pos/orders/${order.id}/voucher`, {method:'DELETE'}));
-        } catch (e) { toast(e.message, 'error'); }
+            const updated = await api(`/api/pos/orders/${order.id}/customer`, {
+                method: 'PUT',
+                body: JSON.stringify({ tenKhachHang: 'Khách lẻ', soDienThoai: '', diaChiKhachHang: '' })
+            });
+            updated.loaiDon = 'Giao hàng';
+            updated.tenKhachHang = '';
+            updated.soDienThoai = '';
+            updated.diaChiKhachHang = '';
+            updated.phiVanChuyen = 0;
+            upsertOrder(updated);
+        } catch (error) {
+            render();
+        }
+        toast('Đã chuyển sang khách lẻ giao hàng. Hãy nhập thông tin nhận hàng.');
     }
 
+    // ================================================================
+    //  VOUCHER (giữ nguyên)
+    // ================================================================
+    function closeVoucherModal() {
+        el('voucherModal')?.classList.remove('open');
+    }
+
+    async function openVoucherModal() {
+        const order = currentOrder();
+        if (!order) return toast('Vui lòng tạo hóa đơn trước', 'error');
+        const list = el('voucherList');
+        el('voucherModalSubtitle').textContent = `Tiền hàng hiện tại: ${fmt(order.tongTienGoc || 0)}`;
+        list.innerHTML = '<div class="empty"><div><b>Đang tải phiếu giảm giá...</b></div></div>';
+        el('voucherModal').classList.add('open');
+        try {
+            const vouchers = await api(`/api/pos/orders/${order.id}/vouchers`);
+            renderVoucherList(vouchers || []);
+        } catch (e) {
+            list.innerHTML = `<div class="empty"><div><b>Không tải được phiếu giảm giá</b><span>${esc(e.message)}</span></div></div>`;
+        }
+    }
+
+    function renderVoucherList(vouchers) {
+        const list = el('voucherList');
+        if (!vouchers.length) {
+            list.innerHTML = '<div class="empty"><div><b>Chưa có phiếu giảm giá phù hợp</b><span>Hãy kiểm tra lại cấu hình phiếu giảm giá.</span></div></div>';
+            return;
+        }
+        const usable = vouchers.filter(v => v.applicable);
+        const locked = vouchers.filter(v => !v.applicable);
+        list.innerHTML = [
+            usable.length ? `<div class="panel-title">Có thể dùng ngay</div>${usable.map(voucherCard).join('')}` : '',
+            locked.length ? `<div class="panel-title" style="margin-top:6px">Cần thêm điều kiện</div>${locked.map(voucherCard).join('')}` : ''
+        ].join('');
+    }
+
+    function voucherValueText(voucher) {
+        const type = String(voucher.loaiGiam || '').toLowerCase();
+        const value = Number(voucher.giaTri || 0);
+        if (type.includes('phan') || type.includes('%')) {
+            return `Giảm ${value}%`;
+        }
+        return `Giảm ${fmt(value)}`;
+    }
+
+    function voucherDateText(value) {
+        if (!value) return '';
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('vi-VN');
+    }
+
+    function voucherCard(voucher) {
+        const disabled = !voucher.applicable;
+        const selected = voucher.selected;
+        const condition = Number(voucher.dieuKienDonHang || 0);
+        const maxDiscount = Number(voucher.giaTriToiDa || 0);
+        const remain = voucher.soLuongConLai == null ? 'Không giới hạn' : `${voucher.soLuongConLai} lượt`;
+        const end = voucherDateText(voucher.ngayKetThuc);
+        return `
+            <div class="voucher-card ${disabled ? 'disabled' : ''}">
+                <div class="voucher-ticket">
+                    <div>${voucherValueText(voucher)}<small>${esc(voucher.maVoucher || '')}</small></div>
+                </div>
+                <div class="voucher-info">
+                    <b>${esc(voucher.tenVoucher || voucher.maVoucher || 'Phiếu giảm giá')}</b>
+                    <div class="p-meta">Đơn tối thiểu ${fmt(condition)}${maxDiscount ? ` · Giảm tối đa ${fmt(maxDiscount)}` : ''}</div>
+                    <div class="p-meta">Dự kiến giảm ${fmt(voucher.soTienGiam || 0)}${end ? ` · HSD ${end}` : ''}</div>
+                    <div class="voucher-tags">
+                        <span class="voucher-tag ${disabled ? 'warn' : 'ok'}">${disabled ? esc(voucher.reason || 'Chưa đủ điều kiện') : 'Dùng được ngay'}</span>
+                        <span class="voucher-tag">Còn ${esc(remain)}</span>
+                        ${Number(voucher.canMuaThem || 0) > 0 ? `<span class="voucher-tag warn">Mua thêm ${fmt(voucher.canMuaThem)}</span>` : ''}
+                    </div>
+                </div>
+                <button class="btn ${disabled ? 'danger' : 'primary'}" type="button" data-code="${esc(voucher.maVoucher || '')}" ${disabled || selected ? 'disabled' : ''} onclick="applyVoucherFromButton(this)">${selected ? 'Đang dùng' : disabled ? 'Chưa đủ' : 'Dùng phiếu'}</button>
+            </div>`;
+    }
+
+    function applyVoucherFromButton(button) {
+        applyVoucher(button?.dataset?.code || '');
+    }
+
+    async function applyVoucher(codeArg) {
+        const order = currentOrder();
+        if (!order) return toast('Vui lòng tạo hóa đơn trước', 'error');
+        const code = (codeArg || el('voucherInput').value).trim();
+        if (!code) return;
+        try {
+            upsertOrder(await api(`/api/pos/orders/${order.id}/voucher`, {
+                method: 'POST',
+                body: JSON.stringify({ maVoucher: code })
+            }), { keepLocalShippingDraft: true });
+            if (el('voucherInput')) el('voucherInput').value = code;
+            toast('Đã áp dụng mã giảm giá');
+            if (el('voucherModal')?.classList.contains('open')) {
+                await openVoucherModal();
+            }
+        } catch (e) {
+            toast(e.message, 'error');
+        }
+    }
+
+    // ================================================================
+    //  CHECKOUT
+    // ================================================================
     async function checkout() {
         const order = currentOrder();
-        if (!order) return;
+        if (!order) return toast('Vui lòng tạo hóa đơn trước', 'error');
+        if (!order.items?.length) return toast('Đơn hàng chưa có sản phẩm', 'error');
+        if (!el('transferModal')?.classList.contains('open')) { await openPaymentModal(); return; }
+        const total = Number(order.tongTienThanhToan || 0);
+        let tienMat = moneyValue(el('cashInput')?.value);
+        let chuyenKhoan = moneyValue(el('transferInput')?.value);
+        if (payMode === 'TRANSFER') {
+            chuyenKhoan = chuyenKhoan > 0 ? chuyenKhoan : tienMat;
+            tienMat = 0;
+        } else if (payMode === 'CASH') {
+            tienMat = tienMat > 0 ? tienMat : chuyenKhoan;
+            chuyenKhoan = 0;
+        }
+        const paid = tienMat + chuyenKhoan;
+        if (paid < total) return toast('Khách thanh toán chưa đủ tiền', 'error');
+        const ok = await showConfirm({
+            title: 'Xác nhận thanh toán',
+            message: `Thanh toán hóa đơn ${order.maHoaDon} với tổng tiền ${fmt(total)}?`,
+            okText: 'Thanh toán',
+            cancelText: 'Kiểm tra lại'
+        });
+        if (!ok) return;
         try {
-            // Sử dụng biến paidAmount thay vì đọc lại input
             const done = await api(`/api/pos/orders/${order.id}/checkout`, {
-                method:'POST',
-                body:JSON.stringify({khachThanhToan: paidAmount, phuongThucThanhToan:'TIEN_MAT'})
+                method: 'POST',
+                body: JSON.stringify({
+                    khachThanhToan: paid,
+                    tienMat,
+                    chuyenKhoan,
+                    phuongThucThanhToan: payMode === 'TRANSFER'
+                        ? 'CHUYEN_KHOAN'
+                        : (payMode === 'CASH' ? 'TIEN_MAT' : 'KET_HOP')
+                })
             });
-            toast(`Thanh toán thành công ${done.maHoaDon}`);
-            orders = orders.filter(item => item.id !== done.id);
-            paidAmount = 0;
-            activeOrderId = orders[0]?.id || null;
+            closeTransferModal();
+            toast('Thanh toán thành công ' + done.maHoaDon);
+            orders = orders.filter(o => o.id !== done.id);
+            clearOrderDraft(done.id);
+            setActiveOrder(restoreActiveOrderId() || orders[0]?.id || null);
             render();
-        } catch (e) { toast(e.message, 'error'); }
+        } catch (e) {
+            toast(e.message, 'error');
+        }
     }
 
+    // ================================================================
+    //  INIT
+    // ================================================================
     document.addEventListener('DOMContentLoaded', () => {
+        loadPendingOrders();
+        el('orderArea')?.addEventListener('input', () => rememberActiveOrderDraft());
+        el('orderArea')?.addEventListener('change', () => rememberActiveOrderDraft());
         el('productKeyword')?.addEventListener('input', () => {
             clearTimeout(productSearchTimer);
             productSearchTimer = setTimeout(loadProductChoices, 350);
@@ -443,6 +3091,8 @@
             customerSearchTimer = setTimeout(loadCustomers, 350);
         });
     });
+    window.addEventListener('beforeunload', () => rememberActiveOrderDraft());
 </script>
+
 </body>
 </html>

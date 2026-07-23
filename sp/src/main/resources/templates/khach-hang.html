@@ -3,738 +3,3062 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quản lý khách hàng</title>
-    <script src="/js/app-shell.js" defer></script>
-    <style>
-        /* Giữ nguyên toàn bộ CSS như bản trước, không thay đổi */
-        *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f3f4f6;color:#172033}.page{min-height:100vh;padding:22px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:14px}.title h1{font-size:22px;margin:0 0 4px;font-weight:800}.title p{margin:0;color:#6b7280;font-size:13px}.toolbar{display:flex;gap:8px;align-items:center}.btn{height:36px;border:1px solid #dde3ea;border-radius:8px;background:#fff;color:#172033;font-weight:700;font-size:13px;padding:0 13px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;text-decoration:none;transition:all 0.2s}.btn:hover{background:#f8fafc}.btn.primary{background:#c8a474;border-color:#c8a474;color:#fff}.btn.primary:hover{background:#b8945a;border-color:#b8945a}.btn.danger{color:#dc2626}.btn.danger:hover{background:#fee2e2}.btn.icon{width:34px;padding:0;justify-content:center}.btn:disabled{opacity:0.5;cursor:not-allowed}.btn-clear{background:#fee2e2;color:#dc2626;border-color:#fecaca}.btn-clear:hover{background:#fecaca}.panel{background:#fff;border:1px solid #dde3ea;border-radius:8px;overflow:hidden}.filters{display:grid;grid-template-columns:minmax(260px,1fr) 190px;gap:12px;padding:16px;border-bottom:1px solid #e5e7eb;align-items:end}.field label{display:block;font-size:12px;color:#64748b;font-weight:800;margin-bottom:6px;text-transform:uppercase}.field input,.field select{width:100%;height:38px;border:1px solid #d8dee8;border-radius:8px;padding:0 11px;font-size:14px;background:#fff;transition:border 0.2s}.field input:focus,.field select:focus{outline:2px solid rgba(200,164,116,.25);border-color:#c8a474}.field input:disabled{background:#f1f5f9;color:#64748b;cursor:not-allowed}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:950px}th{height:44px;background:#f8fafc;border-bottom:1px solid #e5e7eb;color:#64748b;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.02em;padding:0 14px;font-weight:700}td{height:50px;border-bottom:1px solid #edf0f4;padding:0 14px;font-size:14px;vertical-align:middle}tr:hover td{background:#fcfcfd}.code{display:inline-flex;background:#f1f5f9;border-radius:5px;padding:3px 7px;font-size:12px;font-weight:800;color:#334155;font-family:monospace}.badge{display:inline-flex;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:800}.badge.on{background:#dcfce7;color:#16a34a}.badge.off{background:#fee2e2;color:#dc2626}.actions{display:flex;align-items:center;gap:6px}.action-btn{background:none;border:none;cursor:pointer;padding:5px 8px;border-radius:6px;font-size:15px;transition:all 0.15s;display:inline-flex;align-items:center;justify-content:center}.action-btn:hover{background:#f1f5f9}.action-btn.edit{color:#2563eb}.switch{position:relative;display:inline-flex;width:36px;height:20px}.switch input{display:none}.switch span{position:absolute;inset:0;background:#cbd5e1;border-radius:999px;cursor:pointer;transition:.2s}.switch span:before{content:"";position:absolute;width:16px;height:16px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.2s}.switch input:checked+span{background:#16a34a}.switch input:checked+span:before{transform:translateX(16px)}.empty{padding:42px 18px;text-align:center;color:#64748b}.modal{position:fixed;inset:0;background:rgba(15,23,42,.48);z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(3px)}.modal[hidden]{display:none}.modal-box{width:min(800px,100%);background:#fff;border-radius:8px;box-shadow:0 20px 60px rgba(15,23,42,.22);overflow:hidden;max-height:90vh;overflow-y:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #e5e7eb;position:sticky;top:0;background:#fff;z-index:1}.modal-head h2{font-size:18px;margin:0}.modal-body{padding:18px 20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid #e5e7eb;background:#fafbfc;border-radius:0 0 8px 8px}.full{grid-column:1/-1}.required{color:#dc2626;margin-left:2px}.toast{position:fixed;right:18px;bottom:18px;z-index:1200;background:#172033;color:#fff;padding:12px 14px;border-radius:8px;font-size:13px;max-width:360px;box-shadow:0 12px 30px rgba(15,23,42,.24);animation:slideUp 0.3s ease}.toast.error{background:#b91c1c}.toast.success{background:#15803d}@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}.filter-actions{display:flex;gap:8px;align-items:end}.field-note{font-size:11px;color:#94a3b8;margin-top:4px;font-style:italic}.address-full{grid-column:1/-1;border-top:1px solid #e5e7eb;padding-top:14px;margin-top:6px}.address-full .address-label{font-size:13px;font-weight:700;color:#334155;margin-bottom:10px;display:block}.address-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.address-row .field{margin-bottom:0}
+    <title>Quản lý khách hàng | 4MenStore</title>
 
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            padding: 12px 0;
-            flex-wrap: wrap;
-            border-top: 1px solid #e5e7eb;
-            margin-top: 0;
+    <!-- Google Font: Inter hỗ trợ tiếng Việt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+
+    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+    <style>
+        :root{
+            --navy:#102a56;
+            --navy-hover:#173d78;
+            --navy-2:#173c76;
+            --ink:#23344d;
+            --muted:#70819a;
+            --line:#e6ebf2;
+            --bg:#f1f4f8;
+            --panel:#fff;
+            --success:#16b77b;
+            --success-bg:#daf9ea;
+            --danger:#d74b56;
+            --danger-bg:#fff0f1;
+            --shadow:0 7px 20px rgba(40,66,101,.08);
         }
-        .pagination .btn {
-            min-width: 36px;
-            justify-content: center;
-            font-size: 13px;
+
+        *{box-sizing:border-box}
+
+        body{
+            margin:0;
+            background:var(--bg);
+            color:var(--ink);
+            font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
+            font-size:13px;
+            font-weight:400;
+            line-height:1.5;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
         }
-        .pagination .btn.primary {
-            background: #c8a474;
-            border-color: #c8a474;
-            color: #fff;
+
+        button,input,select{font:inherit}
+        button{cursor:pointer}
+
+        .customer-page{
+            min-height:100vh;
+            padding:34px 28px 42px;
         }
-        .pagination .btn.primary:hover {
-            background: #b8945a;
-            border-color: #b8945a;
+
+        .breadcrumb{
+            margin:0 0 18px;
+            font-size:19px;
+            line-height:1.2;
+            font-weight:800;
+            color:#344b6c;
         }
-        .pagination .btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
+
+        .breadcrumb span{color:var(--navy)}
+
+        .filter-card,.table-card{
+            background:var(--panel);
+            border:1px solid #e0e8f1;
+            border-radius:12px;
+            box-shadow:var(--shadow);
         }
-        .pagination .page-info {
-            color: #64748b;
-            font-size: 13px;
-            padding: 0 10px;
+
+        .filter-card{
+            min-height:62px;
+            padding:14px 16px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            justify-content:space-between;
         }
-        .summary-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 16px;
-            background: #f8fafc;
-            border-bottom: 1px solid #e5e7eb;
-            font-size: 13px;
-            color: #64748b;
+
+        .filter-left,.filter-actions{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            min-width:0;
         }
-        .summary-bar .total {
-            font-weight: 600;
-            color: #172033;
+
+        .search-box{
+            position:relative;
+            width:270px;
         }
-        .page-size-selector {
-            display: flex;
-            align-items: center;
-            gap: 6px;
+
+        .search-box svg{
+            position:absolute;
+            left:11px;
+            top:50%;
+            transform:translateY(-50%);
+            width:15px;
+            height:15px;
+            stroke:#94a2b6;
+            fill:none;
+            stroke-width:2;
         }
-        .page-size-selector select {
-            height: 32px;
-            border: 1px solid #d8dee8;
-            border-radius: 6px;
-            padding: 0 8px;
-            font-size: 13px;
-            background: #fff;
+
+        .input,.select{
+            height:33px;
+            border:1px solid #e0e6ee;
+            border-radius:5px;
+            background:#fff;
+            color:#4a5a70;
+            outline:0;
+            transition:.18s ease;
         }
-        .col-cccd {
-            display: none;
+
+        .input{
+            width:100%;
+            padding:0 10px 0 34px;
         }
-        @media(max-width:900px){
-            .filters{grid-template-columns:1fr}
-            .topbar{align-items:flex-start;flex-direction:column}
-            .modal-body{grid-template-columns:1fr}
-            .page{padding:16px}
-            .address-row{grid-template-columns:1fr}
-            .summary-bar{flex-direction:column;gap:8px;align-items:flex-start}
+
+        .select{
+            min-width:112px;
+            padding:0 28px 0 10px;
         }
+
+        .input:focus,.select:focus,.form-control:focus{
+            border-color:#8da7cf;
+            box-shadow:0 0 0 3px rgba(67,110,171,.12);
+        }
+
+        .select-search{
+            width:100%;
+            height:34px;
+            margin-bottom:7px;
+            padding:0 10px;
+            border:1px solid #e0e6ee;
+            border-radius:6px;
+            background:#fff;
+            color:#4a5a70;
+            outline:0;
+            font:inherit;
+        }
+
+        .select-search:focus{
+            border-color:#c8a474;
+            box-shadow:0 0 0 3px rgba(200,164,116,.12);
+        }
+
+        .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}
+
+        .btn:hover{background:var(--navy-hover);border-color:var(--navy-hover);color:#fff}
+
+        .btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+
+        .btn.primary:hover{background:var(--navy-hover);border-color:var(--navy-hover)}
+
+        .btn:disabled{
+            opacity:.55;
+            cursor:not-allowed;
+        }
+
+        .table-card{
+            margin-top:14px;
+            overflow:hidden;
+        }
+
+        .table-scroll{overflow:auto}
+
+        table{
+            width:100%;
+            min-width:1180px;
+            border-collapse:collapse;
+        }
+
+        th{
+            height:38px;
+            padding:0 13px;
+            background:#f7f8fa;
+            color:#22354e;
+            text-align:left;
+            text-transform:uppercase;
+            font-size:10px;
+            font-weight:800;
+            letter-spacing:.01em;
+            border-bottom:1px solid var(--line);
+            white-space:nowrap;
+        }
+
+        td{
+            height:55px;
+            padding:8px 13px;
+            color:#4d5c70;
+            border-bottom:1px solid #edf1f5;
+            vertical-align:middle;
+            line-height:1.35;
+        }
+
+        tbody tr:hover{background:#fbfcfe}
+        tbody tr:last-child td{border-bottom:0}
+
+        .strong{
+            font-weight:750;
+            color:#24364f;
+        }
+
+        .customer-code{
+            font-size:11px;
+            font-weight:800;
+            color:#2a3e5a;
+            white-space:nowrap;
+        }
+
+        .address-cell{
+            max-width:220px;
+            min-width:180px;
+            white-space:normal;
+        }
+
+        .muted{color:#99a7b9}
+
+        .status{
+            display:inline-flex;
+            align-items:center;
+            border-radius:999px;
+            padding:4px 10px;
+            font-size:10px;
+            font-weight:800;
+            white-space:nowrap;
+        }
+
+        .status.on{
+            background:var(--success-bg);
+            color:#18a26d;
+        }
+
+        .status.off{
+            background:var(--danger-bg);
+            color:var(--danger);
+        }
+
+        .row-actions{
+            display:flex;
+            align-items:center;
+            gap:7px;
+        }
+
+        .icon-btn{
+            height:28px;
+            width:28px;
+            border:1px solid #e4eaf1;
+            border-radius:5px;
+            background:#fff;
+            color:#6d7d91;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            transition:.16s;
+        }
+
+        .icon-btn:hover{
+            color:var(--navy);
+            border-color:#cdd9e7;
+            background:#f7f9fc;
+        }
+
+        .icon-btn svg{
+            width:15px;
+            height:15px;
+            stroke:currentColor;
+            fill:none;
+            stroke-width:1.9;
+            stroke-linecap:round;
+            stroke-linejoin:round;
+        }
+
+        .switch{
+            width:27px;
+            height:16px;
+            display:inline-flex;
+            position:relative;
+            flex:0 0 auto;
+        }
+
+        .switch input{
+            opacity:0;
+            width:0;
+            height:0;
+        }
+
+        .switch span{
+            position:absolute;
+            inset:0;
+            background:#c6d1de;
+            border-radius:999px;
+            transition:.2s;
+            cursor:pointer;
+        }
+
+        .switch span:before{
+            content:"";
+            position:absolute;
+            width:12px;
+            height:12px;
+            left:2px;
+            top:2px;
+            border-radius:50%;
+            background:#fff;
+            box-shadow:0 1px 2px rgba(0,0,0,.16);
+            transition:.2s;
+        }
+
+        .switch input:checked + span{background:#25b98f}
+        .switch input:checked + span:before{transform:translateX(11px)}
+
+        .list-footer{
+            min-height:54px;
+            padding:10px 16px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            border-top:1px solid var(--line);
+            gap:12px;
+        }
+
+        .total-note{
+            font-weight:600;
+            color:#7b899b;
+        }
+
+        .total-note b{color:#30445f}
+
+        .pagination{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap;margin-left:auto}
+
+        .page-btn{
+            min-width:29px;
+            height:29px;
+            padding:0 8px;
+            border-radius:5px;
+            border:1px solid #e1e8f0;
+            background:#fff;
+            color:#63748a;
+            font-weight:700;
+        }
+
+        .page-btn:hover:not(:disabled){border-color:var(--navy);color:var(--navy);background:#eef4fb}
+
+        .page-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}
+
+        .page-btn:disabled{
+            opacity:.45;
+            cursor:not-allowed;
+        }
+
+        .empty{
+            padding:56px 18px;
+            text-align:center;
+            color:#8492a5;
+            font-weight:600;
+        }
+
+        .modal-backdrop{
+            position:fixed;
+            inset:0;
+            z-index:1100;
+            background:rgba(14,29,52,.42);
+            display:flex;
+            align-items:flex-start;
+            justify-content:center;
+            padding:24px;
+            overflow:auto;
+            backdrop-filter:blur(2px);
+        }
+
+        .modal-backdrop[hidden]{display:none}
+
+        .dialog{
+            width:min(1110px,100%);
+            margin:auto;
+            background:#fff;
+            border-radius:10px;
+            box-shadow:0 24px 80px rgba(13,31,61,.25);
+            overflow:hidden;
+        }
+
+        .dialog-head{
+            min-height:62px;
+            padding:12px 20px;
+            border-bottom:1px solid #e9edf3;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            background:#fff;
+            position:sticky;
+            top:0;
+            z-index:3;
+        }
+
+        .dialog-title{
+            font-size:17px;
+            font-weight:800;
+            color:#223a61;
+        }
+
+        .dialog-subtitle{
+            font-size:11px;
+            color:#8492a5;
+            margin-top:3px;
+        }
+
+        .close-btn{
+            width:31px;
+            height:31px;
+            border:0;
+            border-radius:6px;
+            background:#fff;
+            color:#77869a;
+            font-size:22px;
+            line-height:1;
+        }
+
+        .close-btn:hover{
+            background:#f0f3f7;
+            color:#253b60;
+        }
+
+        .editor-layout{
+            display:grid;
+            grid-template-columns:245px minmax(0,1fr);
+            min-height:570px;
+        }
+
+        .profile-pane{
+            padding:22px 20px;
+            border-right:1px solid #edf0f4;
+            background:#fff;
+        }
+
+        .profile-avatar{
+            width:92px;
+            height:92px;
+            margin:0 auto 16px;
+            border:2px dashed #d4dce7;
+            border-radius:50%;
+            background:#f7f9fc;
+            color:#8491a6;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:30px;
+            font-weight:800;
+            text-transform:uppercase;
+        }
+
+        .profile-avatar svg{
+            width:28px;
+            height:28px;
+            stroke:currentColor;
+            fill:none;
+            stroke-width:1.7;
+        }
+
+        .avatar-caption{
+            text-align:center;
+            color:#6f7e92;
+            font-weight:700;
+            font-size:11px;
+            margin:-9px 0 22px;
+        }
+
+        .form-group{margin-bottom:13px}
+
+        .form-label{
+            display:block;
+            margin:0 0 6px;
+            font-size:10px;
+            text-transform:uppercase;
+            font-weight:800;
+            color:#6f7e92;
+        }
+
+        .required{color:#ec5961}
+
+        .form-control{
+            width:100%;
+            height:35px;
+            border:1px solid #e3e8ee;
+            border-radius:5px;
+            outline:0;
+            padding:0 10px;
+            color:#32445e;
+            background:#fff;
+            transition:.16s;
+        }
+
+        .form-control::placeholder{
+            color:#a4b0bf;
+            font-style:italic;
+        }
+
+        .form-control.is-invalid{
+            border-color:#d74b56 !important;
+            box-shadow:0 0 0 3px rgba(215,75,86,.12) !important;
+        }
+
+        .field-error{
+            display:block;
+            min-height:14px;
+            margin-top:4px;
+            color:#d74b56;
+            font-size:10px;
+            line-height:1.35;
+        }
+
+        .workspace{
+            padding:24px 26px;
+            background:#fff;
+        }
+
+        .field-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:13px 14px;
+        }
+
+        .field-grid .full{grid-column:1/-1}
+
+        .section-rule{
+            height:1px;
+            background:#ecf0f4;
+            margin:20px 0 15px;
+        }
+
+        .section-head{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            margin-bottom:12px;
+        }
+
+        .section-head h3{
+            font-size:14px;
+            margin:0;
+            color:#273d5e;
+        }
+
+        .section-head .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}
+
+        .address-stack{
+            display:grid;
+            gap:12px;
+        }
+
+        .address-card{
+            border:1px solid #dbe5f0;
+            border-radius:6px;
+            padding:14px;
+            background:#fff;
+        }
+
+        .address-card-head{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:10px;
+            border-bottom:1px solid #edf1f5;
+            padding-bottom:10px;
+            margin-bottom:11px;
+        }
+
+        .address-default{
+            display:inline-flex;
+            align-items:center;
+            gap:7px;
+            color:#465874;
+            font-weight:700;
+            font-size:11px;
+        }
+
+        .address-default input{
+            accent-color:#e95b64;
+            margin:0;
+        }
+
+        .address-actions{
+            display:flex;
+            gap:6px;
+        }
+
+        .address-actions .icon-btn{
+            width:25px;
+            height:25px;
+        }
+
+        .address-grid{
+            display:grid;
+            grid-template-columns:repeat(6,minmax(0,1fr));
+            gap:11px;
+        }
+
+        .address-grid .span-2{grid-column:span 2}
+        .address-grid .span-3{grid-column:span 3}
+        .address-grid .span-6{grid-column:1/-1}
+
+        .dialog-foot{
+            padding:14px 20px;
+            border-top:1px solid #e8edf3;
+            background:#fff;
+            display:flex;
+            justify-content:flex-end;
+            gap:10px;
+            position:sticky;
+            bottom:0;
+            z-index:3;
+        }
+
+        .dialog-foot .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}
+
+        .detail-dialog{width:min(1070px,100%)}
+
+        .detail-layout{
+            display:grid;
+            grid-template-columns:235px minmax(0,1fr);
+            min-height:455px;
+            background:#f5f7fa;
+        }
+
+        .detail-pane{
+            background:#fff;
+            padding:18px 15px;
+            border-right:1px solid #e8edf2;
+        }
+
+        .detail-pane h3{
+            font-size:12px;
+            margin:0 0 13px;
+            color:#283e5d;
+        }
+
+        .detail-avatar{
+            width:80px;
+            height:80px;
+            margin:7px auto 15px;
+            border-radius:50%;
+            border:2px dashed #d5dfe9;
+            color:#7a889d;
+            background:#f7f9fb;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:24px;
+            font-weight:800;
+            text-transform:uppercase;
+        }
+
+        .detail-field{margin-bottom:10px}
+
+        .detail-field label{
+            display:block;
+            font-size:9px;
+            color:#7d8da1;
+            text-transform:uppercase;
+            font-weight:800;
+            margin-bottom:4px;
+        }
+
+        .detail-value{
+            min-height:29px;
+            border:1px solid #e6ebf1;
+            border-radius:5px;
+            background:#fff;
+            padding:7px 8px;
+            font-size:11px;
+            color:#4b5e77;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+
+        .detail-pane .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}
+
+        .address-pane{
+            padding:18px;
+            background:#fff;
+        }
+
+        .address-pane-head{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            border-bottom:1px solid #ebeff4;
+            padding-bottom:11px;
+            margin-bottom:12px;
+        }
+
+        .address-pane h3{
+            margin:0;
+            font-size:13px;
+            color:#263e60;
+        }
+
+        .address-list{
+            display:grid;
+            gap:10px;
+        }
+
+        .address-view-card{
+            border:1px solid #e4eaf1;
+            border-radius:6px;
+            padding:13px;
+            background:#fff;
+        }
+
+        .address-view-top{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            margin-bottom:9px;
+        }
+
+        .address-name{
+            font-size:12px;
+            font-weight:800;
+            color:#354b6b;
+        }
+
+        .default-tag{
+            font-size:10px;
+            color:#1ca77a;
+            font-weight:800;
+        }
+
+        .address-line{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:12px;
+        }
+
+        .address-line label{
+            display:block;
+            font-size:9px;
+            color:#8593a5;
+            text-transform:uppercase;
+            font-weight:800;
+            margin-bottom:3px;
+        }
+
+        .address-line p{
+            margin:0;
+            color:#4d5e74;
+            font-size:11px;
+        }
+
+        .address-full-text{
+            margin-top:10px;
+            border-top:1px solid #eef2f5;
+            padding-top:9px;
+            font-size:11px;
+            color:#506176;
+        }
+
+        .loading{
+            text-align:center;
+            padding:30px;
+            color:#7c8ba0;
+            font-weight:600;
+        }
+
+        .toast{
+            position:fixed;
+            right:22px;
+            bottom:20px;
+            z-index:1400;
+            max-width:380px;
+            border-radius:7px;
+            padding:12px 14px;
+            color:#fff;
+            background:#173964;
+            font-weight:700;
+            font-size:12px;
+            box-shadow:0 13px 30px rgba(14,34,65,.22);
+            animation:toastIn .22s ease;
+        }
+
+        .toast.error{background:#c9404b}
+        .toast.success{background:#16815e}
+
+        @keyframes toastIn{
+            from{
+                opacity:0;
+                transform:translateY(12px);
+            }
+            to{
+                opacity:1;
+                transform:none;
+            }
+        }
+
+        @media(max-width:1000px){
+            .customer-page{padding:24px 18px}
+
+            .filter-card{
+                align-items:stretch;
+                flex-direction:column;
+            }
+
+            .filter-left,.filter-actions{
+                width:100%;
+                flex-wrap:wrap;
+            }
+
+            .search-box{width:min(100%,380px)}
+
+            .editor-layout,.detail-layout{
+                grid-template-columns:1fr;
+            }
+
+            .profile-pane,.detail-pane{
+                border-right:0;
+                border-bottom:1px solid #e8edf2;
+            }
+
+            .profile-pane{
+                display:grid;
+                grid-template-columns:120px 1fr;
+                gap:14px;
+            }
+
+            .profile-avatar{margin:0}
+            .avatar-caption{display:none}
+
+            .address-grid{
+                grid-template-columns:repeat(2,minmax(0,1fr));
+            }
+
+            .address-grid .span-2,
+            .address-grid .span-3{
+                grid-column:span 1;
+            }
+
+            .address-grid .span-6{
+                grid-column:1/-1;
+            }
+        }
+
+        @media(max-width:640px){
+            .customer-page{padding:18px 12px}
+            .breadcrumb{font-size:16px}
+
+            .filter-left,.filter-actions{gap:7px}
+            .filter-actions .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}
+            .search-box{width:100%}
+
+            .select{
+                flex:1;
+                min-width:100px;
+            }
+
+            .modal-backdrop{padding:8px}
+            .workspace{padding:18px 14px}
+            .profile-pane{display:block}
+            .profile-avatar{margin:0 auto 15px}
+
+            .field-grid,.address-grid,.address-line{
+                grid-template-columns:1fr;
+            }
+
+            .field-grid .full,
+            .address-grid .span-2,
+            .address-grid .span-3{
+                grid-column:1/-1;
+            }
+
+            .dialog-head{padding:12px 14px}
+            .dialog-foot{padding:12px 14px}
+
+            .list-footer{
+                align-items:flex-start;
+                flex-direction:column;
+            }
+
+            .pagination{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap;margin-left:auto}
+        }
+
+        .account-mail-note{
+            display:flex;
+            align-items:flex-start;
+            gap:9px;
+            grid-column:1/-1;
+            padding:11px 12px;
+            border:1px solid #d9e7fa;
+            border-radius:6px;
+            background:#f7fbff;
+            color:#4b6386;
+            font-size:11px;
+            line-height:1.55;
+        }
+
+        .account-mail-note b{color:#2f4f77}
+
+        .cccd-actions{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            margin-top:7px;
+        }
+
+        .cccd-actions .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}
+
+        .qr-dialog{width:min(560px,100%)}
+
+        .qr-reader-wrap{
+            min-height:270px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            overflow:hidden;
+            border:1px dashed #cbd8e8;
+            border-radius:8px;
+            background:#f8fbff;
+        }
+
+        #cccdQrReader{
+            width:min(100%,420px);
+        }
+
+        #cccdQrReader video,
+        #cccdQrReader img{
+            max-width:100%;
+            border-radius:6px;
+        }
+
+        .qr-result{
+            min-height:18px;
+            margin-top:12px;
+            color:#60728a;
+            font-size:11px;
+            line-height:1.5;
+            text-align:center;
+            white-space:pre-wrap;
+            word-break:break-word;
+        }
+
+        .qr-upload-label{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:7px;
+            height:33px;
+            padding:0 12px;
+            border:1px solid #dce5ef;
+            border-radius:5px;
+            background:#fff;
+            color:#4c607a;
+            font-size:11px;
+            font-weight:700;
+            cursor:pointer;
+        }
+
+        .qr-upload-label:hover{
+            border-color:#b9cbe1;
+            background:#f7faff;
+        }
+
+        .qr-upload-label input{display:none}
     </style>
 </head>
+
 <body>
 <aside class="sidebar"></aside>
-<main class="main page">
-    <div class="topbar">
-        <div class="title">
-            <h1>Quản lý khách hàng</h1>
-        </div>
-        <div class="toolbar">
-            <button class="btn" id="exportBtn">⬇ Tải Excel</button>
-            <button class="btn primary" id="addBtn">＋ Thêm</button>
-        </div>
-    </div>
 
-    <section class="panel">
-        <form class="filters" id="filterForm">
-            <div class="field">
-                <label>Tìm kiếm</label>
-                <input name="keyword" placeholder="Mã, tên, email, số điện thoại" id="keywordInput">
-            </div>
-            <div class="field">
-                <label>Trạng thái</label>
-                <select name="trangThai" id="statusSelect">
-                    <option value="">Tất cả</option>
+<main class="main">
+    <section class="customer-page">
+        <h1 class="breadcrumb">
+            Quản lý tài khoản / <span>Quản lý khách hàng</span>
+        </h1>
+
+        <section class="filter-card">
+            <div class="filter-left">
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="6.5"></circle>
+                        <path d="m16 16 4 4"></path>
+                    </svg>
+
+                    <input
+                            id="keywordInput"
+                            class="input"
+                            placeholder="Tìm tên, tài khoản, SĐT, email..."
+                            autocomplete="off"
+                    >
+                </div>
+
+                <select id="genderSelect" class="select">
+                    <option value="">-- Giới tính --</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                </select>
+
+                <select id="statusSelect" class="select">
+                    <option value="">-- Trạng thái --</option>
                     <option value="true">Hoạt động</option>
                     <option value="false">Ngừng hoạt động</option>
                 </select>
             </div>
-        </form>
 
-        <div class="summary-bar">
-            <span>Tổng: <span class="total" id="totalCount">0</span> khách hàng</span>
-            <div class="page-size-selector">
-                <span>Hiển thị:</span>
-                <select id="pageSizeSelect">
-                    <option value="5">5</option>
-                    <option value="10" selected>10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                </select>
+            <div class="filter-actions">
+                <button type="button" class="btn" id="resetBtn">
+                    ↻ Đặt lại
+                </button>
+
+                <button type="button" class="btn" id="exportBtn">
+                    ▣ Xuất Excel
+                </button>
+
+                <button type="button" class="btn primary" id="addBtn">
+                    ＋ Thêm mới
+                </button>
             </div>
-        </div>
+        </section>
 
-        <div class="table-wrap">
-            <table>
-                <thead>
-                <tr>
-                    <th style="width:50px;">STT</th>
-                    <th style="width:100px;">Mã KH</th>
-                    <th>Tên khách hàng</th>
-                    <th>Email</th>
-                    <th>Số điện thoại</th>
-                    <th class="col-cccd">CCCD</th>
-                    <th>Địa chỉ</th>
-                    <th>Giới tính</th>
-                    <th>Ngày sinh</th>
-                    <th>Trạng thái</th>
-                    <th style="width:100px;">Hành động</th>
-                </tr>
-                </thead>
-                <tbody id="rows"></tbody>
-            </table>
-            <div class="empty" id="empty" hidden>Không có khách hàng</div>
-            <div id="pagination" class="pagination"></div>
-        </div>
+        <section class="table-card">
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width:50px">STT</th>
+                        <th style="width:105px">Mã KH</th>
+                        <th>Họ tên</th>
+                        <th>SĐT chính</th>
+                        <th>Email</th>
+                        <th style="min-width:190px">Địa chỉ mặc định</th>
+                        <th>Giới tính</th>
+                        <th>Trạng thái</th>
+                        <th style="width:130px">Thao tác</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="rows"></tbody>
+                </table>
+
+                <div id="emptyState" class="empty" hidden>
+                    Chưa có khách hàng phù hợp.
+                </div>
+            </div>
+
+            <div class="list-footer">
+                <div class="total-note">
+                    Tổng cộng: <b id="totalCount">0</b> khách hàng
+                </div>
+
+                <div id="pagination" class="pagination"></div>
+            </div>
+        </section>
     </section>
 </main>
 
-<!-- MODAL -->
-<div class="modal" id="customerModal" hidden>
-    <form class="modal-box" id="customerForm">
-        <div class="modal-head">
-            <h2 id="modalTitle">Thêm khách hàng</h2>
-            <button class="btn icon" type="button" id="closeModal">×</button>
-        </div>
-        <div class="modal-body">
-            <input type="hidden" name="id">
+<div class="modal-backdrop" id="customerModal" hidden>
+    <form class="dialog" id="customerForm" novalidate>
+        <div class="dialog-head">
+            <div>
+                <div class="dialog-title" id="customerModalTitle">
+                    Thêm khách hàng
+                </div>
 
-            <!-- ĐÃ XÓA toàn bộ phần info-box về mã tự động -->
-            <!-- ĐÃ XÓA toàn bộ phần thông báo về mật khẩu -->
-
-            <div class="field">
-                <label>Tên khách hàng <span class="required">*</span></label>
-                <input name="tenKhachHang" id="inputTenKhachHang" required>
-            </div>
-            <div class="field">
-                <label>Email</label>
-                <input name="email" id="inputEmail" type="email">
-            </div>
-            <div class="field">
-                <label>Số điện thoại</label>
-                <input name="soDienThoai" id="inputSoDienThoai">
-            </div>
-            <div class="field">
-                <label>CCCD</label>
-                <input name="cccd" id="inputCccd" maxlength="12">
-            </div>
-            <div class="field">
-                <label>Giới tính</label>
-                <select name="gioiTinh" id="inputGioiTinh">
-                    <option value="">Chọn</option>
-                    <option>Nam</option>
-                    <option>Nữ</option>
-                    <option>Khác</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Ngày sinh</label>
-                <input name="ngaySinh" id="inputNgaySinh" type="date">
-            </div>
-
-            <!-- ĐÃ XÓA trường Trạng thái (cả dropdown và hidden) -->
-
-            <div class="full address-full">
-                <span class="address-label">📍 Địa chỉ</span>
-                <div class="address-row">
-                    <div class="field">
-                        <label>Tỉnh/Thành phố</label>
-                        <select id="provinceSelect">
-                            <option value="">-- Chọn Tỉnh/Thành --</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>Quận/Huyện</label>
-                        <select id="districtSelect">
-                            <option value="">-- Chọn Quận/Huyện --</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>Phường/Xã</label>
-                        <select id="wardSelect">
-                            <option value="">-- Chọn Phường/Xã --</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>Địa chỉ chi tiết</label>
-                        <input name="diaChiChiTiet" id="inputDiaChiChiTiet">
-                    </div>
+                <div class="dialog-subtitle" id="customerModalSubtitle">
+                    Tạo tài khoản để khách hàng có thể đăng nhập mua hàng.
                 </div>
             </div>
+
+            <button
+                    class="close-btn"
+                    type="button"
+                    data-close="customerModal"
+                    aria-label="Đóng"
+            >
+                ×
+            </button>
         </div>
-        <div class="modal-foot">
-            <button class="btn" type="button" id="cancelBtn">Hủy</button>
-            <button class="btn primary" type="submit">💾 Lưu & gửi mail</button>
+
+        <div class="editor-layout">
+            <aside class="profile-pane">
+                <div class="profile-avatar" id="editorAvatar">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="3.5"></circle>
+                        <path d="M5 21a7 7 0 0 1 14 0"></path>
+                    </svg>
+                </div>
+
+                <p class="avatar-caption">Thông tin khách hàng</p>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Họ và tên <span class="required">*</span>
+                    </label>
+
+                    <input
+                            id="customerName"
+                            class="form-control"
+                            maxlength="255"
+                            placeholder="Nhập họ tên..."
+                    >
+
+                    <small class="field-error"></small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email <span class="required">*</span></label>
+
+                    <input
+                            id="customerEmail"
+                            class="form-control"
+                            type="email"
+                            maxlength="255"
+                            placeholder="example@gmail.com"
+                    >
+
+                    <small class="field-error"></small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Số điện thoại chính <span class="required">*</span>
+                    </label>
+
+                    <input
+                            id="customerPhone"
+                            class="form-control"
+                            inputmode="numeric"
+                            maxlength="10"
+                            placeholder="SĐT tài khoản"
+                    >
+
+                    <small class="field-error"></small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">CCCD</label>
+
+                    <input
+                            id="customerCccd"
+                            class="form-control"
+                            inputmode="numeric"
+                            maxlength="12"
+                            placeholder="12 chữ số"
+                    >
+
+                    <div class="cccd-actions">
+                        <button type="button" class="btn" id="openCccdScannerBtn">
+                            ▣ Quét QR CCCD
+                        </button>
+                    </div>
+
+                    <small class="field-error"></small>
+                </div>
+            </aside>
+
+            <section class="workspace">
+                <div class="field-grid">
+                    <div class="form-group">
+                        <label class="form-label">Ngày sinh</label>
+
+                        <input
+                                id="customerBirthday"
+                                class="form-control"
+                                type="date"
+                        >
+
+                        <small class="field-error"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Giới tính <span class="required">*</span>
+                        </label>
+
+                        <div
+                                id="genderBox"
+                                style="height:35px;display:flex;align-items:center;gap:17px;border:1px solid #e3e8ee;border-radius:5px;padding:0 10px"
+                        >
+                            <label style="font-size:12px;color:#54657b;display:flex;gap:5px;align-items:center">
+                                <input type="radio" name="customerGender" value="Nam" checked>
+                                Nam
+                            </label>
+
+                            <label style="font-size:12px;color:#54657b;display:flex;gap:5px;align-items:center">
+                                <input type="radio" name="customerGender" value="Nữ">
+                                Nữ
+                            </label>
+                        </div>
+
+                        <small class="field-error"></small>
+                    </div>
+
+                    <div class="account-mail-note">
+                        <span>✉</span>
+                        <div>
+                            <b>Tài khoản tạo tự động:</b> hệ thống sẽ tạo mật khẩu tạm thời 6 ký tự và gửi <b>email đăng nhập + mật khẩu</b> đến email khách hàng sau khi lưu. Email là bắt buộc khi thêm mới.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-rule"></div>
+
+                <div class="section-head">
+                    <h3>ĐỊA CHỈ NHẬN HÀNG</h3>
+
+                    <button type="button" class="btn primary" id="addAddressBtn">
+                        ＋ Thêm địa chỉ
+                    </button>
+                </div>
+
+                <div id="addressEditors" class="address-stack"></div>
+            </section>
+        </div>
+
+        <div class="dialog-foot">
+            <button class="btn" type="button" data-close="customerModal">
+                Hủy
+            </button>
+
+            <button class="btn primary" type="submit" id="saveCustomerBtn">
+                Lưu khách hàng
+            </button>
         </div>
     </form>
 </div>
 
+<div class="modal-backdrop" id="cccdScannerModal" hidden>
+    <section class="dialog qr-dialog">
+        <div class="dialog-head">
+            <div>
+                <div class="dialog-title">Quét mã QR CCCD</div>
+                <div class="dialog-subtitle">Quét bằng camera hoặc tải ảnh mã QR CCCD.</div>
+            </div>
+            <button class="close-btn" type="button" id="closeCccdScannerBtn" aria-label="Đóng">×</button>
+        </div>
+
+        <div class="workspace">
+            <div class="qr-reader-wrap">
+                <div id="cccdQrReader"></div>
+            </div>
+
+            <div id="cccdQrResult" class="qr-result">
+                Đưa mã QR CCCD vào khung hình để quét.
+            </div>
+
+            <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px">
+                <label class="qr-upload-label">
+                    ▣ Tải ảnh QR
+                    <input type="file" id="cccdQrFile" accept="image/*">
+                </label>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="modal-backdrop" id="detailModal" hidden>
+    <section class="dialog detail-dialog">
+        <div class="dialog-head">
+            <div>
+                <div class="dialog-title">Chi tiết khách hàng</div>
+
+                <div class="dialog-subtitle">
+                    Thông tin tài khoản và danh sách địa chỉ nhận hàng.
+                </div>
+            </div>
+
+            <button
+                    class="close-btn"
+                    type="button"
+                    data-close="detailModal"
+                    aria-label="Đóng"
+            >
+                ×
+            </button>
+        </div>
+
+        <div class="detail-layout">
+            <aside class="detail-pane" id="detailProfile"></aside>
+
+            <section class="address-pane">
+                <div class="address-pane-head">
+                    <h3>Danh sách địa chỉ</h3>
+
+                    <button class="btn primary" type="button" id="detailAddAddressBtn">
+                        ＋ Thêm địa chỉ
+                    </button>
+                </div>
+
+                <div id="detailAddresses" class="address-list"></div>
+            </section>
+        </div>
+    </section>
+</div>
+
 <script>
     const API = '/api/khach-hang';
-    const PROVINCE_API = 'https://provinces.open-api.vn/api/v1';
+    const PROVINCE_API = 'https://provinces.open-api.vn/api/v2';
 
     const state = {
         items: [],
-        currentPage: 1,
-        pageSize: 10
+        page: 0,
+        size: 10,
+        total: 0,
+        totalPages: 0,
+        editingId: null,
+        editingCustomer: null,
+        draftAddresses: [],
+        deletedAddressIds: [],
+        detailId: null,
+        provinces: null,
+        saving: false
     };
 
     const $ = (id) => document.getElementById(id);
-    const form = $('customerForm');
-    const filterForm = $('filterForm');
+    let searchTimer = null;
 
-    let searchTimeout = null;
+    const svg = {
+        eye: `
+            <svg viewBox="0 0 24 24">
+                <path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z"></path>
+                <circle cx="12" cy="12" r="2.4"></circle>
+            </svg>
+        `,
+        pin: `
+            <svg viewBox="0 0 24 24">
+                <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path>
+                <circle cx="12" cy="10" r="2.3"></circle>
+            </svg>
+        `,
+        edit: `
+            <svg viewBox="0 0 24 24">
+                <path d="m4 16.5-.8 4.3 4.3-.8L19 8.5 15.5 5 4 16.5Z"></path>
+                <path d="m13.8 6.7 3.5 3.5"></path>
+            </svg>
+        `,
+        trash: `
+            <svg viewBox="0 0 24 24">
+                <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13"></path>
+            </svg>
+        `
+    };
 
-    // ===== API tỉnh thành =====
-    async function loadProvinces() {
-        try {
-            const response = await fetch(`${PROVINCE_API}/`);
-            const provinces = await response.json();
-            const select = document.getElementById('provinceSelect');
-            select.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>';
-            provinces.forEach(p => {
-                const option = document.createElement('option');
-                option.value = p.code;
-                option.textContent = p.name;
-                select.appendChild(option);
-            });
-            document.getElementById('districtSelect').innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
-            document.getElementById('wardSelect').innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
-        } catch (error) {
-            console.error('Lỗi tải tỉnh thành:', error);
-            toast('Không thể tải danh sách tỉnh thành', true);
-        }
-    }
-
-    async function onProvinceChange() {
-        const provinceCode = document.getElementById('provinceSelect').value;
-        const districtSelect = document.getElementById('districtSelect');
-        const wardSelect = document.getElementById('wardSelect');
-
-        if (!provinceCode) {
-            districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
-            wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
-            return;
-        }
-
-        try {
-            const response = await fetch(`${PROVINCE_API}/p/${provinceCode}?depth=2`);
-            const data = await response.json();
-            districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
-            if (data.districts) {
-                data.districts.forEach(d => {
-                    const option = document.createElement('option');
-                    option.value = d.code;
-                    option.textContent = d.name;
-                    districtSelect.appendChild(option);
-                });
-            }
-            wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
-        } catch (error) {
-            console.error('Lỗi tải quận/huyện:', error);
-            toast('Không thể tải danh sách quận/huyện', true);
-        }
-    }
-
-    async function onDistrictChange() {
-        const districtCode = document.getElementById('districtSelect').value;
-        const wardSelect = document.getElementById('wardSelect');
-
-        if (!districtCode) {
-            wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
-            return;
-        }
-
-        try {
-            const response = await fetch(`${PROVINCE_API}/d/${districtCode}?depth=2`);
-            const data = await response.json();
-            wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
-            if (data.wards) {
-                data.wards.forEach(w => {
-                    const option = document.createElement('option');
-                    option.value = w.code;
-                    option.textContent = w.name;
-                    wardSelect.appendChild(option);
-                });
-            }
-        } catch (error) {
-            console.error('Lỗi tải phường/xã:', error);
-            toast('Không thể tải danh sách phường/xã', true);
-        }
-    }
-
-    // ===== Dự đoán mã KH ===== (vẫn dùng để hiển thị ở đâu đó nếu cần, nhưng đã xóa khỏi UI)
-    function predictNextMaKh() {
-        let maxNumber = 0;
-        state.items.forEach(kh => {
-            if (kh.maKh && kh.maKh.startsWith('KH')) {
-                try {
-                    const num = parseInt(kh.maKh.substring(2));
-                    if (num > maxNumber) maxNumber = num;
-                } catch (e) {}
-            }
-        });
-        return `KH${String(maxNumber + 1).padStart(3, '0')}`;
-    }
-
-    // ===== Khởi tạo =====
     document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('provinceSelect').addEventListener('change', onProvinceChange);
-        document.getElementById('districtSelect').addEventListener('change', onDistrictChange);
-
-        $('addBtn').addEventListener('click', () => openModal());
-        $('closeModal').addEventListener('click', closeModal);
-        $('cancelBtn').addEventListener('click', closeModal);
-        $('customerModal').addEventListener('click', (event) => {
-            if (event.target.id === 'customerModal') closeModal();
-        });
-
-        $('keywordInput').addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                state.currentPage = 1;
+        $('keywordInput').addEventListener('input', () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                state.page = 0;
                 loadData();
             }, 300);
         });
 
-        $('statusSelect').addEventListener('change', function() {
-            state.currentPage = 1;
+        $('genderSelect').addEventListener('change', () => {
+            state.page = 0;
             loadData();
         });
 
-        $('pageSizeSelect').addEventListener('change', function() {
-            state.pageSize = parseInt(this.value);
-            state.currentPage = 1;
-            render();
+        $('statusSelect').addEventListener('change', () => {
+            state.page = 0;
+            loadData();
         });
 
-        form.addEventListener('submit', saveCustomer);
+        $('resetBtn').addEventListener('click', resetFilters);
         $('exportBtn').addEventListener('click', exportExcel);
 
+        $('addBtn').addEventListener('click', () => {
+            openCustomerEditor();
+        });
+
+        $('customerForm').addEventListener('submit', saveCustomer);
+
+        $('addAddressBtn').addEventListener('click', () => {
+            state.draftAddresses.push(blankAddress());
+            renderAddressEditors();
+        });
+
+        $('addressEditors').addEventListener('click', handleAddressEditorClick);
+        $('addressEditors').addEventListener('change', handleAddressEditorChange);
+        $('addressEditors').addEventListener('input', handleAddressEditorInput);
+
+        $('customerName').addEventListener('input', () => {
+            updateEditorAvatar();
+            clearFieldError($('customerName'));
+        });
+
+        $('customerEmail').addEventListener('input', () => {
+            clearFieldError($('customerEmail'));
+        });
+
+        $('customerPhone').addEventListener('input', () => {
+            $('customerPhone').value = onlyDigits($('customerPhone').value, 10);
+            clearFieldError($('customerPhone'));
+        });
+
+        $('customerCccd').addEventListener('input', () => {
+            $('customerCccd').value = onlyDigits($('customerCccd').value, 12);
+            clearFieldError($('customerCccd'));
+        });
+
+        $('customerBirthday').addEventListener('change', () => {
+            clearFieldError($('customerBirthday'));
+        });
+
+        $('openCccdScannerBtn').addEventListener('click', openCccdScanner);
+        $('closeCccdScannerBtn').addEventListener('click', closeCccdScanner);
+        $('cccdQrFile').addEventListener('change', scanCccdQrFile);
+
+        $('cccdScannerModal').addEventListener('click', (event) => {
+            if (event.target === $('cccdScannerModal')) {
+                closeCccdScanner();
+            }
+        });
+
+        $('detailAddAddressBtn').addEventListener('click', () => {
+            const customerId = state.detailId;
+            closeModal('detailModal', true);
+            openCustomerEditor(customerId, true);
+        });
+
+        document.querySelectorAll('[data-close]').forEach((button) => {
+            button.addEventListener('click', () => {
+                closeModal(button.dataset.close);
+            });
+        });
+
+        document.querySelectorAll('.modal-backdrop').forEach((backdrop) => {
+            backdrop.addEventListener('click', (event) => {
+                if (event.target === backdrop) {
+                    closeModal(backdrop.id);
+                }
+            });
+        });
+
         loadData();
-        loadProvinces();
     });
 
-    // ===== CRUD =====
+    function currentParams(includePaging = true) {
+        const params = new URLSearchParams();
+
+        const keyword = $('keywordInput').value.trim();
+        const gender = $('genderSelect').value;
+        const status = $('statusSelect').value;
+
+        if (keyword) params.set('keyword', keyword);
+        if (gender) params.set('gioiTinh', gender);
+        if (status) params.set('trangThai', status);
+
+        if (includePaging) {
+            params.set('page', String(state.page));
+            params.set('size', String(state.size));
+        }
+
+        return params;
+    }
+
     async function loadData() {
-        const params = currentParams();
-        const url = params ? `${API}?${params}` : API;
-
         try {
-            const response = await fetch(url);
-            if (!response.ok) return toast(await readError(response), true);
-            const data = await response.json();
+            state.page = Math.max(0, state.page);
 
-            if (Array.isArray(data)) {
-                state.items = data;
-                state.totalItems = data.length;
-            } else if (data && Array.isArray(data.content)) {
-                state.items = data.content;
-                state.totalItems = data.totalElements ?? data.total ?? state.items.length;
-            } else {
-                state.items = [];
-                state.totalItems = 0;
+            const response = await fetch(`${API}?${currentParams(true).toString()}`);
+
+            if (!response.ok) {
+                throw new Error(await readError(response));
             }
 
-            const pageSize = state.pageSize || 10;
-            const totalPages = Math.max(1, Math.ceil((state.totalItems || state.items.length) / pageSize));
-            if (!state.currentPage || state.currentPage > totalPages) state.currentPage = totalPages;
+            const data = await response.json();
+            const isList = Array.isArray(data);
+            const list = isList ? data : (data.content || []);
+            const meta = isList ? {} : (data.page || {});
 
-            render();
+            state.total = isList
+                ? list.length
+                : (data.totalElements ?? meta.totalElements ?? list.length);
+            state.totalPages = state.total
+                ? Math.max(1, isList ? Math.ceil(state.total / state.size) : (data.totalPages ?? meta.totalPages ?? Math.ceil(state.total / state.size)))
+                : 0;
+
+            if (state.totalPages === 0) {
+                state.page = 0;
+                state.items = [];
+            } else if (state.page >= state.totalPages) {
+                state.page = state.totalPages - 1;
+                return loadData();
+            } else {
+                const start = state.page * state.size;
+                state.items = isList ? list.slice(start, start + state.size) : list;
+            }
+
+            renderRows();
         } catch (error) {
-            toast('Lỗi kết nối đến server', true);
-            console.error(error);
+            state.items = [];
+            state.total = 0;
+            state.totalPages = 0;
+            renderRows();
+            toast(error.message || 'Không thể tải danh sách khách hàng.', true);
         }
     }
 
-    function currentParams() {
-        const params = new URLSearchParams();
-        const keyword = ($('keywordInput').value || '').trim();
-        const trangThai = $('statusSelect').value;
-        if (keyword) params.set('keyword', keyword);
-        if (trangThai) params.set('trangThai', trangThai);
-        return params.toString();
-    }
+    function renderRows() {
+        const rows = $('rows');
+        const empty = $('emptyState');
 
-    function render() {
-        const total = state.items.length;
-        const pageSize = state.pageSize || 10;
-        const currentPage = Math.max(1, Math.min(state.currentPage || 1, Math.ceil(total / pageSize) || 1));
-        state.currentPage = currentPage;
+        $('totalCount').textContent = state.total;
+        empty.hidden = state.items.length > 0;
 
-        const startIdx = (currentPage - 1) * pageSize;
-        const endIdx = Math.min(startIdx + pageSize, total);
+        rows.innerHTML = state.items.map((customer, index) => {
+            const status = Boolean(customer.trangThai);
+            const address = customer.diaChiDisplay || '';
 
-        document.getElementById('totalCount').textContent = total;
-        document.getElementById('pageSizeSelect').value = pageSize;
-
-        $('empty').hidden = total > 0;
-
-        if (total === 0) {
-            $('rows').innerHTML = '';
-            renderPagination();
-            return;
-        }
-
-        const pageItems = state.items.slice(startIdx, endIdx);
-        $('rows').innerHTML = pageItems.map((kh, idx) => {
-            const index = startIdx + idx + 1;
-            const fullAddress = kh.diaChiDisplay || '';
             return `
-            <tr>
-                <td>${index}</td>
-                <td><span class="code">${esc(kh.maKh)}</span></td>
-                <td>${esc(kh.tenKhachHang)}</td>
-                <td>${esc(kh.email)}</td>
-                <td>${esc(kh.soDienThoai)}</td>
-                <td class="col-cccd">${esc(kh.cccd)}</td>
-                <td>${esc(fullAddress)}</td>
-                <td>${esc(kh.gioiTinh)}</td>
-                <td>${formatDate(kh.ngaySinh)}</td>
-                <td><span class="badge ${kh.trangThai ? 'on' : 'off'}">${kh.trangThai ? 'Hoạt động' : 'Ngừng'}</span></td>
-                <td>
-                    <div class="actions">
-                        <button class="action-btn edit" onclick="openModal(${kh.id})" title="Sửa">✎</button>
-                        <label class="switch" title="${kh.trangThai ? 'Chuyển sang ngừng hoạt động' : 'Chuyển sang hoạt động'}">
-                            <input type="checkbox" ${kh.trangThai ? 'checked' : ''} onchange="toggleStatus(${kh.id})">
-                            <span></span>
-                        </label>
-                    </div>
-                </td>
-            </tr>
-        `}).join('');
+                <tr>
+                    <td>${state.page * state.size + index + 1}</td>
+                    <td><span class="customer-code">${esc(customer.maKh)}</span></td>
+                    <td class="strong">${esc(customer.tenKhachHang)}</td>
+                    <td>${customer.soDienThoai ? esc(customer.soDienThoai) : '<span class="muted">—</span>'}</td>
+                    <td>${customer.email ? esc(customer.email) : '<span class="muted">—</span>'}</td>
+                    <td class="address-cell" title="${escAttr(address)}">
+                        ${address ? esc(address) : '<span class="muted">Chưa có địa chỉ</span>'}
+                    </td>
+                    <td>${customer.gioiTinh ? esc(customer.gioiTinh) : '<span class="muted">—</span>'}</td>
+                    <td>
+                        <span class="status ${status ? 'on' : 'off'}">
+                            ${status ? 'Hoạt động' : 'Ngừng hoạt động'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="row-actions">
+                            <button class="icon-btn" type="button" onclick="openCustomerDetail(${customer.id})" title="Xem chi tiết">
+                                ${svg.eye}
+                            </button>
+
+                            <button class="icon-btn" type="button" onclick="openCustomerEditor(${customer.id}, true)" title="Sửa khách hàng / địa chỉ">
+                                ${svg.pin}
+                            </button>
+
+                            <label class="switch" title="${status ? 'Ngừng hoạt động' : 'Kích hoạt'}">
+                                <input type="checkbox" ${status ? 'checked' : ''} onchange="toggleStatus(${customer.id})">
+                                <span></span>
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
         renderPagination();
     }
 
     function renderPagination() {
-        const total = state.items.length;
-        const pageSize = state.pageSize || 10;
-        const totalPages = Math.max(1, Math.ceil(total / pageSize));
-        const currentPage = state.currentPage || 1;
+        const holder = $('pagination');
 
-        const container = document.getElementById('pagination');
-        container.innerHTML = '';
-
-        if (totalPages <= 1) {
-            const info = document.createElement('span');
-            info.className = 'page-info';
-            info.textContent = `Trang 1 / 1`;
-            container.appendChild(info);
+        if (state.total === 0) {
+            holder.innerHTML = '';
             return;
         }
 
-        const prev = document.createElement('button');
-        prev.className = 'btn';
-        prev.textContent = '‹ Trước';
-        prev.disabled = currentPage === 1;
-        prev.onclick = () => changePage(currentPage - 1);
-        container.appendChild(prev);
+        const totalPages = Math.max(1, state.totalPages || 1);
+        const currentPage = Math.min(state.page, totalPages - 1);
+        const parts = [];
 
-        const start = Math.max(1, currentPage - 2);
-        const end = Math.min(totalPages, currentPage + 2);
+        parts.push(`
+            <button class="page-btn" ${currentPage === 0 ? 'disabled' : ''} onclick="changePage(0)">«</button>
+            <button class="page-btn" ${currentPage === 0 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">‹</button>
+        `);
 
-        if (start > 1) {
-            const first = document.createElement('button');
-            first.className = 'btn';
-            first.textContent = '1';
-            first.onclick = () => changePage(1);
-            container.appendChild(first);
-            if (start > 2) {
-                const dots = document.createElement('span');
-                dots.className = 'page-info';
-                dots.textContent = '…';
-                container.appendChild(dots);
+        const start = Math.max(0, currentPage - 2);
+        const end = Math.min(totalPages - 1, currentPage + 2);
+
+        if (start > 0) {
+            parts.push(`<button class="page-btn" onclick="changePage(0)">1</button>`);
+            if (start > 1) {
+                parts.push('<span class="muted">…</span>');
             }
         }
 
-        for (let p = start; p <= end; p++) {
-            const b = document.createElement('button');
-            b.className = 'btn' + (p === currentPage ? ' primary' : '');
-            b.textContent = p;
-            b.onclick = () => changePage(p);
-            container.appendChild(b);
+        for (let page = start; page <= end; page++) {
+            parts.push(`
+                <button class="page-btn ${page === currentPage ? 'active' : ''}" onclick="changePage(${page})">
+                    ${page + 1}
+                </button>
+            `);
         }
 
-        if (end < totalPages) {
-            if (end < totalPages - 1) {
-                const dots = document.createElement('span');
-                dots.className = 'page-info';
-                dots.textContent = '…';
-                container.appendChild(dots);
+        if (end < totalPages - 1) {
+            if (end < totalPages - 2) {
+                parts.push('<span class="muted">…</span>');
             }
-            const last = document.createElement('button');
-            last.className = 'btn';
-            last.textContent = totalPages;
-            last.onclick = () => changePage(totalPages);
-            container.appendChild(last);
+
+            parts.push(`
+                <button class="page-btn" onclick="changePage(${totalPages - 1})">
+                    ${totalPages}
+                </button>
+            `);
         }
 
-        const next = document.createElement('button');
-        next.className = 'btn';
-        next.textContent = 'Tiếp ›';
-        next.disabled = currentPage === totalPages;
-        next.onclick = () => changePage(currentPage + 1);
-        container.appendChild(next);
+        parts.push(`
+            <button class="page-btn" ${currentPage === totalPages - 1 ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">›</button>
+            <button class="page-btn" ${currentPage === totalPages - 1 ? 'disabled' : ''} onclick="changePage(${totalPages - 1})">»</button>
+        `);
 
-        const info = document.createElement('span');
-        info.className = 'page-info';
-        info.textContent = `Trang ${currentPage} / ${totalPages} (${total} khách hàng)`;
-        container.appendChild(info);
+        holder.innerHTML = parts.join('');
     }
 
     function changePage(page) {
-        const total = state.items.length;
-        const totalPages = Math.max(1, Math.ceil(total / (state.pageSize || 10)));
-        const p = Math.max(1, Math.min(page, totalPages));
-        state.currentPage = p;
-        render();
-        document.querySelector('.table-wrap').scrollIntoView({ behavior: 'smooth' });
+        if (page < 0 || page >= state.totalPages || page === state.page) return;
+
+        state.page = page;
+        loadData();
+
+        document.querySelector('.table-card').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
     }
 
-    // ----- MỞ MODAL (ĐÃ XÓA MÃ TỰ ĐỘNG VÀ TRẠNG THÁI) -----
-    function openModal(id) {
-        form.reset();
-        $('modalTitle').textContent = id ? 'Cập nhật khách hàng' : 'Thêm khách hàng';
+    function resetFilters() {
+        $('keywordInput').value = '';
+        $('genderSelect').value = '';
+        $('statusSelect').value = '';
+        state.page = 0;
+        loadData();
+    }
 
-        // Reset địa chỉ
-        document.getElementById('provinceSelect').value = '';
-        document.getElementById('districtSelect').innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
-        document.getElementById('wardSelect').innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
-        document.getElementById('inputDiaChiChiTiet').value = '';
+    async function openCustomerEditor(customerId = null, focusAddress = false) {
+        if (state.saving) return;
 
-        if (id) {
-            const kh = state.items.find(item => item.id === id);
-            if (!kh) {
-                toast('Không tìm thấy khách hàng!', true);
+        state.editingId = customerId;
+        state.editingCustomer = null;
+        state.deletedAddressIds = [];
+        state.draftAddresses = [];
+
+        $('customerForm').reset();
+        clearValidation($('customerForm'));
+
+        $('customerModalTitle').textContent = customerId ? 'Cập nhật khách hàng' : 'Thêm khách hàng';
+        $('customerModalSubtitle').textContent = customerId
+            ? 'Cập nhật thông tin khách hàng và địa chỉ nhận hàng.'
+            : 'Hệ thống gửi email đăng nhập và mật khẩu về email khách hàng.';
+
+        if (customerId) {
+            try {
+                const [customer, addresses] = await Promise.all([
+                    fetchJson(`${API}/${customerId}`),
+                    fetchJson(`${API}/${customerId}/dia-chi`)
+                ]);
+
+                state.editingCustomer = customer;
+
+                $('customerName').value = customer.tenKhachHang || '';
+                $('customerEmail').value = customer.email || '';
+                $('customerPhone').value = customer.soDienThoai || '';
+                $('customerCccd').value = customer.cccd || '';
+                $('customerBirthday').value = toDateInput(customer.ngaySinh);
+
+                const genderInput = [
+                    ...document.querySelectorAll('input[name="customerGender"]')
+                ].find((input) => input.value === (customer.gioiTinh || 'Nam'));
+
+                (
+                    genderInput ||
+                    document.querySelector('input[name="customerGender"][value="Nam"]')
+                ).checked = true;
+
+                state.draftAddresses = (addresses || []).map((address) => ({
+                    ...address,
+                    macDinh: Boolean(address.macDinh)
+                }));
+
+                if (!state.draftAddresses.length && (customer.diaChiDisplay || customer.diaChiChiTiet)) {
+                    state.draftAddresses = [{
+                        ...blankAddress(),
+                        tenDiaChi: 'Địa chỉ mặc định',
+                        tenNguoiNhan: customer.tenKhachHang || '',
+                        soDienThoai: customer.soDienThoai || '',
+                        thanhPho: customer.tinhThanh || '',
+                        quan: customer.quanHuyen || '',
+                        phuong: customer.phuongXa || '',
+                        diaChiCuThe: customer.diaChiChiTiet || '',
+                        macDinh: true
+                    }];
+                }
+
+                if (!state.draftAddresses.length) {
+                    state.draftAddresses = [blankAddress()];
+                }
+            } catch (error) {
+                toast(error.message || 'Không tải được chi tiết khách hàng.', true);
                 return;
             }
-            // Gán dữ liệu
-            Object.entries(kh).forEach(([key, value]) => {
-                if (form.elements[key]) form.elements[key].value = value ?? '';
-            });
-            form.elements.ngaySinh.value = toDateInput(kh.ngaySinh);
-
-            // Load địa chỉ (nếu có)
-            if (kh.tinhThanhCode) {
-                document.getElementById('provinceSelect').value = kh.tinhThanhCode;
-                setTimeout(async () => {
-                    await onProvinceChange();
-                    if (kh.quanHuyenCode) {
-                        document.getElementById('districtSelect').value = kh.quanHuyenCode;
-                        await onDistrictChange();
-                        if (kh.phuongXaCode) {
-                            document.getElementById('wardSelect').value = kh.phuongXaCode;
-                        }
-                    }
-                }, 100);
-            }
-            document.getElementById('inputDiaChiChiTiet').value = kh.diaChiChiTiet || '';
         } else {
-            // Thêm mới: không hiển thị mã tự động nữa
+            state.draftAddresses = [blankAddress()];
         }
+
+        updateEditorAvatar();
+        renderAddressEditors();
+
         $('customerModal').hidden = false;
+
+        if (focusAddress) {
+            setTimeout(() => {
+                document.querySelector('#addressEditors .form-control')?.focus();
+            }, 100);
+        }
     }
 
-    function closeModal() {
-        $('customerModal').hidden = true;
+    function blankAddress() {
+        return {
+            id: null,
+            tenDiaChi: '',
+            tenNguoiNhan: '',
+            soDienThoai: '',
+            thanhPho: '',
+            quan: '',
+            phuong: '',
+            diaChiCuThe: '',
+            macDinh: state.draftAddresses.length === 0,
+            trangThai: true
+        };
     }
 
-    // ----- LƯU KHÁCH HÀNG (tự động gán trạng thái = true khi thêm mới) -----
+    function updateEditorAvatar() {
+        const name = $('customerName').value.trim();
+
+        if (name) {
+            $('editorAvatar').textContent = initials(name);
+            return;
+        }
+
+        $('editorAvatar').innerHTML = `
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="3.5"></circle>
+                <path d="M5 21a7 7 0 0 1 14 0"></path>
+            </svg>
+        `;
+    }
+
+    function renderAddressEditors() {
+        const container = $('addressEditors');
+
+        if (!state.draftAddresses.length) {
+            container.innerHTML = `
+                <div class="empty" style="padding:22px">
+                    Chưa có địa chỉ. Nhấn “Thêm địa chỉ” để bổ sung.
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = state.draftAddresses.map((address, index) => `
+            <article class="address-card" data-address-index="${index}">
+                <div class="address-card-head">
+                    <label class="address-default">
+                        <input type="radio" name="defaultAddress" data-default-address="${index}" ${address.macDinh ? 'checked' : ''}>
+                        Đặt làm mặc định
+                    </label>
+
+                    <div class="address-actions">
+                        <button type="button" class="icon-btn" data-remove-address="${index}" title="Xóa địa chỉ">
+                            ${svg.trash}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="address-grid">
+                    <div class="form-group span-2">
+                        <label class="form-label">Tên địa chỉ <span class="required">*</span></label>
+                        <input class="form-control" data-field="tenDiaChi" maxlength="100" value="${escAttr(address.tenDiaChi)}" placeholder="Ví dụ: Nhà riêng">
+                        <small class="field-error"></small>
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label class="form-label">Tên người nhận <span class="required">*</span></label>
+                        <input class="form-control" data-field="tenNguoiNhan" maxlength="255" value="${escAttr(address.tenNguoiNhan)}" placeholder="Ví dụ: Nguyễn Văn A">
+                        <small class="field-error"></small>
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label class="form-label">SĐT người nhận <span class="required">*</span></label>
+                        <input class="form-control" data-field="soDienThoai" inputmode="numeric" maxlength="10" value="${escAttr(address.soDienThoai)}" placeholder="Nhập SĐT">
+                        <small class="field-error"></small>
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label class="form-label">Tỉnh / Thành <span class="required">*</span></label>
+                        <input class="select-search" type="search" placeholder="Tìm kiếm tỉnh/thành..." oninput="filterAddressSelectOptions(this, this.parentElement.querySelector('.province-select'))">
+                        <select class="form-control province-select" data-field="thanhPho">
+                            <option value="">-- Chọn --</option>
+                        </select>
+                        <small class="field-error"></small>
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label class="form-label">Phường / Xã <span class="required">*</span></label>
+                        <input class="select-search" type="search" placeholder="Tìm kiếm phường/xã..." oninput="filterAddressSelectOptions(this, this.parentElement.querySelector('.ward-select'))">
+                        <select class="form-control ward-select" data-field="phuong">
+                            <option value="">-- Chọn --</option>
+                        </select>
+                        <small class="field-error"></small>
+                    </div>
+
+                    <div class="form-group span-6">
+                        <label class="form-label">Số nhà / Đường <span class="required">*</span></label>
+                        <input class="form-control" data-field="diaChiCuThe" maxlength="255" value="${escAttr(address.diaChiCuThe)}" placeholder="Ví dụ: 12 Nguyễn Trãi">
+                        <small class="field-error"></small>
+                    </div>
+                </div>
+            </article>
+        `).join('');
+
+        state.draftAddresses.forEach((address, index) => {
+            prepareAddressSelects(index, address);
+        });
+    }
+
+    async function getProvinces() {
+        if (state.provinces) return state.provinces;
+
+        try {
+            const response = await fetch(`${PROVINCE_API}/`);
+            if (!response.ok) {
+                throw new Error('Không tải được tỉnh/thành.');
+            }
+
+            state.provinces = await response.json();
+            return state.provinces;
+        } catch {
+            state.provinces = [];
+            return [];
+        }
+    }
+
+    async function prepareAddressSelects(index, address) {
+        const card = document.querySelector(`[data-address-index="${index}"]`);
+        if (!card) return;
+
+        const provinceSelect = card.querySelector('.province-select');
+        const wardSelect = card.querySelector('.ward-select');
+
+        const provinces = await getProvinces();
+        if (!card.isConnected) return;
+
+        fillSelect(
+            provinceSelect,
+            provinces.map((province) => ({
+                value: province.name,
+                label: province.name,
+                code: province.code
+            })),
+            address.thanhPho
+        );
+
+        const selectedProvince = provinces.find((province) => province.name === address.thanhPho);
+
+        if (!selectedProvince) {
+            fillSelect(wardSelect, [], address.phuong);
+            return;
+        }
+
+        const wards = await fetchWards(selectedProvince.code);
+        if (!card.isConnected) return;
+
+        fillSelect(
+            wardSelect,
+            wards.map((ward) => ({
+                value: ward.name,
+                label: ward.name,
+                code: ward.code
+            })),
+            address.phuong
+        );
+    }
+
+    function fillSelect(select, options, currentValue) {
+        if (!select) return;
+
+        select.innerHTML = `
+            <option value="">-- Chọn --</option>
+            ${options.map((option) => `
+                <option value="${escAttr(option.value)}" data-code="${option.code || ''}">
+                    ${esc(option.label)}
+                </option>
+            `).join('')}
+        `;
+
+        if (!currentValue) return;
+
+        const found = [...select.options].some((option) => option.value === currentValue);
+
+        if (!found) {
+            select.insertAdjacentHTML(
+                'beforeend',
+                `<option value="${escAttr(currentValue)}">${esc(currentValue)}</option>`
+            );
+        }
+
+        select.value = currentValue;
+    }
+
+    function normalizeAddressSearch(value) {
+        return String(value || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .replace(/Đ/g, 'D')
+            .toLowerCase();
+    }
+
+    function filterAddressSelectOptions(input, select) {
+        if (!select) return;
+        const keyword = normalizeAddressSearch(input?.value || '');
+        [...select.options].forEach((option, index) => {
+            const searchable = normalizeAddressSearch(`${option.textContent || ''} ${option.dataset?.code || ''}`);
+            option.hidden = index > 0 && keyword && !searchable.includes(keyword);
+        });
+    }
+
+    async function fetchWards(provinceCode) {
+        try {
+            const response = await fetch(`${PROVINCE_API}/p/${provinceCode}?depth=2`);
+            if (!response.ok) return [];
+            const data = await response.json();
+            return data.wards || [];
+        } catch {
+            return [];
+        }
+    }
+
+    function handleAddressEditorClick(event) {
+        const removeButton = event.target.closest('[data-remove-address]');
+        if (!removeButton) return;
+
+        const index = Number(removeButton.dataset.removeAddress);
+        const address = state.draftAddresses[index];
+
+        if (address?.id) {
+            state.deletedAddressIds.push(address.id);
+        }
+
+        state.draftAddresses.splice(index, 1);
+
+        if (state.draftAddresses.length && !state.draftAddresses.some((item) => item.macDinh)) {
+            state.draftAddresses[0].macDinh = true;
+        }
+
+        renderAddressEditors();
+    }
+
+    async function handleAddressEditorChange(event) {
+        const card = event.target.closest('[data-address-index]');
+        if (!card) return;
+
+        const index = Number(card.dataset.addressIndex);
+        const address = state.draftAddresses[index];
+        if (!address) return;
+
+        if (event.target.matches('[data-default-address]')) {
+            state.draftAddresses.forEach((item, itemIndex) => {
+                item.macDinh = itemIndex === index;
+            });
+
+            renderAddressEditors();
+            return;
+        }
+
+        const field = event.target.dataset.field;
+
+        if (field) {
+            address[field] = event.target.value;
+            clearFieldError(event.target);
+        }
+
+        if (event.target.classList.contains('province-select')) {
+            address.phuong = '';
+
+            const option = event.target.options[event.target.selectedIndex];
+            const provinceCode = option?.dataset.code;
+
+            const wardSelect = card.querySelector('.ward-select');
+
+            fillSelect(wardSelect, [], '');
+
+            if (provinceCode) {
+                const wards = await fetchWards(provinceCode);
+
+                fillSelect(
+                    wardSelect,
+                    wards.map((ward) => ({
+                        value: ward.name,
+                        label: ward.name,
+                        code: ward.code
+                    })),
+                    ''
+                );
+            }
+        }
+    }
+
+    function handleAddressEditorInput(event) {
+        const field = event.target.dataset.field;
+        if (!field) return;
+
+        if (field === 'soDienThoai') {
+            event.target.value = onlyDigits(event.target.value, 10);
+        }
+
+        if (field === 'tenNguoiNhan' || field === 'tenDiaChi') {
+            event.target.value = event.target.value.replace(/\s{2,}/g, ' ');
+        }
+
+        clearFieldError(event.target);
+    }
+
     async function saveCustomer(event) {
         event.preventDefault();
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-        const id = data.id;
-        delete data.id;
-        delete data.maKh;
 
-        const provinceSelect = document.getElementById('provinceSelect');
-        const districtSelect = document.getElementById('districtSelect');
-        const wardSelect = document.getElementById('wardSelect');
+        if (state.saving) return;
 
-        const provinceName = provinceSelect.options[provinceSelect.selectedIndex]?.text || '';
-        const districtName = districtSelect.options[districtSelect.selectedIndex]?.text || '';
-        const wardName = wardSelect.options[wardSelect.selectedIndex]?.text || '';
+        const isUpdate = Boolean(state.editingId);
 
-        data.tinhThanh = provinceName;
-        data.tinhThanhCode = provinceSelect.value || null;
-        data.quanHuyen = districtName;
-        data.quanHuyenCode = districtSelect.value || null;
-        data.phuongXa = wardName;
-        data.phuongXaCode = wardSelect.value || null;
-        data.diaChiChiTiet = document.getElementById('inputDiaChiChiTiet').value.trim() || null;
-
-        // Nếu không có trạng thái trong form (đã xóa), set mặc định true cho thêm mới
-        if (!id) {
-            data.trangThai = true;   // Hoạt động
-        } else {
-            // Khi cập nhật, lấy trạng thái từ dữ liệu hiện tại (giữ nguyên)
-            const existing = state.items.find(item => item.id === parseInt(id));
-            if (existing) {
-                data.trangThai = existing.trangThai;
-            } else {
-                data.trangThai = true; // fallback
-            }
+        if (!validateCustomerForm(isUpdate)) {
+            toast('Vui lòng kiểm tra lại các trường đang báo lỗi.', true);
+            return;
         }
 
-        if (!data.ngaySinh) data.ngaySinh = null;
-        Object.keys(data).forEach(key => { if (data[key] === '') data[key] = null; });
+        const addresses = collectAndValidateAddresses();
+        if (!addresses) {
+            toast('Vui lòng kiểm tra lại thông tin địa chỉ nhận hàng.', true);
+            return;
+        }
+
+        const customer = {
+            tenKhachHang: normalizeSpaces($('customerName').value),
+            email: emptyToNull($('customerEmail').value)?.toLowerCase(),
+            soDienThoai: $('customerPhone').value.trim(),
+            cccd: emptyToNull($('customerCccd').value),
+            ngaySinh: emptyToNull($('customerBirthday').value),
+            gioiTinh: document.querySelector('input[name="customerGender"]:checked')?.value || null,
+            trangThai: state.editingCustomer?.trangThai ?? true
+        };
+
+        const saveButton = $('saveCustomerBtn');
+
+        state.saving = true;
+        saveButton.disabled = true;
+        saveButton.textContent = 'Đang lưu...';
 
         try {
-            const response = await fetch(id ? `${API}/${id}` : API, {
-                method: id ? 'PUT' : 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            });
+            let savedCustomer;
 
-            if (!response.ok) {
-                const error = await readError(response);
-                return toast(error, true);
+            if (isUpdate) {
+                savedCustomer = await fetchJson(`${API}/${state.editingId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(customer)
+                });
+            } else {
+                savedCustomer = await fetchJson(API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(customer)
+                });
+
+                state.editingId = savedCustomer.id;
+                state.editingCustomer = savedCustomer;
             }
-            closeModal();
-            toast(id ? '✅ Đã cập nhật khách hàng thành công!' : '✅ Đã thêm khách hàng thành công!');
+
+            await saveAddressChanges(savedCustomer.id, addresses);
+            closeModal('customerModal', true);
+
+            toast(
+                isUpdate
+                    ? 'Đã cập nhật khách hàng thành công.'
+                    : 'Đã thêm khách hàng. Tài khoản và mật khẩu tạm thời đã gửi về email.'
+            );
+
             await loadData();
         } catch (error) {
-            toast('❌ Lỗi khi lưu khách hàng', true);
-            console.error(error);
+            toast(error.message || 'Không thể lưu khách hàng.', true);
+        } finally {
+            state.saving = false;
+            saveButton.disabled = false;
+            saveButton.textContent = 'Lưu khách hàng';
         }
     }
 
-    async function toggleStatus(id) {
-        try {
-            const response = await fetch(`${API}/${id}/trang-thai`, {method: 'PATCH'});
-            if (!response.ok) {
-                const error = await readError(response);
-                return toast(error, true);
+    function validateCustomerForm(isUpdate) {
+        clearValidation($('customerForm'));
+
+        let valid = true;
+
+        const name = $('customerName');
+        const email = $('customerEmail');
+        const phone = $('customerPhone');
+        const cccd = $('customerCccd');
+        const birthday = $('customerBirthday');
+        const genderBox = $('genderBox');
+
+        name.value = normalizeSpaces(name.value);
+        email.value = email.value.trim();
+        phone.value = onlyDigits(phone.value, 10);
+        cccd.value = onlyDigits(cccd.value, 12);
+
+        if (!name.value) {
+            setInvalid(name, 'Vui lòng nhập họ và tên.');
+            valid = false;
+        } else if (name.value.length < 2 || name.value.length > 255) {
+            setInvalid(name, 'Họ tên phải từ 2 đến 255 ký tự.');
+            valid = false;
+        } else if (!/^[\p{L} .'-]+$/u.test(name.value)) {
+            setInvalid(name, 'Họ tên chỉ được chứa chữ cái, khoảng trắng, dấu chấm, nháy đơn hoặc gạch ngang.');
+            valid = false;
+        }
+
+        if (!email.value && !isUpdate) {
+            setInvalid(email, 'Vui lòng nhập email để gửi tài khoản và mật khẩu tạm thời.');
+            valid = false;
+        } else if (email.value) {
+            if (email.value.length > 255) {
+                setInvalid(email, 'Email không được vượt quá 255 ký tự.');
+                valid = false;
+            } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) {
+                setInvalid(email, 'Email không đúng định dạng.');
+                valid = false;
             }
+        }
+
+        if (!phone.value) {
+            setInvalid(phone, 'Vui lòng nhập số điện thoại chính.');
+            valid = false;
+        } else if (!/^(03|05|07|08|09)\d{8}$/.test(phone.value)) {
+            setInvalid(phone, 'Số điện thoại gồm 10 số, bắt đầu bằng 03, 05, 07, 08 hoặc 09.');
+            valid = false;
+        }
+
+        if (cccd.value && !/^\d{12}$/.test(cccd.value)) {
+            setInvalid(cccd, 'CCCD phải gồm đúng 12 chữ số.');
+            valid = false;
+        }
+
+        if (birthday.value) {
+            const birthDate = new Date(`${birthday.value}T00:00:00`);
+            const today = new Date();
+            const currentYear = today.getFullYear();
+
+            if (birthDate >= new Date(today.toDateString())) {
+                setInvalid(birthday, 'Ngày sinh phải nhỏ hơn ngày hiện tại.');
+                valid = false;
+            } else if (
+                birthDate.getFullYear() < currentYear - 130 ||
+                birthDate.getFullYear() > currentYear
+            ) {
+                setInvalid(birthday, 'Ngày sinh không hợp lệ.');
+                valid = false;
+            }
+        }
+
+        const gender = document.querySelector('input[name="customerGender"]:checked');
+
+        if (!gender) {
+            setInvalid(genderBox, 'Vui lòng chọn giới tính.');
+            valid = false;
+        }
+
+        if (!valid) {
+            document.querySelector('.is-invalid')?.focus();
+        }
+
+        return valid;
+    }
+
+    function collectAndValidateAddresses() {
+        clearValidation($('addressEditors'));
+
+        if (!state.draftAddresses.length) {
+            toast('Khách hàng cần có ít nhất một địa chỉ nhận hàng.', true);
+            return null;
+        }
+
+        let valid = true;
+
+        const addresses = state.draftAddresses.map((address, index) => {
+            const card = document.querySelector(`[data-address-index="${index}"]`);
+
+            const get = (field) => card.querySelector(`[data-field="${field}"]`);
+
+            const tenDiaChi = get('tenDiaChi');
+            const tenNguoiNhan = get('tenNguoiNhan');
+            const soDienThoai = get('soDienThoai');
+            const thanhPho = get('thanhPho');
+            const phuong = get('phuong');
+            const diaChiCuThe = get('diaChiCuThe');
+
+            tenDiaChi.value = normalizeSpaces(tenDiaChi.value);
+            tenNguoiNhan.value = normalizeSpaces(tenNguoiNhan.value);
+            soDienThoai.value = onlyDigits(soDienThoai.value, 10);
+            diaChiCuThe.value = normalizeSpaces(diaChiCuThe.value);
+
+            if (!tenDiaChi.value) {
+                setInvalid(tenDiaChi, 'Vui lòng nhập tên địa chỉ.');
+                valid = false;
+            } else if (tenDiaChi.value.length < 2 || tenDiaChi.value.length > 100) {
+                setInvalid(tenDiaChi, 'Tên địa chỉ phải từ 2 đến 100 ký tự.');
+                valid = false;
+            }
+
+            if (!tenNguoiNhan.value) {
+                setInvalid(tenNguoiNhan, 'Vui lòng nhập tên người nhận.');
+                valid = false;
+            } else if (tenNguoiNhan.value.length < 2 || tenNguoiNhan.value.length > 255) {
+                setInvalid(tenNguoiNhan, 'Tên người nhận phải từ 2 đến 255 ký tự.');
+                valid = false;
+            } else if (!/^[\p{L} .'-]+$/u.test(tenNguoiNhan.value)) {
+                setInvalid(tenNguoiNhan, 'Tên người nhận chỉ được chứa chữ cái, khoảng trắng, dấu chấm, nháy đơn hoặc gạch ngang.');
+                valid = false;
+            }
+
+            if (!soDienThoai.value) {
+                setInvalid(soDienThoai, 'Vui lòng nhập số điện thoại người nhận.');
+                valid = false;
+            } else if (!/^(03|05|07|08|09)\d{8}$/.test(soDienThoai.value)) {
+                setInvalid(soDienThoai, 'SĐT người nhận gồm 10 số, bắt đầu bằng 03, 05, 07, 08 hoặc 09.');
+                valid = false;
+            }
+
+            if (!thanhPho.value) {
+                setInvalid(thanhPho, 'Vui lòng chọn Tỉnh / Thành.');
+                valid = false;
+            }
+
+            if (!phuong.value) {
+                setInvalid(phuong, 'Vui lòng chọn Phường / Xã.');
+                valid = false;
+            }
+
+            if (!diaChiCuThe.value) {
+                setInvalid(diaChiCuThe, 'Vui lòng nhập số nhà hoặc tên đường.');
+                valid = false;
+            } else if (diaChiCuThe.value.length < 2 || diaChiCuThe.value.length > 255) {
+                setInvalid(diaChiCuThe, 'Số nhà / đường phải từ 2 đến 255 ký tự.');
+                valid = false;
+            }
+
+            return {
+                ...address,
+                tenDiaChi: tenDiaChi.value,
+                tenNguoiNhan: tenNguoiNhan.value,
+                soDienThoai: soDienThoai.value,
+                thanhPho: thanhPho.value,
+                quan: '',
+                phuong: phuong.value,
+                diaChiCuThe: diaChiCuThe.value
+            };
+        });
+
+        const defaultCount = addresses.filter((address) => address.macDinh).length;
+
+        if (defaultCount !== 1) {
+            toast('Vui lòng chọn đúng một địa chỉ mặc định.', true);
+            valid = false;
+        }
+
+        if (!valid) {
+            document.querySelector('#addressEditors .is-invalid')?.focus();
+            return null;
+        }
+
+        return addresses;
+    }
+
+    async function saveAddressChanges(customerId, addresses) {
+        for (const addressId of [...state.deletedAddressIds]) {
+            const response = await fetch(`${API}/${customerId}/dia-chi/${addressId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+        }
+
+        state.deletedAddressIds = [];
+
+        const defaultAddress = addresses.find((address) => address.macDinh);
+
+        const orderedAddresses = [
+            defaultAddress,
+            ...addresses.filter((address) => address !== defaultAddress)
+        ];
+
+        for (const address of orderedAddresses) {
+            const payload = {
+                tenDiaChi: address.tenDiaChi,
+                tenNguoiNhan: address.tenNguoiNhan,
+                soDienThoai: address.soDienThoai,
+                thanhPho: address.thanhPho,
+                quan: null,
+                phuong: address.phuong,
+                diaChiCuThe: address.diaChiCuThe,
+                macDinh: address === defaultAddress
+            };
+
+            const url = address.id
+                ? `${API}/${customerId}/dia-chi/${address.id}`
+                : `${API}/${customerId}/dia-chi`;
+
+            const savedAddress = await fetchJson(url, {
+                method: address.id ? 'PUT' : 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (savedAddress?.id) {
+                Object.assign(address, savedAddress);
+            }
+        }
+
+        state.draftAddresses = addresses;
+    }
+
+    async function openCustomerDetail(customerId) {
+        state.detailId = customerId;
+
+        $('detailModal').hidden = false;
+        $('detailProfile').innerHTML = `<div class="loading">Đang tải thông tin...</div>`;
+        $('detailAddresses').innerHTML = `<div class="loading">Đang tải địa chỉ...</div>`;
+
+        try {
+            const [customer, addresses] = await Promise.all([
+                fetchJson(`${API}/${customerId}`),
+                fetchJson(`${API}/${customerId}/dia-chi`)
+            ]);
+
+            renderDetail(customer, addresses || []);
+        } catch (error) {
+            toast(error.message || 'Không thể tải chi tiết khách hàng.', true);
+            closeModal('detailModal', true);
+        }
+    }
+
+    function renderDetail(customer, addresses) {
+        $('detailProfile').innerHTML = `
+            <h3>Thông tin khách hàng</h3>
+
+            <div class="detail-avatar">${esc(initials(customer.tenKhachHang))}</div>
+
+            ${detailField('Mã KH', customer.maKh)}
+            ${detailField('Tên khách hàng', customer.tenKhachHang)}
+            ${detailField('Email', customer.email)}
+            ${detailField('Số điện thoại chính', customer.soDienThoai)}
+            ${detailField('CCCD', customer.cccd)}
+            ${detailField('Ngày sinh', formatDate(customer.ngaySinh))}
+            ${detailField('Giới tính', customer.gioiTinh)}
+
+            <button class="btn primary" type="button" onclick="closeModal('detailModal', true);openCustomerEditor(${customer.id})">
+                ${svg.edit}
+                Chỉnh sửa thông tin
+            </button>
+        `;
+
+        $('detailAddresses').innerHTML = addresses.length
+            ? addresses.map((address) => `
+                <article class="address-view-card">
+                    <div class="address-view-top">
+                        <div class="address-name">
+                            ${esc(address.tenDiaChi || address.maDiaChi || 'Địa chỉ')}
+                        </div>
+
+                        <div style="display:flex;align-items:center;gap:8px">
+                            ${address.macDinh ? '<span class="default-tag">★ Mặc định</span>' : ''}
+                        </div>
+                    </div>
+
+                    <div class="address-line">
+                        <div>
+                            <label>Tên người nhận</label>
+                            <p>${esc(address.tenNguoiNhan)}</p>
+                        </div>
+
+                        <div>
+                            <label>SĐT người nhận</label>
+                            <p>${esc(address.soDienThoai)}</p>
+                        </div>
+                    </div>
+
+                    <div class="address-full-text">
+                        ${esc(address.diaChiDayDu || joinAddress(address))}
+                    </div>
+                </article>
+            `).join('')
+            : `
+                <div class="empty" style="padding:34px">
+                    Khách hàng chưa có địa chỉ nhận hàng.
+                </div>
+            `;
+    }
+
+    function detailField(label, value) {
+        return `
+            <div class="detail-field">
+                <label>${label}</label>
+                <div class="detail-value" title="${escAttr(value || '')}">
+                    ${esc(value) || '—'}
+                </div>
+            </div>
+        `;
+    }
+
+    async function toggleStatus(customerId) {
+        try {
+            const response = await fetch(`${API}/${customerId}/trang-thai`, {
+                method: 'PATCH'
+            });
+
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            toast('Đã cập nhật trạng thái khách hàng.');
             await loadData();
         } catch (error) {
-            toast('Lỗi khi thay đổi trạng thái', true);
-            console.error(error);
+            toast(error.message || 'Không thể cập nhật trạng thái.', true);
+            await loadData();
         }
     }
 
     async function exportExcel() {
         try {
-            const params = currentParams();
-            const url = params ? `${API}/xuat-excel?${params}` : `${API}/xuat-excel`;
-            const response = await fetch(url);
+            const response = await fetch(`${API}/xuat-excel?${currentParams(false).toString()}`);
+
             if (!response.ok) {
-                const error = await readError(response);
-                return toast(error, true);
+                throw new Error(await readError(response));
             }
+
             const blob = await response.blob();
-            download(blob, 'danh_sach_khach_hang.xlsx');
-            toast('📥 Đang tải file Excel...');
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'danh_sach_khach_hang.xlsx';
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            URL.revokeObjectURL(url);
+            toast('Đang tải file Excel...');
         } catch (error) {
-            toast('Lỗi khi xuất Excel', true);
-            console.error(error);
+            toast(error.message || 'Không thể xuất Excel.', true);
         }
     }
 
-    function download(blob, filename) {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
+    function setInvalid(element, message) {
+        if (!element) return;
+
+        element.classList.add('is-invalid');
+        element.setAttribute('aria-invalid', 'true');
+
+        const group = element.closest('.form-group');
+        if (!group) return;
+
+        const errorBox = group.querySelector('.field-error');
+        if (errorBox) {
+            errorBox.textContent = message;
+        }
+    }
+
+    function clearFieldError(element) {
+        if (!element) return;
+
+        element.classList.remove('is-invalid');
+        element.removeAttribute('aria-invalid');
+
+        const group = element.closest('.form-group');
+        if (!group) return;
+
+        const errorBox = group.querySelector('.field-error');
+        if (errorBox) {
+            errorBox.textContent = '';
+        }
+    }
+
+    function clearValidation(root) {
+        root.querySelectorAll('.is-invalid').forEach((element) => {
+            element.classList.remove('is-invalid');
+            element.removeAttribute('aria-invalid');
+        });
+
+        root.querySelectorAll('.field-error').forEach((box) => {
+            box.textContent = '';
+        });
+    }
+
+    function closeModal(id, force = false) {
+        if (state.saving && !force) return;
+
+        if (id === 'cccdScannerModal') {
+            closeCccdScanner();
+            return;
+        }
+
+        $(id).hidden = true;
+    }
+
+    let cccdQrScanner = null;
+    let cccdQrBusy = false;
+
+    function openCccdScanner() {
+        $('cccdQrResult').textContent = 'Đưa mã QR CCCD vào khung hình để quét.';
+        $('cccdScannerModal').hidden = false;
+        setTimeout(startCccdScanner, 120);
+    }
+
+    async function closeCccdScanner() {
+        await stopCccdScanner();
+        $('cccdScannerModal').hidden = true;
+        $('cccdQrReader').innerHTML = '';
+        $('cccdQrFile').value = '';
+    }
+
+    async function startCccdScanner() {
+        if (cccdQrBusy) return;
+
+        if (!window.Html5Qrcode) {
+            $('cccdQrResult').textContent =
+                'Không tải được thư viện quét QR. Kiểm tra lại kết nối Internet.';
+            return;
+        }
+
+        await stopCccdScanner();
+        $('cccdQrReader').innerHTML = '';
+        $('cccdQrResult').textContent = 'Đang mở camera...';
+
+        try {
+            cccdQrBusy = true;
+            cccdQrScanner = new Html5Qrcode('cccdQrReader');
+
+            await cccdQrScanner.start(
+                { facingMode: 'environment' },
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 },
+                    aspectRatio: 1
+                },
+                handleCccdQrSuccess,
+                () => {}
+            );
+
+            $('cccdQrResult').textContent =
+                'Đang quét... đưa mã QR CCCD vào khung hình.';
+        } catch {
+            $('cccdQrResult').textContent =
+                'Không mở được camera. Bạn có thể dùng nút “Tải ảnh QR”.';
+        } finally {
+            cccdQrBusy = false;
+        }
+    }
+
+    async function stopCccdScanner() {
+        const scanner = cccdQrScanner;
+        cccdQrScanner = null;
+
+        if (!scanner) return;
+
+        try {
+            const stateValue = scanner.getState?.();
+
+            if (stateValue === 2 || stateValue === 3 || stateValue === 'SCANNING') {
+                await scanner.stop();
+            }
+
+            await scanner.clear();
+        } catch {}
+    }
+
+    async function scanCccdQrFile(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        if (!window.Html5Qrcode) {
+            $('cccdQrResult').textContent = 'Không tải được thư viện quét QR.';
+            return;
+        }
+
+        try {
+            await stopCccdScanner();
+            $('cccdQrReader').innerHTML = '';
+            $('cccdQrResult').textContent = 'Đang đọc ảnh QR...';
+
+            const scanner = new Html5Qrcode('cccdQrReader');
+            const decodedText = await scanner.scanFile(file, true);
+
+            await scanner.clear();
+            await handleCccdQrSuccess(decodedText);
+        } catch {
+            $('cccdQrResult').textContent =
+                'Không đọc được mã QR trong ảnh. Hãy thử ảnh rõ nét hơn.';
+        } finally {
+            event.target.value = '';
+        }
+    }
+
+    async function handleCccdQrSuccess(decodedText) {
+        if (cccdQrBusy) return;
+
+        cccdQrBusy = true;
+
+        const rawText = String(decodedText || '').trim();
+        $('cccdQrResult').textContent = rawText
+            ? `Đã quét được nội dung QR:\n${rawText}`
+            : 'Không đọc được nội dung QR.';
+
+        const qr = parseCccdQr(rawText);
+
+        if (!rawText) {
+            $('cccdQrResult').textContent = 'Không đọc được nội dung QR.';
+            cccdQrBusy = false;
+            return;
+        }
+
+        await fillCustomerFromCccdQr(qr, rawText);
+        cccdQrBusy = false;
+    }
+
+    async function fillCustomerFromCccdQr(qr, rawText = '') {
+        await stopCccdScanner();
+
+        const d = {
+            cccd: qr.cccd || '',
+            hoTen: qr.hoTen || '',
+            ngaySinh: qr.ngaySinh || '',
+            gioiTinh: qr.gioiTinh || '',
+            email: qr.email || '',
+            diaChi: qr.diaChi || '',
+            rawText: rawText || qr.rawText || ''
+        };
+
+        if (d.cccd) {
+            $('customerCccd').value = onlyDigits(d.cccd, 12);
+            clearFieldError($('customerCccd'));
+        }
+
+        if (d.hoTen) {
+            $('customerName').value = toCustomerTitleCase(d.hoTen);
+            clearFieldError($('customerName'));
+            updateEditorAvatar();
+        }
+
+        if (d.ngaySinh) {
+            $('customerBirthday').value = d.ngaySinh;
+            clearFieldError($('customerBirthday'));
+        }
+
+        if (d.gioiTinh) {
+            const gender = [
+                ...document.querySelectorAll('input[name="customerGender"]')
+            ].find((item) => item.value === d.gioiTinh);
+
+            if (gender) {
+                gender.checked = true;
+            }
+        }
+
+        if (d.email) {
+            $('customerEmail').value = d.email.toLowerCase();
+            clearFieldError($('customerEmail'));
+        }
+
+        if (d.diaChi) {
+            await applyCustomerQrAddress(d.diaChi);
+        }
+
+        await stopCccdScanner();
+        $('cccdScannerModal').hidden = true;
+        $('cccdQrReader').innerHTML = '';
+
+        if (!d.cccd) {
+            toast(
+                'Đã quét được QR nhưng chưa tách đúng CCCD. Kiểm tra lại nội dung QR.',
+                true
+            );
+            return;
+        }
+
+        if (!d.email) {
+            $('customerEmail').focus();
+            toast(
+                'Đã điền CCCD, họ tên, ngày sinh, giới tính và địa chỉ từ QR. QR không có email, hãy nhập email thủ công.',
+                true
+            );
+            return;
+        }
+
+        toast('Đã điền thông tin khách hàng từ mã QR CCCD.');
+    }
+
+    function parseCccdQr(rawText) {
+        const text = String(rawText || '').trim();
+
+        const parts = text
+            .split('|')
+            .map((value) => normalizeSpaces(value));
+
+        const cccd = (parts[0] || '').replace(/\D/g, '').slice(0, 12);
+        const birthDigits = (parts[2] || '').replace(/\D/g, '');
+
+        let ngaySinh = '';
+        if (birthDigits.length === 8) {
+            const day = birthDigits.slice(0, 2);
+            const month = birthDigits.slice(2, 4);
+            const year = birthDigits.slice(4, 8);
+            ngaySinh = `${year}-${month}-${day}`;
+        }
+
+        const rawGender = String(parts[3] || '').toLowerCase();
+        let gioiTinh = '';
+
+        if (rawGender.includes('nam') || rawGender.includes('male')) {
+            gioiTinh = 'Nam';
+        }
+
+        if (
+            rawGender.includes('nữ') ||
+            rawGender.includes('nu') ||
+            rawGender.includes('female')
+        ) {
+            gioiTinh = 'Nữ';
+        }
+
+        const email =
+            parts.find((value) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) || '';
+
+        return {
+            rawText: text,
+            parts,
+            cccd: /^\d{12}$/.test(cccd) ? cccd : '',
+            hoTen: parts[1] || '',
+            ngaySinh,
+            gioiTinh,
+            diaChi: parts[4] || '',
+            email
+        };
+    }
+
+    async function applyCustomerQrAddress(raw) {
+        const parsed = await resolveCustomerQrAddress(raw);
+
+        if (!state.draftAddresses.length) {
+            state.draftAddresses = [blankAddress()];
+        }
+
+        const firstAddress = state.draftAddresses[0];
+
+        if (!firstAddress.tenDiaChi) {
+            firstAddress.tenDiaChi = 'Địa chỉ mặc định';
+        }
+
+        if (!firstAddress.tenNguoiNhan && $('customerName').value.trim()) {
+            firstAddress.tenNguoiNhan = normalizeSpaces($('customerName').value);
+        }
+
+        if (!firstAddress.soDienThoai && $('customerPhone').value.trim()) {
+            firstAddress.soDienThoai = onlyDigits($('customerPhone').value, 10);
+        }
+
+        firstAddress.thanhPho = parsed.tinhThanh || '';
+        firstAddress.quan = parsed.quanHuyen || '';
+        firstAddress.phuong = parsed.phuongXa || '';
+        firstAddress.diaChiCuThe = parsed.diaChiChiTiet || normalizeSpaces(raw) || '';
+
+        if (!state.draftAddresses.some((item) => item.macDinh)) {
+            firstAddress.macDinh = true;
+        }
+
+        renderAddressEditors();
+        await prepareAddressSelects(0, firstAddress);
+
+        const card = document.querySelector('[data-address-index="0"]');
+        if (!card) return;
+
+        const provinceInput = card.querySelector('[data-field="thanhPho"]');
+        const wardInput = card.querySelector('[data-field="phuong"]');
+        const detailInput = card.querySelector('[data-field="diaChiCuThe"]');
+
+        if (provinceInput) {
+            provinceInput.value = firstAddress.thanhPho || '';
+            clearFieldError(provinceInput);
+        }
+
+        if (wardInput) {
+            wardInput.value = firstAddress.phuong || '';
+            clearFieldError(wardInput);
+        }
+
+        if (detailInput) {
+            detailInput.value = firstAddress.diaChiCuThe || '';
+            clearFieldError(detailInput);
+        }
+    }
+
+    async function resolveCustomerQrAddress(raw) {
+        const fullText = normalizeCustomerQrMatch(raw);
+
+        if (!fullText) {
+            return {
+                tinhThanh: '',
+                quanHuyen: '',
+                phuongXa: '',
+                diaChiChiTiet: ''
+            };
+        }
+
+        const parts = splitCustomerQrAddressParts(raw);
+        const provinces = await getProvinces();
+
+        const province = findBestCustomerQrAdministrativeMatch(provinces, fullText);
+
+        if (!province) {
+            return {
+                tinhThanh: '',
+                quanHuyen: '',
+                phuongXa: '',
+                diaChiChiTiet: normalizeSpaces(raw)
+            };
+        }
+
+        const wards = await fetchWards(province.code);
+        const ward = findBestCustomerQrAdministrativeMatch(wards, fullText);
+
+        const adminNames = [
+            ward?.name || '',
+            province?.name || ''
+        ].filter(Boolean);
+
+        const detailParts = parts.filter((part) => {
+            const normalizedPart = normalizeCustomerQrMatch(part);
+
+            return !adminNames.some((name) => {
+                const aliases = buildCustomerQrAdministrativeAliases(name);
+                return aliases.some((alias) =>
+                    normalizedPart === alias || normalizedPart.includes(alias)
+                );
+            });
+        });
+
+        let diaChiChiTiet = normalizeSpaces(detailParts.join(', '));
+
+        if (!diaChiChiTiet) {
+            diaChiChiTiet = parts.length ? normalizeSpaces(parts[0]) : '';
+        }
+
+        return {
+            tinhThanh: province?.name || '',
+            quanHuyen: '',
+            phuongXa: ward?.name || '',
+            diaChiChiTiet
+        };
+    }
+
+    function splitCustomerQrAddressParts(value) {
+        return String(value || '')
+            .split(',')
+            .map((item) => normalizeSpaces(item))
+            .filter(Boolean);
+    }
+
+    function findBestCustomerQrAdministrativeMatch(items, fullText) {
+        if (!Array.isArray(items) || !items.length) return null;
+
+        const normalizedText = normalizeCustomerQrMatch(fullText);
+        let bestItem = null;
+        let bestScore = -1;
+
+        for (const item of items) {
+            const aliases = buildCustomerQrAdministrativeAliases(item.name);
+            let score = -1;
+
+            for (const alias of aliases) {
+                if (!alias) continue;
+
+                if (normalizedText === alias) {
+                    score = Math.max(score, 1000 + alias.length);
+                } else if (normalizedText.includes(' ' + alias + ' ')) {
+                    score = Math.max(score, 800 + alias.length);
+                } else if (
+                    normalizedText.startsWith(alias + ' ') ||
+                    normalizedText.endsWith(' ' + alias) ||
+                    normalizedText.includes(alias)
+                ) {
+                    score = Math.max(score, 500 + alias.length);
+                }
+            }
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestItem = item;
+            }
+        }
+
+        return bestItem;
+    }
+
+    function buildCustomerQrAdministrativeAliases(name) {
+        const base = normalizeCustomerQrMatch(name);
+        const cleaned = stripCustomerQrAdministrativePrefix(base);
+
+        const aliases = new Set([base, cleaned]);
+
+        if (base.startsWith('thanh pho ')) aliases.add(base.replace(/^thanh pho\s+/, 'tp '));
+        if (base.startsWith('tinh ')) aliases.add(base.replace(/^tinh\s+/, ''));
+        if (base.startsWith('quan ')) aliases.add(base.replace(/^quan\s+/, 'q '));
+        if (base.startsWith('huyen ')) aliases.add(base.replace(/^huyen\s+/, 'h '));
+        if (base.startsWith('phuong ')) aliases.add(base.replace(/^phuong\s+/, 'p '));
+        if (base.startsWith('xa ')) aliases.add(base.replace(/^xa\s+/, 'x '));
+        if (base.startsWith('thi tran ')) aliases.add(base.replace(/^thi tran\s+/, 'tt '));
+        if (base.startsWith('thi xa ')) aliases.add(base.replace(/^thi xa\s+/, 'tx '));
+
+        if (cleaned) {
+            aliases.add('tp ' + cleaned);
+            aliases.add('q ' + cleaned);
+            aliases.add('h ' + cleaned);
+            aliases.add('p ' + cleaned);
+            aliases.add('x ' + cleaned);
+            aliases.add('tt ' + cleaned);
+            aliases.add('tx ' + cleaned);
+        }
+
+        return [...aliases].filter(Boolean);
+    }
+
+    function stripCustomerQrAdministrativePrefix(value) {
+        return String(value || '')
+            .replace(/^(thanh pho|tinh|quan|huyen|phuong|xa|thi tran|thi xa)\s+/, '')
+            .trim();
+    }
+
+    function normalizeCustomerQrMatch(value) {
+        return String(value || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, ' ')
+            .trim()
+            .replace(/\s+/g, ' ');
+    }
+
+    function toCustomerTitleCase(value) {
+        return normalizeSpaces(value)
+            .toLocaleLowerCase('vi-VN')
+            .replace(/(^|\s)(\S)/g, (match, space, char) => {
+                return space + char.toLocaleUpperCase('vi-VN');
+            });
+    }
+
+    async function fetchJson(url, options) {
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            throw new Error(await readError(response));
+        }
+
+        return response.status === 204 ? null : response.json();
     }
 
     async function readError(response) {
+        const text = await response.text();
+
         try {
-            const text = await response.text();
-            const json = JSON.parse(text);
-            return json.message || json.error || text;
+            const value = JSON.parse(text);
+
+            if (value.message) return value.message;
+            if (value.error) return value.error;
+            if (value.errors) return Object.values(value.errors).join('. ');
+
+            return Object.values(value).join('. ');
         } catch {
-            return response.statusText || 'Có lỗi xảy ra';
+            return text || 'Có lỗi xảy ra.';
         }
     }
 
-    function toast(message, error = false) {
-        const el = document.createElement('div');
-        el.className = `toast ${error ? 'error' : 'success'}`;
-        el.textContent = message;
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 3000);
+    function normalizeSpaces(value) {
+        return String(value || '')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    function onlyDigits(value, maxLength) {
+        return String(value || '')
+            .replace(/\D/g, '')
+            .slice(0, maxLength);
+    }
+
+    function emptyToNull(value) {
+        const text = String(value || '').trim();
+        return text || null;
+    }
+
+    function initials(value) {
+        return String(value || '')
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+            .slice(-2)
+            .map((word) => word[0])
+            .join('')
+            .toUpperCase() || 'KH';
     }
 
     function formatDate(value) {
         if (!value) return '';
-        const [y, m, d] = value.split('-');
-        return d && m && y ? `${d}/${m}/${y}` : value;
+
+        const parts = String(value).slice(0, 10).split('-');
+        return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : value;
     }
 
     function toDateInput(value) {
-        return value ? value.substring(0, 10) : '';
+        return value ? String(value).slice(0, 10) : '';
+    }
+
+    function joinAddress(address) {
+        return [
+            address.diaChiCuThe,
+            address.phuong,
+            address.thanhPho
+        ].filter(Boolean).join(', ');
     }
 
     function esc(value) {
-        return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+        return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        }[char]));
     }
+
+    function escAttr(value) {
+        return esc(value).replace(/`/g, '&#096;');
+    }
+
+    function toast(message, error = false) {
+        const element = document.createElement('div');
+
+        element.className = `toast ${error ? 'error' : 'success'}`;
+        element.textContent = message;
+
+        document.body.appendChild(element);
+
+        setTimeout(() => {
+            element.remove();
+        }, 3200);
+    }
+
+    window.openCustomerEditor = openCustomerEditor;
+    window.openCustomerDetail = openCustomerDetail;
+    window.toggleStatus = toggleStatus;
+    window.changePage = changePage;
+    window.closeModal = closeModal;
+    window.openCccdScanner = openCccdScanner;
 </script>
 </body>
 </html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat hỗ trợ | 4MenStore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/js/app-shell.js?v=live-chat-20260722-1" defer></script>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{--sw:220px;--bg:#eef2f7;--white:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;--navy:#102a56;--navy-hover:#0b1f3f;--blue:#2563eb;--green:#16a34a;--amber:#b7791f;--red:#dc2626;--r:14px}
+        body{font-family:Inter,system-ui,-apple-system,sans-serif;background:radial-gradient(900px 360px at 70% -100px,#dceafe,transparent),var(--bg);color:var(--text);font-size:13px}
+        .sidebar{position:fixed;inset:0 auto 0 0;width:var(--sw);background:#fff;border-right:1px solid var(--border);z-index:20}
+        .main{margin-left:var(--sw);min-height:100vh;padding:24px 28px}
+        .topbar{min-height:82px;background:#fff;border:1px solid var(--border);border-radius:18px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;margin-bottom:16px;box-shadow:0 18px 46px rgba(15,23,42,.07)}
+        .title{display:flex;align-items:center;gap:12px}
+        .title-icon{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#173b82,#0f2556);color:#fff;display:grid;place-items:center;font-weight:900;box-shadow:0 10px 22px rgba(16,42,86,.2)}
+        .title h1{font-size:18px;margin-bottom:3px}.title p{color:var(--muted);font-size:12px}
+        .chat-layout{display:grid;grid-template-columns:360px minmax(0,1fr);gap:16px;min-height:calc(100vh - 140px)}
+        .panel{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;min-height:0;box-shadow:0 18px 46px rgba(15,23,42,.06)}
+        .panel-head{padding:15px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,#fff,#fbfdff)}
+        .panel-head strong{font-size:14px}.muted{color:var(--muted);font-size:12px}
+        .agent-stats{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+        .stat-pill{padding:8px 10px;border-radius:999px;background:#f1f5ff;color:#173b82;font-size:11px;font-weight:900}
+        .stat-pill.wait{background:#fff7ed;color:#9a5b08}.stat-pill.live{background:#ecfdf5;color:#0f7a42}
+        .session-tools{padding:12px;border-bottom:1px solid var(--border);display:grid;gap:10px;background:#fff}
+        .search-box{display:flex;align-items:center;gap:8px;height:40px;padding:0 11px;border:1px solid #dfe6ef;border-radius:12px;background:#f8fafc;color:#64748b}
+        .search-box input{min-width:0;flex:1;border:0;background:transparent;outline:none;font-family:inherit;color:#172033;font-weight:700}
+        .session-list{height:calc(100vh - 190px);overflow:auto}
+        .session-card{width:100%;border:0;border-bottom:1px solid var(--border);background:#fff;padding:14px;text-align:left;cursor:pointer;display:grid;grid-template-columns:42px 1fr;gap:10px}
+        .session-card:hover,.session-card.active{background:#f8fbff}
+        .session-card.active{box-shadow:inset 4px 0 0 var(--blue)}
+        .session-avatar{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#eaf2ff,#fff);color:#173b82;display:grid;place-items:center;font-weight:1000;border:1px solid #dce8fb}
+        .session-card strong{display:block;font-size:13px;color:var(--text)}
+        .session-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px}
+        .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:800}
+        .badge.waiting{background:#fff7ed;color:var(--amber)}.badge.staff{background:#dcfce7;color:var(--green)}.badge.ai{background:#eef4ff;color:var(--navy)}
+        .thread{height:calc(100vh - 190px);display:flex;flex-direction:column}
+        .thread-customer-card{display:none;padding:12px 16px;border-bottom:1px solid var(--border);background:#f8fbff;color:#334155}
+        .thread-customer-card.show{display:flex;align-items:center;justify-content:space-between;gap:12px}
+        .messages{flex:1;overflow:auto;padding:18px;background:radial-gradient(420px 180px at 50% 0,rgba(37,99,235,.08),transparent),#f8fafc;display:flex;flex-direction:column;gap:10px}
+        .msg{max-width:min(720px,82%);padding:11px 13px;border-radius:16px 16px 16px 5px;background:#fff;border:1px solid #e8edf4;box-shadow:0 7px 18px rgba(15,23,42,.05);line-height:1.45;white-space:pre-wrap}
+        .msg.customer{align-self:flex-start}.msg.staff{align-self:flex-end;background:#102a56;color:#fff;border-radius:16px 16px 5px 16px}.msg.ai{align-self:flex-start;background:#eef4ff}.msg.system{align-self:center;background:#fff7ed;color:#8a5a16}
+        .msg small{display:block;margin-bottom:4px;font-size:10px;font-weight:800;opacity:.72}
+        .quick-replies{display:flex;gap:7px;flex-wrap:wrap;padding:10px 12px 0;background:#fff;border-top:1px solid var(--border)}
+        .quick-replies button{border:1px solid #dbe5f3;background:#f8fbff;color:#173b82;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:900;cursor:pointer}
+        .reply{padding:12px;display:flex;gap:8px;background:#fff}
+        .reply textarea{flex:1;min-height:44px;max-height:120px;resize:vertical;border:1px solid var(--border);border-radius:12px;padding:11px 12px;font-family:inherit;outline:none}
+        .reply textarea:focus{border-color:#8ba7d8;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+        .btn{height:38px;border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:8px;padding:0 13px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+        .btn:hover{background:var(--navy-hover)}.btn.light{background:#fff;color:var(--navy)}.btn.light:hover{background:#eef4ff}
+        .empty{height:100%;display:grid;place-items:center;color:var(--muted);text-align:center;padding:24px}
+        @media(max-width:900px){.main{margin-left:0;padding:14px}.sidebar{display:none}.chat-layout{grid-template-columns:1fr}.session-list,.thread{height:auto;min-height:420px}}
+    </style>
+</head>
+<body>
+<aside class="sidebar"></aside>
+<main class="main">
+    <div class="topbar">
+        <div class="title">
+            <div class="title-icon"><i class="fas fa-comments"></i></div>
+            <div>
+                <h1>Chat hỗ trợ khách online</h1>
+                <p>Nhân viên tham gia các phiên khách đã yêu cầu hỗ trợ.</p>
+            </div>
+        </div>
+        <div class="agent-stats">
+            <span class="stat-pill wait" id="waitingCount">0 chờ</span>
+            <span class="stat-pill live" id="liveCount">0 đang chat</span>
+            <button class="btn light" type="button" onclick="loadSessions()"><i class="fas fa-rotate"></i> Làm mới</button>
+        </div>
+    </div>
+
+    <div class="chat-layout">
+        <section class="panel">
+            <div class="panel-head">
+                <strong>Phiên đang mở</strong>
+                <span class="muted" id="sessionCount">0 phiên</span>
+            </div>
+            <div class="session-tools">
+                <label class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input id="sessionSearch" placeholder="Tìm tên, email, mã phiên..." oninput="renderSessions()">
+                </label>
+            </div>
+            <div class="session-list" id="sessionList">
+                <div class="empty">Đang tải phiên chat...</div>
+            </div>
+        </section>
+
+        <section class="panel thread">
+            <div class="panel-head">
+                <div>
+                    <strong id="threadTitle">Chọn một phiên chat</strong>
+                    <div class="muted" id="threadSubtitle">Tin nhắn sẽ hiển thị tại đây.</div>
+                </div>
+                <button class="btn light" type="button" onclick="closeCurrentSession()" id="closeBtn" disabled><i class="fas fa-check"></i> Kết thúc</button>
+            </div>
+            <div class="thread-customer-card" id="threadCustomerCard"></div>
+            <div class="messages" id="messageList">
+                <div class="empty">Chưa chọn phiên.</div>
+            </div>
+            <div class="quick-replies">
+                <button type="button" onclick="insertQuickReply('Dạ em đang kiểm tra ngay cho anh/chị ạ.')">Đang kiểm tra</button>
+                <button type="button" onclick="insertQuickReply('Anh/chị cho em xin mã đơn hàng hoặc số điện thoại đặt hàng nhé.')">Xin mã đơn</button>
+                <button type="button" onclick="insertQuickReply('Mẫu này hiện còn hàng, anh/chị muốn em tư vấn size nào ạ?')">Tư vấn size</button>
+                <button type="button" onclick="insertQuickReply('Dạ em cảm ơn anh/chị, 4MenStore sẽ hỗ trợ mình ngay ạ.')">Cảm ơn</button>
+            </div>
+            <form class="reply" onsubmit="sendReply(event)">
+                <textarea id="replyInput" placeholder="Nhập phản hồi cho khách..." disabled></textarea>
+                <button class="btn" id="replyBtn" type="submit" disabled><i class="fas fa-paper-plane"></i> Gửi</button>
+            </form>
+        </section>
+    </div>
+</main>
+
+<script>
+    let sessions = [];
+    let currentId = null;
+    let refreshTimer = null;
+    const $ = id => document.getElementById(id);
+    const esc = value => String(value ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
+    const fmtTime = value => value ? new Intl.DateTimeFormat('vi-VN',{dateStyle:'short',timeStyle:'short'}).format(new Date(value)) : '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadSessions();
+        refreshTimer = setInterval(refresh, 3500);
+    });
+
+    async function api(url, options = {}) {
+        const response = await fetch(url, {...options, credentials:'same-origin'});
+        if (!response.ok) throw new Error(await response.text() || 'Không tải được dữ liệu');
+        return response.status === 204 ? null : response.json();
+    }
+
+    async function loadSessions() {
+        try {
+            sessions = await api('/api/staff/chat-sessions');
+            renderSessions();
+            if (currentId) await openSession(currentId, false);
+        } catch (error) {
+            $('sessionList').innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+        }
+    }
+
+    async function refresh() {
+        await loadSessions();
+    }
+
+    function renderSessions() {
+        const keyword = ($('sessionSearch')?.value || '').trim().toLowerCase();
+        const filtered = keyword
+            ? sessions.filter(session => [
+                session.id,
+                session.customerName,
+                session.customerEmail,
+                session.employeeName,
+                statusText(session.status)
+            ].some(value => String(value || '').toLowerCase().includes(keyword)))
+            : sessions;
+        $('sessionCount').textContent = `${filtered.length}/${sessions.length} phiên`;
+        $('waitingCount').textContent = `${sessions.filter(item => item.status === 'WAITING_STAFF').length} chờ`;
+        $('liveCount').textContent = `${sessions.filter(item => item.status === 'STAFF_JOINED').length} đang chat`;
+        $('sessionList').innerHTML = filtered.length ? filtered.map(session => `
+            <button class="session-card ${Number(session.id) === Number(currentId) ? 'active' : ''}" type="button" onclick="openSession(${session.id})">
+                <span class="session-avatar">${esc(initials(session.customerName || 'KO'))}</span>
+                <span>
+                    <strong>${esc(session.customerName || 'Khách online')}</strong>
+                    <div class="session-meta">
+                        <span>${esc(session.customerEmail || 'Khách vãng lai')}</span>
+                        <span class="badge ${statusClass(session.status)}">${statusText(session.status)}</span>
+                    </div>
+                    <div class="muted">Cập nhật ${esc(fmtTime(session.updatedAt))}</div>
+                </span>
+            </button>
+        `).join('') : '<div class="empty">Không có phiên phù hợp.</div>';
+    }
+
+    async function openSession(id, focus = true) {
+        currentId = id;
+        const session = await api(`/api/staff/chat-sessions/${id}`);
+        $('threadTitle').textContent = session.customerName || 'Khách online';
+        $('threadSubtitle').textContent = `${statusText(session.status)}${session.employeeName ? ' · ' + session.employeeName : ''}`;
+        renderCustomerCard(session);
+        $('closeBtn').disabled = false;
+        $('replyInput').disabled = false;
+        $('replyBtn').disabled = false;
+        renderMessages(session.messages || []);
+        renderSessions();
+        if (focus) $('replyInput').focus();
+    }
+
+    function renderMessages(messages) {
+        $('messageList').innerHTML = messages.length ? messages.map(message => `
+            <div class="msg ${messageClass(message.senderType)}">
+                <small>${esc(message.senderName || senderText(message.senderType))} · ${esc(fmtTime(message.createdAt))}</small>
+                ${esc(message.content)}
+            </div>
+        `).join('') : '<div class="empty">Phiên này chưa có tin nhắn.</div>';
+        $('messageList').scrollTop = $('messageList').scrollHeight;
+    }
+
+    function renderCustomerCard(session) {
+        const card = $('threadCustomerCard');
+        card.classList.add('show');
+        card.innerHTML = `
+            <div>
+                <strong>${esc(session.customerName || 'Khách online')}</strong>
+                <div class="muted">${esc(session.customerEmail || 'Khách vãng lai')} · Phiên #${esc(session.id)}</div>
+            </div>
+            <span class="badge ${statusClass(session.status)}">${statusText(session.status)}</span>
+        `;
+    }
+
+    function insertQuickReply(text) {
+        const input = $('replyInput');
+        if (input.disabled) return;
+        input.value = text;
+        input.focus();
+    }
+
+    function initials(name) {
+        const words = String(name || '').trim().split(/\s+/).filter(Boolean);
+        if (!words.length) return 'K';
+        return words.slice(-2).map(word => word[0]).join('').toUpperCase();
+    }
+
+    async function sendReply(event) {
+        event.preventDefault();
+        const message = $('replyInput').value.trim();
+        if (!currentId || !message) return;
+        $('replyBtn').disabled = true;
+        try {
+            const session = await api(`/api/staff/chat-sessions/${currentId}/messages`, {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({message})
+            });
+            $('replyInput').value = '';
+            renderMessages(session.messages || []);
+            await loadSessions();
+        } finally {
+            $('replyBtn').disabled = false;
+        }
+    }
+
+    async function closeCurrentSession() {
+        if (!currentId) return;
+        await api(`/api/staff/chat-sessions/${currentId}/close`, {method:'POST'});
+        currentId = null;
+        $('threadTitle').textContent = 'Chọn một phiên chat';
+        $('threadSubtitle').textContent = 'Tin nhắn sẽ hiển thị tại đây.';
+        $('messageList').innerHTML = '<div class="empty">Chưa chọn phiên.</div>';
+        $('threadCustomerCard').classList.remove('show');
+        $('threadCustomerCard').innerHTML = '';
+        $('replyInput').value = '';
+        $('replyInput').disabled = true;
+        $('replyBtn').disabled = true;
+        $('closeBtn').disabled = true;
+        await loadSessions();
+    }
+
+    function statusText(status) {
+        if (status === 'WAITING_STAFF') return 'Chờ nhân viên';
+        if (status === 'STAFF_JOINED') return 'Đang chat';
+        if (status === 'AI') return 'AI hỗ trợ';
+        return status || 'Không rõ';
+    }
+
+    function statusClass(status) {
+        if (status === 'WAITING_STAFF') return 'waiting';
+        if (status === 'STAFF_JOINED') return 'staff';
+        return 'ai';
+    }
+
+    function messageClass(type) {
+        const value = String(type || '').toLowerCase();
+        if (value === 'staff') return 'staff';
+        if (value === 'ai') return 'ai';
+        if (value === 'system') return 'system';
+        return 'customer';
+    }
+
+    function senderText(type) {
+        if (type === 'STAFF') return 'Nhân viên';
+        if (type === 'AI') return 'Trợ lý AI';
+        if (type === 'SYSTEM') return '4MenStore';
+        return 'Khách';
+    }
+</script>
+</body>
+</html>

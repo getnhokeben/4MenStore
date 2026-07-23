@@ -1,0 +1,93 @@
+spring.application.name=sp
+spring.config.import=optional:file:config/application-local.properties,optional:file:config/vnpay-local.properties,optional:file:config/zalopay-local.properties
+server.port=8081
+
+# Database
+spring.datasource.url=${SPRING_DATASOURCE_URL:jdbc:sqlserver://localhost:1433;databaseName=datn_s5;encrypt=true;trustServerCertificate=true;}
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME:}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:}
+spring.datasource.driverClassName=com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+# SQL logging
+spring.jpa.show-sql=false
+logging.level.org.hibernate.SQL=INFO
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=INFO
+logging.level.org.springframework.jdbc.core=INFO
+
+# Mail
+spring.mail.host=${SPRING_MAIL_HOST:smtp.gmail.com}
+spring.mail.port=${SPRING_MAIL_PORT:587}
+spring.mail.username=${SPRING_MAIL_USERNAME:}
+spring.mail.password=${SPRING_MAIL_PASSWORD:}
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.properties.mail.smtp.connectiontimeout=5000
+spring.mail.properties.mail.smtp.timeout=5000
+spring.mail.properties.mail.smtp.writetimeout=5000
+
+# Application paths
+app.employee-login-url=${EMPLOYEE_LOGIN_URL:http://localhost:8081/dang-nhap}
+app.upload.directory=${UPLOAD_DIRECTORY:uploads}
+
+# JPA
+spring.jpa.hibernate.ddl-auto=none
+spring.jpa.open-in-view=false
+spring.jpa.properties.hibernate.format_sql=true
+spring.sql.init.mode=always
+spring.sql.init.encoding=UTF-8
+
+# UTF-8
+spring.servlet.encoding.charset=UTF-8
+spring.servlet.encoding.enabled=true
+spring.servlet.encoding.force=true
+spring.thymeleaf.encoding=UTF-8
+spring.thymeleaf.cache=false
+spring.messages.encoding=UTF-8
+
+# GHN
+ghn.api.base-url=${GHN_API_BASE_URL:https://online-gateway.ghn.vn/shiip/public-api}
+ghn.api.token=${GHN_API_TOKEN:}
+ghn.api.shop-id=${GHN_API_SHOP_ID:}
+ghn.api.from-district-id=${GHN_API_FROM_DISTRICT_ID:}
+ghn.api.service-type-id=${GHN_API_SERVICE_TYPE_ID:2}
+
+# Shared payment settings
+payment.public-base-url=${PAYMENT_PUBLIC_BASE_URL:http://localhost:8081}
+
+# VNPay
+payment.vnpay.enabled=${VNPAY_ENABLED:false}
+payment.vnpay.reconcile-on-return=${VNPAY_RECONCILE_ON_RETURN:false}
+payment.vnpay.local-checkout-enabled=${VNPAY_LOCAL_CHECKOUT_ENABLED:true}
+payment.vnpay.local-scan-base-url=${VNPAY_LOCAL_SCAN_BASE_URL:}
+payment.vnpay.tmn-code=${VNPAY_TMN_CODE:}
+payment.vnpay.hash-secret=${VNPAY_HASH_SECRET:}
+payment.vnpay.payment-url=${VNPAY_PAYMENT_URL:https://sandbox.vnpayment.vn/paymentv2/vpcpay.html}
+
+# Local QR demo
+payment.qr-demo.enabled=${PAYMENT_QR_DEMO_ENABLED:true}
+payment.qr-demo.scan-base-url=${PAYMENT_QR_DEMO_SCAN_BASE_URL:}
+payment.qr-demo.secret=${PAYMENT_QR_DEMO_SECRET:}
+
+# MoMo
+payment.momo.enabled=${MOMO_ENABLED:false}
+payment.momo.partner-code=${MOMO_PARTNER_CODE:}
+payment.momo.access-key=${MOMO_ACCESS_KEY:}
+payment.momo.secret-key=${MOMO_SECRET_KEY:}
+payment.momo.endpoint=${MOMO_ENDPOINT:https://test-payment.momo.vn/v2/gateway/api/create}
+
+# ZaloPay
+payment.zalopay.enabled=${ZALOPAY_ENABLED:false}
+payment.zalopay.app-id=${ZALOPAY_APP_ID:0}
+payment.zalopay.key1=${ZALOPAY_KEY1:}
+payment.zalopay.key2=${ZALOPAY_KEY2:}
+payment.zalopay.endpoint=${ZALOPAY_ENDPOINT:https://sb-openapi.zalopay.vn/v2/create}
+payment.zalopay.query-endpoint=${ZALOPAY_QUERY_ENDPOINT:https://sb-openapi.zalopay.vn/v2/query}
+
+# OpenAI chatbot (optional)
+chatbot.openai.enabled=${CHATBOT_OPENAI_ENABLED:false}
+chatbot.openai.api-key=${OPENAI_API_KEY:}
+chatbot.openai.model=${OPENAI_MODEL:gpt-5.4-mini}
+chatbot.openai.endpoint=${OPENAI_RESPONSES_URL:https://api.openai.com/v1/responses}
+chatbot.openai.connect-timeout=10s
+chatbot.openai.read-timeout=30s
+chatbot.openai.max-output-tokens=450

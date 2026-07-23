@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Local secrets ###
+.env
+.env.*
+application-local.properties
+src/main/resources/application-local.properties
+config/vnpay-local.properties
+config/zalopay-local.properties

@@ -3,224 +3,886 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phiếu giảm giá</title>
+    <title>Phiếu giảm giá | 4MenStore</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <script src="/js/app-shell.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
     <style>
-        :root{--gold:#b78a55;--gold-dark:#8f6536;--bg:#f5f5f5;--white:#fff;--line:#eee;--text:#252525;--muted:#777;--danger:#e65b43;--green:#16a05d;--shadow:0 8px 28px rgba(31,20,10,.10);--radius:8px}*{box-sizing:border-box}body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.45;font-synthesis:none;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}.page{min-height:100vh;padding:22px 28px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:14px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}.title h1{font-size:18px;margin:0;font-weight:700;color:#111;text-transform:uppercase;letter-spacing:.3px}.title p{margin:4px 0 0;color:var(--muted);font-size:13px}.toolbar{display:flex;gap:8px}.btn{height:34px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--text);font-weight:600;font-size:13px;font-family:inherit;padding:0 12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:.15s}.btn:hover{border-color:var(--gold);color:var(--gold-dark)}.btn.primary{background:var(--gold);border-color:var(--gold);color:#fff}.btn.primary:hover{background:var(--gold-dark);border-color:var(--gold-dark);color:#fff}.btn.danger{color:var(--danger)}.btn.icon{width:30px;padding:0}.btn:disabled{opacity:.45;cursor:not-allowed}.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.03);margin-bottom:16px}.panel-head{height:40px;background:#fff;color:#111;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--line);font-size:13.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}.panel-head small{font-weight:500;font-size:12px;color:var(--muted);text-transform:none}.filters{display:grid;grid-template-columns:minmax(260px,1fr) 250px 250px;gap:12px 18px;padding:16px}.field label{display:block;font-size:12.5px;color:#555;font-weight:600;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;height:36px;border:1px solid var(--line);border-radius:6px;padding:0 10px;font-size:13px;font-family:inherit;background:#fff;color:var(--text);outline:none}.date-picker{cursor:text;padding-right:42px}.date-input-wrap{position:relative}.date-input-wrap input{display:block}.calendar-trigger{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:0;background:#fff;color:#111;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center}.calendar-trigger:hover{background:#f6eee3;color:var(--gold-dark)}.calendar-icon{position:relative;width:12px;height:12px;border:2px solid currentColor;border-radius:1px;display:block}.calendar-icon:before{content:"";position:absolute;left:-2px;right:-2px;top:2px;border-top:2px solid currentColor}.calendar-icon:after{content:"";position:absolute;left:2px;top:-4px;width:2px;height:4px;background:currentColor;box-shadow:4px 0 0 currentColor}.field textarea{height:78px;padding:10px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(183,138,85,.12)}.date-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.radio-line{display:flex;align-items:center;gap:18px;height:36px}.radio-line label{display:inline-flex;align-items:center;gap:6px;margin:0;text-transform:none;font-weight:500;color:#555}.radio-line input{width:14px;height:14px;accent-color:var(--gold)}.table-card{padding:18px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px}table{width:100%;border-collapse:collapse;min-width:1120px}th{height:40px;background:#fff;color:#777;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:0 12px;white-space:nowrap;border-bottom:1px solid var(--line)}td{height:44px;border-bottom:1px solid #f2f2f2;padding:0 12px;font-size:13px;text-align:center;vertical-align:middle;color:#444}tr:last-child td{border-bottom:0}tr:hover td{background:#faf8f5}.badge{display:inline-flex;border-radius:999px;padding:4px 9px;font-size:11.5px;font-weight:700}.badge.public{background:#f2eee9;color:var(--gold-dark);border:1px solid #ead9c6}.badge.on{background:#dcfce7;color:#166534}.badge.wait{background:#fef3c7;color:#92400e}.badge.off{background:#f1f1f1;color:#777}.actions{display:flex;align-items:center;justify-content:center;gap:8px}.edit-btn{border-color:#ead9c6;color:var(--gold-dark);background:#fffaf3}.edit-btn:hover{background:#f6eee3;border-color:var(--gold)}.switch{position:relative;display:inline-flex;width:38px;height:20px}.switch input{display:none}.switch span{position:absolute;inset:0;background:#d6d6d6;border-radius:999px;cursor:pointer;transition:.15s}.switch span:before{content:"";position:absolute;width:16px;height:16px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.18)}.switch input:checked+span{background:var(--gold)}.switch input:checked+span:before{transform:translateX(18px)}.empty{padding:36px 18px;text-align:center;color:var(--muted)}.pager{display:flex;justify-content:space-between;align-items:center;padding:12px 0 0;color:var(--muted);font-size:13px}.pager-center{display:flex;align-items:center;gap:8px}.page-input{width:42px;height:28px;border:1px solid var(--line);border-radius:6px;text-align:center;font-family:inherit}.form-card{padding:18px}.voucher-form{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}.full{grid-column:1/-1}.input-suffix{display:flex}.input-suffix input{border-radius:6px 0 0 6px}.suffix{height:36px;min-width:46px;border:1px solid var(--line);border-left:0;border-radius:0 6px 6px 0;background:#fafafa;color:#666;font-size:12px;display:flex;align-items:center;justify-content:center}.form-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;margin-top:34px}.toast{position:fixed;right:24px;top:70px;z-index:1200;background:#dcfce7;color:#166534;border-left:5px solid #22c55e;padding:12px 18px;border-radius:4px;font-size:13px;font-weight:700;max-width:420px;box-shadow:var(--shadow)}.toast.error{background:#fee2e2;color:#991b1b;border-left-color:#ef4444}.toast.success{background:#dcfce7;color:#166534}.hidden{display:none!important}@media(max-width:1080px){.filters,.voucher-form{grid-template-columns:1fr}.date-row{grid-template-columns:1fr}.topbar{align-items:flex-start;flex-direction:column}}@media(max-width:760px){.page{padding:16px}.table-card,.form-card{padding:12px}}
-        .badge.public {
-            min-width: 58px;
-            justify-content: center;
-            white-space: nowrap;
-            padding: 3px 8px;
-            background: #faf8f5;
-            color: #8f6536;
-            border: 1px solid #efe3d5;
-            font-size: 11px;
-            line-height: 1.15;
-            font-weight: 600;
+        :root{
+            --bg:#eef2f6;
+            --panel:#ffffff;
+            --line:#e4ebf3;
+            --text:#24344d;
+            --muted:#7b8ba1;
+            --navy:#17376a;
+            --navy-hover:#173d78;
+            --navy-2:#214886;
+            --dark-btn:#324763;
+            --green:#25b98f;
+            --green-bg:#e8fbf4;
+            --warn:#d69a2d;
+            --warn-bg:#fff4de;
+            --red:#dc5663;
+            --red-bg:#fff1f3;
+            --blue-tag:#edf5ff;
+            --blue-tag-text:#4e78b8;
+            --shadow:0 10px 26px rgba(31,52,88,.07);
+            --radius:14px;
         }
-        .badge.on { background:#dcfce7!important; color:#166534!important; }
-        .badge.wait { background:#fef3c7!important; color:#92400e!important; }
-        .badge.off { background:#fee2e2!important; color:#dc2626!important; }
-        .switch input:checked+span { background:#16a34a!important; }
-        .confirm-backdrop{position:fixed;inset:0;background:rgba(17,24,39,.42);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
-        .confirm-backdrop.show{display:flex}
-        .confirm-dialog{width:min(420px,100%);background:#fff;border:1px solid #ead9c6;border-radius:10px;box-shadow:0 24px 70px rgba(31,20,10,.22);overflow:hidden}
-        .confirm-head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid #f1e5d7}
-        .confirm-icon{width:34px;height:34px;border-radius:50%;background:#f6eee3;color:var(--gold-dark);display:flex;align-items:center;justify-content:center;font-weight:800}
-        .confirm-title{font-size:15px;font-weight:800;color:#111}
-        .confirm-body{padding:16px 18px;color:#555;font-size:13.5px;line-height:1.55}
-        .confirm-actions{display:flex;justify-content:flex-end;gap:8px;padding:14px 18px;background:#faf8f5;border-top:1px solid #f1e5d7}
-        .confirm-actions .btn{height:34px}
+
+        *{box-sizing:border-box}
+
+        body{
+            margin:0;
+            background:var(--bg);
+            color:var(--text);
+            font-family:'Inter','Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif;
+            font-size:13px;
+            font-weight:400;
+            line-height:1.5;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+
+        button,input,select,textarea{font:inherit}
+        button{cursor:pointer}
+
+        .page{
+            min-height:100vh;
+            padding:24px 28px 32px;
+        }
+
+        .page-title{
+            margin:0 0 16px;
+            font-size:14px;
+            font-weight:800;
+            color:#243651;
+        }
+
+        .panel{
+            background:var(--panel);
+            border:1px solid var(--line);
+            border-radius:14px;
+            box-shadow:var(--shadow);
+        }
+
+        .toolbar-card{
+            padding:14px 16px;
+            margin-bottom:14px;
+        }
+
+        .toolbar-row{
+            display:grid;
+            grid-template-columns:minmax(230px,1.2fr) 200px 200px 190px auto;
+            gap:10px;
+            align-items:center;
+        }
+
+        .search-box,.date-box,.select-box{position:relative}
+
+        .input,.select,.date-input,.textarea{
+            width:100%;
+            border:1px solid var(--line);
+            border-radius:8px;
+            background:#fff;
+            color:#30425f;
+            outline:none;
+            transition:.16s ease;
+        }
+
+        .input,.select,.date-input{
+            height:38px;
+            padding:0 12px;
+        }
+
+        .textarea{
+            min-height:88px;
+            resize:vertical;
+            padding:10px 12px;
+        }
+
+        .search-box .input{padding-left:34px}
+
+        .search-box svg{
+            position:absolute;
+            left:11px;
+            top:50%;
+            transform:translateY(-50%);
+            width:15px;
+            height:15px;
+            stroke:#99a7b7;
+            fill:none;
+            stroke-width:2;
+        }
+
+        .date-box .date-input{padding-right:38px}
+
+        .calendar-btn{
+            position:absolute;
+            right:6px;
+            top:50%;
+            transform:translateY(-50%);
+            width:28px;
+            height:28px;
+            padding:0;
+            border:0;
+            border-radius:7px;
+            background:#fff;
+            color:#7f90a5;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            line-height:1;
+        }
+
+        .calendar-btn:hover{
+            background:#f4f7fb;
+            color:var(--navy);
+        }
+
+        .calendar-icon{
+            width:12px;
+            height:12px;
+            position:relative;
+            border:2px solid currentColor;
+            border-radius:2px;
+            display:block;
+            flex:0 0 auto;
+        }
+
+        .calendar-icon::before{
+            content:"";
+            position:absolute;
+            left:-2px;
+            right:-2px;
+            top:2px;
+            border-top:2px solid currentColor;
+        }
+
+        .calendar-icon::after{
+            content:"";
+            position:absolute;
+            left:2px;
+            top:-4px;
+            width:2px;
+            height:4px;
+            background:currentColor;
+            box-shadow:4px 0 0 currentColor;
+        }
+
+        .input:focus,.select:focus,.date-input:focus,.textarea:focus{
+            border-color:#8fa9d1;
+            box-shadow:0 0 0 3px rgba(73,114,176,.12);
+        }
+
+        .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}
+
+        .btn:hover{background:var(--navy-hover);border-color:var(--navy-hover);color:#fff}
+
+        .btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+
+        .btn.primary:hover{background:var(--navy-hover);border-color:var(--navy-hover)}
+
+        .btn.dark{background:var(--navy);border-color:var(--navy);color:#fff}
+
+        .btn.dark:hover{background:var(--navy-hover);border-color:var(--navy-hover)}
+
+        .btn:disabled{
+            opacity:.55;
+            cursor:not-allowed;
+        }
+
+        .action-group{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            justify-content:flex-end;
+        }
+
+        .table-card{
+            overflow:hidden;
+        }
+
+        .table-wrap{
+            overflow:auto;
+        }
+
+        table{
+            width:100%;
+            min-width:920px;
+            border-collapse:collapse;
+            table-layout:fixed;
+        }
+
+        thead th{
+            height:44px;
+            padding:0 8px;
+            background:#fff;
+            border-bottom:1px solid var(--line);
+            color:#2f4461;
+            font-size:11px;
+            text-transform:uppercase;
+            font-weight:800;
+            white-space:nowrap;
+            text-align:center;
+            vertical-align:middle;
+        }
+
+        tbody td{
+            height:48px;
+            padding:10px 8px;
+            border-bottom:1px solid #eef3f7;
+            color:#46566d;
+            font-size:12px;
+            vertical-align:middle;
+            text-align:center;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+
+        tbody tr:hover td{
+            background:#fbfdff;
+        }
+
+        thead th.name-cell,
+        tbody td.name-cell{
+            text-align:left;
+        }
+
+        tbody td.name-cell{
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+
+        .strong{
+            font-weight:700;
+            color:#2e425f;
+        }
+
+        .status-badge{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            padding:5px 10px;
+            border-radius:999px;
+            font-size:11px;
+            font-weight:800;
+            white-space:nowrap;
+        }
+
+        .status-badge.on{
+            background:var(--green-bg);
+            color:var(--green);
+        }
+
+        .status-badge.wait{
+            background:var(--warn-bg);
+            color:var(--warn);
+        }
+
+        .status-badge.off{
+            background:var(--red-bg);
+            color:var(--red);
+        }
+        .status-preview{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            min-height:38px;
+            padding:0 12px;
+            border:1px solid var(--line);
+            border-radius:8px;
+            background:#f8fbff;
+            color:#5b6f88;
+            font-weight:700;
+        }
+
+        .status-preview .status-badge{
+            padding:4px 9px;
+        }
+
+        .row-actions{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            min-width:0;
+        }
+
+        .icon-btn{
+            width:30px;
+            height:30px;
+            border:1px solid var(--line);
+            border-radius:8px;
+            background:#fff;
+            color:#7b8da6;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            transition:.16s ease;
+        }
+
+        .icon-btn:hover{
+            background:#f7fbff;
+            border-color:#cad8e8;
+            color:var(--navy);
+        }
+
+        .icon-btn svg{
+            width:15px;
+            height:15px;
+            stroke:currentColor;
+            fill:none;
+            stroke-width:2;
+            stroke-linecap:round;
+            stroke-linejoin:round;
+        }
+
+        .switch{
+            position:relative;
+            width:38px;
+            height:20px;
+            flex:0 0 38px;
+            display:inline-flex;
+        }
+
+        .switch input{display:none}
+
+        .switch span{
+            position:absolute;
+            inset:0;
+            border-radius:999px;
+            background:#cfd8e3;
+            cursor:pointer;
+            transition:.18s;
+        }
+
+        .switch span::before{
+            content:"";
+            position:absolute;
+            top:2px;
+            left:2px;
+            width:16px;
+            height:16px;
+            border-radius:50%;
+            background:#fff;
+            box-shadow:0 1px 2px rgba(0,0,0,.16);
+            transition:.18s;
+        }
+
+        .switch input:checked + span{
+            background:var(--green);
+        }
+
+        .switch input:checked + span::before{
+            transform:translateX(18px);
+        }
+
+        .table-footer{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:14px;
+            padding:12px 14px;
+            border-top:1px solid var(--line);
+        }
+
+        .footer-left{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            color:#70829c;
+        }
+
+        .footer-left select{
+            height:30px;
+            min-width:62px;
+            padding:0 10px;
+            border:1px solid var(--line);
+            border-radius:7px;
+            background:#fff;
+            color:#435672;
+        }
+
+        .pagination{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap;margin-left:auto}
+
+        .page-btn{
+            min-width:30px;
+            height:30px;
+            padding:0 9px;
+            border:1px solid var(--line);
+            border-radius:7px;
+            background:#fff;
+            color:#6f829b;
+            font-weight:700;
+        }
+
+        .page-btn:hover:not(:disabled){border-color:var(--navy);color:var(--navy);background:#eef4fb}
+
+        .page-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}
+
+        .page-btn:disabled{
+            opacity:.45;
+            cursor:not-allowed;
+        }
+
+        .empty{
+            padding:42px 16px;
+            text-align:center;
+            color:#8a97a9;
+            font-weight:600;
+        }
+
+        .hidden{display:none !important}
+
+        .form-page .top-line{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            margin-bottom:12px;
+        }
+
+        .form-page .page-title{
+            margin:0;
+            font-size:14px;
+            color:#263955;
+        }
+
+        .form-card{
+            padding:16px;
+        }
+
+        .voucher-form{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:14px 18px;
+        }
+
+        .full{grid-column:1 / -1}
+
+        .field label{
+            display:block;
+            margin:0 0 6px;
+            color:#546780;
+            font-size:12px;
+            font-weight:700;
+        }
+
+        .required{color:#ec5b67}
+
+        .field-error{
+            display:block;
+            min-height:16px;
+            margin-top:5px;
+            color:var(--red);
+            font-size:11px;
+            line-height:1.35;
+        }
+
+        .is-invalid{
+            border-color:var(--red) !important;
+            box-shadow:0 0 0 3px rgba(217,75,88,.12) !important;
+        }
+
+        .radio-row{
+            min-height:38px;
+            display:flex;
+            align-items:center;
+            gap:18px;
+            flex-wrap:wrap;
+            padding:0 2px;
+        }
+
+        .radio-option{
+            display:inline-flex;
+            align-items:center;
+            gap:7px;
+            color:#485b75;
+            font-size:12px;
+            font-weight:600;
+        }
+
+        .radio-option input{
+            margin:0;
+            accent-color:var(--navy);
+        }
+
+        .input-addon{
+            display:flex;
+        }
+
+        .input-addon .input{
+            border-radius:8px 0 0 8px;
+        }
+
+        .addon{
+            min-width:52px;
+            height:38px;
+            border:1px solid var(--line);
+            border-left:0;
+            border-radius:0 8px 8px 0;
+            background:#f7f9fc;
+            color:#5f728a;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:12px;
+            font-weight:700;
+        }
+
+        .toggle-inline{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:10px;
+        }
+
+        .toggle-box{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            color:#5d7089;
+            font-weight:700;
+            white-space:nowrap;
+        }
+
+        .hint{
+            margin-top:5px;
+            color:#97a6b7;
+            font-size:11px;
+        }
+
+        .form-actions{
+            display:flex;
+            justify-content:flex-end;
+            gap:10px;
+            margin-top:10px;
+            padding-top:10px;
+        }
+
+        .toast{
+            position:fixed;
+            right:22px;
+            bottom:22px;
+            z-index:2200;
+            max-width:380px;
+            padding:12px 14px;
+            border-radius:10px;
+            color:#fff;
+            font-size:12px;
+            font-weight:700;
+            box-shadow:0 18px 34px rgba(0,0,0,.16);
+            background:#193b79;
+            animation:fadeIn .18s ease;
+        }
+
+        .toast.error{background:#d94b58}
+        .toast.success{background:#17a773}
+
+        @keyframes fadeIn{
+            from{opacity:0;transform:translateY(10px)}
+            to{opacity:1;transform:none}
+        }
+
+        .confirm-backdrop{
+            position:fixed;
+            inset:0;
+            z-index:2400;
+            background:rgba(16,27,45,.42);
+            display:none;
+            align-items:center;
+            justify-content:center;
+            padding:18px;
+        }
+
+        .confirm-backdrop.show{
+            display:flex;
+        }
+
+        .confirm-box{
+            width:min(420px,100%);
+            background:#fff;
+            border:1px solid var(--line);
+            border-radius:14px;
+            box-shadow:0 24px 70px rgba(16,27,45,.22);
+            overflow:hidden;
+        }
+
+        .confirm-head{
+            padding:16px 18px 10px;
+            font-size:16px;
+            font-weight:800;
+            color:#243654;
+        }
+
+        .confirm-body{
+            padding:0 18px 16px;
+            color:#60728d;
+            line-height:1.6;
+        }
+
+        .confirm-actions{
+            display:flex;
+            justify-content:flex-end;
+            gap:8px;
+            padding:12px 18px;
+            border-top:1px solid var(--line);
+            background:#fafcff;
+        }
+
+        @media (max-width:1100px){
+            .toolbar-row{
+                grid-template-columns:1fr 1fr;
+            }
+
+            .action-group{
+                grid-column:1 / -1;
+                justify-content:flex-end;
+            }
+        }
+
+        @media (max-width:900px){
+            .page{
+                padding:18px 14px 24px;
+            }
+
+            .voucher-form{
+                grid-template-columns:1fr;
+            }
+
+            .toolbar-row{
+                grid-template-columns:1fr;
+            }
+
+            .action-group{
+                flex-wrap:wrap;
+            }
+
+            .action-group .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}
+
+            .table-footer{
+                flex-direction:column;
+                align-items:flex-start;
+            }
+        }
     </style>
 </head>
 <body>
 <aside class="sidebar"></aside>
-<main class="main page">
-    <section id="listView">
-        <div class="topbar">
-            <div class="title">
-                <h1>Quản lý phiếu giảm giá</h1>
-            </div>
-            <div class="toolbar">
-                <button class="btn" type="button" id="exportBtn">Xuất Excel</button>
-                <button class="btn primary" type="button" id="addBtn">+ Thêm mới</button>
-            </div>
-        </div>
 
-        <section class="panel">
-            <div class="panel-head">
-                <span>Bộ lọc tìm kiếm</span>
+<main class="main">
+    <section class="page">
+        <section id="listView">
+            <h1 class="page-title">Quản lý phiếu giảm giá</h1>
+
+            <div class="panel toolbar-card">
+                <div class="toolbar-row">
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="6.5"></circle>
+                            <path d="m16 16 4 4"></path>
+                        </svg>
+                        <input id="keywordInput" class="input" placeholder="Tìm theo tên hoặc mã...">
+                    </div>
+
+                    <div class="date-box">
+                        <input id="filterStart" class="date-input" type="text" placeholder="Ngày bắt đầu">
+                        <button class="calendar-btn" type="button" data-picker="filterStart">
+                            <span class="calendar-icon"></span>
+                        </button>
+                    </div>
+
+                    <div class="date-box">
+                        <input id="filterEnd" class="date-input" type="text" placeholder="Ngày kết thúc">
+                        <button class="calendar-btn" type="button" data-picker="filterEnd">
+                            <span class="calendar-icon"></span>
+                        </button>
+                    </div>
+
+                    <div class="select-box">
+                        <select id="filterStatus" class="select">
+                            <option value="">-- Trạng thái --</option>
+                            <option value="SAP_DIEN_RA">Sắp diễn ra</option>
+                            <option value="DANG_DIEN_RA">Đang diễn ra</option>
+                            <option value="KET_THUC">Kết thúc</option>
+                        </select>
+                    </div>
+
+                    <div class="action-group">
+                        <button class="btn dark" type="button" id="resetBtn">↻ Đặt lại</button>
+                        <button class="btn" type="button" id="exportBtn">▣ Xuất Excel</button>
+                        <button class="btn primary" type="button" id="createBtn">+ Tạo mới</button>
+                    </div>
+                </div>
             </div>
-            <form class="filters" id="filterForm">
-                <div class="field">
-                    <label>Tìm kiếm</label>
-                    <input name="keyword" placeholder="Nhập mã / tên phiếu giảm giá...">
+
+            <div class="panel table-card">
+                <div class="table-wrap">
+                    <table>
+                        <colgroup>
+                            <col style="width:4%">
+                            <col style="width:15%">
+                            <col style="width:5%">
+                            <col style="width:8%">
+                            <col style="width:10%">
+                            <col style="width:12%">
+                            <col style="width:12%">
+                            <col style="width:12%">
+                            <col style="width:9%">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã</th>
+                            <th class="name-cell">Tên phiếu</th>
+                            <th>Số lượng</th>
+                            <th>Giá trị</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody id="rows"></tbody>
+                    </table>
+                    <div id="emptyState" class="empty hidden">Không có phiếu giảm giá phù hợp.</div>
                 </div>
-                <div class="field">
-                    <label>Loại giảm</label>
-                    <select name="loaiGiam">
-                        <option value="">Tất cả</option>
-                        <option value="PHAN_TRAM">Giảm %</option>
-                        <option value="TIEN_MAT">Giảm tiền</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>Trạng thái</label>
-                    <select name="tienDo">
-                        <option value="">Tất cả</option>
-                        <option value="SAP_DIEN_RA">Sắp diễn ra</option>
-                        <option value="DANG_DIEN_RA">Đang diễn ra</option>
-                        <option value="KET_THUC">Kết thúc</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>Loại phiếu</label>
-                    <div class="radio-line">
-                        <label><input type="radio" checked disabled> Công khai</label>
+
+                <div class="table-footer">
+                    <div class="footer-left">
+                        <span>Hiển thị</span>
+                        <select id="pageSize">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                        <span>phiếu / trang</span>
                     </div>
+
+                    <div class="pagination" id="pagination"></div>
                 </div>
-                <div class="date-row">
-                    <div class="field">
-                        <label>Từ ngày</label>
-                        <div class="date-input-wrap"><input name="tuNgay" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm"><button class="calendar-trigger" type="button" aria-label="Chọn từ ngày" data-picker="tuNgay"><span class="calendar-icon"></span></button></div>
-                    </div>
-                    <div class="field">
-                        <label>Đến ngày</label>
-                        <div class="date-input-wrap"><input name="denNgay" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm"><button class="calendar-trigger" type="button" aria-label="Chọn đến ngày" data-picker="denNgay"><span class="calendar-icon"></span></button></div>
-                    </div>
-                </div>
-                <div class="field">
-                    <label>&nbsp;</label>
-                </div>
-            </form>
+            </div>
         </section>
 
-        <section class="panel table-card">
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Mã giảm giá</th>
-                        <th>Tên giảm giá</th>
-                        <th>Loại phiếu</th>
-                        <th>Giá trị giảm</th>
-                        <th>Đơn hàng tối thiểu</th>
-                        <th>Số lượng</th>
-                        <th>Ngày bắt đầu</th>
-                        <th>Ngày kết thúc</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
-                    </tr>
-                    </thead>
-                    <tbody id="rows"></tbody>
-                </table>
-                <div class="empty" id="empty" hidden>Không có phiếu giảm giá</div>
+        <section id="formView" class="form-page hidden">
+            <div class="top-line">
+                <h1 class="page-title" id="formHeading">Phiếu giảm giá / Tạo phiếu giảm giá</h1>
+                <button class="btn primary" type="button" id="backBtn">↩ Quay lại</button>
             </div>
-            <div class="pager">
-                <span id="recordInfo">Hiển thị 0 / tổng 0 bản ghi</span>
-                <div class="pager-center">
-                    <button class="btn icon" id="prevBtn" type="button">‹</button>
-                    <span>Trang</span>
-                    <input class="page-input" id="pageInput" value="1">
-                    <button class="btn icon" id="nextBtn" type="button">›</button>
-                </div>
-                <select id="pageSize" class="btn">
-                    <option value="10">10 bản ghi / trang</option>
-                    <option value="20">20 bản ghi / trang</option>
-                    <option value="50">50 bản ghi / trang</option>
-                </select>
-            </div>
-        </section>
-    </section>
 
-    <section id="formView" class="hidden">
-        <div class="topbar">
-            <div class="title">
-                <h1 id="formTitle">Thêm phiếu giảm giá</h1>
+            <div class="panel form-card">
+                <form id="voucherForm" novalidate>
+                    <input type="hidden" name="id">
+
+                    <div class="voucher-form">
+                        <div class="field full">
+                            <label>Mã phiếu giảm giá</label>
+                            <input class="input" name="maPgg" placeholder="Hệ thống tự tạo từ tên phiếu + ngày tạo..." readonly>
+                            <div class="hint">Tự sinh tối đa 15 ký tự từ tên phiếu giảm giá và ngày tạo.</div>
+                            <small class="field-error"></small>
+                        </div>
+
+                        <div class="field full">
+                            <label>Tên giảm giá <span class="required">*</span></label>
+                            <input class="input" name="tenPgg" maxlength="100" placeholder="Ví dụ: Siêu sale 2025">
+                            <small class="field-error"></small>
+                        </div>
+
+                        <div class="field">
+                            <label>Hình thức giảm <span class="required">*</span></label>
+                            <select id="loaiGiamSelect" name="loaiGiam" class="select">
+                                <option value="TIEN_MAT">Tiền mặt</option>
+                                <option value="PHAN_TRAM">Phần trăm</option>
+                            </select>
+                            <small class="field-error"></small>
+                        </div>
+
+                        <div class="field">
+                            <label id="valueLabel">Giá trị giảm (%) <span class="required">*</span></label>
+                            <div class="input-addon">
+                                <input class="input" name="giaTri" type="text" inputmode="decimal" placeholder="0">
+                                <span class="addon" id="valueAddon">%</span>
+                            </div>
+                            <small class="field-error"></small>
+                        </div>
+
+                        <div class="field">
+                            <label>Giảm tối đa (đ)</label>
+                            <input class="input" name="giaTriToiDa" type="text" inputmode="numeric" placeholder="0 (để trống = Không giới hạn)">
+                            <small class="field-error"></small>
+                        </div>
+
+                        <div class="field">
+                            <label>Giới hạn dùng / 1 khách <span class="required">*</span></label>
+                            <input class="input" name="gioiHanMoiKhach" type="number" min="1" step="1" placeholder="1" value="1">
+                            <small class="field-error"></small>
+                        </div>
+
+                        <div class="field">
+                            <label>Số lượng sử dụng (Tổng) <span class="required">*</span></label>
+                            <input class="input" name="soLuong" type="number" min="1" step="1" placeholder="0" value="1">
+                            <small class="field-error"></small>
+                        </div>
+
+                        <div class="field">
+                            <label>Hóa đơn tối thiểu (đ)</label>
+                            <input class="input" name="dieuKienDonHang" type="text" inputmode="numeric" placeholder="0" value="0">
+                            <small class="field-error"></small>
+                        </div>
+
+                        <div class="field">
+                            <label>Ngày bắt đầu <span class="required">*</span></label>
+                            <div class="date-box">
+                                <input class="date-input" name="ngayBatDau" type="text" placeholder="dd/mm/yyyy --:--">
+                                <button class="calendar-btn" type="button" data-picker="ngayBatDau">
+                                    <span class="calendar-icon"></span>
+                                </button>
+                            </div>
+                            <small class="field-error"></small>
+                        </div>
+
+                        <div class="field">
+                            <label>Ngày kết thúc <span class="required">*</span></label>
+                            <div class="date-box">
+                                <input class="date-input" name="ngayKetThuc" type="text" placeholder="dd/mm/yyyy --:--">
+                                <button class="calendar-btn" type="button" data-picker="ngayKetThuc">
+                                    <span class="calendar-icon"></span>
+                                </button>
+                            </div>
+                            <small class="field-error"></small>
+                        </div>
+                        <div class="field full">
+                            <label>Trạng thái dự kiến</label>
+                            <div class="status-preview" id="formStatusPreview">--</div>
+                            <div class="hint">Hệ thống tự xác định theo ngày bắt đầu và ngày kết thúc.</div>
+                        </div>
+
+
+                        <div class="field full">
+                            <label>Mô tả phiếu giảm giá</label>
+                            <textarea class="textarea" name="moTa" maxlength="500" placeholder="Nhập ghi chú hoặc điều kiện áp dụng phiếu..."></textarea>
+                            <small class="field-error"></small>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn" type="button" id="cancelBtn">Hủy</button>
+                        <button class="btn primary" type="submit" id="saveBtn">Lưu phiếu giảm giá</button>
+                    </div>
+                </form>
             </div>
-            <button class="btn" type="button" id="backBtn">← Quay lại danh sách</button>
-        </div>
-        <section class="panel form-card">
-            <form class="voucher-form" id="voucherForm" novalidate>
-                <input type="hidden" name="id">
-                <div class="field">
-                    <label>Tên phiếu giảm giá *</label>
-                    <input name="tenPgg" placeholder="Ví dụ: Sale 1/6">
-                </div>
-                <div class="field">
-                    <label>Số lượng *</label>
-                    <input name="soLuong" type="number" min="1" step="1" placeholder="1">
-                </div>
-                <div class="field">
-                    <label>Ngày bắt đầu *</label>
-                    <div class="date-input-wrap"><input name="ngayBatDau" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm"><button class="calendar-trigger" type="button" aria-label="Chọn ngày bắt đầu" data-picker="ngayBatDau"><span class="calendar-icon"></span></button></div>
-                </div>
-                <div class="field">
-                    <label>Ngày kết thúc *</label>
-                    <div class="date-input-wrap"><input name="ngayKetThuc" type="text" class="date-picker" placeholder="dd/mm/yyyy HH:mm"><button class="calendar-trigger" type="button" aria-label="Chọn ngày kết thúc" data-picker="ngayKetThuc"><span class="calendar-icon"></span></button></div>
-                </div>
-                <div class="field">
-                    <label>Loại giảm</label>
-                    <select name="loaiGiam">
-                        <option value="PHAN_TRAM">Giảm %</option>
-                        <option value="TIEN_MAT">Giảm tiền</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>Giá trị giảm *</label>
-                    <div class="input-suffix">
-                        <input name="giaTri" type="number" min="0" step="1" placeholder="1">
-                        <span class="suffix" id="discountSuffix">%</span>
-                    </div>
-                </div>
-                <div class="field">
-                    <label>Giảm tối đa (VND) *</label>
-                    <div class="input-suffix">
-                        <input name="giaTriToiDa" type="number" min="0" step="1000">
-                        <span class="suffix">VND</span>
-                    </div>
-                </div>
-                <div class="field">
-                    <label>Đơn hàng tối thiểu</label>
-                    <div class="input-suffix">
-                        <input name="dieuKienDonHang" type="number" min="0" step="1000" value="0">
-                        <span class="suffix">VND</span>
-                    </div>
-                </div>
-                <div class="field full">
-                    <label>Mã phiếu</label>
-                    <input name="maPgg" placeholder="Tự tạo nếu để trống">
-                </div>
-                <div class="field full">
-                    <label>Mô tả</label>
-                    <textarea name="moTa" placeholder="Nhập mô tả..." disabled></textarea>
-                </div>
-                <div class="field full">
-                    <label>Loại phiếu *</label>
-                    <div class="radio-line">
-                        <label><input type="radio" checked disabled> Công khai</label>
-                    </div>
-                </div>
-                <input type="hidden" name="trangThai" value="true">
-                <div class="form-actions">
-                    <button class="btn" type="button" id="cancelBtn">Hủy</button>
-                    <button class="btn primary" type="submit">Lưu phiếu giảm giá</button>
-                </div>
-            </form>
         </section>
     </section>
 </main>
-<div class="confirm-backdrop" id="confirmBackdrop" aria-hidden="true">
-    <div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
-        <div class="confirm-head">
-            <div class="confirm-icon">?</div>
-            <div class="confirm-title" id="confirmTitle">Xác nhận thao tác</div>
-        </div>
+
+<div class="confirm-backdrop" id="confirmBackdrop">
+    <div class="confirm-box">
+        <div class="confirm-head">Xác nhận thao tác</div>
         <div class="confirm-body" id="confirmMessage"></div>
         <div class="confirm-actions">
             <button class="btn" type="button" id="confirmCancel">Hủy</button>
@@ -231,61 +893,131 @@
 
 <script>
     const API = '/api/phieu-giam-gia';
-    const state = {page: 0, size: 10, totalPages: 1, totalElements: 0, items: []};
+
+    const state = {
+        page: 0,
+        size: 10,
+        totalPages: 1,
+        totalElements: 0,
+        items: [],
+        editingStart: ''
+    };
+
     const $ = (id) => document.getElementById(id);
-    const filterForm = $('filterForm');
     const form = $('voucherForm');
 
+    const icons = {
+        edit: `
+            <svg viewBox="0 0 24 24">
+                <path d="m4 20 4.2-.8L19 8.5 15.5 5 4.8 15.7 4 20Z"></path>
+                <path d="m13.8 6.7 3.5 3.5"></path>
+            </svg>
+        `
+    };
+
+    let filterTimer = null;
+
     document.addEventListener('DOMContentLoaded', () => {
-        $('addBtn').addEventListener('click', () => openForm());
+        $('createBtn').addEventListener('click', () => openForm());
         $('backBtn').addEventListener('click', showList);
         $('cancelBtn').addEventListener('click', showList);
+        $('resetBtn').addEventListener('click', resetFilters);
         $('exportBtn').addEventListener('click', exportExcel);
-        filterForm.addEventListener('submit', e => { e.preventDefault(); loadData(0); });
-        filterForm.addEventListener('input', debounceFilter);
-        filterForm.addEventListener('change', () => { syncFilterDateLimits(); loadData(0); });
+
+        $('keywordInput').addEventListener('input', debounceFilter);
+        $('filterStart').addEventListener('change', handleFilterDateChange);
+        $('filterEnd').addEventListener('change', handleFilterDateChange);
+        $('filterStatus').addEventListener('change', () => loadData(0));
+        $('pageSize').addEventListener('change', (event) => {
+            state.size = Number(event.target.value || 10);
+            loadData(0);
+        });
+
         form.addEventListener('submit', saveVoucher);
-        form.elements.loaiGiam.addEventListener('change', syncDiscountSuffix);
-        form.elements.ngayBatDau.addEventListener('change', syncVoucherDateLimits);
-        form.elements.ngayKetThuc.addEventListener('change', syncVoucherDateLimits);
-        document.querySelectorAll('.calendar-trigger').forEach(button => {
+        form.elements.tenPgg.addEventListener('input', syncGeneratedCode);
+        form.elements.ngayBatDau.addEventListener('input', updateFormStatusPreview);
+        form.elements.ngayBatDau.addEventListener('change', updateFormStatusPreview);
+        form.elements.ngayBatDau.addEventListener('change', enforceStartDateNotPast);
+        form.elements.ngayKetThuc.addEventListener('input', updateFormStatusPreview);
+        form.elements.ngayKetThuc.addEventListener('change', updateFormStatusPreview);
+
+        [form.elements.giaTriToiDa, form.elements.dieuKienDonHang].forEach((input) => {
+            input.addEventListener('input', () => formatCurrencyInput(input));
+            input.addEventListener('blur', () => roundCurrencyInput(input));
+        });
+        form.elements.giaTri.addEventListener('input', () => {
+            const type = form.querySelector('#loaiGiamSelect').value;
+            if (type === 'TIEN_MAT') {
+                formatCurrencyInput(form.elements.giaTri);
+            } else {
+                removeLeadingZeros(form.elements.giaTri);
+            }
+        });
+        form.elements.giaTri.addEventListener('blur', () => {
+            const type = form.querySelector('#loaiGiamSelect').value;
+            if (type === 'TIEN_MAT') roundCurrencyInput(form.elements.giaTri);
+        });
+
+        form.querySelectorAll('input, select, textarea').forEach((element) => {
+            element.addEventListener('input', () => clearFieldError(element));
+            element.addEventListener('change', () => clearFieldError(element));
+        });
+
+        // Sự kiện change cho select loaiGiam
+        const loaiGiamSelect = $('loaiGiamSelect');
+        loaiGiamSelect.addEventListener('change', () => {
+            clearFieldError(loaiGiamSelect);
+            syncDiscountUI();
+        });
+
+        document.querySelectorAll('[data-picker]').forEach((button) => {
             button.addEventListener('click', () => {
-                const input = document.querySelector(`[name="${button.dataset.picker}"]`);
-                if (input) openNativePicker(input);
+                const targetName = button.dataset.picker;
+                const input = targetName.startsWith('filter')
+                    ? $(targetName)
+                    : form.elements[targetName];
+                if (input) openNativePicker(input, !targetName.startsWith('filter'));
             });
         });
-        $('prevBtn').addEventListener('click', () => loadData(Math.max(0, state.page - 1)));
-        $('nextBtn').addEventListener('click', () => loadData(Math.min(state.totalPages - 1, state.page + 1)));
-        $('pageSize').addEventListener('change', e => { state.size = Number(e.target.value); loadData(0); });
-        $('pageInput').addEventListener('change', e => {
-            const page = Math.min(Math.max(Number(e.target.value || 1), 1), state.totalPages);
-            loadData(page - 1);
-        });
-        syncDiscountSuffix();
-        syncFilterDateLimits();
-        syncVoucherDateLimits();
+
+        syncDiscountUI();
+        setDefaultDates();
         loadData();
     });
 
-    async function loadData(page = 0) {
+    async function loadData(page = state.page) {
         state.page = page;
-        const params = currentParams(true);
+
+        const params = buildFilterParams(true);
         if (!params) return;
-        const response = await fetch(`${API}?${params}`);
-        if (!response.ok) return toast(await readError(response), true);
-        const data = await response.json();
-        const pageData = normalizePageResponse(data);
-        state.items = pageData.content;
-        state.page = pageData.page;
-        state.size = pageData.size || state.size;
-        state.totalPages = pageData.totalPages;
-        state.totalElements = pageData.totalElements;
-        render();
+
+        try {
+            const response = await fetch(`${API}?${params.toString()}`);
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            const data = await response.json();
+            const pageData = normalizePageResponse(data);
+
+            state.items = pageData.content;
+            state.page = pageData.page;
+            state.size = pageData.size;
+            state.totalPages = pageData.totalPages;
+            state.totalElements = pageData.totalElements;
+
+            renderTable();
+        } catch (error) {
+            state.items = [];
+            renderTable();
+            toast(error.message || 'Không thể tải danh sách phiếu giảm giá.', true);
+        }
     }
 
     function normalizePageResponse(data) {
         const pageMeta = data.page || {};
         const totalPages = Number(data.totalPages ?? pageMeta.totalPages ?? 1);
+
         return {
             content: data.content || [],
             page: Number(data.number ?? pageMeta.number ?? state.page ?? 0),
@@ -295,170 +1027,210 @@
         };
     }
 
-    function currentParams(includePaging) {
-        const data = new FormData(filterForm);
+    function renderTable() {
+        const rows = $('rows');
+        const emptyState = $('emptyState');
+
+        emptyState.classList.toggle('hidden', state.items.length > 0);
+
+        rows.innerHTML = state.items.map((item, index) => {
+            const status = resolveStatus(item);
+
+            return `
+                <tr>
+                    <td>${state.page * state.size + index + 1}</td>
+                    <td class="strong">${esc(item.maPgg || '')}</td>
+                    <td class="name-cell" title="${esc(item.tenPgg || '')}">${esc(item.tenPgg || '')}</td>
+                    <td>${formatNumber(item.soLuong)}</td>
+                    <td>${formatDiscount(item)}</td>
+                    <td>${dateTime(item.ngayBatDau)}</td>
+                    <td>${dateTime(item.ngayKetThuc)}</td>
+                    <td><span class="status-badge ${status.cls}">${status.text}</span></td>
+                    <td>
+                        <div class="row-actions">
+                            <button class="icon-btn" type="button" onclick="openForm(${item.id})" title="Sửa">
+                                ${icons.edit}
+                            </button>
+                            <label class="switch" title="Bật / tắt">
+                                <input type="checkbox" ${item.trangThai ? 'checked' : ''} onchange="toggleStatus(${item.id})">
+                                <span></span>
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        renderPagination();
+    }
+
+    function renderPagination() {
+        const holder = $('pagination');
+        holder.innerHTML = '';
+
+        if (!state.totalElements) return;
+
+        const current = state.page;
+        const total = Math.max(1, state.totalPages);
+
+        const addBtn = (label, page, disabled = false, active = false) => {
+            const button = document.createElement('button');
+            button.className = `page-btn ${active ? 'active' : ''}`;
+            button.textContent = label;
+            button.disabled = disabled;
+            button.type = 'button';
+            button.addEventListener('click', () => loadData(page));
+            holder.appendChild(button);
+        };
+
+        addBtn('«', 0, current === 0);
+        addBtn('‹', Math.max(0, current - 1), current === 0);
+
+        const start = Math.max(0, current - 1);
+        const end = Math.min(total - 1, current + 1);
+
+        if (start > 0) addBtn('1', 0, false, current === 0);
+
+        if (start > 1) {
+            const span = document.createElement('span');
+            span.textContent = '...';
+            span.className = 'page-btn';
+            span.style.pointerEvents = 'none';
+            holder.appendChild(span);
+        }
+
+        for (let i = start; i <= end; i++) {
+            addBtn(String(i + 1), i, false, i === current);
+        }
+
+        if (end < total - 2) {
+            const span = document.createElement('span');
+            span.textContent = '...';
+            span.className = 'page-btn';
+            span.style.pointerEvents = 'none';
+            holder.appendChild(span);
+        }
+
+        if (end < total - 1) {
+            addBtn(String(total), total - 1, false, current === total - 1);
+        }
+
+        addBtn('›', Math.min(total - 1, current + 1), current >= total - 1);
+        addBtn('»', total - 1, current >= total - 1);
+    }
+
+    function buildFilterParams(includePaging) {
         const params = new URLSearchParams();
-        ['keyword','loaiGiam','tienDo'].forEach(key => {
-            const value = (data.get(key) || '').trim();
-            if (value) params.set(key, value);
-        });
-        const tuNgay = (data.get('tuNgay') || '').trim();
-        const denNgay = (data.get('denNgay') || '').trim();
-        if (tuNgay && !isValidDateTimeLocal(tuNgay)) {
-            toast('Từ ngày không hợp lệ', true);
+
+        const keyword = $('keywordInput').value.trim();
+        const tuNgay = normalizeDateTime($('filterStart').value);
+        const denNgay = normalizeDateTime($('filterEnd').value);
+        const tienDo = $('filterStatus').value;
+
+        if (keyword) params.set('keyword', keyword);
+        if (tienDo) params.set('tienDo', tienDo);
+
+        if ($('filterStart').value.trim() && !tuNgay) {
+            toast('Ngày bắt đầu lọc không hợp lệ.', true);
             return null;
         }
-        if (denNgay && !isValidDateTimeLocal(denNgay)) {
-            toast('Đến ngày không hợp lệ', true);
+
+        if ($('filterEnd').value.trim() && !denNgay) {
+            toast('Ngày kết thúc lọc không hợp lệ.', true);
             return null;
         }
+
         if (tuNgay && denNgay && new Date(denNgay) < new Date(tuNgay)) {
-            toast('Đến ngày phải lớn hơn hoặc bằng từ ngày', true);
+            toast('Ngày kết thúc lọc phải lớn hơn hoặc bằng ngày bắt đầu.', true);
             return null;
         }
+
         if (tuNgay) params.set('tuNgay', withSeconds(tuNgay));
         if (denNgay) params.set('denNgay', withSeconds(denNgay));
+
         if (includePaging) {
-            params.set('page', state.page);
-            params.set('size', state.size);
+            params.set('page', String(state.page));
+            params.set('size', String(state.size));
         }
+
         return params;
     }
 
-    function syncFilterDateLimits() {
-        const start = filterForm.elements.tuNgay;
-        const end = filterForm.elements.denNgay;
-        end.min = start.value || '';
-        start.max = end.value || '';
-        if (start.value && end.value && new Date(end.value) < new Date(start.value)) {
-            end.value = start.value;
-        }
-    }
-
-    function openNativePicker(input) {
-        if (!input) return;
-        if (input.type !== 'text') {
-            input.focus();
-            if (typeof input.showPicker === 'function') {
-                try { input.showPicker(); } catch {}
-            }
-            return;
-        }
-
-        const picker = document.createElement('input');
-        const rect = input.getBoundingClientRect();
-        picker.type = 'datetime-local';
-        picker.value = normalizeDateTime(input.value);
-        picker.style.position = 'fixed';
-        picker.style.left = `${Math.max(0, rect.right - 34)}px`;
-        picker.style.top = `${Math.max(0, rect.top + 2)}px`;
-        picker.style.width = '32px';
-        picker.style.height = '32px';
-        picker.style.opacity = '0.01';
-        picker.style.zIndex = '3000';
-        picker.style.border = '0';
-        picker.style.padding = '0';
-        document.body.appendChild(picker);
-
-        const cleanup = () => setTimeout(() => picker.remove(), 200);
-        const commit = () => {
-            if (picker.value) {
-                input.value = formatDateTimeInput(picker.value);
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-            cleanup();
-        };
-
-        picker.addEventListener('change', commit);
-        picker.addEventListener('keydown', event => {
-            if (event.key === 'Escape') cleanup();
-        });
-        picker.addEventListener('blur', cleanup, { once: true });
-        picker.focus();
-        if (typeof picker.showPicker === 'function') {
-            try { picker.showPicker(); } catch {}
-        }
-    }
-
-    function isValidDateTimeLocal(value) {
-        const normalized = normalizeDateTime(value);
-        return Boolean(normalized) && !Number.isNaN(new Date(normalized).getTime());
-    }
-
-    function withSeconds(value) {
-        const normalized = normalizeDateTime(value);
-        return normalized && normalized.length === 16 ? `${normalized}:00` : normalized;
-    }
-
-    function render() {
-        const shown = state.items.length;
-        $('recordInfo').textContent = `Hiển thị ${shown} / tổng ${state.totalElements} bản ghi`;
-        $('pageInput').value = state.page + 1;
-        $('prevBtn').disabled = state.page <= 0;
-        $('nextBtn').disabled = state.page >= state.totalPages - 1;
-        $('empty').hidden = shown > 0;
-        $('rows').innerHTML = state.items.map((item, index) => {
-            const status = progressStatus(item);
-            return `
-            <tr>
-                <td>${state.page * state.size + index + 1}</td>
-                <td>${esc(item.maPgg)}</td>
-                <td>${esc(item.tenPgg)}</td>
-                <td><span class="badge public">Công khai</span></td>
-                <td>${formatDiscount(item)}</td>
-                <td>${money(item.dieuKienDonHang)}</td>
-                <td>${item.soLuong ?? 0}</td>
-                <td>${dateTime(item.ngayBatDau)}</td>
-                <td>${dateTime(item.ngayKetThuc)}</td>
-                <td><span class="badge ${status.cls}">${status.text}</span></td>
-                <td>
-                    <div class="actions">
-                        <button class="btn icon edit-btn" type="button" onclick="openForm(${item.id})">✎</button>
-                        <label class="switch"><input type="checkbox" ${item.trangThai ? 'checked' : ''} onchange="toggleStatus(${item.id})"><span></span></label>
-                    </div>
-                </td>
-            </tr>
-        `}).join('');
-    }
-
-    function progressStatus(item) {
-        const now = new Date();
-        const start = item.ngayBatDau ? new Date(item.ngayBatDau) : null;
-        const end = item.ngayKetThuc ? new Date(item.ngayKetThuc) : null;
-        if (end && now > end) return {text: 'Kết thúc', cls: 'off'};
-        if (item.trangThai) return {text: 'Đang diễn ra', cls: 'on'};
-        if (start && now < start) return {text: 'Sắp diễn ra', cls: 'wait'};
-        if (!item.trangThai) return {text: 'Kết thúc', cls: 'off'};
-        return {text: 'Đang diễn ra', cls: 'on'};
-    }
-
-    let filterTimer;
     function debounceFilter() {
         clearTimeout(filterTimer);
         filterTimer = setTimeout(() => loadData(0), 300);
     }
 
-    async function openForm(id) {
-        form.reset();
-        form.elements.trangThai.value = id ? 'true' : 'false';
-        form.elements.loaiGiam.value = 'PHAN_TRAM';
-        form.elements.dieuKienDonHang.value = 0;
-        form.elements.giaTriToiDa.disabled = false;
-        $('formTitle').textContent = id ? 'Cập nhật phiếu giảm giá' : 'Thêm phiếu giảm giá';
-        if (id) {
-            const item = state.items.find(v => v.id === id) || await (await fetch(`${API}/${id}`)).json();
-            Object.entries(item).forEach(([key, value]) => {
-                if (form.elements[key]) form.elements[key].value = value ?? '';
-            });
-            form.elements.ngayBatDau.value = toInputDateTime(item.ngayBatDau);
-            form.elements.ngayKetThuc.value = toInputDateTime(item.ngayKetThuc);
-            form.elements.trangThai.value = String(Boolean(item.trangThai));
-        } else {
-            setDefaultFutureDates();
+    function handleFilterDateChange() {
+        const start = normalizeDateTime($('filterStart').value);
+        const end = normalizeDateTime($('filterEnd').value);
+
+        if (start && end && new Date(end) < new Date(start)) {
+            $('filterEnd').value = $('filterStart').value;
         }
-        syncDiscountSuffix();
-        syncVoucherDateLimits();
+
+        loadData(0);
+    }
+
+    function resetFilters() {
+        $('keywordInput').value = '';
+        $('filterStart').value = '';
+        $('filterEnd').value = '';
+        $('filterStatus').value = '';
+        loadData(0);
+    }
+
+    async function openForm(id = null) {
+        resetVoucherForm();
+
+        if (!id) {
+            $('formHeading').textContent = 'Phiếu giảm giá / Tạo phiếu giảm giá';
+            syncGeneratedCode();
+            updateFormStatusPreview();
+            showForm();
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API}/${id}`);
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            const item = await response.json();
+            state.editingStart = normalizeDateTime(item.ngayBatDau);
+
+            $('formHeading').textContent = 'Phiếu giảm giá / Cập nhật phiếu giảm giá';
+
+            form.elements.id.value = item.id || '';
+            form.elements.maPgg.value = item.maPgg || '';
+            form.elements.tenPgg.value = item.tenPgg || '';
+            form.elements.giaTri.value = item.giaTri ?? '';
+            form.elements.giaTriToiDa.value = formatCurrency(item.giaTriToiDa);
+            form.elements.gioiHanMoiKhach.value = item.gioiHanMoiKhach ?? 1;
+            form.elements.soLuong.value = item.soLuong ?? '';
+            form.elements.dieuKienDonHang.value = formatCurrency(item.dieuKienDonHang ?? 0);
+            form.elements.ngayBatDau.value = formatDateTimeInput(item.ngayBatDau);
+            form.elements.ngayKetThuc.value = formatDateTimeInput(item.ngayKetThuc);
+            form.elements.moTa.value = item.moTa || '';
+
+            const discountType = item.loaiGiam || 'PHAN_TRAM';
+            const select = $('loaiGiamSelect');
+            select.value = discountType;
+            syncDiscountUI();
+            if (discountType === 'TIEN_MAT') {
+                form.elements.giaTri.value = formatCurrency(item.giaTri);
+            }
+
+            updateFormStatusPreview();
+
+            showForm();
+        } catch (error) {
+            toast(error.message || 'Không thể tải chi tiết phiếu giảm giá.', true);
+        }
+    }
+
+    function showForm() {
         $('listView').classList.add('hidden');
         $('formView').classList.remove('hidden');
     }
@@ -468,208 +1240,809 @@
         $('listView').classList.remove('hidden');
     }
 
-    async function saveVoucher(event) {
-        event.preventDefault();
-        const data = Object.fromEntries(new FormData(form).entries());
-        const id = data.id;
-        delete data.id;
-        ['giaTri','giaTriToiDa','dieuKienDonHang'].forEach(key => data[key] = data[key] ? Number(data[key]) : null);
-        data.soLuong = data.soLuong ? Number(data.soLuong) : 0;
-        data.trangThai = data.trangThai === 'true';
-        data.ngayBatDau = withSeconds(data.ngayBatDau || '');
-        data.ngayKetThuc = withSeconds(data.ngayKetThuc || '');
-        data.khachHangIds = null;
-        Object.keys(data).forEach(key => { if (data[key] === '') data[key] = null; });
-        data.maPgg = data.maPgg ? String(data.maPgg).trim().toUpperCase() : null;
-        data.tenPgg = data.tenPgg ? String(data.tenPgg).trim().replace(/\s+/g, ' ') : null;
-        const validationError = validateVoucherPayload(data);
-        if (validationError) return toast(validationError, true);
-        if (!await confirmAction('Bạn có chắc chắn muốn lưu phiếu giảm giá này không?')) return;
-        const response = await fetch(id ? `${API}/${id}` : API, {
-            method: id ? 'PUT' : 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        });
-        if (!response.ok) return toast(await readError(response), true);
-        toast('Đã lưu phiếu giảm giá');
-        showList();
-        await loadData(0);
+    function resetVoucherForm() {
+        form.reset();
+        clearFormErrors();
+        state.editingStart = '';
+
+        form.elements.id.value = '';
+        form.elements.maPgg.value = '';
+        form.elements.tenPgg.value = '';
+        form.elements.giaTri.value = '0';
+        form.elements.giaTriToiDa.value = '';
+        form.elements.gioiHanMoiKhach.value = '1';
+        form.elements.soLuong.value = '1';
+        form.elements.dieuKienDonHang.value = '0';
+        form.elements.moTa.value = '';
+
+        // Mặc định chọn PHAN_TRAM
+        const select = $('loaiGiamSelect');
+        select.value = 'PHAN_TRAM';
+
+        setDefaultDates();
+        syncDiscountUI();
+        updateFormStatusPreview();
     }
 
-    function validateVoucherPayload(data) {
-        const code = String(data.maPgg || '').trim();
-        if (code && !/^[A-Za-z0-9_-]{3,30}$/.test(code)) return 'Mã phiếu chỉ được gồm chữ, số, gạch ngang/gạch dưới và dài 3-30 ký tự';
-        const name = String(data.tenPgg || '').trim();
-        if (!name) return 'Vui lòng nhập tên phiếu';
-        if (name.length < 3 || name.length > 100) return 'Tên phiếu phải từ 3 đến 100 ký tự';
-        if (!['PHAN_TRAM','TIEN_MAT'].includes(data.loaiGiam)) return 'Loại giảm không hợp lệ';
-        if (!Number.isFinite(data.giaTri) || data.giaTri <= 0) return 'Giá trị giảm phải lớn hơn 0';
-        if (data.loaiGiam === 'PHAN_TRAM' && data.giaTri > 100) return 'Giá trị phần trăm phải lớn hơn 0 và không vượt quá 100';
-        if (data.loaiGiam === 'PHAN_TRAM' && (!Number.isFinite(data.giaTriToiDa) || data.giaTriToiDa <= 0)) return 'Vui lòng nhập giảm tối đa lớn hơn 0 khi giảm theo phần trăm';
-        if (data.loaiGiam === 'TIEN_MAT' && !Number.isInteger(data.giaTri)) return 'Giá trị giảm tiền mặt phải là số nguyên';
-        if (data.giaTriToiDa != null && (!Number.isFinite(data.giaTriToiDa) || data.giaTriToiDa < 0 || !Number.isInteger(data.giaTriToiDa))) return 'Giảm tối đa phải là số nguyên không âm';
-        if (data.loaiGiam === 'TIEN_MAT' && data.giaTriToiDa != null && data.giaTriToiDa > data.giaTri) return 'Giảm tối đa không được lớn hơn giá trị giảm tiền mặt';
-        if (data.dieuKienDonHang != null && (!Number.isFinite(data.dieuKienDonHang) || data.dieuKienDonHang < 0 || !Number.isInteger(data.dieuKienDonHang))) return 'Đơn hàng tối thiểu phải là số nguyên không âm';
-        if (data.loaiGiam === 'TIEN_MAT' && data.dieuKienDonHang != null && data.giaTri > data.dieuKienDonHang) return 'Giá trị giảm tiền mặt không được lớn hơn đơn hàng tối thiểu';
-        if (!Number.isInteger(data.soLuong) || data.soLuong <= 0) return 'Số lượng phải lớn hơn 0';
-        if (!data.ngayBatDau || !data.ngayKetThuc) return 'Vui lòng nhập thời gian bắt đầu và kết thúc';
-        const start = new Date(data.ngayBatDau);
-        const end = new Date(data.ngayKetThuc);
-        if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 'Thời gian bắt đầu hoặc kết thúc không hợp lệ';
-        if (end <= start) return 'Ngày kết thúc phải sau ngày bắt đầu';
-        return '';
+    function syncGeneratedCode() {
+        if (form.elements.id.value) return;
+
+        const tenPgg = form.elements.tenPgg.value || '';
+        form.elements.maPgg.value = generatePggCode(tenPgg);
+    }
+
+    function generatePggCode(name) {
+        const cleanName = String(name || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/gi, 'd')
+            .toUpperCase()
+            .replace(/[^A-Z0-9]+/g, '');
+
+        const now = new Date();
+        const datePart = `${String(now.getDate()).padStart(2, '0')}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getFullYear()).slice(-2)}`;
+
+        const namePart = (cleanName || 'PGG').slice(0, 8);
+        return `${namePart}${datePart}`.slice(0, 15);
+    }
+
+    async function saveVoucher(event) {
+        event.preventDefault();
+
+        clearFormErrors();
+
+        const payload = collectVoucherPayload();
+        const validation = validateVoucherPayload(payload);
+
+        if (Object.keys(validation).length) {
+            applyValidationErrors(validation);
+            toast('Vui lòng kiểm tra lại thông tin phiếu giảm giá.', true);
+            return;
+        }
+
+        const isUpdate = Boolean(payload.id);
+        const ok = await confirmAction(
+            isUpdate
+                ? 'Bạn có chắc chắn muốn cập nhật phiếu giảm giá này không?'
+                : 'Bạn có chắc chắn muốn tạo phiếu giảm giá mới không?'
+        );
+
+        if (!ok) return;
+
+        const body = buildSubmitPayload(payload);
+        const url = isUpdate ? `${API}/${payload.id}` : API;
+
+        try {
+            const response = await fetch(url, {
+                method: isUpdate ? 'PUT' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            toast(isUpdate ? 'Đã cập nhật phiếu giảm giá.' : 'Đã tạo phiếu giảm giá.', false);
+            showList();
+            loadData(0);
+        } catch (error) {
+            toast(error.message || 'Không thể lưu phiếu giảm giá.', true);
+        }
+    }
+
+    function collectVoucherPayload() {
+        return {
+            id: form.elements.id.value ? Number(form.elements.id.value) : null,
+            maPgg: form.elements.maPgg.value.trim(),
+            tenPgg: normalizeSpaces(form.elements.tenPgg.value),
+            loaiGiam: $('loaiGiamSelect').value,
+            giaTri: parseDiscountValue(form.elements.giaTri.value),
+            giaTriToiDa: parseFormattedNumber(form.elements.giaTriToiDa.value),
+            gioiHanMoiKhach: form.elements.gioiHanMoiKhach.value.trim(),
+            soLuong: form.elements.soLuong.value.trim(),
+            dieuKienDonHang: parseFormattedNumber(form.elements.dieuKienDonHang.value),
+            ngayBatDau: form.elements.ngayBatDau.value.trim(),
+            ngayKetThuc: form.elements.ngayKetThuc.value.trim(),
+            moTa: normalizeSpaces(form.elements.moTa.value)
+        };
+    }
+
+    function validateVoucherPayload(payload) {
+        const errors = {};
+
+        if (!payload.maPgg) {
+            errors.maPgg = 'Không tạo được mã phiếu giảm giá.';
+        } else if (!/^[A-Z0-9]{3,15}$/.test(payload.maPgg)) {
+            errors.maPgg = 'Mã phiếu chỉ gồm chữ và số, tối đa 15 ký tự.';
+        }
+
+        if (!payload.tenPgg) {
+            errors.tenPgg = 'Vui lòng nhập tên phiếu giảm giá.';
+        } else if (payload.tenPgg.length < 3 || payload.tenPgg.length > 100) {
+            errors.tenPgg = 'Tên phiếu phải từ 3 đến 100 ký tự.';
+        }
+
+        if (!['TIEN_MAT', 'PHAN_TRAM'].includes(payload.loaiGiam)) {
+            errors.loaiGiam = 'Vui lòng chọn hình thức giảm.';
+        }
+
+        {
+            if (payload.giaTri === '') {
+                errors.giaTri = 'Vui lòng nhập giá trị giảm.';
+            } else if (!isFiniteNumber(payload.giaTri)) {
+                errors.giaTri = 'Giá trị giảm không hợp lệ.';
+            } else {
+                const giaTri = Number(payload.giaTri);
+
+                if (giaTri <= 0) {
+                    errors.giaTri = 'Giá trị giảm phải lớn hơn 0.';
+                } else if (payload.loaiGiam === 'PHAN_TRAM' && giaTri > 100) {
+                    errors.giaTri = 'Giá trị phần trăm không được vượt quá 100.';
+                } else if (payload.loaiGiam === 'TIEN_MAT' && !Number.isInteger(giaTri)) {
+                    errors.giaTri = 'Giảm theo đ phải là số nguyên.';
+                }
+            }
+        }
+
+        if (payload.loaiGiam === 'PHAN_TRAM' && payload.giaTriToiDa !== '') {
+            if (!isFiniteNumber(payload.giaTriToiDa)) {
+                errors.giaTriToiDa = 'Giảm tối đa không hợp lệ.';
+            } else if (Number(payload.giaTriToiDa) <= 0 || !Number.isInteger(Number(payload.giaTriToiDa))) {
+                errors.giaTriToiDa = 'Giảm tối đa phải là số nguyên lớn hơn 0.';
+            }
+        }
+
+        if (payload.loaiGiam === 'TIEN_MAT' && payload.giaTriToiDa !== '') {
+            if (!isFiniteNumber(payload.giaTriToiDa) || Number(payload.giaTriToiDa) < 0 || !Number.isInteger(Number(payload.giaTriToiDa))) {
+                errors.giaTriToiDa = 'Giảm tối đa phải là số nguyên không âm.';
+            } else if (Number(payload.giaTriToiDa) > Number(payload.giaTri || 0)) {
+                errors.giaTriToiDa = 'Giảm tối đa không được lớn hơn giá trị giảm.';
+            }
+        }
+
+        if (payload.gioiHanMoiKhach === '') {
+            errors.gioiHanMoiKhach = 'Vui lòng nhập giới hạn dùng / 1 khách.';
+        } else if (!/^\d+$/.test(payload.gioiHanMoiKhach) || Number(payload.gioiHanMoiKhach) < 1) {
+            errors.gioiHanMoiKhach = 'Giới hạn dùng / 1 khách phải là số nguyên từ 1 trở lên.';
+        }
+        if (payload.soLuong === '') {
+            errors.soLuong = 'Vui lòng nhập số lượng sử dụng.';
+        } else if (!/^\d+$/.test(payload.soLuong) || Number(payload.soLuong) < 1) {
+            errors.soLuong = 'Số lượng sử dụng phải là số nguyên từ 1 trở lên.';
+        }
+
+        if (payload.dieuKienDonHang !== '') {
+            if (!isFiniteNumber(payload.dieuKienDonHang) || Number(payload.dieuKienDonHang) < 0 || !Number.isInteger(Number(payload.dieuKienDonHang))) {
+                errors.dieuKienDonHang = 'Hóa đơn tối thiểu phải là số nguyên không âm.';
+            }
+        }
+
+        if (payload.loaiGiam === 'TIEN_MAT'
+            && isFiniteNumber(payload.giaTri)
+            && isFiniteNumber(payload.dieuKienDonHang)
+            && Number(payload.dieuKienDonHang) > 0
+            && Number(payload.giaTri) > Number(payload.dieuKienDonHang)) {
+            errors.giaTri = 'Giá trị giảm không được lớn hơn hóa đơn tối thiểu.';
+        }
+
+        const start = normalizeDateTime(payload.ngayBatDau);
+        const end = normalizeDateTime(payload.ngayKetThuc);
+
+        if (!payload.ngayBatDau) {
+            errors.ngayBatDau = 'Vui lòng nhập ngày bắt đầu.';
+        } else if (!start) {
+            errors.ngayBatDau = 'Ngày bắt đầu không đúng định dạng.';
+        }
+
+        if (!payload.ngayKetThuc) {
+            errors.ngayKetThuc = 'Vui lòng nhập ngày kết thúc.';
+        } else if (!end) {
+            errors.ngayKetThuc = 'Ngày kết thúc không đúng định dạng.';
+        }
+
+        if (start && end && new Date(end) <= new Date(start)) {
+            errors.ngayKetThuc = 'Ngày kết thúc phải sau ngày bắt đầu.';
+        }
+
+        if (start && isPastDateTime(start) && start !== state.editingStart) {
+            errors.ngayBatDau = 'Ngày bắt đầu không được là thời gian trong quá khứ.';
+        }
+
+        if (end && isPastDateTime(end)) {
+            errors.ngayKetThuc = 'Ngày kết thúc không được là thời gian trong quá khứ.';
+        }
+
+        if (payload.moTa && payload.moTa.length > 500) {
+            errors.moTa = 'Mô tả không được vượt quá 500 ký tự.';
+        }
+
+        return errors;
+    }
+
+    function applyValidationErrors(errors) {
+        Object.entries(errors).forEach(([field, message]) => {
+            if (field === 'loaiGiam') {
+                const select = $('loaiGiamSelect');
+                if (select) setFieldError(select, message);
+                return;
+            }
+
+            const element = form.elements[field];
+            if (element) {
+                setFieldError(element, message);
+            }
+        });
+
+        const firstInvalid = form.querySelector('.is-invalid');
+        if (firstInvalid) firstInvalid.focus();
+    }
+
+    function buildSubmitPayload(payload) {
+        return {
+            maPgg: payload.maPgg || null,
+            tenPgg: payload.tenPgg,
+            loaiGiam: payload.loaiGiam,
+            giaTri: Number(payload.giaTri || 0),
+            giaTriToiDa: payload.giaTriToiDa === '' ? null : Number(payload.giaTriToiDa),
+            gioiHanMoiKhach: Number(payload.gioiHanMoiKhach),
+            soLuong: Number(payload.soLuong),
+            dieuKienDonHang: payload.dieuKienDonHang === '' ? 0 : Number(payload.dieuKienDonHang),
+            ngayBatDau: withSeconds(normalizeDateTime(payload.ngayBatDau)),
+            ngayKetThuc: withSeconds(normalizeDateTime(payload.ngayKetThuc)),
+            loaiPhieu: 'CONG_KHAI',
+            moTa: payload.moTa || null,
+            trangThai: shouldEnableVoucher(payload)
+        };
     }
 
     async function toggleStatus(id) {
-        const item = state.items.find(v => v.id === id);
+        const item = state.items.find((voucher) => voucher.id === id);
         const nextStatus = !(item && item.trangThai);
-        const message = nextStatus
-            ? 'Bạn có chắc chắn muốn bật phiếu giảm giá này không?'
-            : 'Bạn có chắc chắn muốn tắt phiếu giảm giá này không?';
-        if (!await confirmAction(message)) {
-            await loadData(state.page);
+
+        const ok = await confirmAction(
+            nextStatus
+                ? 'Bạn có chắc chắn muốn bật phiếu giảm giá này không?'
+                : 'Bạn có chắc chắn muốn tắt phiếu giảm giá này không?'
+        );
+
+        if (!ok) {
+            loadData(state.page);
             return;
         }
-        const response = await fetch(`${API}/${id}/trang-thai`, {method: 'PATCH'});
-        if (!response.ok) return toast(await readError(response), true);
-        await loadData(0);
-    }
 
-    function setDefaultFutureDates() {
-        const start = new Date();
-        start.setDate(start.getDate() + 1);
-        start.setHours(0, 0, 0, 0);
-        const end = new Date(start);
-        end.setDate(end.getDate() + 7);
-        end.setHours(23, 59, 0, 0);
-        form.elements.ngayBatDau.value = toDateTimeLocal(start);
-        form.elements.ngayKetThuc.value = toDateTimeLocal(end);
+        try {
+            const response = await fetch(`${API}/${id}/trang-thai`, {
+                method: 'PATCH'
+            });
+
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            toast('Đã cập nhật trạng thái phiếu giảm giá.');
+            loadData(state.page);
+        } catch (error) {
+            toast(error.message || 'Không thể cập nhật trạng thái.', true);
+            loadData(state.page);
+        }
     }
 
     async function exportExcel() {
-        if (!await confirmAction('Bạn có chắc chắn muốn xuất Excel danh sách phiếu giảm giá không?')) return;
-        const params = currentParams(false);
+        const ok = await confirmAction('Bạn có chắc chắn muốn xuất danh sách phiếu giảm giá không?');
+        if (!ok) return;
+
+        const params = buildFilterParams(false);
         if (!params) return;
-        params.set('page', 0);
-        params.set('size', 10000);
-        const response = await fetch(`${API}?${params}`);
-        if (!response.ok) return toast(await readError(response), true);
-        const data = await response.json();
-        const items = data.content || [];
-        if (!items.length) return toast('Không có dữ liệu để xuất', true);
-        const rows = [
-            ['STT', 'Mã giảm giá', 'Tên giảm giá', 'Loại phiếu', 'Loại giảm', 'Giá trị giảm', 'Đơn hàng tối thiểu', 'Số lượng', 'Ngày bắt đầu', 'Ngày kết thúc', 'Trạng thái']
-        ];
-        items.forEach((item, index) => {
-            rows.push([
-                index + 1,
-                item.maPgg || '',
-                item.tenPgg || '',
-                'Công khai',
-                item.loaiGiam === 'PHAN_TRAM' ? 'Giảm %' : 'Giảm tiền',
-                item.loaiGiam === 'PHAN_TRAM' ? `${item.giaTri ?? 0}%` : Number(item.giaTri || 0),
-                Number(item.dieuKienDonHang || 0),
-                item.soLuong ?? 0,
-                dateTime(item.ngayBatDau),
-                dateTime(item.ngayKetThuc),
-                progressStatus(item).text
-            ]);
+
+        params.set('page', '0');
+        params.set('size', '10000');
+
+        try {
+            const response = await fetch(`${API}?${params.toString()}`);
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            const data = await response.json();
+            const items = data.content || [];
+
+            if (!items.length) {
+                toast('Không có dữ liệu để xuất.', true);
+                return;
+            }
+
+            const rows = [
+                ['STT', 'Mã', 'Tên phiếu', 'Số lượng', 'Giá trị', 'Ngày bắt đầu', 'Ngày kết thúc', 'Trạng thái']
+            ];
+
+            items.forEach((item, index) => {
+                rows.push([
+                    index + 1,
+                    item.maPgg || '',
+                    item.tenPgg || '',
+                    item.soLuong ?? '',
+                    formatDiscount(item),
+                    dateTime(item.ngayBatDau),
+                    dateTime(item.ngayKetThuc),
+                    resolveStatus(item).text
+                ]);
+            });
+
+            const tableHtml = rows.map((row) =>
+                `<tr>${row.map((cell) => `<td>${esc(cell)}</td>`).join('')}</tr>`
+            ).join('');
+
+            const html = `\uFEFF<html><head><meta charset="UTF-8"></head><body><table border="1">${tableHtml}</table></body></html>`;
+            const blob = new Blob([html], {
+                type: 'application/vnd.ms-excel;charset=utf-8;'
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `phieu-giam-gia-${new Date().toISOString().slice(0, 10)}.xls`;
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+
+            toast('Đã xuất Excel.');
+        } catch (error) {
+            toast(error.message || 'Không thể xuất Excel.', true);
+        }
+    }
+
+    function resolveStatus(item) {
+        return timelineStatus({
+            ngayBatDau: item.ngayBatDau,
+            ngayKetThuc: item.ngayKetThuc,
+            trangThai: item.trangThai
         });
-        const table = rows.map(row => `<tr>${row.map(cell => `<td>${esc(cell)}</td>`).join('')}</tr>`).join('');
-        const html = `\uFEFF<html><head><meta charset="UTF-8"></head><body><table border="1">${table}</table></body></html>`;
-        const blob = new Blob([html], {type: 'application/vnd.ms-excel;charset=utf-8;'});
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `phieu-giam-gia-${new Date().toISOString().slice(0, 10)}.xls`;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
-        toast('Đã xuất Excel');
     }
 
-    function syncDiscountSuffix() {
-        const isPercent = form.elements.loaiGiam.value === 'PHAN_TRAM';
-        $('discountSuffix').textContent = isPercent ? '%' : 'VND';
-        form.elements.giaTri.step = isPercent ? '0.01' : '1000';
-        form.elements.giaTri.max = isPercent ? '100' : '';
+    function timelineStatus(item) {
+        const now = new Date();
+        const start = parseDateForStatus(item.ngayBatDau);
+        const end = parseDateForStatus(item.ngayKetThuc);
+
+        if (item.trangThai === false || (end && end < now)) {
+            return { text: 'Kết thúc', cls: 'off' };
+        }
+
+        if (start && start > now) {
+            return { text: 'Sắp diễn ra', cls: 'wait' };
+        }
+
+        if (end && end >= now) {
+            return { text: 'Đang diễn ra', cls: 'on' };
+        }
+
+        return { text: 'Kết thúc', cls: 'off' };
     }
 
-    function syncVoucherDateLimits() {
-        const start = form.elements.ngayBatDau;
-        const end = form.elements.ngayKetThuc;
-        end.min = start.value || '';
-        start.max = end.value || '';
+    function parseDateForStatus(value) {
+        const normalized = normalizeDateTime(value);
+        if (!normalized) return null;
+
+        const date = new Date(normalized);
+        return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    function shouldEnableVoucher(payload) {
+        const end = parseDateForStatus(payload.ngayKetThuc);
+        return Boolean(end && end > new Date());
+    }
+
+    function updateFormStatusPreview() {
+        const preview = $('formStatusPreview');
+        if (!preview) return;
+
+        const start = form.elements.ngayBatDau.value.trim();
+        const end = form.elements.ngayKetThuc.value.trim();
+        const normalizedEnd = normalizeDateTime(end);
+
+        if (!start || !end || !normalizeDateTime(start) || !normalizedEnd) {
+            preview.textContent = 'Chưa xác định';
+            return;
+        }
+
+        const status = timelineStatus({
+            ngayBatDau: start,
+            ngayKetThuc: end,
+            trangThai: shouldEnableVoucher({ ngayKetThuc: end })
+        });
+
+        preview.innerHTML = `<span class="status-badge ${status.cls}">${status.text}</span>`;
+    }
+
+    function syncDiscountUI() {
+        const type = $('loaiGiamSelect').value;
+        const valueInput = form.elements.giaTri;
+        const maxInput = form.elements.giaTriToiDa;
+        const addon = $('valueAddon');
+        const label = $('valueLabel');
+
+        clearFieldError($('loaiGiamSelect'));
+        clearFieldError(valueInput);
+        clearFieldError(maxInput);
+
+        if (type === 'PHAN_TRAM') {
+            label.innerHTML = 'Giá trị giảm (%) <span class="required">*</span>';
+            addon.textContent = '%';
+            valueInput.disabled = false;
+            valueInput.placeholder = '0';
+            valueInput.inputMode = 'decimal';
+            valueInput.value = parseFormattedNumber(valueInput.value);
+            maxInput.disabled = false;
+            maxInput.placeholder = '0 (để trống = Không giới hạn)';
+            return;
+        }
+
+        if (type === 'TIEN_MAT') {
+            label.innerHTML = 'Giá trị giảm (đ) <span class="required">*</span>';
+            addon.textContent = 'đ';
+            valueInput.disabled = false;
+            valueInput.placeholder = '0';
+            valueInput.inputMode = 'numeric';
+            valueInput.value = formatCurrency(parseFormattedNumber(valueInput.value));
+            maxInput.disabled = true;
+            maxInput.value = '';
+            maxInput.placeholder = 'Không áp dụng';
+            return;
+        }
+
+        label.innerHTML = 'Giá trị giảm <span class="required">*</span>';
+        addon.textContent = 'FS';
+        valueInput.value = '0';
+        valueInput.disabled = true;
+        valueInput.placeholder = 'Miễn phí vận chuyển';
+        maxInput.disabled = true;
+        maxInput.value = '';
+        maxInput.placeholder = 'Không áp dụng';
+    }
+
+    function parseFormattedNumber(value) {
+        return String(value ?? '').replace(/\./g, '').replace(/[^\d,\-]/g, '').replace(',', '.');
+    }
+
+    function parseDiscountValue(value) {
+        const type = $('loaiGiamSelect').value;
+        return type === 'TIEN_MAT'
+            ? parseFormattedNumber(value)
+            : String(value ?? '').trim().replace(',', '.');
+    }
+
+    function formatCurrency(value) {
+        const digits = String(value ?? '').replace(/\D/g, '');
+        return digits === '' ? '' : Number(digits).toLocaleString('vi-VN');
+    }
+
+    function formatCurrencyInput(input) {
+        input.value = formatCurrency(input.value);
+    }
+
+    function roundCurrencyInput(input) {
+        const value = Number(parseFormattedNumber(input.value) || 0);
+        input.value = value ? formatCurrency(Math.round(value / 1000) * 1000) : '';
+    }
+
+    function removeLeadingZeros(input) {
+        input.value = String(input.value ?? '').replace(/^0+(?=\d)/, '');
+    }
+
+    function setDefaultDates() {
+        const start = new Date();
+        start.setSeconds(0);
+        start.setMilliseconds(0);
+
+        const end = new Date(start);
+        end.setDate(end.getDate() + 7);
+
+        form.elements.ngayBatDau.value = formatDateTimeInput(toLocalDateTimeValue(start));
+        form.elements.ngayKetThuc.value = formatDateTimeInput(toLocalDateTimeValue(end));
+    }
+
+    function enforceStartDateNotPast() {
+        const input = form.elements.ngayBatDau;
+        if (!input) return;
+
+        const min = currentDateTimeLocal();
+        const normalized = normalizeDateTime(input.value);
+
+        if (normalized && normalized < min) {
+            input.value = formatDateTimeInput(min);
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            toast('Ngày bắt đầu không được chọn giờ trong quá khứ.', true);
+        }
+    }
+
+    function setFieldError(element, message) {
+        if (!element) return;
+
+        element.classList.add('is-invalid');
+        const field = element.closest('.field');
+        if (!field) return;
+
+        const errorBox = field.querySelector('.field-error');
+        if (errorBox) errorBox.textContent = message;
+    }
+
+    function clearFieldError(element) {
+        if (!element) return;
+
+        element.classList.remove('is-invalid');
+        const field = element.closest('.field');
+        if (!field) return;
+
+        const errorBox = field.querySelector('.field-error');
+        if (errorBox) errorBox.textContent = '';
+    }
+
+    function clearFormErrors() {
+        form.querySelectorAll('.is-invalid').forEach((element) => {
+            element.classList.remove('is-invalid');
+        });
+
+        form.querySelectorAll('.field-error').forEach((element) => {
+            element.textContent = '';
+        });
+    }
+
+    function openNativePicker(input, enforceMin = true) {
+        if (!input) return;
+
+        const picker = document.createElement('input');
+        const rect = input.getBoundingClientRect();
+        const min = currentDateTimeLocal();
+        let pickerValue = normalizeDateTime(input.value);
+
+        picker.type = 'datetime-local';
+        if (enforceMin) {
+            picker.min = min;
+            if (!pickerValue || pickerValue < min) {
+                pickerValue = min;
+            }
+        }
+        picker.value = pickerValue;
+        picker.style.position = 'fixed';
+        picker.style.left = `${Math.max(0, rect.right - 36)}px`;
+        picker.style.top = `${Math.max(0, rect.top + 2)}px`;
+        picker.style.width = '34px';
+        picker.style.height = '34px';
+        picker.style.opacity = '0.01';
+        picker.style.zIndex = '3000';
+        picker.style.border = '0';
+        picker.style.padding = '0';
+
+        document.body.appendChild(picker);
+
+        const cleanup = () => setTimeout(() => picker.remove(), 150);
+
+        picker.addEventListener('change', () => {
+            if (picker.value) {
+                if (enforceMin && picker.value < min) {
+                    picker.value = min;
+                }
+                input.value = formatDateTimeInput(picker.value);
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                if (input === form.elements.ngayBatDau) {
+                    enforceStartDateNotPast();
+                }
+            }
+            cleanup();
+        });
+
+        picker.addEventListener('blur', cleanup, { once: true });
+
+        picker.focus();
+        if (typeof picker.showPicker === 'function') {
+            try { picker.showPicker(); } catch {}
+        }
+    }
+
+    function normalizeDateTime(value) {
+        if (!value) return '';
+
+        const text = String(value).trim();
+
+        // Dạng người dùng nhập: dd/MM/yyyy hoặc dd/MM/yyyy HH:mm
+        const vnMatch = text.match(
+            /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?$/
+        );
+
+        if (vnMatch) {
+            const [, day, month, year, hour = '00', minute = '00'] = vnMatch;
+            const pad = (number) => String(number).padStart(2, '0');
+
+            return `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}`;
+        }
+
+        // Dạng LocalDateTime Spring trả về:
+        // 2026-06-26T10:30
+        // 2026-06-26T10:30:00
+        // 2026-06-26T10:30:00.000
+        const localIsoMatch = text.match(
+            /^(\d{4})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?::\d{2}(?:\.\d{1,9})?)?$/
+        );
+
+        if (localIsoMatch) {
+            const [, year, month, day, hour, minute] = localIsoMatch;
+            return `${year}-${month}-${day}T${hour}:${minute}`;
+        }
+
+        // Dạng backend chỉ trả ngày: 2026-06-26
+        const dateOnlyMatch = text.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+        if (dateOnlyMatch) {
+            const [, year, month, day] = dateOnlyMatch;
+            return `${year}-${month}-${day}T00:00`;
+        }
+
+        // Dạng có timezone: 2026-06-26T10:30:00.000+07:00 hoặc ...Z
+        const date = new Date(text);
+
+        if (!Number.isNaN(date.getTime())) {
+            const pad = (number) => String(number).padStart(2, '0');
+
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        }
+
+        return '';
+    }
+
+    function formatDateTimeInput(value) {
+        const normalized = normalizeDateTime(value);
+
+        if (!normalized) return '';
+
+        const match = normalized.match(
+            /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/
+        );
+
+        if (!match) return '';
+
+        const [, year, month, day, hour, minute] = match;
+        return `${day}/${month}/${year} ${hour}:${minute}`;
+    }
+
+    function currentDateTimeLocal() {
+        const now = new Date();
+        now.setSeconds(0, 0);
+        return toLocalDateTimeValue(now);
+    }
+
+    function toLocalDateTimeValue(date) {
+        const pad = (number) => String(number).padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+
+    function isPastDateTime(value) {
+        const normalized = normalizeDateTime(value);
+        if (!normalized) return false;
+        return new Date(normalized).getTime() < Date.now() - 60000;
+    }
+
+    function withSeconds(value) {
+        const normalized = normalizeDateTime(value);
+        return normalized ? `${normalized}:00` : '';
+    }
+
+    function isFiniteNumber(value) {
+        return value !== '' && Number.isFinite(Number(value));
+    }
+
+    function normalizeSpaces(value) {
+        return String(value || '')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    function formatNumber(value) {
+        if (value == null || value === '') return '–';
+        return Number(value).toLocaleString('vi-VN');
     }
 
     function formatDiscount(item) {
-        return item.loaiGiam === 'PHAN_TRAM' ? `${item.giaTri ?? 0}%` : money(item.giaTri);
+        if ((item.loaiGiam || '') === 'PHAN_TRAM') {
+            return `${Number(item.giaTri || 0)}%`;
+        }
+
+        return money(item.giaTri);
     }
-    function money(value) { return value == null ? '0 đ' : Number(value).toLocaleString('vi-VN') + ' đ'; }
+
+    function money(value) {
+        if (value == null || value === '') return '0 đ';
+        return `${(Math.round(Number(value) / 1000) * 1000).toLocaleString('vi-VN')} đ`;
+    }
+
     function dateTime(value) {
         if (!value) return '';
+
         const date = new Date(value);
-        if (Number.isNaN(date.getTime())) return String(value).replace('T', ' ').substring(0, 16);
-        const pad = number => String(number).padStart(2, '0');
-        return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        if (Number.isNaN(date.getTime())) {
+            return String(value).replace('T', ' ').substring(0, 16);
+        }
+
+        const pad = (number) => String(number).padStart(2, '0');
+        return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
     }
-    function toInputDateTime(value) { return formatDateTimeInput(value); }
-    function toDateTimeLocal(date) {
-        const pad = value => String(value).padStart(2, '0');
-        return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+
+    async function readError(response) {
+        const text = await response.text();
+
+        try {
+            const data = JSON.parse(text);
+            return data.message || data.error || text;
+        } catch {
+            return text || 'Có lỗi xảy ra.';
+        }
     }
-    function normalizeDateTime(value) {
-        if (!value) return '';
-        const text = String(value).trim();
-        if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/.test(text)) return text.slice(0, 16);
-        const match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?$/);
-        if (!match) return '';
-        const [, day, month, year, hour = '00', minute = '00'] = match;
-        const pad = number => String(number).padStart(2, '0');
-        return `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}`;
-    }
-    function formatDateTimeInput(value) {
-        if (!value) return '';
-        const normalized = normalizeDateTime(value) || String(value).substring(0, 16);
-        const match = normalized.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
-        return match ? `${match[3]}/${match[2]}/${match[1]} ${match[4]}:${match[5]}` : '';
-    }
-    async function readError(response) { const text = await response.text(); try { return JSON.parse(text).message || text; } catch { return text || 'Có lỗi xảy ra'; } }
+
     function confirmAction(message) {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const backdrop = $('confirmBackdrop');
             const messageEl = $('confirmMessage');
-            const ok = $('confirmOk');
-            const cancel = $('confirmCancel');
+            const okBtn = $('confirmOk');
+            const cancelBtn = $('confirmCancel');
+
             messageEl.textContent = message;
             backdrop.classList.add('show');
-            backdrop.setAttribute('aria-hidden', 'false');
-            ok.focus();
-            const cleanup = result => {
+
+            const cleanup = (result) => {
                 backdrop.classList.remove('show');
-                backdrop.setAttribute('aria-hidden', 'true');
-                ok.removeEventListener('click', onOk);
-                cancel.removeEventListener('click', onCancel);
+                okBtn.removeEventListener('click', onOk);
+                cancelBtn.removeEventListener('click', onCancel);
                 backdrop.removeEventListener('click', onBackdrop);
                 document.removeEventListener('keydown', onKeydown);
                 resolve(result);
             };
+
             const onOk = () => cleanup(true);
             const onCancel = () => cleanup(false);
-            const onBackdrop = event => { if (event.target === backdrop) cleanup(false); };
-            const onKeydown = event => { if (event.key === 'Escape') cleanup(false); };
-            ok.addEventListener('click', onOk);
-            cancel.addEventListener('click', onCancel);
+            const onBackdrop = (event) => {
+                if (event.target === backdrop) cleanup(false);
+            };
+            const onKeydown = (event) => {
+                if (event.key === 'Escape') cleanup(false);
+            };
+
+            okBtn.addEventListener('click', onOk);
+            cancelBtn.addEventListener('click', onCancel);
             backdrop.addEventListener('click', onBackdrop);
             document.addEventListener('keydown', onKeydown);
+
+            okBtn.focus();
         });
     }
-    function toast(message, error = false) { const el = document.createElement('div'); el.className = `toast ${error ? 'error' : 'success'}`; el.textContent = message; document.body.appendChild(el); setTimeout(() => el.remove(), 3500); }
-    function esc(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
+
+    function toast(message, error = false) {
+        const element = document.createElement('div');
+        element.className = `toast ${error ? 'error' : 'success'}`;
+        element.textContent = message;
+
+        document.body.appendChild(element);
+
+        setTimeout(() => {
+            element.remove();
+        }, 3200);
+    }
+
+    function esc(value) {
+        return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        }[character]));
+    }
+
+    window.openForm = openForm;
+    window.toggleStatus = toggleStatus;
 </script>
 </body>
 </html>
-
-
-
