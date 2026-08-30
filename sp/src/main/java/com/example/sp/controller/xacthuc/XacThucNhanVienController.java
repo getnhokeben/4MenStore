@@ -35,6 +35,7 @@ public class XacThucNhanVienController {
             new SecureRandom();
 
     @PostMapping("/login")
+    // Thực hiện xử lý nghiệp vụ của hàm dang nhap.
     public ResponseEntity<?> dangNhap(
             @Valid @RequestBody DangNhapNhanVienRequest request,
             HttpSession session
@@ -89,6 +90,7 @@ public class XacThucNhanVienController {
     }
 
     @GetMapping("/me")
+    // Thực hiện xử lý nghiệp vụ của hàm me.
     public ResponseEntity<?> me(HttpSession session) {
         Integer employeeId = (Integer) session.getAttribute(
                 KhoaSessionNhanVien.NHANVIEN_ID
@@ -113,6 +115,7 @@ public class XacThucNhanVienController {
     }
 
     @PostMapping("/logout")
+    // Thực hiện xử lý nghiệp vụ của hàm dang xuat.
     public ResponseEntity<?> dangXuat(HttpSession session) {
         session.invalidate();
 
@@ -125,18 +128,22 @@ public class XacThucNhanVienController {
         private String matKhauCu;
         private String matKhauMoi;
 
+        // Tải hoặc truy xuất dữ liệu cho get mat khau cu.
         public String getMatKhauCu() {
             return matKhauCu;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set mat khau cu.
         public void setMatKhauCu(String matKhauCu) {
             this.matKhauCu = matKhauCu;
         }
 
+        // Tải hoặc truy xuất dữ liệu cho get mat khau moi.
         public String getMatKhauMoi() {
             return matKhauMoi;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set mat khau moi.
         public void setMatKhauMoi(String matKhauMoi) {
             this.matKhauMoi = matKhauMoi;
         }
@@ -145,16 +152,19 @@ public class XacThucNhanVienController {
     public static class ForgotPasswordRequest {
         private String email;
 
+        // Tải hoặc truy xuất dữ liệu cho get email.
         public String getEmail() {
             return email;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set email.
         public void setEmail(String email) {
             this.email = email;
         }
     }
 
     @PostMapping({"/doi-mat-khau", "/change-password"})
+    // Thực hiện xử lý nghiệp vụ của hàm change password.
     public ResponseEntity<?> changePassword(
             @RequestBody ChangePasswordRequest request,
             HttpSession session
@@ -232,6 +242,7 @@ public class XacThucNhanVienController {
 
     @PostMapping({"/quen-mat-khau", "/forgot-password"})
     @Transactional(rollbackFor = Exception.class)
+    // Thực hiện xử lý nghiệp vụ của hàm forgot password.
     public ResponseEntity<?> forgotPassword(
             @RequestBody ForgotPasswordRequest request
     ) {
@@ -287,6 +298,7 @@ public class XacThucNhanVienController {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to dto.
     private NhanVienDTO toDto(NhanVien employee) {
         NhanVienDTO dto = new NhanVienDTO();
 
@@ -298,6 +310,7 @@ public class XacThucNhanVienController {
         return dto;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm matches password.
     private boolean matchesPassword(
             String rawPassword,
             String storedPassword
@@ -311,6 +324,7 @@ public class XacThucNhanVienController {
                 : storedPassword.equals(rawPassword);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is bcrypt hash.
     private boolean isBcryptHash(String value) {
         return value != null && (
                 value.startsWith("$2a$") ||
@@ -319,6 +333,7 @@ public class XacThucNhanVienController {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate temporary password.
     private String generateTemporaryPassword() {
         String upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
         String lower = "abcdefghijkmnopqrstuvwxyz";

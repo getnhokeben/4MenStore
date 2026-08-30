@@ -39,6 +39,7 @@ public class ShopController {
     private final GhnShippingService ghnShippingService;
 
     @GetMapping(value = {"/", "/shop", "/shop.html"}, produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm shop page.
     public ResponseEntity<byte[]> shopPage() throws IOException {
         byte[] html = new ClassPathResource("templates/Shop.html").getInputStream().readAllBytes();
         return ResponseEntity.ok()
@@ -47,6 +48,7 @@ public class ShopController {
     }
 
     @GetMapping("/api/shop/products")
+    // Thực hiện xử lý nghiệp vụ của hàm products.
     public Page<ShopProductDTO> products(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String loaiAo,
@@ -80,16 +82,19 @@ public class ShopController {
     }
 
     @GetMapping("/api/shop/products/{id}")
+    // Thực hiện xử lý nghiệp vụ của hàm product.
     public ShopProductDTO product(@PathVariable Integer id) {
         return shopService.getProduct(id);
     }
 
     @GetMapping("/api/shop/products/{id}/variants")
+    // Thực hiện xử lý nghiệp vụ của hàm variants.
     public List<ShopVariantDTO> variants(@PathVariable Integer id) {
         return shopService.getVariants(id);
     }
 
     @GetMapping("/api/shop/vouchers/{code}")
+    // Thực hiện xử lý nghiệp vụ của hàm voucher.
     public ShopVoucherDTO voucher(
             @PathVariable String code,
             @RequestParam(defaultValue = "0") BigDecimal subtotal
@@ -98,17 +103,20 @@ public class ShopController {
     }
 
     @GetMapping("/api/shop/vouchers")
+    // Thực hiện xử lý nghiệp vụ của hàm vouchers.
     public List<ShopVoucherDTO> vouchers(@RequestParam(defaultValue = "0") BigDecimal subtotal) {
         return shopService.getVouchers(subtotal);
     }
 
     @PostMapping("/api/shop/orders")
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create order.
     public ShopOrderResponse createOrder(@Valid @RequestBody ShopOrderRequest request, HttpSession session) {
         Integer customerId = (Integer) session.getAttribute(ShopSessionKeys.CUSTOMER_ID);
         return shopService.createOrder(request, customerId);
     }
 
     @GetMapping("/api/shop/orders/history")
+    // Thực hiện xử lý nghiệp vụ của hàm order history.
     public ResponseEntity<List<ShopOrderHistoryDTO>> orderHistory(HttpSession session) {
         Integer customerId = (Integer) session.getAttribute(ShopSessionKeys.CUSTOMER_ID);
         if (customerId == null) {
@@ -118,34 +126,41 @@ public class ShopController {
     }
 
     @GetMapping("/api/shop/orders/lookup")
+    // Thực hiện xử lý nghiệp vụ của hàm lookup order.
     public ShopOrderHistoryDTO lookupOrder(@RequestParam String maHoaDon) {
         return shopService.lookupOrder(maHoaDon);
     }
 
     @GetMapping("/api/shop/shipping/provinces")
+    // Thực hiện xử lý nghiệp vụ của hàm provinces.
     public ResponseEntity<String> provinces() {
         return json(ghnShippingService.provinces());
     }
 
     @GetMapping("/api/shop/shipping/districts")
+    // Thực hiện xử lý nghiệp vụ của hàm districts.
     public ResponseEntity<String> districts(@RequestParam Integer provinceId) {
         return json(ghnShippingService.districts(provinceId));
     }
 
     @GetMapping("/api/shop/shipping/wards")
+    // Thực hiện xử lý nghiệp vụ của hàm wards.
     public ResponseEntity<String> wards(@RequestParam Integer districtId) {
         return json(ghnShippingService.wards(districtId));
     }
 
     @PostMapping("/api/shop/shipping/fee")
+    // Thực hiện xử lý nghiệp vụ của hàm shipping fee.
     public Map<String, BigDecimal> shippingFee(@RequestBody PosShippingRequest request) {
         BigDecimal fee = request.getDistrictId() != null && request.getDistrictId() > 0
-                ? ghnShippingService.calculateFee(
+                ? ghnShippingService.calculateFeeWithFallback(
                         request.getDistrictId(),
                         request.getWardCode(),
-                        request.getPhiVanChuyen()
+                        request.getPhiVanChuyen(),
+                        request.getProvinceName(),
+                        request.getWardName()
                 )
-                : ghnShippingService.calculateTwoTierFee(
+                : ghnShippingService.calculateFallbackFee(
                         request.getProvinceName(),
                         request.getWardName(),
                         request.getPhiVanChuyen()
@@ -153,6 +168,7 @@ public class ShopController {
         return Map.of("fee", MoneyRoundingUtil.roundNonNegative(fee));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm json.
     private ResponseEntity<String> json(String body) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)

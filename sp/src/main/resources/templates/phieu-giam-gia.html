@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-scale-20260822-2" defer></script>
     <style>
         :root{
             --bg:#eef2f6;
@@ -818,12 +818,6 @@
                         </div>
 
                         <div class="field">
-                            <label>Giới hạn dùng / 1 khách <span class="required">*</span></label>
-                            <input class="input" name="gioiHanMoiKhach" type="number" min="1" step="1" placeholder="1" value="1">
-                            <small class="field-error"></small>
-                        </div>
-
-                        <div class="field">
                             <label>Số lượng sử dụng (Tổng) <span class="required">*</span></label>
                             <input class="input" name="soLuong" type="number" min="1" step="1" placeholder="0" value="1">
                             <small class="field-error"></small>
@@ -985,6 +979,7 @@
         loadData();
     });
 
+    // Tải hoặc truy xuất dữ liệu cho load data.
     async function loadData(page = state.page) {
         state.page = page;
 
@@ -1014,6 +1009,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize page response.
     function normalizePageResponse(data) {
         const pageMeta = data.page || {};
         const totalPages = Number(data.totalPages ?? pageMeta.totalPages ?? 1);
@@ -1027,6 +1023,7 @@
         };
     }
 
+    // Hiển thị và đồng bộ giao diện cho render table.
     function renderTable() {
         const rows = $('rows');
         const emptyState = $('emptyState');
@@ -1064,6 +1061,7 @@
         renderPagination();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render pagination.
     function renderPagination() {
         const holder = $('pagination');
         holder.innerHTML = '';
@@ -1119,6 +1117,7 @@
         addBtn('»', total - 1, current >= total - 1);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm build filter params.
     function buildFilterParams(includePaging) {
         const params = new URLSearchParams();
 
@@ -1156,11 +1155,13 @@
         return params;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm debounce filter.
     function debounceFilter() {
         clearTimeout(filterTimer);
         filterTimer = setTimeout(() => loadData(0), 300);
     }
 
+    // Xử lý tương tác người dùng cho handle filter date change.
     function handleFilterDateChange() {
         const start = normalizeDateTime($('filterStart').value);
         const end = normalizeDateTime($('filterEnd').value);
@@ -1172,6 +1173,7 @@
         loadData(0);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset filters.
     function resetFilters() {
         $('keywordInput').value = '';
         $('filterStart').value = '';
@@ -1180,6 +1182,7 @@
         loadData(0);
     }
 
+    // Xử lý tương tác người dùng cho open form.
     async function openForm(id = null) {
         resetVoucherForm();
 
@@ -1207,7 +1210,6 @@
             form.elements.tenPgg.value = item.tenPgg || '';
             form.elements.giaTri.value = item.giaTri ?? '';
             form.elements.giaTriToiDa.value = formatCurrency(item.giaTriToiDa);
-            form.elements.gioiHanMoiKhach.value = item.gioiHanMoiKhach ?? 1;
             form.elements.soLuong.value = item.soLuong ?? '';
             form.elements.dieuKienDonHang.value = formatCurrency(item.dieuKienDonHang ?? 0);
             form.elements.ngayBatDau.value = formatDateTimeInput(item.ngayBatDau);
@@ -1230,16 +1232,19 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho show form.
     function showForm() {
         $('listView').classList.add('hidden');
         $('formView').classList.remove('hidden');
     }
 
+    // Hiển thị và đồng bộ giao diện cho show list.
     function showList() {
         $('formView').classList.add('hidden');
         $('listView').classList.remove('hidden');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset voucher form.
     function resetVoucherForm() {
         form.reset();
         clearFormErrors();
@@ -1250,7 +1255,6 @@
         form.elements.tenPgg.value = '';
         form.elements.giaTri.value = '0';
         form.elements.giaTriToiDa.value = '';
-        form.elements.gioiHanMoiKhach.value = '1';
         form.elements.soLuong.value = '1';
         form.elements.dieuKienDonHang.value = '0';
         form.elements.moTa.value = '';
@@ -1264,6 +1268,7 @@
         updateFormStatusPreview();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sync generated code.
     function syncGeneratedCode() {
         if (form.elements.id.value) return;
 
@@ -1271,6 +1276,7 @@
         form.elements.maPgg.value = generatePggCode(tenPgg);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate pgg code.
     function generatePggCode(name) {
         const cleanName = String(name || '')
             .normalize('NFD')
@@ -1286,6 +1292,7 @@
         return `${namePart}${datePart}`.slice(0, 15);
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save voucher.
     async function saveVoucher(event) {
         event.preventDefault();
 
@@ -1333,6 +1340,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm collect voucher payload.
     function collectVoucherPayload() {
         return {
             id: form.elements.id.value ? Number(form.elements.id.value) : null,
@@ -1341,7 +1349,6 @@
             loaiGiam: $('loaiGiamSelect').value,
             giaTri: parseDiscountValue(form.elements.giaTri.value),
             giaTriToiDa: parseFormattedNumber(form.elements.giaTriToiDa.value),
-            gioiHanMoiKhach: form.elements.gioiHanMoiKhach.value.trim(),
             soLuong: form.elements.soLuong.value.trim(),
             dieuKienDonHang: parseFormattedNumber(form.elements.dieuKienDonHang.value),
             ngayBatDau: form.elements.ngayBatDau.value.trim(),
@@ -1350,6 +1357,7 @@
         };
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate voucher payload.
     function validateVoucherPayload(payload) {
         const errors = {};
 
@@ -1403,11 +1411,6 @@
             }
         }
 
-        if (payload.gioiHanMoiKhach === '') {
-            errors.gioiHanMoiKhach = 'Vui lòng nhập giới hạn dùng / 1 khách.';
-        } else if (!/^\d+$/.test(payload.gioiHanMoiKhach) || Number(payload.gioiHanMoiKhach) < 1) {
-            errors.gioiHanMoiKhach = 'Giới hạn dùng / 1 khách phải là số nguyên từ 1 trở lên.';
-        }
         if (payload.soLuong === '') {
             errors.soLuong = 'Vui lòng nhập số lượng sử dụng.';
         } else if (!/^\d+$/.test(payload.soLuong) || Number(payload.soLuong) < 1) {
@@ -1462,6 +1465,7 @@
         return errors;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply validation errors.
     function applyValidationErrors(errors) {
         Object.entries(errors).forEach(([field, message]) => {
             if (field === 'loaiGiam') {
@@ -1480,6 +1484,7 @@
         if (firstInvalid) firstInvalid.focus();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm build submit payload.
     function buildSubmitPayload(payload) {
         return {
             maPgg: payload.maPgg || null,
@@ -1487,7 +1492,6 @@
             loaiGiam: payload.loaiGiam,
             giaTri: Number(payload.giaTri || 0),
             giaTriToiDa: payload.giaTriToiDa === '' ? null : Number(payload.giaTriToiDa),
-            gioiHanMoiKhach: Number(payload.gioiHanMoiKhach),
             soLuong: Number(payload.soLuong),
             dieuKienDonHang: payload.dieuKienDonHang === '' ? 0 : Number(payload.dieuKienDonHang),
             ngayBatDau: withSeconds(normalizeDateTime(payload.ngayBatDau)),
@@ -1498,6 +1502,7 @@
         };
     }
 
+    // Xử lý tương tác người dùng cho toggle status.
     async function toggleStatus(id) {
         const item = state.items.find((voucher) => voucher.id === id);
         const nextStatus = !(item && item.trangThai);
@@ -1530,6 +1535,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm export excel.
     async function exportExcel() {
         const ok = await confirmAction('Bạn có chắc chắn muốn xuất danh sách phiếu giảm giá không?');
         if (!ok) return;
@@ -1596,6 +1602,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm resolve status.
     function resolveStatus(item) {
         return timelineStatus({
             ngayBatDau: item.ngayBatDau,
@@ -1604,6 +1611,7 @@
         });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm timeline status.
     function timelineStatus(item) {
         const now = new Date();
         const start = parseDateForStatus(item.ngayBatDau);
@@ -1624,6 +1632,7 @@
         return { text: 'Kết thúc', cls: 'off' };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm parse date for status.
     function parseDateForStatus(value) {
         const normalized = normalizeDateTime(value);
         if (!normalized) return null;
@@ -1632,11 +1641,13 @@
         return Number.isNaN(date.getTime()) ? null : date;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm should enable voucher.
     function shouldEnableVoucher(payload) {
         const end = parseDateForStatus(payload.ngayKetThuc);
         return Boolean(end && end > new Date());
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update form status preview.
     function updateFormStatusPreview() {
         const preview = $('formStatusPreview');
         if (!preview) return;
@@ -1659,6 +1670,7 @@
         preview.innerHTML = `<span class="status-badge ${status.cls}">${status.text}</span>`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sync discount ui.
     function syncDiscountUI() {
         const type = $('loaiGiamSelect').value;
         const valueInput = form.elements.giaTri;
@@ -1705,10 +1717,12 @@
         maxInput.placeholder = 'Không áp dụng';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm parse formatted number.
     function parseFormattedNumber(value) {
         return String(value ?? '').replace(/\./g, '').replace(/[^\d,\-]/g, '').replace(',', '.');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm parse discount value.
     function parseDiscountValue(value) {
         const type = $('loaiGiamSelect').value;
         return type === 'TIEN_MAT'
@@ -1716,24 +1730,29 @@
             : String(value ?? '').trim().replace(',', '.');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format currency.
     function formatCurrency(value) {
         const digits = String(value ?? '').replace(/\D/g, '');
         return digits === '' ? '' : Number(digits).toLocaleString('vi-VN');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format currency input.
     function formatCurrencyInput(input) {
         input.value = formatCurrency(input.value);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm round currency input.
     function roundCurrencyInput(input) {
         const value = Number(parseFormattedNumber(input.value) || 0);
         input.value = value ? formatCurrency(Math.round(value / 1000) * 1000) : '';
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho remove leading zeros.
     function removeLeadingZeros(input) {
         input.value = String(input.value ?? '').replace(/^0+(?=\d)/, '');
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set default dates.
     function setDefaultDates() {
         const start = new Date();
         start.setSeconds(0);
@@ -1746,6 +1765,7 @@
         form.elements.ngayKetThuc.value = formatDateTimeInput(toLocalDateTimeValue(end));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm enforce start date not past.
     function enforceStartDateNotPast() {
         const input = form.elements.ngayBatDau;
         if (!input) return;
@@ -1760,6 +1780,7 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set field error.
     function setFieldError(element, message) {
         if (!element) return;
 
@@ -1771,6 +1792,7 @@
         if (errorBox) errorBox.textContent = message;
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear field error.
     function clearFieldError(element) {
         if (!element) return;
 
@@ -1782,6 +1804,7 @@
         if (errorBox) errorBox.textContent = '';
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear form errors.
     function clearFormErrors() {
         form.querySelectorAll('.is-invalid').forEach((element) => {
             element.classList.remove('is-invalid');
@@ -1792,6 +1815,7 @@
         });
     }
 
+    // Xử lý tương tác người dùng cho open native picker.
     function openNativePicker(input, enforceMin = true) {
         if (!input) return;
 
@@ -1844,6 +1868,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize date time.
     function normalizeDateTime(value) {
         if (!value) return '';
 
@@ -1894,6 +1919,7 @@
         return '';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format date time input.
     function formatDateTimeInput(value) {
         const normalized = normalizeDateTime(value);
 
@@ -1909,43 +1935,51 @@
         return `${day}/${month}/${year} ${hour}:${minute}`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm current date time local.
     function currentDateTimeLocal() {
         const now = new Date();
         now.setSeconds(0, 0);
         return toLocalDateTimeValue(now);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to local date time value.
     function toLocalDateTimeValue(date) {
         const pad = (number) => String(number).padStart(2, '0');
         return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is past date time.
     function isPastDateTime(value) {
         const normalized = normalizeDateTime(value);
         if (!normalized) return false;
         return new Date(normalized).getTime() < Date.now() - 60000;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm with seconds.
     function withSeconds(value) {
         const normalized = normalizeDateTime(value);
         return normalized ? `${normalized}:00` : '';
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is finite number.
     function isFiniteNumber(value) {
         return value !== '' && Number.isFinite(Number(value));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize spaces.
     function normalizeSpaces(value) {
         return String(value || '')
             .replace(/\s+/g, ' ')
             .trim();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format number.
     function formatNumber(value) {
         if (value == null || value === '') return '–';
         return Number(value).toLocaleString('vi-VN');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format discount.
     function formatDiscount(item) {
         if ((item.loaiGiam || '') === 'PHAN_TRAM') {
             return `${Number(item.giaTri || 0)}%`;
@@ -1954,11 +1988,13 @@
         return money(item.giaTri);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm money.
     function money(value) {
         if (value == null || value === '') return '0 đ';
         return `${(Math.round(Number(value) / 1000) * 1000).toLocaleString('vi-VN')} đ`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm date time.
     function dateTime(value) {
         if (!value) return '';
 
@@ -1971,6 +2007,7 @@
         return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho read error.
     async function readError(response) {
         const text = await response.text();
 
@@ -1982,6 +2019,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm confirm action.
     function confirmAction(message) {
         return new Promise((resolve) => {
             const backdrop = $('confirmBackdrop');
@@ -2019,6 +2057,7 @@
         });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm toast.
     function toast(message, error = false) {
         const element = document.createElement('div');
         element.className = `toast ${error ? 'error' : 'success'}`;
@@ -2031,6 +2070,7 @@
         }, 3200);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm esc.
     function esc(value) {
         return String(value ?? '').replace(/[&<>"']/g, (character) => ({
             '&': '&amp;',

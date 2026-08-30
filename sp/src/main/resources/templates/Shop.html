@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -40,6 +40,7 @@
             font-family:"Inter",Arial,sans-serif;
             font-size:14px;
         }
+        @media (min-width:901px){body{zoom:1.16}}
         main{flex:1 0 auto}
 
         button,input,select,textarea{font:inherit}
@@ -102,6 +103,26 @@
             align-items:center;
             gap:23px;
             margin-left:auto;
+        }
+        .review-avatar{
+            width:45px;
+            height:45px;
+            display:grid;
+            place-items:center;
+            overflow:hidden;
+            border-radius:50%;
+            background:#eef1f5;
+            color:#687990;
+            font-size:11px;
+            font-weight:800;
+        }
+
+        .review-avatar img{
+            width:100%;
+            height:100%;
+            display:block;
+            object-fit:cover;
+            border-radius:50%;
         }
         .main-nav button{
             position:relative;
@@ -892,7 +913,7 @@
         }
         .size-option:hover{border-color:#9aaed0}
         .size-option.selected{border-color:var(--navy);background:var(--navy);color:#fff}
-        .stock-note{min-height:18px;margin-top:10px;color:#8a95a6;font-size:11px;font-style:italic}
+        .stock-note{min-height:18px;margin-top:10px;color:#8a95a6;font-size:11px;font-style:italic}.stock-note.out-of-stock{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:5px;background:#fff0f1;color:#c43f4b;font-style:normal;font-weight:800}.stock-note.out-of-stock:before{content:'!';display:grid;place-items:center;width:14px;height:14px;border-radius:50%;background:#c43f4b;color:#fff;font-size:10px}
         .detail-qty{
             display:inline-grid;
             grid-template-columns:34px 70px 34px;
@@ -940,6 +961,28 @@
         }
         .detail-benefits span{display:inline-flex;align-items:center;gap:6px}
         .detail-benefits svg{width:13px;height:13px;stroke:var(--blue);fill:none;stroke-width:2}
+
+        /* PRODUCT REVIEWS - Shopee-inspired summary and feedback list */
+        .review-section{margin-top:34px;padding-top:28px;border-top:1px solid var(--line)}
+        .review-section h2{margin:0 0 16px;color:#1b2941;font-family:"Manrope",sans-serif;font-size:18px;text-transform:uppercase}
+        .review-summary{display:grid;grid-template-columns:158px 1fr;gap:22px;align-items:center;padding:20px;border:1px solid #f0dfcf;border-radius:10px;background:#fff8f2}
+        .review-score{text-align:center;color:#d33a42}.review-score strong{display:block;font-size:32px;line-height:1;font-weight:900}.review-score span{font-size:13px;font-weight:800}.review-stars{margin-top:6px;color:#f59b23;font-size:16px;letter-spacing:1px}
+        .review-filter{display:flex;flex-wrap:wrap;gap:8px}.review-filter button{min-width:74px;height:31px;padding:0 10px;border:1px solid #e5d4c4;border-radius:5px;background:#fff;color:#6e6270;font-size:11px;font-weight:800}.review-filter button:hover,.review-filter button.active{border-color:#d33a42;background:#fff0f1;color:#c42e37}
+        .review-compose{margin-top:18px;padding:16px;border:1px solid #e5eaf1;border-radius:9px;background:#fbfcff}.review-compose-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.review-compose-head b{color:#34435c;font-size:12px}.review-star-picker{display:flex;gap:4px}.review-star-picker button{padding:0;border:0;background:transparent;color:#d8dee8;font-size:26px;line-height:1}.review-star-picker button.active,.review-star-picker button:hover{color:#f59b23}.review-compose textarea{width:100%;min-height:78px;padding:10px;border:1px solid #dfe6ef;border-radius:6px;outline:none;resize:vertical;color:#31415b;font-size:12px}.review-compose textarea:focus{border-color:#8ba3cc;box-shadow:0 0 0 3px rgba(33,76,159,.08)}.review-compose-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;color:#7e899b;font-size:10px}.review-login{margin-top:18px;padding:13px 15px;border:1px dashed #cbd6e5;border-radius:8px;color:#647189;font-size:11px}.review-login button{padding:0;border:0;background:none;color:var(--blue);font-weight:900;text-decoration:underline}
+        .review-list{display:grid;gap:0;margin-top:18px}.review-item{padding:17px 0;border-bottom:1px solid #edf0f4}.review-item:last-child{border-bottom:0}.review-author{display:flex;align-items:center;gap:9px}.review-avatar{width:31px;height:31px;display:grid;place-items:center;border-radius:50%;background:#edf3ff;color:#315b9f;font-size:11px;font-weight:900}.review-author b{display:block;color:#3a465a;font-size:11px}.review-author span{display:block;margin-top:2px;color:#95a0b0;font-size:10px}.review-item-stars{margin:9px 0 5px;color:#f59b23;font-size:13px;letter-spacing:1px}.review-content{max-width:760px;color:#58667b;font-size:12px;line-height:1.65;white-space:pre-wrap}.review-empty{padding:30px 14px;color:#7d899a;text-align:center;font-size:12px}.review-loading{padding:25px;color:#8a96a7;text-align:center;font-size:12px}
+
+        .review-admin-reply{max-width:760px;margin-top:12px;padding:11px 13px;border-left:3px solid var(--blue);border-radius:0 7px 7px 0;background:#f2f6fd;color:#465a78;font-size:12px;line-height:1.6;white-space:pre-wrap}.review-admin-reply b{display:block;margin-bottom:4px;color:#244b85;font-size:11px}
+
+        /* REVIEW LAYOUT – detailed marketplace-style product feedback */
+        .review-section{margin-top:34px;padding:26px 14px 12px;border:0;border-radius:0;background:#fff}
+        .review-section h2{margin:0 0 18px;color:#242424;font-family:Arial,sans-serif;font-size:20px;font-weight:500;text-transform:uppercase}
+        .review-summary{grid-template-columns:190px 1fr;gap:24px;padding:36px 26px 32px;border:1px solid #f8e4dc;border-radius:2px;background:#fffaf8}
+        .review-score{color:#ee4d2d}.review-score strong{display:inline;font-family:Arial,sans-serif;font-size:35px;font-weight:400}.review-score span{display:inline;margin-left:5px;font-size:18px;font-weight:500}.review-stars{margin-top:10px;color:#ee4d2d;font-size:26px;letter-spacing:1px}.review-score small{display:none}
+        .review-filter{align-content:center;gap:10px}.review-filter button{min-width:110px;height:40px;padding:0 13px;border:1px solid #e6e8ed;border-radius:2px;background:#fff;color:#242424;font-size:13px;font-weight:400}.review-filter button:hover,.review-filter button.active{border-color:#ee4d2d;background:#fff;color:#ee4d2d}
+        .review-compose{margin:20px 0 6px;border-color:#eef0f4;border-radius:5px;background:#fafcff}.review-compose-head b{font-size:13px}.review-compose-foot{font-size:11px}
+        .review-list{margin-top:10px}.review-item{display:grid;grid-template-columns:48px minmax(0,1fr);column-gap:13px;padding:25px 0;border-bottom:1px solid #eef0f4}.review-author{display:contents}.review-avatar{grid-row:1 / span 4;width:45px;height:45px;background:#eef1f5;color:#687990}.review-author>div{grid-column:2}.review-author b{font-size:13px;font-weight:500}.review-author span{margin-top:7px;color:#8b96a8;font-size:11px}.review-item-stars{grid-column:2;margin:7px 0 9px;color:#ee4d2d;font-size:18px;line-height:1;letter-spacing:1px}.review-content{grid-column:2;max-width:none;color:#333;font-size:14px;line-height:1.7}.review-admin-reply{grid-column:2;max-width:none;margin-top:13px;border-left-color:#ee4d2d;border-radius:2px;background:#fff7f4;color:#4f5560;font-size:12px}.review-admin-reply b{color:#cf4127}.review-empty{padding:38px 0;background:#fff;color:#8993a0}
+        .review-author>.review-avatar{margin:0;color:#687990;font-size:11px}.review-item-stars{margin:7px 0;color:#ee4d2d}.review-date{grid-column:2;margin:0 0 15px;color:#8b96a8;font-size:11px}
+        @media(max-width:720px){.review-section{padding:19px 16px 8px}.review-summary{grid-template-columns:1fr;padding:19px}.review-filter button{min-width:calc(50% - 5px);font-size:12px}.review-compose{padding:13px}.review-item{padding:20px 0}}
 
         /* CART PAGE */
         .sub-banner{
@@ -1153,6 +1196,8 @@
         }
         .field textarea{min-height:72px;resize:vertical}
         .field input:focus,.field textarea:focus,.field select:focus{border-color:#9aaed3;box-shadow:0 0 0 3px rgba(29,75,157,.07)}
+        .field input.invalid,.field textarea.invalid{border-color:#d92d20;background:#fff9f9}
+        .field-error{min-height:16px;margin-top:4px;color:#c62828;font-size:10px;line-height:1.35}
         .select-search{
             width:100%;
             height:36px;
@@ -1166,6 +1211,31 @@
             font-size:12px;
         }
         .select-search:focus{border-color:#c8a474;box-shadow:0 0 0 3px rgba(200,164,116,.12)}
+        .searchable-select{position:relative}
+        .searchable-select-control{display:flex;align-items:stretch;width:100%}
+        .searchable-select-toggle{
+            width:100%;min-height:38px;padding:8px 10px;border:1px solid #e4e9f0;border-radius:6px 0 0 6px;
+            background:#fff;color:#35435b;font:inherit;font-size:12px;outline:none;
+        }
+        .searchable-select-toggle:hover,.searchable-select.open .searchable-select-toggle{border-color:#9aaed3}
+        .searchable-select-toggle:focus{outline:none;border-color:#9aaed3;box-shadow:0 0 0 3px rgba(29,75,157,.07)}
+        .searchable-select-toggle:disabled{cursor:not-allowed;background:#f6f8fb;color:#9aa4b4}
+        .searchable-select-arrow-button{width:38px;border:1px solid #e4e9f0;border-left:0;border-radius:0 6px 6px 0;background:#fff;color:#63718a;cursor:pointer}
+        .searchable-select-arrow-button:disabled{cursor:not-allowed;background:#f6f8fb;color:#9aa4b4}
+        .searchable-select-arrow{flex:0 0 auto;font-size:15px;line-height:1;transition:transform .15s ease}
+        .searchable-select.open .searchable-select-arrow{transform:rotate(180deg)}
+        .searchable-select-menu{
+            position:absolute;z-index:30;top:calc(100% + 4px);left:0;right:0;padding:7px;
+            border:1px solid #cfd8e7;border-radius:8px;background:#fff;box-shadow:0 10px 25px rgba(27,48,83,.16);
+        }
+        .searchable-select-menu[hidden]{display:none}
+        .searchable-select-options{max-height:210px;overflow-y:auto}
+        .searchable-select-option{
+            display:block;width:100%;padding:8px 9px;border:0;border-radius:5px;background:transparent;color:#35435b;
+            font:inherit;font-size:12px;text-align:left;cursor:pointer;
+        }
+        .searchable-select-option:hover,.searchable-select-option:focus{outline:none;background:#edf3ff;color:#1d4b9d}
+        .searchable-select-empty{padding:10px 9px;color:#7c8798;font-size:12px;text-align:center}
         .address-choice{
             display:flex;
             align-items:flex-start;
@@ -1622,8 +1692,8 @@
             gap:12px;
             padding:18px;
             background:
-                radial-gradient(190px 90px at 92% -20%,rgba(255,255,255,.22),transparent),
-                linear-gradient(135deg,#173b82,#0f2556);
+                    radial-gradient(190px 90px at 92% -20%,rgba(255,255,255,.22),transparent),
+                    linear-gradient(135deg,#173b82,#0f2556);
             color:#fff;
         }
         .chat-brand-line{display:flex;align-items:center;gap:11px}
@@ -1708,8 +1778,8 @@
             overflow:auto;
             padding:16px;
             background:
-                radial-gradient(280px 120px at 50% 0,rgba(41,79,153,.08),transparent),
-                #f8fafc;
+                    radial-gradient(280px 120px at 50% 0,rgba(41,79,153,.08),transparent),
+                    #f8fafc;
         }
         .chat-message{
             position:relative;
@@ -1899,9 +1969,26 @@
         }
         .account-trigger:hover,.account-trigger.open{border-color:#dce4f0;background:#f7f9fd;color:var(--navy)}
         .account-avatar{
-            width:27px;height:27px;display:grid;place-items:center;border-radius:50%;
-            background:linear-gradient(135deg,#315ca8,#12295d);color:#fff;
-            font-size:10px;font-weight:800;letter-spacing:.2px;flex:0 0 auto;
+            width:27px;
+            height:27px;
+            display:grid;
+            place-items:center;
+            border-radius:50%;
+            overflow:hidden;
+            background:linear-gradient(135deg,#315ca8,#12295d);
+            color:#fff;
+            font-size:10px;
+            font-weight:800;
+            letter-spacing:.2px;
+            flex:0 0 auto;
+        }
+
+        .account-avatar img{
+            width:100%;
+            height:100%;
+            display:block;
+            object-fit:cover;
+            border-radius:50%;
         }
         .account-label{min-width:0;display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;text-align:left}
         .account-label b{max-width:102px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;font-weight:800}
@@ -1982,13 +2069,18 @@
         .order-history-product{min-width:0;flex:1}
         .order-history-product strong{display:block;color:#2c3a55;font-size:11px;text-transform:uppercase;line-height:1.35}
         .order-history-product span{display:block;margin-top:4px;color:#8792a4;font-size:10px}
-        .order-history-price{text-align:right;color:#253554;font-size:11px;font-weight:800;white-space:nowrap}
+        .order-history-side{display:flex;align-items:flex-end;flex-direction:column;gap:7px;text-align:right}
+        .order-history-price{color:#253554;font-size:11px;font-weight:800;white-space:nowrap}
+        .order-history-item-action{min-height:27px;padding:0 8px;border:1px solid #d6e0ed;border-radius:5px;background:#fff;color:#315a9f;font-size:10px;font-weight:900;white-space:nowrap}
+        .order-history-item-action.primary{border-color:#d33a42;background:#d33a42;color:#fff}
+        .order-history-item-action:hover{border-color:#193d82;background:#f0f5ff;color:#193d82}.order-history-item-action.primary:hover{border-color:#b82c35;background:#b82c35;color:#fff}
         .order-history-summary{display:grid;gap:7px;padding:13px 14px;border-top:1px solid #edf1f6;background:#fbfcff}
         .order-history-line{display:flex;justify-content:space-between;gap:12px;color:#738097;font-size:11px}
         .order-history-line.total{padding-top:7px;border-top:1px solid #e7ebf2;color:#26334d;font-size:13px;font-weight:900}
         .order-history-line.total b{color:var(--red)}
         .order-history-address{padding:0 14px 13px;color:#728096;font-size:10px;line-height:1.5}
         .order-history-empty{padding:28px;border:1px dashed #cbd5e3;border-radius:9px;background:#fbfcff;color:#7d899a;text-align:center;font-size:12px}
+        .my-reviews-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}.my-reviews-toolbar p{margin:0;color:#728096;font-size:11px}.my-review-list{display:grid;gap:11px}.my-review-card{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;padding:13px;border:1px solid #e4eaf2;border-radius:10px;background:#fff}.my-review-thumb{width:52px;height:60px;border-radius:6px;background:#eef2f7;object-fit:cover}.my-review-thumb.fallback{display:grid;place-items:center;color:#94a0b2;font-size:16px}.my-review-product{min-width:0}.my-review-product strong{display:block;overflow:hidden;color:#263b59;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.my-review-meta{margin-top:4px;color:#8995a6;font-size:10px}.my-review-stars{margin:7px 0 4px;color:#f59b23;font-size:13px;letter-spacing:1px}.my-review-copy{color:#54647a;font-size:11px;line-height:1.55;white-space:pre-wrap}.my-review-reply{margin-top:8px;padding:8px 10px;border-left:3px solid #4c75b5;border-radius:0 6px 6px 0;background:#f1f6ff;color:#4a6282;font-size:10px;line-height:1.55;white-space:pre-wrap}.my-review-reply b{display:block;margin-bottom:3px;color:#345d9a}.my-review-action{align-self:center;min-height:29px;padding:0 9px;border:1px solid #d6e0ed;border-radius:5px;background:#fff;color:#315a9f;font-size:10px;font-weight:900;white-space:nowrap}.my-review-action:hover{border-color:#193d82;background:#f0f5ff;color:#193d82}
         .lookup-page{padding:36px 0 48px}
         .lookup-panel{
             display:grid;
@@ -2056,6 +2148,7 @@
             .contact-panel{grid-template-columns:1fr}
             .news-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
             .detail-layout{grid-template-columns:1fr}
+            .review-summary{grid-template-columns:1fr}.review-score{text-align:left}
             .detail-gallery,.detail-gallery img,.detail-gallery .product-fallback{min-height:0;height:min(580px,80vw)}
             .cart-layout,.checkout-layout{grid-template-columns:1fr}
             .order-card,.checkout-summary{position:static}
@@ -2182,6 +2275,10 @@
                             <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1.2-2 1.2-2-1.2-2 1.2-2-1.2L6 21z"></path><path d="M9 8h6"></path><path d="M9 12h6"></path><path d="M9 16h4"></path></svg>
                             Lịch sử đơn hàng
                         </button>
+                        <button type="button" onclick="openAccountModal('reviews')">
+                            <svg viewBox="0 0 24 24"><path d="m12 3 2.2 4.5 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.5 5-.7z"></path></svg>
+                            Đánh giá của tôi
+                        </button>
                         <button type="button" onclick="openAccountModal('password')">
                             <svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7.5a4 4 0 0 1 8 0V10"></path><path d="M12 14v2"></path></svg>
                             Đổi mật khẩu
@@ -2236,34 +2333,34 @@
 
                 <div class="filter-panel" id="filterPanel">
                     <div class="filter-groups">
-                    <div class="filter-card">
-                        <div class="filter-col-title">Loại áo</div>
-                        <div id="filterLoaiAo" class="filter-options"></div>
-                    </div>
-                    <div class="filter-card">
-                        <div class="filter-col-title">Kích cỡ</div>
-                        <div id="filterKichCo" class="filter-options"></div>
-                    </div>
-                    <div class="filter-card">
-                        <div class="filter-col-title">Màu sắc</div>
-                        <div id="filterMauSac" class="filter-options"></div>
-                    </div>
-                    <div class="filter-card">
-                        <div class="filter-col-title">Chất liệu</div>
-                        <div id="filterChatLieu" class="filter-options"></div>
-                    </div>
-                    <div class="filter-card">
-                        <div class="filter-col-title">Xuất xứ</div>
-                        <div id="filterXuatXu" class="filter-options"></div>
-                    </div>
-                    <div class="filter-card">
-                        <div class="filter-col-title">Phong cách</div>
-                        <div id="filterPhongCach" class="filter-options"></div>
-                    </div>
-                    <div class="filter-card">
-                        <div class="filter-col-title">Kiểu dáng</div>
-                        <div id="filterKieuDang" class="filter-options"></div>
-                    </div>
+                        <div class="filter-card">
+                            <div class="filter-col-title">Loại áo</div>
+                            <div id="filterLoaiAo" class="filter-options"></div>
+                        </div>
+                        <div class="filter-card">
+                            <div class="filter-col-title">Kích cỡ</div>
+                            <div id="filterKichCo" class="filter-options"></div>
+                        </div>
+                        <div class="filter-card">
+                            <div class="filter-col-title">Màu sắc</div>
+                            <div id="filterMauSac" class="filter-options"></div>
+                        </div>
+                        <div class="filter-card">
+                            <div class="filter-col-title">Chất liệu</div>
+                            <div id="filterChatLieu" class="filter-options"></div>
+                        </div>
+                        <div class="filter-card">
+                            <div class="filter-col-title">Xuất xứ</div>
+                            <div id="filterXuatXu" class="filter-options"></div>
+                        </div>
+                        <div class="filter-card">
+                            <div class="filter-col-title">Phong cách</div>
+                            <div id="filterPhongCach" class="filter-options"></div>
+                        </div>
+                        <div class="filter-card">
+                            <div class="filter-col-title">Kiểu dáng</div>
+                            <div id="filterKieuDang" class="filter-options"></div>
+                        </div>
                     </div>
                     <div class="filter-price-card">
                         <div class="filter-col-title">Khoảng giá (đ)</div>
@@ -2535,6 +2632,7 @@
         <div class="account-tabs">
             <button class="account-tab active" type="button" data-account-tab="profile" onclick="switchAccountTab('profile')">Thông tin tài khoản</button>
             <button class="account-tab" type="button" data-account-tab="orders" onclick="switchAccountTab('orders')">Đơn hàng</button>
+            <button class="account-tab" type="button" data-account-tab="reviews" onclick="switchAccountTab('reviews')">Đánh giá của tôi</button>
             <button class="account-tab" type="button" data-account-tab="password" onclick="switchAccountTab('password')">Đổi mật khẩu</button>
         </div>
         <div class="account-modal-body">
@@ -2563,6 +2661,13 @@
                 <div class="order-history-list" id="orderHistoryList">
                     <div class="order-history-empty">Mở tab này để tải lịch sử đơn hàng.</div>
                 </div>
+            </section>
+            <section class="account-panel" id="accountReviewsPanel">
+                <div class="my-reviews-toolbar">
+                    <p>Các đánh giá bạn đã gửi cho sản phẩm đã mua và hoàn thành đơn.</p>
+                    <button class="btn small" type="button" onclick="loadMyReviews(true)">Làm mới</button>
+                </div>
+                <div class="my-review-list" id="myReviewsList"><div class="order-history-empty">Mở tab này để tải đánh giá của bạn.</div></div>
             </section>
             <section class="account-panel" id="accountPasswordPanel">
                 <form class="change-password-form" id="changePasswordForm" onsubmit="submitChangePassword(event)" novalidate>
@@ -2612,6 +2717,7 @@
     const ADDRESS_API = 'https://provinces.open-api.vn/api/v2';
     const FREE_SHIPPING_THRESHOLD = 500000;
 
+    // Tải hoặc truy xuất dữ liệu cho read saved chatbot history.
     function readSavedChatbotHistory() {
         try {
             const history = JSON.parse(sessionStorage.getItem('chatbot4menHistory') || '[]');
@@ -2621,6 +2727,7 @@
         }
     }
 
+    // Tải hoặc truy xuất dữ liệu cho read saved chatbot criteria.
     function readSavedChatbotCriteria() {
         try {
             return JSON.parse(sessionStorage.getItem('chatbot4menCriteria') || 'null');
@@ -2656,10 +2763,14 @@
         orderHistory: [],
         orderHistoryLoaded: false,
         orderHistoryLoading: false,
+        myReviews: [],
+        myReviewsLoaded: false,
+        myReviewsLoading: false,
         pendingPayment: null,
         paymentConfigLoaded: false,
-        paymentGateways: { COD: true, BANKING: true, VNPAY: false, ZALOPAY: false },
+        paymentGateways: { COD: true, BANKING: true, VNPAY: false },
         detail: { size: null, color: null, qty: 1, variantId: null },
+        review: { productId: null, summary: null, loading: false, filter: 0, view: 'all', selectedRating: 0 },
         checkout: {
             tenKhachHang: '',
             email: '',
@@ -2675,6 +2786,8 @@
             shippingFee: 0,
             shippingCalculated: false,
             shippingLoading: false,
+            shippingApiError: false,
+            shippingFixed35k: false,
             phuongThucThanhToan: 'COD'
         },
         savedAddresses: [],
@@ -2720,6 +2833,7 @@
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#39;');
 
+    // Thực hiện xử lý nghiệp vụ của hàm default checkout state.
     function defaultCheckoutState() {
         return {
             tenKhachHang: '',
@@ -2736,6 +2850,8 @@
             shippingFee: 0,
             shippingCalculated: false,
             shippingLoading: false,
+            shippingApiError: false,
+            shippingFixed35k: false,
             phuongThucThanhToan: 'COD'
         };
     }
@@ -2756,6 +2872,7 @@
         'hồng':'#d88ca9'
     };
 
+    // Thực hiện xử lý nghiệp vụ của hàm icon.
     function icon(name) {
         const icons = {
             cart: '<svg viewBox="0 0 24 24"><path d="M4 4h2l1.5 10h9.8l2-7H8"></path><circle cx="10" cy="19" r="1.3"></circle><circle cx="17" cy="19" r="1.3"></circle></svg>',
@@ -2769,6 +2886,7 @@
         return icons[name] || '';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm toast.
     function toast(message, type = 'success') {
         const box = $('toast');
         box.textContent = message;
@@ -2787,6 +2905,7 @@
         { size: 'XXL', minHeight: 175, minWeight: 76 }
     ];
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize apparel size.
     function normalizeApparelSize(value) {
         const raw = text(value).trim().toUpperCase().replace(/\s+/g, '');
         if (!raw) return '';
@@ -2798,6 +2917,7 @@
         return raw;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm size rank.
     function sizeRank(size) {
         const normalized = normalizeApparelSize(size);
         const rank = SIZE_ORDER.indexOf(normalized);
@@ -2807,6 +2927,7 @@
         return null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm recommend apparel sizes.
     function recommendApparelSizes(height, weight) {
         const heightRank = chartRank(height, 'minHeight');
         const weightRank = chartRank(weight, 'minWeight');
@@ -2825,10 +2946,12 @@
         return SIZE_ORDER.slice(Math.max(0, to - 1), to + 1);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm recommend apparel size.
     function recommendApparelSize(height, weight) {
         return recommendApparelSizes(height, weight)[0];
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm chart rank.
     function chartRank(value, key) {
         const numeric = Number(value || 0);
         let rank = 0;
@@ -2838,6 +2961,7 @@
         return Math.max(0, Math.min(SIZE_ORDER.length - 1, rank));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm size advice.
     function sizeAdvice(size) {
         const notes = {
             S: 'Form gọn, hợp dáng nhỏ hoặc thích mặc vừa người.',
@@ -2849,6 +2973,7 @@
         return notes[size] || 'Bạn nên xem thêm bảng size chi tiết của từng sản phẩm.';
     }
 
+    // Xử lý tương tác người dùng cho toggle size chat.
     function toggleSizeChat(force) {
         const panel = $('sizeChatPanel');
         const shouldOpen = typeof force === 'boolean' ? force : !panel.classList.contains('open');
@@ -2858,6 +2983,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm append chat message.
     function appendChatMessage(message, role = 'bot', allowHtml = false) {
         const results = $('sizeChatResults');
         const safeMessage = allowHtml ? message : esc(message).replaceAll('\n', '<br>');
@@ -2869,6 +2995,7 @@
         $('sizeChatBody').scrollTop = $('sizeChatBody').scrollHeight;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save chatbot history.
     function saveChatbotHistory() {
         try {
             sessionStorage.setItem('chatbot4menHistory', JSON.stringify(state.chatbot.history.slice(-10)));
@@ -2880,6 +3007,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm restore chatbot history.
     function restoreChatbotHistory() {
         renderChatbotCriteria(state.chatbot.criteria);
         if (!state.chatbot.history.length) return;
@@ -2890,6 +3018,7 @@
         renderChatbotQuickReplies(['Mẫu nào rẻ nhất?', 'Ưu tiên màu đen', 'Mình thích mặc rộng', 'Bắt đầu tìm mẫu khác']);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset shop chat.
     async function resetShopChat() {
         if (state.chatbot.loading) return;
         stopLiveChatPolling();
@@ -2919,18 +3048,30 @@
         setTimeout(() => $('shopChatInput')?.focus(), 50);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is live chat active.
     function isLiveChatActive() {
         const status = state.chatbot.liveSession?.status;
         return status === 'WAITING_STAFF' || status === 'STAFF_JOINED';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm session status text.
     function sessionStatusText(status) {
         if (status === 'WAITING_STAFF') return 'Đang chờ nhân viên';
         if (status === 'STAFF_JOINED') return 'Nhân viên đang hỗ trợ';
+        if (status === 'EXPIRED') return 'Đã hết hạn sau 30 phút';
         if (status === 'CLOSED') return 'Đã kết thúc';
         return 'AI hỗ trợ';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm session time remaining.
+    function sessionTimeRemaining(expiresAt) {
+        const milliseconds = new Date(expiresAt || 0).getTime() - Date.now();
+        if (!Number.isFinite(milliseconds) || milliseconds <= 0) return '00:00';
+        const seconds = Math.ceil(milliseconds / 1000);
+        return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update chat session strip.
     function updateChatSessionStrip(session) {
         const strip = $('chatSessionStrip');
         if (!strip) return;
@@ -2939,10 +3080,14 @@
             return;
         }
         $('chatSessionLabel').textContent = `Phiên chat #${session.id}`;
-        $('chatSessionStatus').textContent = sessionStatusText(session.status);
+        const active = session.status === 'AI' || session.status === 'WAITING_STAFF' || session.status === 'STAFF_JOINED';
+        $('chatSessionStatus').textContent = active
+            ? `${sessionStatusText(session.status)} · còn ${sessionTimeRemaining(session.expiresAt)}`
+            : sessionStatusText(session.status);
         strip.hidden = false;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm refresh chat session meta.
     async function refreshChatSessionMeta() {
         try {
             const response = await fetch(`${API}/api/shop/chat-sessions/current`, { credentials: 'same-origin' });
@@ -2953,6 +3098,7 @@
         } catch (ignored) {}
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm request staff chat.
     async function requestStaffChat() {
         if (state.chatbot.loading) return;
         toggleSizeChat(true);
@@ -2976,6 +3122,7 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho send live chat message.
     async function sendLiveChatMessage(message) {
         appendChatMessage(message, 'user');
         setChatbotLoading(true);
@@ -2999,6 +3146,7 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho render live chat session.
     function renderLiveChatSession(session) {
         updateChatSessionStrip(session);
         document.querySelectorAll('[data-chat-history="true"]').forEach((item) => item.remove());
@@ -3020,6 +3168,8 @@
             $('chatbotMode').textContent = 'AI đang hỗ trợ';
         } else if (status === 'CLOSED') {
             $('chatbotMode').textContent = 'Phiên chat đã kết thúc';
+        } else if (status === 'EXPIRED') {
+            $('chatbotMode').textContent = 'Phiên chat đã hết hạn — hãy bắt đầu phiên mới';
         } else {
             $('chatbotMode').textContent = 'Sẵn sàng hỗ trợ';
         }
@@ -3028,6 +3178,7 @@
             : ['Mình đang cần nhân viên hỗ trợ', 'Gửi lại yêu cầu của mình', 'Tìm sản phẩm tương tự']);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm live message role.
     function liveMessageRole(senderType) {
         if (senderType === 'CUSTOMER') return 'user';
         if (senderType === 'STAFF') return 'staff';
@@ -3035,17 +3186,20 @@
         return 'bot';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm start live chat polling.
     function startLiveChatPolling() {
         if (state.chatbot.livePolling) return;
         state.chatbot.livePolling = setInterval(refreshLiveChatSession, 3000);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm stop live chat polling.
     function stopLiveChatPolling() {
         if (!state.chatbot.livePolling) return;
         clearInterval(state.chatbot.livePolling);
         state.chatbot.livePolling = null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm refresh live chat session.
     async function refreshLiveChatSession() {
         if (!isLiveChatActive()) {
             stopLiveChatPolling();
@@ -3063,14 +3217,17 @@
             if (oldLast !== newLast || oldStatus !== session?.status) {
                 renderLiveChatSession(session);
             }
-            if (session.status === 'CLOSED') {
+            if (session.status === 'CLOSED' || session.status === 'EXPIRED') {
                 stopLiveChatPolling();
-                appendChatMessage('Phiên chat với nhân viên đã kết thúc. Bạn vẫn có thể nhắn tiếp để gặp nhân viên lại.', 'system');
+                appendChatMessage(session.status === 'EXPIRED'
+                    ? 'Phiên chat đã hết hạn sau 30 phút. Bạn vẫn có thể nhắn tiếp để bắt đầu phiên mới.'
+                    : 'Phiên chat với nhân viên đã kết thúc. Bạn vẫn có thể nhắn tiếp để gặp nhân viên lại.', 'system');
                 state.chatbot.liveSession = null;
             }
         } catch (ignored) {}
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm restore live chat session.
     async function restoreLiveChatSession() {
         try {
             const response = await fetch(`${API}/api/shop/chat-sessions/current`, { credentials: 'same-origin' });
@@ -3088,6 +3245,7 @@
         } catch (ignored) {}
     }
 
+    // Hiển thị và đồng bộ giao diện cho render chatbot criteria.
     function renderChatbotCriteria(criteria) {
         state.chatbot.criteria = criteria || null;
         const panel = $('chatbotContext');
@@ -3108,6 +3266,7 @@
         panel.hidden = false;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render chatbot quick replies.
     function renderChatbotQuickReplies(replies) {
         const container = $('chatQuickActions');
         container.innerHTML = '';
@@ -3128,6 +3287,7 @@
         container.appendChild(staffButton);
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set chatbot loading.
     function setChatbotLoading(loading) {
         state.chatbot.loading = loading;
         const button = $('shopChatSubmit');
@@ -3144,6 +3304,7 @@
         $('sizeChatBody').scrollTop = $('sizeChatBody').scrollHeight;
     }
 
+    // Xử lý tương tác người dùng cho handle chat input keydown.
     function handleChatInputKeydown(event) {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
@@ -3151,11 +3312,13 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ask chatbot.
     function askChatbot(question) {
         toggleSizeChat(true);
         sendShopChatMessage(question);
     }
 
+    // Xử lý tương tác người dùng cho submit shop chat.
     async function submitShopChat(event) {
         event.preventDefault();
         const input = $('shopChatInput');
@@ -3164,6 +3327,7 @@
         await sendShopChatMessage(message);
     }
 
+    // Xử lý tương tác người dùng cho send shop chat message.
     async function sendShopChatMessage(rawMessage) {
         const message = text(rawMessage).trim();
         if (!message || state.chatbot.loading) return;
@@ -3227,6 +3391,7 @@
         }
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load chatbot product recommendations.
     async function loadChatbotProductRecommendations(recommendationData, sizes = []) {
         const results = $('sizeChatResults');
         const sizeList = (Array.isArray(sizes) ? sizes : []).map(normalizeApparelSize).filter(Boolean);
@@ -3274,11 +3439,13 @@
         renderSizeRecommendations();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize chat value.
     function normalizeChatValue(value) {
         return text(value).trim().toLocaleLowerCase('vi-VN')
             .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replaceAll('đ', 'd');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm choose smart recommendation variant.
     function chooseSmartRecommendationVariant(variants, sizes = [], preferredColor = '') {
         const desiredSizes = (Array.isArray(sizes) ? sizes : []).map(normalizeApparelSize).filter(Boolean);
         const desiredColor = normalizeChatValue(preferredColor);
@@ -3310,6 +3477,7 @@
         return ranked[0] || { variant: null, exact: false };
     }
 
+    // Tải hoặc truy xuất dữ liệu cho fetch shop products.
     async function fetchShopProducts(params = {}) {
         const query = new URLSearchParams({ page: '0', size: '120', sort: 'newest', ...params });
         const response = await fetch(`${API}/api/shop/products?${query.toString()}`);
@@ -3319,6 +3487,7 @@
         return Array.isArray(products) ? products.filter((product) => Number(product.tongTon || 0) > 0) : [];
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load variants for recommendation.
     async function loadVariantsForRecommendation(productId) {
         if (!state.variants[productId]) {
             const response = await fetch(`${API}/api/shop/products/${encodeURIComponent(productId)}/variants`);
@@ -3330,6 +3499,7 @@
         return state.variants[productId] || [];
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm choose recommendation variant.
     function chooseRecommendationVariant(variants, size, allowNear = false) {
         const target = normalizeApparelSize(size);
         const targetRank = sizeRank(target);
@@ -3348,6 +3518,7 @@
         return { variant: near[0]?.variant || null, exact: false };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm build size recommendations.
     async function buildSizeRecommendations(sizes, allowNear = false) {
         const sizeList = Array.isArray(sizes) ? sizes : [sizes];
         const productGroups = allowNear
@@ -3375,6 +3546,7 @@
         return recommendations;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load size recommendations.
     async function loadSizeRecommendations(sizes) {
         const sizeList = Array.isArray(sizes) ? sizes : [sizes];
         const sizeLabel = sizeList.join(' - ');
@@ -3409,6 +3581,7 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho render size recommendations.
     function renderSizeRecommendations() {
         const results = $('sizeChatResults');
         const recommendations = state.chatbot.recommendations;
@@ -3469,10 +3642,12 @@
             { url: '/api/auth/doi-mat-khau', method: 'PUT', body: 'vi' }
         ],
         orderHistory: '/api/shop/orders/history',
+        myReviews: '/api/shop/reviews/mine',
         logout: '/api/shop/auth/logout',
         loginPath: '/dang-nhap'
     };
 
+    // Tải hoặc truy xuất dữ liệu cho get stored json.
     function getStoredJson(key) {
         try {
             const value = localStorage.getItem(key) || sessionStorage.getItem(key);
@@ -3482,6 +3657,7 @@
         }
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get stored account.
     function getStoredAccount() {
         const keys = ['currentCustomer', 'customer', 'currentUser', 'user', 'authUser', 'loggedInUser', 'account', 'userInfo'];
         for (const key of keys) {
@@ -3491,6 +3667,7 @@
         return null;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get access token.
     function getAccessToken() {
         const keys = ['accessToken', 'token', 'authToken', 'jwtToken'];
         for (const key of keys) {
@@ -3500,6 +3677,7 @@
         return '';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm account headers.
     function accountHeaders(json = false) {
         const headers = {};
         const token = getAccessToken();
@@ -3508,10 +3686,12 @@
         return headers;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm first filled.
     function firstFilled(...values) {
         return values.find((value) => value !== null && value !== undefined && String(value).trim() !== '') || '';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize account.
     function normalizeAccount(data) {
         const source = data?.data || data?.user || data?.khachHang || data?.customer || data || {};
         const name = firstFilled(source.tenKhachHang, source.hoTen, source.fullName, source.name, source.tenNguoiDung, source.ten);
@@ -3536,20 +3716,46 @@
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm account initials.
     function accountInitials(name) {
         const words = String(name || 'KH').trim().split(/\s+/).filter(Boolean);
         return (words.length > 1 ? `${words[0][0]}${words[words.length - 1][0]}` : words[0]?.slice(0, 2) || 'KH').toUpperCase();
     }
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set account avatar.
+    function setAccountAvatar(elementId, account) {
+        const element = $(elementId);
+        if (!element) return;
 
+        const initials = accountInitials(account?.name);
+
+        // Lấy ảnh từ dữ liệu tài khoản backend
+        const avatar = imageUrlOf(account?.raw || account);
+
+        if (!account?.loggedIn || !avatar) {
+            element.innerHTML = esc(initials);
+            return;
+        }
+
+        element.innerHTML = `
+        <img
+            src="${esc(avatar)}"
+            alt="${esc(account.name || 'Khách hàng')}"
+            onerror="
+                this.parentElement.innerHTML='${esc(initials)}'
+            "
+        >
+    `;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm sync account header.
     function syncAccountHeader() {
         const account = state.account;
         const initials = accountInitials(account.name);
         const accountButton = $('accountButton');
 
-        $('accountInitials').textContent = initials;
-        $('accountPopoverInitials').textContent = initials;
-        $('profileInitials').textContent = initials;
-
+        setAccountAvatar('accountInitials', account);
+        setAccountAvatar('accountPopoverInitials', account);
+        setAccountAvatar('profileInitials', account);
         if (!account.loggedIn) {
             $('accountName').textContent = 'Đăng nhập';
             $('accountCaption').textContent = 'Tài khoản';
@@ -3575,15 +3781,28 @@
         $('profileCode').textContent = account.code || '—';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm order status class.
     function orderStatusClass(status) {
         const value = text(status).toLowerCase();
         if (value.includes('hủy') || value.includes('huy')) return 'cancel';
         if (value.includes('chờ hàng hoàn') || value.includes('cho hang hoan') || value.includes('chờ hoàn hàng') || value.includes('cho hoan hang')) return 'returning';
+        if (value.includes('chờ nhập hàng') || value.includes('cho nhap hang')) return 'returning';
         if (value.includes('giao') || value.includes('chuẩn bị') || value.includes('chuan bi')) return 'shipping';
         if (value.includes('hoàn thành') || value.includes('hoan thanh') || value.includes('đã thanh toán') || value.includes('da thanh toan')) return 'done';
         return '';
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is completed order.
+    function isCompletedOrder(status) {
+        const value = String(status || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .trim()
+            .toLowerCase();
+        return value === 'hoan thanh' || value === 'hoan tat';
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render order history.
     function renderOrderHistory() {
         const box = $('orderHistoryList');
         if (!box) return;
@@ -3615,7 +3834,11 @@
                                 <strong>${esc(item.tenSanPham || 'Sản phẩm')}</strong>
                                 <span>${esc([item.mauSac, item.kichCo].filter(Boolean).join(' / ') || 'Phân loại')} x ${Number(item.soLuong || 0)}${item.dangGiamGia ? ` · giảm từ ${fmt(item.giaGoc)}` : ''}</span>
                             </div>
-                            <div class="order-history-price">${fmt(item.thanhTien)}</div>
+                            <div class="order-history-side">
+                                <div class="order-history-price">${fmt(item.thanhTien)}</div>
+                                ${item.idSp ? `<button class="order-history-item-action" type="button" onclick="openOrderedProduct(${Number(item.idSp)}, ${Number(item.idSpct || 0)}, false)">Xem sản phẩm</button>` : ''}
+                                ${item.idSp && isCompletedOrder(order.trangThai) ? `<button class="order-history-item-action primary" type="button" onclick="openOrderedProduct(${Number(item.idSp)}, ${Number(item.idSpct || 0)}, true)">Đánh giá</button>` : ''}
+                            </div>
                         </div>
                     `).join('')}
                 </div>
@@ -3633,6 +3856,67 @@
         `).join('');
     }
 
+    // Hiển thị và đồng bộ giao diện cho render my reviews.
+    function renderMyReviews() {
+        const box = $('myReviewsList');
+        if (!box) return;
+        if (state.myReviewsLoading) {
+            box.innerHTML = '<div class="order-history-empty">Đang tải đánh giá của bạn...</div>';
+            return;
+        }
+        if (!state.myReviews.length) {
+            box.innerHTML = '<div class="order-history-empty">Bạn chưa có đánh giá nào. Chỉ sản phẩm thuộc đơn hoàn thành mới có thể được đánh giá.</div>';
+            return;
+        }
+        box.innerHTML = state.myReviews.map((review) => {
+            const image = imageUrlOf({ hinhAnh: review.hinhAnh });
+            return `<article class="my-review-card">
+                ${image ? `<img class="my-review-thumb" src="${esc(image)}" alt="${esc(review.tenSp || '')}" onerror="this.outerHTML='<div class=&quot;my-review-thumb fallback&quot;>SP</div>'">` : '<div class="my-review-thumb fallback">SP</div>'}
+                <div class="my-review-product"><strong>${esc(review.tenSp || 'Sản phẩm')}</strong><div class="my-review-meta">Cập nhật ${esc(fmtDateTime(review.ngayTao))}</div><div class="my-review-stars">${reviewStars(review.diemDanhGia)}</div><div class="my-review-copy">${esc(review.noiDung || 'Bạn đã chấm điểm sản phẩm này.')}</div>${review.phanHoiQuanTri ? `<div class="my-review-reply"><b>Phản hồi từ 4MenStore</b>${esc(review.phanHoiQuanTri)}</div>` : ''}</div>
+                <button class="my-review-action" type="button" onclick="openMyReview(${Number(review.idSp)})">Chỉnh sửa</button>
+            </article>`;
+        }).join('');
+    }
+
+    // Tải hoặc truy xuất dữ liệu cho load my reviews.
+    async function loadMyReviews(force = false) {
+        if (!state.account.loggedIn) {
+            state.myReviews = [];
+            state.myReviewsLoaded = true;
+            renderMyReviews();
+            return;
+        }
+        if (state.myReviewsLoaded && !force) {
+            renderMyReviews();
+            return;
+        }
+        state.myReviewsLoading = true;
+        renderMyReviews();
+        try {
+            const response = await fetch(`${API}${ACCOUNT_API.myReviews}`, { credentials: 'include', headers: accountHeaders() });
+            if (!response.ok) throw new Error('Không thể tải đánh giá của bạn.');
+            state.myReviews = await response.json();
+            state.myReviewsLoaded = true;
+        } catch (error) {
+            state.myReviews = [];
+            toast(error.message || 'Không thể tải đánh giá của bạn.', 'error');
+        } finally {
+            state.myReviewsLoading = false;
+            renderMyReviews();
+        }
+    }
+
+    // Xử lý tương tác người dùng cho open my review.
+    async function openMyReview(productId) {
+        closeAccountModal();
+        await openProduct(Number(productId));
+        setTimeout(() => {
+            $('productReviewSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            $('reviewContent')?.focus({ preventScroll: true });
+        }, 350);
+    }
+
+    // Tải hoặc truy xuất dữ liệu cho load order history.
     async function loadOrderHistory(force = false) {
         if (!state.account.loggedIn) {
             await loadGuestOrderHistory(force);
@@ -3668,6 +3952,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fill checkout from account.
     function fillCheckoutFromAccount() {
         const account = state.account;
         if (!account.loggedIn) return;
@@ -3676,6 +3961,7 @@
         if (!state.checkout.soDienThoai && account.phone !== '—') state.checkout.soDienThoai = account.phone;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get profile from api.
     async function getProfileFromApi() {
         const requests = ACCOUNT_API.profile.map(async (url) => {
             try {
@@ -3690,15 +3976,26 @@
         return results.find((item) => item && typeof item === 'object') || null;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load current account.
     async function loadCurrentAccount() {
         const stored = getStoredAccount();
         const apiData = await getProfileFromApi();
+
         state.account = normalizeAccount(apiData || stored);
+
         fillCheckoutFromAccount();
         await loadCustomerAddresses();
         syncAccountHeader();
+
+        // Nếu đang đứng ở trang checkout thì cập nhật lại giao diện
+        if ($('checkoutView') &&
+            !$('checkoutView').classList.contains('hidden') &&
+            state.cart.length) {
+            renderCheckoutPage();
+        }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho address full text.
     function addressFullText(address) {
         return firstFilled(
             address?.diaChiDayDu,
@@ -3708,6 +4005,7 @@
         );
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load customer addresses.
     async function loadCustomerAddresses() {
         state.savedAddresses = [];
         const id = state.account?.id;
@@ -3731,6 +4029,7 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho toggle account menu.
     function toggleAccountMenu(event) {
         event?.stopPropagation();
         if (!state.account.loggedIn) {
@@ -3745,6 +4044,7 @@
         popover.setAttribute('aria-hidden', String(!isOpen));
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close account menu.
     function closeAccountMenu() {
         const popover = $('accountPopover');
         const button = $('accountButton');
@@ -3755,6 +4055,7 @@
         popover.setAttribute('aria-hidden', 'true');
     }
 
+    // Xử lý tương tác người dùng cho open account modal.
     function openAccountModal(tab = 'profile') {
         if (!state.account.loggedIn) {
             window.location.href = ACCOUNT_API.loginPath;
@@ -3767,6 +4068,7 @@
         document.body.style.overflow = 'hidden';
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close account modal.
     function closeAccountModal(event) {
         if (event && event.target !== $('accountModalLayer')) return;
         $('accountModalLayer').classList.remove('open');
@@ -3775,14 +4077,18 @@
         if (form) form.reset();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm switch account tab.
     function switchAccountTab(tab) {
         document.querySelectorAll('[data-account-tab]').forEach((button) => button.classList.toggle('active', button.dataset.accountTab === tab));
         $('accountProfilePanel').classList.toggle('active', tab === 'profile');
         $('accountOrdersPanel').classList.toggle('active', tab === 'orders');
+        $('accountReviewsPanel').classList.toggle('active', tab === 'reviews');
         $('accountPasswordPanel').classList.toggle('active', tab === 'password');
         if (tab === 'orders') loadOrderHistory();
+        if (tab === 'reviews') loadMyReviews();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm parse api error.
     async function parseApiError(response) {
         const raw = await response.text();
         try {
@@ -3793,6 +4099,7 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho submit change password.
     async function submitChangePassword(event) {
         event.preventDefault();
         if (!state.account.loggedIn) return;
@@ -3851,6 +4158,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm logout account.
     async function logoutAccount() {
         closeAccountMenu();
         const pendingBeforeLogout = state.pendingPayment || readPendingPayment();
@@ -3868,7 +4176,10 @@
         state.savedAddresses = [];
         state.orderHistory = [];
         state.orderHistoryLoaded = false;
+        state.myReviews = [];
+        state.myReviewsLoaded = false;
         renderOrderHistory();
+        renderMyReviews();
         syncAccountHeader();
         if (pendingBeforeLogout?.code) {
             toast('Đã đăng xuất. Đơn chưa thanh toán vẫn được giữ để bạn tiếp tục.');
@@ -3879,6 +4190,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm image url of.
     function imageUrlOf(item) {
         const raw = item?.imageUrl || item?.hinhAnh || item?.img || item?.anhDaiDien || item?.duongDanAnh;
         if (!raw) return '';
@@ -3886,6 +4198,7 @@
         return `/uploads/${raw}`;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render image.
     function renderImage(item, alt, placeholderClass = 'product-fallback') {
         const src = imageUrlOf(item);
         if (!src) return `<div class="${placeholderClass}">👕</div>`;
@@ -3897,6 +4210,7 @@
             `;
     }
 
+    // Hiển thị và đồng bộ giao diện cho show editorial fallback.
     function showEditorialFallback(image) {
         image.style.display = 'none';
         const fallback = image.nextElementSibling;
@@ -3905,6 +4219,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm hydrate editorial images.
     function hydrateEditorialImages() {
         const images = [...state.products]
             .map((product) => imageUrlOf(product))
@@ -3927,14 +4242,18 @@
         });
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save cart.
     function saveCart() {
         localStorage.setItem('cart4menstore', JSON.stringify(state.cart));
         state.checkout.shippingCalculated = false;
+        state.checkout.shippingApiError = false;
+        state.checkout.shippingFixed35k = false;
     }
 
     const GUEST_ORDER_HISTORY_KEY = 'guestOrderHistory4menstore';
     const PENDING_PAYMENT_KEY = 'pendingPayment4menstore';
 
+    // Tải hoặc truy xuất dữ liệu cho get guest order refs.
     function getGuestOrderRefs() {
         try {
             const stored = JSON.parse(localStorage.getItem(GUEST_ORDER_HISTORY_KEY) || '[]');
@@ -3944,6 +4263,7 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save guest order ref.
     function saveGuestOrderRef(order) {
         const code = text(order?.maHoaDon).trim();
         if (!code) return;
@@ -3957,6 +4277,7 @@
         localStorage.setItem(GUEST_ORDER_HISTORY_KEY, JSON.stringify(refs.slice(0, 20)));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm payment method from order.
     function paymentMethodFromOrder(order = {}) {
         const direct = text(order.phuongThucThanhToan).trim().toUpperCase();
         if (direct) return direct;
@@ -3966,15 +4287,17 @@
         return match ? match[1].toUpperCase() : '';
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho can continue online payment.
     function canContinueOnlinePayment(order = {}) {
         const gateway = paymentMethodFromOrder(order);
-        if (!['BANKING', 'VNPAY', 'ZALOPAY'].includes(gateway)) return false;
+        if (!['BANKING', 'VNPAY'].includes(gateway)) return false;
         if (!money(order.tongTienThanhToan)) return false;
         const status = normalizeLocationName(order.trangThai || '');
         if (status.includes('huy') || status.includes('hoan thanh') || status.includes('da thanh toan')) return false;
         return !order.ngayThanhToan || status.includes('cho thanh toan') || status.includes('online');
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save pending payment.
     function savePendingPayment(pending) {
         if (!pending?.order?.id || !pending?.code || !pending?.gateway) return;
         state.pendingPayment = pending;
@@ -3986,6 +4309,7 @@
         }));
     }
 
+    // Tải hoặc truy xuất dữ liệu cho read pending payment.
     function readPendingPayment() {
         try {
             const pending = JSON.parse(localStorage.getItem(PENDING_PAYMENT_KEY) || 'null');
@@ -3995,6 +4319,7 @@
         }
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear pending payment.
     function clearPendingPayment(code = '') {
         const pending = readPendingPayment();
         if (!code || !pending || text(pending.code).toLowerCase() === text(code).toLowerCase()) {
@@ -4003,6 +4328,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sync pending payment from order.
     function syncPendingPaymentFromOrder(order) {
         if (!order?.id) return;
         const code = order.maHoaDon || `HD${String(order.id).padStart(6, '0')}`;
@@ -4013,6 +4339,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm continue payment button.
     function continuePaymentButton(order) {
         if (!canContinueOnlinePayment(order)) return '';
         const code = order.maHoaDon || `HD${String(order.id || '').padStart(6, '0')}`;
@@ -4025,6 +4352,7 @@
         `;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho fetch lookup order.
     async function fetchLookupOrder(maHoaDon) {
         const params = new URLSearchParams({
             maHoaDon: text(maHoaDon).trim()
@@ -4039,6 +4367,7 @@
         return order;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load guest order history.
     async function loadGuestOrderHistory(force = false) {
         if (state.orderHistoryLoaded && !force) {
             renderOrderHistory();
@@ -4067,21 +4396,25 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update cart count.
     function updateCartCount() {
         $('cartCount').textContent = state.cart.reduce((sum, item) => sum + Number(item.qty || 0), 0);
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set active nav.
     function setActiveNav(name = 'home') {
         document.querySelectorAll('[data-nav]').forEach((button) => {
             button.classList.toggle('active', button.dataset.nav === name);
         });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm hide all views.
     function hideAllViews() {
         ['homeView', 'productView', 'cartView', 'checkoutView', 'lookupView'].forEach((id) => $(id).classList.add('hidden'));
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Hiển thị và đồng bộ giao diện cho show home screen.
     function showHomeScreen(screen = 'home', navName = screen) {
         hideAllViews();
         $('homeView').classList.remove('hidden');
@@ -4091,6 +4424,7 @@
         setActiveNav(navName);
     }
 
+    // Hiển thị và đồng bộ giao diện cho show home.
     function showHome(scrollProducts = false) {
         stopBankingPaymentPolling();
         showHomeScreen('home', scrollProducts ? 'products' : 'home');
@@ -4099,6 +4433,7 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho show cart.
     function showCart() {
         stopBankingPaymentPolling();
         hideAllViews();
@@ -4107,25 +4442,41 @@
         renderCartPage();
     }
 
+    // Hiển thị và đồng bộ giao diện cho show checkout.
     async function showCheckout() {
         stopBankingPaymentPolling();
+
         if (!state.cart.length) {
             toast('Giỏ hàng đang trống.', 'error');
             showCart();
             return;
         }
+
+        // QUAN TRỌNG:
+        // Đảm bảo thông tin tài khoản đã được load trước khi render checkout
+        if (!state.account.loggedIn) {
+            await loadCurrentAccount();
+        }
+
+        // Đổ Họ tên, Email, SĐT từ tài khoản vào checkout
+        fillCheckoutFromAccount();
+
         await loadShopProvinces();
         await loadPaymentGatewayConfig();
         await autoApplyBestVoucher();
+
         hideAllViews();
         $('checkoutView').classList.remove('hidden');
         setActiveNav('');
+
         renderCheckoutPage();
+
         if (canCalculateShopShipping() && !state.checkout.shippingCalculated) {
             await calculateShopShippingFee();
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho show order lookup.
     function showOrderLookup() {
         stopBankingPaymentPolling();
         hideAllViews();
@@ -4134,6 +4485,7 @@
         renderOrderLookupPage();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm order lookup card.
     function orderLookupCard(order) {
         return `
             <article class="order-history-card">
@@ -4171,6 +4523,7 @@
         `;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render order lookup page.
     function renderOrderLookupPage(order = null, message = '') {
         const guestRefs = getGuestOrderRefs();
         const pending = readPendingPayment();
@@ -4214,6 +4567,7 @@
         `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lookup saved guest order.
     async function lookupSavedGuestOrder(code) {
         $('lookupCode').value = code;
         $('lookupResult').innerHTML = '<div class="order-history-empty">Đang tải lại đơn hàng...</div>';
@@ -4227,6 +4581,7 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho submit order lookup.
     async function submitOrderLookup(event) {
         event.preventDefault();
         const code = $('lookupCode').value.trim();
@@ -4252,18 +4607,22 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm scroll to products.
     function scrollToProducts() {
         showHome(true);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm scroll to news.
     function scrollToNews() {
         showHomeScreen('news');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm scroll to contact.
     function scrollToContact() {
         showHomeScreen('contact');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm search products from news.
     function searchProductsFromNews(keyword, label) {
         state.searchKeyword = keyword;
         state.currentPage = 0;
@@ -4289,12 +4648,14 @@
         toast(`Đang tìm sản phẩm theo chủ đề ${label}.`);
     }
 
+    // Xử lý tương tác người dùng cho submit contact form.
     function submitContactForm(event) {
         event.preventDefault();
         event.currentTarget.reset();
         toast('4MenStore đã nhận liên hệ, shop sẽ phản hồi bạn sớm.');
     }
 
+    // Xử lý tương tác người dùng cho toggle mobile nav.
     function toggleMobileNav() {
         const nav = $('mainNav');
         const visible = getComputedStyle(nav).display !== 'none';
@@ -4317,6 +4678,7 @@
     }
 
     /* FILTERS */
+    // Tải hoặc truy xuất dữ liệu cho load filters.
     async function loadFilters() {
         try {
             const response = await fetch(`${API}/api/shop/products?page=0&size=500&sort=newest`);
@@ -4360,6 +4722,7 @@
         fillEmptyFiltersFromProducts();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render filter options.
     function renderFilterOptions(containerId, items, keys) {
         const list = Array.isArray(items) ? items : [];
         const html = list.map((item) => {
@@ -4369,6 +4732,7 @@
         $(containerId).innerHTML = html || '<span class="filter-empty">Chưa có lựa chọn</span>';
     }
 
+    // Hiển thị và đồng bộ giao diện cho render filter values.
     function renderFilterValues(containerId, values) {
         const unique = [...new Set((values || []).map((value) => text(value).trim()).filter(Boolean))];
         $(containerId).innerHTML = unique.length
@@ -4376,10 +4740,12 @@
             : '<span class="filter-empty">Chưa có lựa chọn</span>';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fill empty filters from products.
     function fillEmptyFiltersFromProducts() {
         fillFiltersFromProductList(state.products, false);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fill filters from product list.
     function fillFiltersFromProductList(products, force = false) {
         if (!products?.length) return;
         const needsFill = (id) => !$(id)?.querySelector('input[type="checkbox"]');
@@ -4396,6 +4762,7 @@
         if (force || needsFill('filterKieuDang')) renderFilterValues('filterKieuDang', products.flatMap((product) => lookupNames(product, 'kieuDangs')));
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update price range from products.
     function updatePriceRangeFromProducts(products) {
         const prices = (products || []).flatMap((product) => [money(product.giaBanMin), money(product.giaBanMax)]).filter((value) => value > 0);
         if (!prices.length) return;
@@ -4410,10 +4777,12 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho toggle filters.
     function toggleFilters() {
         $('filterPanel').classList.toggle('open');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm collect filters.
     function collectFilters(auto = true) {
         state.filters.loaiAo = [...document.querySelectorAll('#filterLoaiAo input:checked')].map((input) => input.value);
         state.filters.kichCo = [...document.querySelectorAll('#filterKichCo input:checked')].map((input) => input.value);
@@ -4428,6 +4797,7 @@
     }
 
     let filterTimer = null;
+    // Thực hiện xử lý nghiệp vụ của hàm schedule auto filter.
     function scheduleAutoFilter() {
         clearTimeout(filterTimer);
         filterTimer = setTimeout(() => {
@@ -4436,6 +4806,7 @@
         }, 350);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sync price range.
     function syncPriceRange(type, value) {
         const range = state.priceRange;
         let min = Number($('priceMinRange').value || range.min);
@@ -4451,6 +4822,7 @@
         collectFilters();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sync price input.
     function syncPriceInput(type, value) {
         const range = state.priceRange;
         const numeric = value === '' ? (type === 'min' ? range.min : range.max) : Number(value || 0);
@@ -4460,6 +4832,7 @@
         collectFilters();
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update price range ui.
     function updatePriceRangeUI() {
         const range = state.priceRange;
         const min = Number($('priceMinRange')?.value || range.min);
@@ -4473,6 +4846,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply filter.
     function applyFilter() {
         clearTimeout(filterTimer);
         collectFilters(false);
@@ -4480,6 +4854,7 @@
         loadProducts();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset filter.
     function resetFilter() {
         clearTimeout(filterTimer);
         state.filters = { loaiAo: [], kichCo: [], mauSac: [], chatLieu: [], xuatXu: [], phongCachMac: [], kieuDang: [], priceMin: '', priceMax: '' };
@@ -4494,26 +4869,32 @@
     }
 
     /* PRODUCTS */
+    // Thực hiện xử lý nghiệp vụ của hàm product price.
     function productPrice(product) {
         return money(product.giaBanMin ?? product.giaBan ?? product.donGia);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product old price.
     function productOldPrice(product) {
         return money(product.giaGocMin ?? product.giaBanOld ?? product.giaGoc ?? product.giaCu);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm variant price.
     function variantPrice(variant, product = state.currentProduct) {
         return money(variant?.donGia ?? variant?.giaBan ?? productPrice(product || {}));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm variant old price.
     function variantOldPrice(variant) {
         return money(variant?.giaGoc ?? variant?.giaBanOld ?? variant?.giaCu);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm promo badge.
     function promoBadge(name) {
         return `<span class="promo-badge">${esc(name || 'Đang giảm')}</span>`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product price html.
     function productPriceHtml(product) {
         const price = productPrice(product);
         const oldPrice = productOldPrice(product);
@@ -4525,6 +4906,7 @@
         `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm detail price html.
     function detailPriceHtml(variant, product) {
         const price = variant ? variantPrice(variant, product) : productPrice(product);
         const oldPrice = variant ? variantOldPrice(variant) : productOldPrice(product);
@@ -4537,6 +4919,7 @@
         `;
     }
 
+    // Hiển thị và đồng bộ giao diện cho show product loading.
     function showProductLoading() {
         $('productContainer').innerHTML = `
                 <div class="loading-grid">
@@ -4551,6 +4934,7 @@
             `;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load products.
     async function loadProducts() {
         showProductLoading();
 
@@ -4608,6 +4992,7 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho render products.
     function renderProducts() {
         if (!state.products.length) {
             $('paginationWrap').innerHTML = '';
@@ -4654,6 +5039,7 @@
             `;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render pagination.
     function renderPagination() {
         const wrap = $('paginationWrap');
         if (!wrap || state.totalElements === 0 || state.totalPages <= 1) {
@@ -4677,6 +5063,7 @@
         `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm go to page.
     function goToPage(page) {
         const next = Math.max(0, Math.min(state.totalPages - 1, Number(page || 0)));
         if (next === state.currentPage) return;
@@ -4689,21 +5076,25 @@
     const variantColor = (variant) => variant?.mauSac?.ten || variant?.mauSac?.tenMauSac || variant?.tenMauSac || '';
     const uniqueVariantValues = (variants, getter) => [...new Set(variants.map(getter).filter(Boolean))];
 
+    // Thực hiện xử lý nghiệp vụ của hàm variant matches.
     function variantMatches(variant, criteria = {}) {
         return (!criteria.size || variantSize(variant) === criteria.size)
             && (!criteria.color || variantColor(variant) === criteria.color);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm first matching variant.
     function firstMatchingVariant(variants, criteria = {}) {
         return variants.find((variant) => variantMatches(variant, criteria)) || null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sync detail to variant.
     function syncDetailToVariant(variant) {
         state.detail.size = variant ? variantSize(variant) || null : null;
         state.detail.color = variant ? variantColor(variant) || null : null;
         state.detail.variantId = variant?.idSpct || null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm selectable sizes.
     function selectableSizes(variants) {
         const matchingColor = state.detail.color
             ? variants.filter((variant) => variantColor(variant) === state.detail.color)
@@ -4711,14 +5102,25 @@
         return uniqueVariantValues(matchingColor, variantSize);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm selectable colors.
     function selectableColors(variants) {
         return uniqueVariantValues(variants, variantColor);
     }
 
+    // Xử lý tương tác người dùng cho open product.
     async function openProduct(idSp, preferred = {}) {
-        const product = state.products.find((item) => Number(item.idSp) === Number(idSp))
+        let product = state.products.find((item) => Number(item.idSp) === Number(idSp))
             || state.chatbot.recommendations.find((item) => Number(item.product?.idSp) === Number(idSp))?.product;
-        if (!product) return;
+        if (!product) {
+            try {
+                const response = await fetch(`${API}/api/shop/products/${encodeURIComponent(idSp)}`);
+                if (!response.ok) throw new Error();
+                product = await response.json();
+            } catch {
+                toast('Sản phẩm này hiện không thể xem chi tiết.', 'error');
+                return;
+            }
+        }
 
         state.currentProduct = product;
         state.detail = { size: null, color: null, qty: 1, variantId: null };
@@ -4728,11 +5130,10 @@
             if (!response.ok) throw new Error('Không thể tải biến thể sản phẩm.');
 
             const list = await response.json();
-            state.variants[idSp] = (Array.isArray(list) ? list : [])
-                .filter(variant => Number(variant.soLuongTon || 0) > 0);
+            state.variants[idSp] = Array.isArray(list) ? list : [];
 
             if (!state.variants[idSp].length) {
-                toast('Sản phẩm hiện chưa có biến thể để bán.', 'error');
+                toast('Sản phẩm hiện không còn kinh doanh.', 'error');
                 return;
             }
 
@@ -4749,11 +5150,24 @@
             $('productView').classList.remove('hidden');
             setActiveNav('products');
             renderProductDetail();
+            loadProductReviews(idSp);
         } catch (error) {
             toast(error.message || 'Không tải được chi tiết sản phẩm.', 'error');
         }
     }
 
+    // Xử lý tương tác người dùng cho open ordered product.
+    async function openOrderedProduct(productId, variantId = 0, focusReview = false) {
+        closeAccountModal();
+        await openProduct(productId, { variantId: Number(variantId) || null });
+        if (!focusReview) return;
+        setTimeout(() => {
+            $('productReviewSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            $('reviewContent')?.focus({ preventScroll: true });
+        }, 350);
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render product detail.
     function renderProductDetail() {
         const product = state.currentProduct;
         if (!product) return;
@@ -4828,11 +5242,253 @@
                         </div>
                     </article>
                 </div>
+                <section id="productReviewSection" class="review-section"></section>
             `;
 
         updateDetailSelection();
+        renderReviewSection();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm review stars.
+    function reviewStars(rating) {
+        const score = Math.max(0, Math.min(5, Number(rating || 0)));
+        return `${'★'.repeat(score)}${'☆'.repeat(5 - score)}`;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm review initials.
+    function reviewInitials(name) {
+        return String(name || 'KH').trim().slice(0, 1).toUpperCase() || 'KH';
+    }
+    // Thực hiện xử lý nghiệp vụ của hàm review avatar url.
+    function reviewAvatarUrl(review) {
+        const raw =
+            review?.anhDaiDien ||
+            review?.avatar ||
+            review?.hinhAnhKhachHang ||
+            review?.anhKhachHang ||
+            review?.imageUrl ||
+            review?.duongDanAnh;
+
+        if (!raw) return '';
+
+        if (/^(https?:)?\/\//i.test(raw) || raw.startsWith('/')) {
+            return raw;
+        }
+
+        return `/uploads/${raw}`;
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render review avatar.
+    function renderReviewAvatar(review) {
+        const avatar = reviewAvatarUrl(review);
+        const initials = reviewInitials(review.tenKhachHang);
+
+        if (!avatar) {
+            return `
+            <span class="review-avatar">
+                ${esc(initials)}
+            </span>
+        `;
+        }
+
+        return `
+        <span class="review-avatar">
+            <img
+                src="${esc(avatar)}"
+                alt="${esc(review.tenKhachHang || 'Khách hàng')}"
+                onerror="
+                    this.style.display='none';
+                    this.parentElement.textContent='${esc(initials)}';
+                "
+            >
+        </span>
+    `;
+    }
+    // Hiển thị và đồng bộ giao diện cho render review section.
+    function renderReviewSection() {
+        const section = $('productReviewSection');
+        const product = state.currentProduct;
+        if (!section || !product) return;
+
+        const hasSummary = Number(state.review.productId) === Number(product.idSp) && state.review.summary;
+        if (!hasSummary) {
+            section.innerHTML = '<h2>Đánh giá sản phẩm</h2><div class="review-loading">Đang tải đánh giá...</div>';
+            return;
+        }
+
+        const summary = state.review.summary;
+        const counts = summary.thongKeSao || {};
+        const allReviews = Array.isArray(summary.danhSach) ? summary.danhSach : [];
+        const filter = Number(state.review.filter || 0);
+        const view = state.review.view || 'all';
+        const commentCount = allReviews.filter(item => String(item.noiDung || '').trim()).length;
+        const reviews = allReviews.filter(item => (!filter || Number(item.diemDanhGia) === filter)
+            && (view !== 'comments' || String(item.noiDung || '').trim()));
+        const average = Number(summary.diemTrungBinh || 0).toFixed(1);
+        const total = Number(summary.tongDanhGia || 0);
+        const filterButton = (rating, label) => `<button type="button" class="${view === 'all' && filter === rating ? 'active' : ''}" onclick="setReviewFilter(${rating})">${label}</button>`;
+        const viewButton = (key, label) => `<button type="button" class="${view === key ? 'active' : ''}" onclick="setReviewView('${key}')">${label}</button>`;
+        const compose = state.account.loggedIn ? `
+    <form class="review-compose" onsubmit="submitProductReview(event)">
+        <div class="review-compose-head">
+            <b>Viết đánh giá của bạn</b>
+
+            <div class="review-star-picker">
+                ${[1, 2, 3, 4, 5].map(star => `
+                    <button
+                        type="button"
+                        class="${star <= Number(state.review.selectedRating || 0) ? 'active' : ''}"
+                        onclick="selectReviewRating(${star})"
+                        title="${star} sao"
+                    >★</button>
+                `).join('')}
+            </div>
+        </div>
+
+        <textarea
+            id="reviewContent"
+            maxlength="1000"
+            placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..."
+        ></textarea>
+
+        <div class="review-compose-foot">
+            <span>
+                ${state.review.selectedRating
+            ? `Bạn đang chọn ${state.review.selectedRating}/5 sao`
+            : 'Vui lòng chọn số sao'}
+            </span>
+
+            <button class="btn primary small" type="submit">
+                Gửi đánh giá
+            </button>
+        </div>
+    </form>
+` : `
+    <div class="review-login">
+        Bạn cần đăng nhập để viết đánh giá.
+        <button type="button" onclick="goToReviewLogin()">
+            Đăng nhập ngay
+        </button>
+    </div>
+`;
+
+        section.innerHTML = `
+            <h2>Đánh giá sản phẩm</h2>
+            <div class="review-summary">
+                <div class="review-score"><strong>${average}</strong><span>trên 5</span><div class="review-stars">${reviewStars(Math.round(Number(summary.diemTrungBinh || 0)))}</div><small>${total} đánh giá</small></div>
+                <div class="review-filter">
+                    ${filterButton(0, 'Tất cả')}
+                    ${[5, 4, 3, 2, 1].map(score => filterButton(score, `${score} sao (${Number(counts[score] || 0)})`)).join('')}
+                    ${viewButton('comments', `Có bình luận (${commentCount})`)}
+                    ${viewButton('all', `Trong nước (${total})`)}
+                </div>
+            </div>
+            ${compose}
+            <div class="review-list">
+                ${reviews.length ? reviews.map(review => `
+                    <article class="review-item">
+                    <div class="review-author">
+    ${renderReviewAvatar(review)}
+
+    <div>
+        <b>${esc(review.tenKhachHang || 'Khách hàng')}</b>
+    </div>
+</div>
+                        <div class="review-item-stars">${reviewStars(review.diemDanhGia)}</div>
+                        <div class="review-date">Đã mua hàng · ${esc(fmtDateTime(review.ngayTao))}</div>
+                        ${review.noiDung ? `<div class="review-content">${esc(review.noiDung)}</div>` : '<div class="review-content">Khách hàng đánh giá sản phẩm này.</div>'}
+                        ${review.phanHoiQuanTri ? `<div class="review-admin-reply"><b>Phản hồi từ 4MenStore${review.ngayPhanHoi ? ` · ${esc(fmtDateTime(review.ngayPhanHoi))}` : ''}</b>${esc(review.phanHoiQuanTri)}</div>` : ''}
+                    </article>
+                `).join('') : '<div class="review-empty">Chưa có đánh giá phù hợp. Hãy là người đầu tiên chia sẻ trải nghiệm.</div>'}
+            </div>
+        `;
+    }
+
+    // Tải hoặc truy xuất dữ liệu cho load product reviews.
+    async function loadProductReviews(productId) {
+        state.review = { ...state.review, productId: Number(productId), summary: null, loading: true, filter: 0, view: 'all', selectedRating: 0 };
+        renderReviewSection();
+        try {
+            const response = await fetch(`${API}/api/shop/products/${encodeURIComponent(productId)}/reviews`);
+            if (!response.ok) throw new Error('Không thể tải đánh giá sản phẩm.');
+            const summary = await response.json();
+            if (Number(state.currentProduct?.idSp) !== Number(productId)) return;
+            state.review = { ...state.review, productId: Number(productId), summary, loading: false };
+        } catch (error) {
+            if (Number(state.currentProduct?.idSp) !== Number(productId)) return;
+            state.review = { ...state.review, productId: Number(productId), summary: { diemTrungBinh: 0, tongDanhGia: 0, thongKeSao: {}, danhSach: [] }, loading: false };
+        }
+        renderReviewSection();
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set review filter.
+    function setReviewFilter(rating) {
+        state.review.filter = Number(rating || 0);
+        state.review.view = 'all';
+        renderReviewSection();
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set review view.
+    function setReviewView(view) {
+        state.review.view = view === 'comments' ? 'comments' : 'all';
+        state.review.filter = 0;
+        renderReviewSection();
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm select review rating.
+    function selectReviewRating(rating) {
+        state.review.selectedRating = Number(rating || 0);
+
+        document.querySelectorAll('.review-star-picker button')
+            .forEach((button, index) => {
+                button.classList.toggle(
+                    'active',
+                    index < state.review.selectedRating
+                );
+            });
+
+        const text = document.querySelector('.review-compose-foot span');
+
+        if (text) {
+            text.textContent = state.review.selectedRating
+                ? `Bạn đang chọn ${state.review.selectedRating}/5 sao`
+                : 'Vui lòng chọn số sao';
+        }
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm go to review login.
+    function goToReviewLogin() {
+        window.location.href = ACCOUNT_API.loginPath;
+    }
+
+    // Xử lý tương tác người dùng cho submit product review.
+    async function submitProductReview(event) {
+        event.preventDefault();
+        const product = state.currentProduct;
+        const rating = Number(state.review.selectedRating || 0);
+        if (!product || !rating) {
+            toast('Vui lòng chọn số sao trước khi gửi đánh giá.', 'error');
+            return;
+        }
+        const button = event.currentTarget.querySelector('button[type="submit"]');
+        if (button) { button.disabled = true; button.textContent = 'Đang gửi...'; }
+        try {
+            const response = await fetch(`${API}/api/shop/products/${encodeURIComponent(product.idSp)}/reviews`, {
+                method: 'POST', credentials: 'include', headers: accountHeaders(true),
+                body: JSON.stringify({ diemDanhGia: rating, noiDung: $('reviewContent')?.value || '' })
+            });
+            if (!response.ok) throw new Error(await parseApiError(response));
+            state.review.selectedRating = 0;
+            state.myReviewsLoaded = false;
+            toast('Cảm ơn bạn đã gửi đánh giá.');
+            await loadProductReviews(product.idSp);
+        } catch (error) {
+            toast(error.message || 'Không thể gửi đánh giá.', 'error');
+            if (button) { button.disabled = false; button.textContent = 'Gửi đánh giá'; }
+        }
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm selected variant.
     function selectedVariant() {
         const product = state.currentProduct;
         if (!product) return null;
@@ -4844,6 +5500,7 @@
         });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm select detail color.
     function selectDetailColor(color) {
         const product = state.currentProduct;
         const variants = product ? state.variants[product.idSp] || [] : [];
@@ -4854,6 +5511,7 @@
         renderProductDetail();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm select detail size.
     function selectDetailSize(size) {
         const product = state.currentProduct;
         const variants = product ? state.variants[product.idSp] || [] : [];
@@ -4864,12 +5522,14 @@
         renderProductDetail();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm detail qty max.
     function detailQtyMax() {
         const variant = selectedVariant();
         const stock = Number(variant?.soLuongTon || 0);
         return Math.max(1, stock);
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set detail qty.
     function setDetailQty(value, updateInput = false) {
         const max = detailQtyMax();
         const parsed = Math.floor(Number(value));
@@ -4882,16 +5542,19 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm change detail qty.
     function changeDetailQty(change) {
         const inputValue = Number($('detailQty')?.value || state.detail.qty || 1);
         setDetailQty(inputValue + change, true);
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update detail selection.
     function updateDetailSelection() {
         const variant = selectedVariant();
         const stock = Number(variant?.soLuongTon || 0);
         const canBuy = Boolean(variant) && stock > 0;
         const qtyInput = $('detailQty');
+        const stockNote = $('detailStock');
 
         if (variant) {
             state.detail.variantId = variant.idSpct;
@@ -4901,12 +5564,13 @@
                 qtyInput.max = Math.max(1, stock);
                 qtyInput.disabled = !canBuy;
             }
-            $('detailStock').textContent = stock > 0 ? `Còn ${stock} sản phẩm có sẵn` : 'Biến thể này hiện đã hết hàng';
+            stockNote.textContent = stock > 0 ? `Còn ${stock} sản phẩm có sẵn` : 'Sản phẩm hiện đã hết hàng';
         } else {
             state.detail.variantId = null;
             if (qtyInput) qtyInput.disabled = true;
-            $('detailStock').textContent = 'Biến thể màu sắc và kích cỡ này chưa có sẵn.';
+            stockNote.textContent = 'Sản phẩm hiện đã hết hàng';
         }
+        stockNote.classList.toggle('out-of-stock', !canBuy);
 
         ['addToCartBtn', 'buyNowBtn'].forEach((id) => {
             const button = $(id);
@@ -4914,6 +5578,7 @@
         });
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho add current product to cart.
     function addCurrentProductToCart() {
         const product = state.currentProduct;
         const variant = selectedVariant();
@@ -4927,6 +5592,7 @@
         return addVariantToCart(product, variant, state.detail.qty);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm quick add.
     async function quickAdd(idSp) {
         const product = state.products.find((item) => Number(item.idSp) === Number(idSp));
         if (!product) return;
@@ -4952,6 +5618,7 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho add variant to cart.
     function addVariantToCart(product, variant, qty) {
         const stock = Number(variant.soLuongTon || 0);
         const key = `spct_${variant.idSpct}`;
@@ -4995,6 +5662,7 @@
         return true;
     }
 
+    // Xử lý tương tác người dùng cho open recommended product.
     function openRecommendedProduct(index) {
         const item = state.chatbot.recommendations[Number(index)];
         if (!item?.product || !item?.variant) return;
@@ -5006,21 +5674,25 @@
         });
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho add recommended to cart.
     function addRecommendedToCart(index) {
         const item = state.chatbot.recommendations[Number(index)];
         if (!item?.product || !item?.variant) return;
         addVariantToCart(item.product, item.variant, 1);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm buy now.
     function buyNow() {
         if (addCurrentProductToCart()) showCart();
     }
 
     /* CART */
+    // Thực hiện xử lý nghiệp vụ của hàm cart subtotal.
     function cartSubtotal() {
         return state.cart.reduce((sum, item) => sum + money(item.price) * Number(item.qty || 0), 0);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm shipping fee.
     function shippingFee() {
         const subtotal = cartSubtotal();
         if (!subtotal) return 0;
@@ -5028,16 +5700,19 @@
         return Math.max(0, money(state.checkout.shippingFee));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm free shipping remaining.
     function freeShippingRemaining(subtotal = cartSubtotal()) {
         return Math.max(0, FREE_SHIPPING_THRESHOLD - money(subtotal));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm shipping progress text.
     function shippingProgressText(subtotal = cartSubtotal()) {
         const remaining = freeShippingRemaining(subtotal);
         if (!remaining) return `Đơn hàng đã đạt mốc ${fmt(FREE_SHIPPING_THRESHOLD)} nên được miễn phí vận chuyển.`;
         return `Mua thêm ${fmt(remaining)} để được miễn phí vận chuyển cho đơn từ ${fmt(FREE_SHIPPING_THRESHOLD)}.`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm discount amount.
     function discountAmount(subtotal = cartSubtotal()) {
         if (!state.appliedVoucher) return 0;
 
@@ -5056,11 +5731,13 @@
         return Math.min(discount, subtotal);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm total amount.
     function totalAmount() {
         const subtotal = cartSubtotal();
         return Math.max(0, subtotal - discountAmount(subtotal) + shippingFee());
     }
 
+    // Hiển thị và đồng bộ giao diện cho render cart page.
     function renderCartPage() {
         if (!state.cart.length) {
             $('cartPageContent').innerHTML = `
@@ -5139,6 +5816,7 @@
             `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm change cart qty.
     function changeCartQty(index, delta) {
         const item = state.cart[index];
         if (!item) return;
@@ -5160,6 +5838,7 @@
         renderCartPage();
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set cart qty.
     function setCartQty(index, value) {
         const item = state.cart[index];
         if (!item) return;
@@ -5177,6 +5856,7 @@
         renderCartPage();
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho remove cart item.
     function removeCartItem(index) {
         state.cart.splice(index, 1);
         saveCart();
@@ -5184,6 +5864,7 @@
         renderCartPage();
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear cart.
     function clearCart() {
         state.cart = [];
         state.appliedVoucher = null;
@@ -5193,10 +5874,72 @@
     }
 
     /* CHECKOUT */
+    // Thực hiện xử lý nghiệp vụ của hàm sync checkout value.
     function syncCheckoutValue(field, value) {
+        if (field === 'tenKhachHang') {
+            value = String(value || '')
+                .replace(/[^\p{L}\s]/gu, '')
+                .replace(/\s{2,}/g, ' ');
+            const nameInput = $('ckName');
+            if (nameInput && nameInput.value !== value) nameInput.value = value;
+        }
+        if (field === 'soDienThoai') {
+            value = String(value || '').replace(/\D/g, '').slice(0, 10);
+            const phoneInput = $('ckPhone');
+            if (phoneInput && phoneInput.value !== value) phoneInput.value = value;
+        }
         state.checkout[field] = value;
+        if (['tenKhachHang', 'email', 'soDienThoai', 'diaChiKhachHang', 'ghiChu'].includes(field)) {
+            validateCheckoutField(field);
+        }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate checkout field.
+    function validateCheckoutField(field, forceRequired = false) {
+        const config = {
+            tenKhachHang: { input: 'ckName', error: 'ckNameValidation' },
+            email: { input: 'ckEmail', error: 'ckEmailValidation' },
+            soDienThoai: { input: 'ckPhone', error: 'ckPhoneValidation' },
+            diaChiKhachHang: { input: 'ckAddress', error: 'ckAddressValidation' },
+            ghiChu: { input: 'ckNote', error: 'ckNoteValidation' }
+        }[field];
+        if (!config) return true;
+
+        const value = String(state.checkout[field] || '').trim();
+        let message = '';
+        if (field === 'tenKhachHang') {
+            if (!value && forceRequired) message = 'Vui lòng nhập họ tên.';
+            else if (value && !/^[\p{L}]+(?: [\p{L}]+)+$/u.test(value.replace(/\s+/g, ' '))) {
+                message = 'Họ tên cần ít nhất 2 từ, chỉ gồm chữ cái và khoảng trắng.';
+            } else if (value.length > 255) message = 'Họ tên tối đa 255 ký tự.';
+        } else if (field === 'email') {
+            if (!value && forceRequired) message = 'Vui lòng nhập email.';
+            else if (value && (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value) || value.length > 255)) {
+                message = value.length > 255 ? 'Email tối đa 255 ký tự.' : 'Email không đúng định dạng.';
+            }
+        } else if (field === 'soDienThoai') {
+            if (!value && forceRequired) message = 'Vui lòng nhập số điện thoại.';
+            else if (value && !/^(03|05|07|08|09)\d{8}$/.test(value)) {
+                message = 'Số điện thoại phải gồm 10 số và bắt đầu bằng 03, 05, 07, 08 hoặc 09.';
+            }
+        } else if (field === 'diaChiKhachHang') {
+            if (!value && forceRequired) message = 'Vui lòng nhập địa chỉ chi tiết.';
+            else if (value.length > 500) message = 'Địa chỉ tối đa 500 ký tự.';
+        } else if (field === 'ghiChu' && value.length > 1000) {
+            message = 'Ghi chú tối đa 1000 ký tự.';
+        }
+
+        const input = $(config.input);
+        if (input) {
+            input.classList.toggle('invalid', Boolean(message));
+            input.setAttribute('aria-invalid', String(Boolean(message)));
+        }
+        const error = $(config.error);
+        if (error) error.textContent = message;
+        return !message;
+    }
+
+    // Tải hoặc truy xuất dữ liệu cho load shop vouchers.
     async function loadShopVouchers(silent = true) {
         const subtotal = cartSubtotal();
         if (!subtotal) {
@@ -5219,6 +5962,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm auto apply best voucher.
     async function autoApplyBestVoucher() {
         const subtotal = cartSubtotal();
         if (!subtotal) {
@@ -5245,6 +5989,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm best voucher hint.
     function bestVoucherHint(subtotal = cartSubtotal(), currentDiscount = discountAmount(subtotal)) {
         if (!subtotal) return null;
         const vouchers = state.voucherOptions || [];
@@ -5278,6 +6023,7 @@
         return null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm voucher value label.
     function voucherValueLabel(voucher) {
         const type = text(voucher.loaiGiam).toLowerCase();
         if (type.includes('phan') || type.includes('percent') || type.includes('%')) {
@@ -5286,6 +6032,7 @@
         return `Giảm ${fmt(voucher.giaTri)}`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm voucher summary label.
     function voucherSummaryLabel(voucher, discount = 0) {
         if (!voucher) return '';
         const name = text(voucher.tenPgg || voucher.displayText || voucher.maPgg).trim();
@@ -5293,6 +6040,7 @@
         return [name, value].filter(Boolean).join(' - ');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm voucher card.
     function voucherCard(voucher) {
         const selected = state.appliedVoucher?.maPgg === voucher.maPgg;
         const applicable = Boolean(voucher.applicable);
@@ -5329,6 +6077,7 @@
         `;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render shop voucher list.
     function renderShopVoucherList() {
         const list = $('shopVoucherList');
         if (!list) return;
@@ -5343,6 +6092,7 @@
         list.innerHTML = state.voucherOptions.map(voucherCard).join('');
     }
 
+    // Xử lý tương tác người dùng cho open shop voucher modal.
     async function openShopVoucherModal() {
         $('shopVoucherModal').classList.add('open');
         renderShopVoucherList();
@@ -5350,15 +6100,18 @@
         renderShopVoucherList();
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close shop voucher modal.
     function closeShopVoucherModal(event) {
         if (event && event.target !== $('shopVoucherModal')) return;
         $('shopVoucherModal').classList.remove('open');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply shop voucher from button.
     function applyShopVoucherFromButton(button) {
         applyVoucher(button.dataset.code);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm payment method option.
     function paymentMethodOption(code, methodIcon, title, description, badge = '', enabled = true) {
         const selectedCode = state.checkout.phuongThucThanhToan || 'COD';
         const selected = enabled && selectedCode === code;
@@ -5376,23 +6129,26 @@
         `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm payment method display name.
     function paymentMethodDisplayName(code) {
         return {
             COD: 'thanh toán khi nhận hàng',
             BANKING: 'chuyển khoản ngân hàng / VietQR',
-            VNPAY: 'VNPay',
-            ZALOPAY: 'ví ZaloPay'
+            VNPAY: 'VNPay'
         }[code] || code;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm payment gateway enabled.
     function paymentGatewayEnabled(code) {
         return Boolean(state.paymentGateways?.[code]);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm banking transfer content.
     function bankingTransferContent(code) {
         return `Thanh toan ${code || '4MenStore'}`.replace(/[^\p{L}\p{N}\s._-]/gu, '').trim();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm viet qr image url.
     function vietQrImageUrl(amount, content) {
         const value = Math.max(0, Math.round(money(amount)));
         const info = encodeURIComponent(content || 'Thanh toan 4MenStore');
@@ -5400,6 +6156,7 @@
         return `https://img.vietqr.io/image/${BANK_CODE}-${BANK_ACCOUNT}-compact2.png?amount=${value}&addInfo=${info}&accountName=${accountName}`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm copy payment value.
     async function copyPaymentValue(value) {
         try {
             await navigator.clipboard.writeText(text(value));
@@ -5409,6 +6166,7 @@
         }
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load payment gateway config.
     async function loadPaymentGatewayConfig(force = false) {
         if (state.paymentConfigLoaded && !force) return;
         try {
@@ -5419,11 +6177,12 @@
             const current = state.checkout.phuongThucThanhToan || 'COD';
             if (!paymentGatewayEnabled(current)) state.checkout.phuongThucThanhToan = 'COD';
         } catch (error) {
-            state.paymentGateways = { COD: true, BANKING: true, VNPAY: false, ZALOPAY: false };
+            state.paymentGateways = { COD: true, BANKING: true, VNPAY: false };
             console.warn(error.message || error);
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set checkout payment method.
     function setCheckoutPaymentMethod(method) {
         if (!paymentGatewayEnabled(method)) {
             toast('Cổng thanh toán này chưa có đủ cấu hình merchant.', 'error');
@@ -5433,6 +6192,7 @@
         renderCheckoutPage();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render checkout page.
     function renderCheckoutPage() {
         if (!state.cart.length) {
             showCart();
@@ -5458,15 +6218,18 @@
                             <div class="checkout-grid">
                                 <div class="field full">
                                     <label>Họ tên <span class="required">*</span></label>
-                                    <input id="ckName" type="text" value="${esc(checkout.tenKhachHang)}" oninput="syncCheckoutValue('tenKhachHang',this.value)" placeholder="Nguyễn Văn A">
+                                    <input id="ckName" type="text" value="${esc(checkout.tenKhachHang)}" maxlength="255" oninput="syncCheckoutValue('tenKhachHang',this.value)" onblur="validateCheckoutField('tenKhachHang',true)" placeholder="Nguyễn Văn A">
+                                    <div class="field-error" id="ckNameValidation" aria-live="polite"></div>
                                 </div>
                                 <div class="field">
                                     <label>Email <span class="required">*</span></label>
-                                    <input id="ckEmail" type="email" value="${esc(checkout.email)}" oninput="syncCheckoutValue('email',this.value)" placeholder="email@example.com">
+                                    <input id="ckEmail" type="email" value="${esc(checkout.email)}" maxlength="255" oninput="syncCheckoutValue('email',this.value)" onblur="validateCheckoutField('email',true)" placeholder="email@example.com">
+                                    <div class="field-error" id="ckEmailValidation" aria-live="polite"></div>
                                 </div>
                                 <div class="field">
                                     <label>Số điện thoại <span class="required">*</span></label>
-                                    <input id="ckPhone" type="tel" value="${esc(checkout.soDienThoai)}" oninput="syncCheckoutValue('soDienThoai',this.value)" placeholder="0901 234 567">
+                                    <input id="ckPhone" type="tel" value="${esc(checkout.soDienThoai)}" inputmode="numeric" maxlength="10" oninput="syncCheckoutValue('soDienThoai',this.value)" onblur="validateCheckoutField('soDienThoai',true)" placeholder="0901234567">
+                                    <div class="field-error" id="ckPhoneValidation" aria-live="polite"></div>
                                 </div>
                             </div>
                         </section>
@@ -5484,12 +6247,7 @@
                             ${checkout.addressMode === 'saved' ? `
                                 <div class="field" style="margin-top:12px">
                                     <label>Danh sách địa chỉ</label>
-                                    <input class="select-search" type="search" placeholder="Tìm kiếm địa chỉ..." oninput="filterSelectOptions(this,'savedAddressSelect')">
-                                    <select id="savedAddressSelect" onchange="applySavedCheckoutAddress(this.value)">
-                                        ${state.savedAddresses.length
-                                            ? state.savedAddresses.map((address) => `<option value="${esc(address.id)}" ${String(checkout.savedAddressId) === String(address.id) ? 'selected' : ''}>${address.macDinh ? 'Mặc định - ' : ''}${esc(address.tenDiaChi || address.tenNguoiNhan || 'Địa chỉ')} | ${esc(addressFullText(address))}</option>`).join('')
-                                            : '<option value="">Chưa có địa chỉ đã lưu</option>'}
-                                    </select>
+                                    ${renderSavedCheckoutAddressSelect(checkout)}
                                 </div>
                             ` : ''}
                             ` : ''}
@@ -5509,30 +6267,24 @@
                                 <div class="checkout-grid" style="margin-top:12px">
                                     <div class="field">
                                         <label>Tỉnh/Thành <span class="required">*</span></label>
-                                        <input class="select-search" type="search" placeholder="Tìm kiếm tỉnh/thành..." oninput="filterSelectOptions(this,'provinceSelect')">
-                                        <select id="provinceSelect" onchange="onCheckoutProvinceChange(this)">
-                                            <option value="">Chọn tỉnh/thành</option>
-                                            ${state.provinces.map((item) => `<option value="${item.code}" data-name="${esc(item.name)}" ${String(checkout.provinceId) === String(item.code) ? 'selected' : ''}>${esc(item.name)}</option>`).join('')}
-                                        </select>
+                                        ${renderCheckoutLocationSelect('province', state.provinces, checkout.provinceId, checkout.provinceName, 'Chọn tỉnh/thành', 'Tìm kiếm tỉnh/thành...')}
                                     </div>
                                     <div class="field">
                                         <label>Xã/Phường <span class="required">*</span></label>
-                                        <input class="select-search" type="search" placeholder="Tìm kiếm xã/phường..." oninput="filterSelectOptions(this,'wardSelect')">
-                                        <select id="wardSelect" onchange="onCheckoutWardChange(this)">
-                                            <option value="">Chọn xã/phường</option>
-                                            ${state.wards.map((item) => `<option value="${esc(item.code)}" data-name="${esc(item.name)}" ${String(checkout.wardCode) === String(item.code) ? 'selected' : ''}>${esc(item.name)}</option>`).join('')}
-                                        </select>
+                                        ${renderCheckoutLocationSelect('ward', state.wards, checkout.wardCode, checkout.wardName, 'Chọn xã/phường', 'Tìm kiếm xã/phường...', !checkout.provinceId)}
                                     </div>
                                 </div>
                                 <div class="field" style="margin-top:12px">
                                     <label>Địa chỉ chi tiết <span class="required">*</span></label>
-                                    <textarea id="ckAddress" oninput="syncCheckoutValue('diaChiKhachHang',this.value)" placeholder="Số nhà, tên đường">${esc(checkout.diaChiKhachHang)}</textarea>
+                                    <textarea id="ckAddress" maxlength="500" oninput="syncCheckoutValue('diaChiKhachHang',this.value)" onblur="validateCheckoutField('diaChiKhachHang',true)" placeholder="Số nhà, tên đường">${esc(checkout.diaChiKhachHang)}</textarea>
+                                    <div class="field-error" id="ckAddressValidation" aria-live="polite"></div>
                                 </div>
                                 <div class="shipping-hint">${checkout.shippingLoading ? 'Đang tính phí vận chuyển...' : checkout.wardName ? 'Phí vận chuyển đã được cập nhật theo địa chỉ sau sáp nhập.' : 'Chọn tỉnh/thành và xã/phường để tính phí vận chuyển.'}</div>
                             `}
                             <div class="field" style="margin-top:11px">
                                 <label>Ghi chú đơn hàng</label>
-                                <textarea id="ckNote" oninput="syncCheckoutValue('ghiChu',this.value)" placeholder="Giao giờ hành chính, gọi trước khi giao...">${esc(checkout.ghiChu)}</textarea>
+                                <textarea id="ckNote" maxlength="1000" oninput="syncCheckoutValue('ghiChu',this.value)" onblur="validateCheckoutField('ghiChu')" placeholder="Giao giờ hành chính, gọi trước khi giao...">${esc(checkout.ghiChu)}</textarea>
+                                <div class="field-error" id="ckNoteValidation" aria-live="polite"></div>
                             </div>
                         </section>
 
@@ -5547,6 +6299,34 @@
                                 </div>
                                 <div class="delivery-price">${shipping ? fmt(shipping) : 'Miễn phí'}</div>
                             </label>
+                            <div class="shipping-progress ${subtotal >= FREE_SHIPPING_THRESHOLD ? 'free' : ''}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+                                <div style="flex:1;min-width:190px">
+                                    ${subtotal >= FREE_SHIPPING_THRESHOLD ? `
+                                        <b>Đơn hàng được miễn phí vận chuyển.</b><br>
+                                        Phí ship cố định không áp dụng cho đơn hàng đã đủ điều kiện freeship.
+                                    ` : checkout.shippingFixed35k ? `
+                                        <b>Đã áp dụng ship cố định toàn quốc 35.000đ.</b><br>
+                                        Phí vận chuyển hiện tại đã được chọn thủ công là 35.000đ.
+                                    ` : checkout.shippingApiError ? `
+                                        <b>Không lấy được phí chính xác từ GHN.</b><br>
+                                        Bạn có thể chọn mức ship toàn quốc cố định 35.000đ ở bên cạnh.
+                                    ` : `
+                                        <b>Phí ship toàn quốc tùy chọn.</b><br>
+                                        Bạn có thể dùng mức cố định 35.000đ thay cho phí GHN hiện tại.
+                                    `}
+                                </div>
+                                <button class="btn ${checkout.shippingFixed35k ? 'primary' : 'outline-primary'}"
+                                        type="button"
+                                        onclick="applyFixedNationalShippingFee()"
+                                        aria-pressed="${checkout.shippingFixed35k}"
+                                        ${subtotal >= FREE_SHIPPING_THRESHOLD ? 'disabled' : ''}>
+                                    ${subtotal >= FREE_SHIPPING_THRESHOLD
+            ? 'Đơn hàng đang freeship'
+            : checkout.shippingFixed35k
+                ? 'Dùng phí GHN'
+                : 'Áp dụng ship toàn quốc 35.000đ'}
+                                </button>
+                            </div>
                         </section>
 
                         <section class="checkout-card">
@@ -5555,14 +6335,13 @@
                                 ${paymentMethodOption('COD', '💵', 'Thanh toán khi nhận hàng', 'Thanh toán bằng tiền mặt khi đơn hàng được giao.')}
                                 ${paymentMethodOption('BANKING', '🏦', 'Chuyển khoản ngân hàng / VietQR', '', 'Thanh toán ngay')}
                                 ${paymentMethodOption('VNPAY', '💳', 'Thẻ ATM / Visa / Mastercard qua VNPay', paymentGatewayEnabled('VNPAY') ? '' : '', paymentGatewayEnabled('VNPAY') ? 'Thanh toán ngay' : '', paymentGatewayEnabled('VNPAY'))}
-                                ${paymentMethodOption('ZALOPAY', '🔵', 'Ví điện tử ZaloPay', paymentGatewayEnabled('ZALOPAY') ? 'ZaloPay' : '', paymentGatewayEnabled('ZALOPAY') ? 'Thanh toán ngay' : '', paymentGatewayEnabled('ZALOPAY'))}
                             </div>
                             ${checkout.phuongThucThanhToan === 'BANKING' ? `
                                 <div class="payment-notice">
 
                                 </div>
                             ` : ''}
-                            ${['VNPAY', 'ZALOPAY'].includes(checkout.phuongThucThanhToan) ? `
+                            ${checkout.phuongThucThanhToan === 'VNPAY' ? `
                                 <div class="payment-notice">
                                     Sau khi tạo đơn, bạn sẽ được chuyển đến QR của <b>${esc(paymentMethodDisplayName(checkout.phuongThucThanhToan))}</b>.
 
@@ -5607,6 +6386,7 @@
             `;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set checkout address mode.
     async function setCheckoutAddressMode(mode) {
         state.checkout.addressMode = mode;
         if (mode === 'saved') {
@@ -5618,6 +6398,7 @@
         renderCheckoutPage();
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load shop provinces.
     async function loadShopProvinces() {
         if (state.provinces.length) return;
         try {
@@ -5629,6 +6410,7 @@
         }
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load shop wards.
     async function loadShopWards(provinceId) {
         state.wards = [];
         if (!provinceId) return;
@@ -5638,10 +6420,12 @@
         state.wards = payload.wards || [];
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm selected option name.
     function selectedOptionName(select) {
         return select?.selectedOptions?.[0]?.dataset?.name || '';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize select search.
     function normalizeSelectSearch(value) {
         return text(value)
             .normalize('NFD')
@@ -5651,6 +6435,7 @@
             .toLowerCase();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm filter select options.
     function filterSelectOptions(input, selectId) {
         const select = document.getElementById(selectId);
         if (!select) return;
@@ -5661,28 +6446,225 @@
         });
     }
 
-    async function onCheckoutProvinceChange(select) {
-        state.checkout.provinceId = select.value;
-        state.checkout.provinceName = selectedOptionName(select);
+    // Hiển thị và đồng bộ giao diện cho render checkout location select.
+    function renderCheckoutLocationSelect(type, items, selectedValue, selectedName, placeholder, searchPlaceholder, disabled = false) {
+        const options = items.map((item) => `
+            <button type="button" class="searchable-select-option" data-search="${esc(item.name)}"
+                    onclick="selectCheckoutLocation('${type}','${esc(item.code)}')">${esc(item.name)}</button>
+        `).join('');
+        const emptyMessage = type === 'ward' && disabled
+            ? 'Hãy chọn tỉnh/thành trước.'
+            : 'Không tìm thấy kết quả phù hợp.';
+        return `
+            <div class="searchable-select" data-checkout-location="${type}" data-selected-label="${esc(selectedName || '')}">
+                <div class="searchable-select-control">
+                    <input type="search" class="searchable-select-toggle" ${disabled ? 'disabled' : ''}
+                           value="${esc(selectedName || '')}" placeholder="${esc(placeholder)}" autocomplete="off"
+                           role="combobox" aria-haspopup="listbox" aria-expanded="false"
+                           onfocus="openCheckoutLocationDropdown('${type}',true)"
+                           oninput="openCheckoutLocationDropdown('${type}');filterCheckoutLocationOptions('${type}',this)"
+                           onkeydown="handleCheckoutLocationSearchKeydown(event,'${type}')">
+                    <button type="button" class="searchable-select-arrow-button" ${disabled ? 'disabled' : ''}
+                            onclick="toggleCheckoutLocationDropdown('${type}')" aria-label="Mở danh sách ${esc(placeholder)}">
+                        <span class="searchable-select-arrow" aria-hidden="true">⌄</span>
+                    </button>
+                </div>
+                <div class="searchable-select-menu" hidden>
+                    <div class="searchable-select-options" role="listbox">
+                        ${options || `<div class="searchable-select-empty">${emptyMessage}</div>`}
+                    </div>
+                    <div class="searchable-select-empty" data-empty hidden>Không tìm thấy kết quả phù hợp.</div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render saved checkout address select.
+    function renderSavedCheckoutAddressSelect(checkout) {
+        const selected = state.savedAddresses.find((address) => String(address.id) === String(checkout.savedAddressId));
+        const selectedLabel = selected
+            ? `${selected.macDinh ? 'Mặc định - ' : ''}${selected.tenDiaChi || selected.tenNguoiNhan || 'Địa chỉ'} | ${addressFullText(selected)}`
+            : '';
+        const options = state.savedAddresses.map((address) => {
+            const label = `${address.macDinh ? 'Mặc định - ' : ''}${address.tenDiaChi || address.tenNguoiNhan || 'Địa chỉ'} | ${addressFullText(address)}`;
+            return `<button type="button" class="searchable-select-option" data-search="${esc(label)}" onclick="selectSavedCheckoutAddress('${esc(address.id)}')">${esc(label)}</button>`;
+        }).join('');
+        return `
+            <div class="searchable-select" data-saved-address-select data-selected-label="${esc(selectedLabel)}">
+                <div class="searchable-select-control">
+                    <input type="search" class="searchable-select-toggle" value="${esc(selectedLabel)}"
+                           placeholder="Tìm kiếm hoặc chọn địa chỉ..." autocomplete="off"
+                           role="combobox" aria-haspopup="listbox" aria-expanded="false"
+                           onfocus="openSavedCheckoutAddressDropdown(true)"
+                           oninput="filterSavedCheckoutAddressOptions(this)">
+                    <button type="button" class="searchable-select-arrow-button"
+                            onclick="toggleSavedCheckoutAddressDropdown()" aria-label="Mở danh sách địa chỉ">
+                        <span class="searchable-select-arrow" aria-hidden="true">⌄</span>
+                    </button>
+                </div>
+                <div class="searchable-select-menu" hidden>
+                    <div class="searchable-select-options" role="listbox">
+                        ${options || '<div class="searchable-select-empty">Chưa có địa chỉ đã lưu.</div>'}
+                    </div>
+                    <div class="searchable-select-empty" data-empty hidden>Không tìm thấy kết quả phù hợp.</div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho saved checkout address select.
+    function savedCheckoutAddressSelect() {
+        return document.querySelector('[data-saved-address-select]');
+    }
+
+    // Xử lý tương tác người dùng cho toggle saved checkout address dropdown.
+    function toggleSavedCheckoutAddressDropdown() {
+        const select = savedCheckoutAddressSelect();
+        if (!select) return;
+        if (select.classList.contains('open')) closeCheckoutLocationDropdowns();
+        else openSavedCheckoutAddressDropdown(true);
+    }
+
+    // Xử lý tương tác người dùng cho open saved checkout address dropdown.
+    function openSavedCheckoutAddressDropdown(clearSearch = false) {
+        const select = savedCheckoutAddressSelect();
+        if (!select) return;
+        const input = select.querySelector('.searchable-select-toggle');
+        closeCheckoutLocationDropdowns(select);
+        select.classList.add('open');
+        select.querySelector('.searchable-select-menu').hidden = false;
+        input.setAttribute('aria-expanded', 'true');
+        if (clearSearch) input.value = '';
+        filterSavedCheckoutAddressOptions(input);
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm filter saved checkout address options.
+    function filterSavedCheckoutAddressOptions(input) {
+        const select = savedCheckoutAddressSelect();
+        if (!select) return;
+        const keyword = normalizeSelectSearch(input?.value || '');
+        let visible = 0;
+        select.querySelectorAll('.searchable-select-option').forEach((option) => {
+            const matches = !keyword || normalizeSelectSearch(option.dataset.search).includes(keyword);
+            option.hidden = !matches;
+            if (matches) visible += 1;
+        });
+        select.querySelector('[data-empty]').hidden = visible > 0;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm select saved checkout address.
+    function selectSavedCheckoutAddress(addressId) {
+        closeCheckoutLocationDropdowns();
+        applySavedCheckoutAddress(addressId);
+    }
+
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close checkout location dropdowns.
+    function closeCheckoutLocationDropdowns(except = null) {
+        document.querySelectorAll('.searchable-select.open').forEach((select) => {
+            if (select !== except) {
+                select.classList.remove('open');
+                select.querySelector('.searchable-select-menu').hidden = true;
+                select.querySelector('.searchable-select-toggle').setAttribute('aria-expanded', 'false');
+                select.querySelector('.searchable-select-toggle').value = select.dataset.selectedLabel || '';
+            }
+        });
+    }
+
+    // Xử lý tương tác người dùng cho toggle checkout location dropdown.
+    function toggleCheckoutLocationDropdown(type) {
+        const select = document.querySelector(`[data-checkout-location="${type}"]`);
+        if (!select || select.querySelector('.searchable-select-toggle').disabled) return;
+        const isOpen = select.classList.contains('open');
+        if (isOpen) {
+            closeCheckoutLocationDropdowns();
+            return;
+        }
+        openCheckoutLocationDropdown(type, true);
+    }
+
+    // Xử lý tương tác người dùng cho open checkout location dropdown.
+    function openCheckoutLocationDropdown(type, clearSearch = false) {
+        const select = document.querySelector(`[data-checkout-location="${type}"]`);
+        if (!select || select.querySelector('.searchable-select-toggle').disabled) return;
+        const input = select.querySelector('.searchable-select-toggle');
+        const wasOpen = select.classList.contains('open');
+        closeCheckoutLocationDropdowns(select);
+        select.classList.add('open');
+        select.querySelector('.searchable-select-menu').hidden = false;
+        input.setAttribute('aria-expanded', 'true');
+        if (clearSearch && !wasOpen) input.value = '';
+        filterCheckoutLocationOptions(type, input);
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm filter checkout location options.
+    function filterCheckoutLocationOptions(type, input) {
+        const select = document.querySelector(`[data-checkout-location="${type}"]`);
+        if (!select) return;
+        const keyword = normalizeSelectSearch(input?.value || '');
+        let visible = 0;
+        select.querySelectorAll('.searchable-select-option').forEach((option) => {
+            const matches = !keyword || normalizeSelectSearch(option.dataset.search).includes(keyword);
+            option.hidden = !matches;
+            if (matches) visible += 1;
+        });
+        select.querySelector('[data-empty]').hidden = visible > 0;
+    }
+
+    // Xử lý tương tác người dùng cho handle checkout location search keydown.
+    function handleCheckoutLocationSearchKeydown(event, type) {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            closeCheckoutLocationDropdowns();
+        }
+        if (event.key === 'Enter') {
+            const option = document.querySelector(`[data-checkout-location="${type}"] .searchable-select-option:not([hidden])`);
+            if (option) {
+                event.preventDefault();
+                option.click();
+            }
+        }
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm select checkout location.
+    async function selectCheckoutLocation(type, value) {
+        if (type === 'province') {
+            await onCheckoutProvinceChange(value);
+            return;
+        }
+        await onCheckoutWardChange(value);
+    }
+
+    // Xử lý tương tác người dùng cho on checkout province change.
+    async function onCheckoutProvinceChange(provinceId) {
+        const selected = state.provinces.find((item) => String(item.code) === String(provinceId));
+        state.checkout.provinceId = provinceId;
+        state.checkout.provinceName = selected?.name || '';
         state.checkout.wardCode = '';
         state.checkout.wardName = '';
         state.checkout.shippingFee = 0;
         state.checkout.shippingCalculated = false;
+        state.checkout.shippingApiError = false;
+        state.checkout.shippingFixed35k = false;
         try {
-            await loadShopWards(select.value);
+            await loadShopWards(provinceId);
         } catch (error) {
             toast(error.message, 'error');
         }
         renderCheckoutPage();
     }
 
-    async function onCheckoutWardChange(select) {
-        state.checkout.wardCode = select.value;
-        state.checkout.wardName = selectedOptionName(select);
+    // Xử lý tương tác người dùng cho on checkout ward change.
+    async function onCheckoutWardChange(wardCode) {
+        const selected = state.wards.find((item) => String(item.code) === String(wardCode));
+        state.checkout.wardCode = wardCode;
+        state.checkout.wardName = selected?.name || '';
         state.checkout.shippingCalculated = false;
+        state.checkout.shippingApiError = false;
+        state.checkout.shippingFixed35k = false;
         await calculateShopShippingFee();
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho checkout address text.
     function checkoutAddressText() {
         const checkout = state.checkout;
         if (checkout.addressMode === 'saved') {
@@ -5696,29 +6678,34 @@
         ].filter((item) => text(item).trim()).join(', ');
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho can calculate shop shipping.
     function canCalculateShopShipping() {
         return Boolean(state.checkout.provinceName && state.checkout.wardName);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm selected saved checkout address.
     function selectedSavedCheckoutAddress() {
         return state.savedAddresses.find((item) => String(item.id) === String(state.checkout.savedAddressId)) || null;
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho has usable saved checkout address.
     function hasUsableSavedCheckoutAddress() {
         return state.checkout.addressMode === 'saved'
             && Boolean(selectedSavedCheckoutAddress())
             && Boolean(text(state.checkout.diaChiKhachHang || addressFullText(selectedSavedCheckoutAddress())).trim());
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fallback shipping fee by address.
     function fallbackShippingFeeByAddress(addressText, subtotal = cartSubtotal()) {
         if (!subtotal || subtotal >= FREE_SHIPPING_THRESHOLD) return 0;
         const normalized = normalizeLocationName(addressText);
-        if (!normalized) return 38000;
+        if (!normalized) return 35000;
         if (['ha noi', 'ho chi minh', 'hcm', 'tp hcm', 'da nang'].some((name) => normalized.includes(name))) return 25000;
         if (['hai phong', 'can tho', 'binh duong', 'dong nai'].some((name) => normalized.includes(name))) return 30000;
-        return 38000;
+        return 35000;
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho checkout shipping fee for order.
     function checkoutShippingFeeForOrder() {
         if (cartSubtotal() >= FREE_SHIPPING_THRESHOLD) return 0;
         if (state.checkout.shippingCalculated) return shippingFee();
@@ -5726,6 +6713,7 @@
         return shippingFee();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize location name.
     function normalizeLocationName(value) {
         return text(value)
             .normalize('NFD')
@@ -5739,12 +6727,14 @@
             .trim();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm location name matches.
     function locationNameMatches(left, right) {
         const a = normalizeLocationName(left);
         const b = normalizeLocationName(right);
         return Boolean(a && b && (a === b || a.includes(b) || b.includes(a)));
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho saved address location.
     function savedAddressLocation(address) {
         const full = addressFullText(address);
         const parts = full.split(',').map((item) => item.trim()).filter(Boolean);
@@ -5758,18 +6748,24 @@
         return { province, ward };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm calculate shop shipping fee.
     async function calculateShopShippingFee() {
         if (cartSubtotal() >= FREE_SHIPPING_THRESHOLD) {
             state.checkout.shippingFee = 0;
             state.checkout.shippingCalculated = true;
             state.checkout.shippingLoading = false;
+            state.checkout.shippingApiError = false;
+            state.checkout.shippingFixed35k = false;
             renderCheckoutPage();
             return;
         }
         if (!canCalculateShopShipping()) {
+            state.checkout.shippingApiError = false;
+            state.checkout.shippingFixed35k = false;
             if (hasUsableSavedCheckoutAddress()) {
                 state.checkout.shippingFee = fallbackShippingFeeByAddress(checkoutAddressText());
                 state.checkout.shippingCalculated = true;
+                state.checkout.shippingApiError = true;
             } else {
                 state.checkout.shippingFee = 0;
                 state.checkout.shippingCalculated = false;
@@ -5779,6 +6775,8 @@
         }
 
         state.checkout.shippingLoading = true;
+        state.checkout.shippingApiError = false;
+        state.checkout.shippingFixed35k = false;
         renderCheckoutPage();
         try {
             const response = await fetch(`${API}/api/shop/shipping/fee`, {
@@ -5798,22 +6796,78 @@
             const payload = await response.json();
             state.checkout.shippingFee = money(payload.fee);
             state.checkout.shippingCalculated = true;
+            state.checkout.shippingApiError = false;
         } catch (error) {
-            state.checkout.shippingFee = 0;
-            state.checkout.shippingCalculated = false;
-            toast(error.message || 'Không tính được phí vận chuyển.', 'error');
+            // Giữ nguyên cơ chế cũ: API bên thứ ba lỗi thì vẫn tự gán phí dự phòng theo địa chỉ.
+            state.checkout.shippingFee = fallbackShippingFeeByAddress(checkoutAddressText());
+            state.checkout.shippingCalculated = true;
+            state.checkout.shippingApiError = true;
+            state.checkout.shippingFixed35k = false;
+            toast('Dịch vụ vận chuyển tạm thời không phản hồi. Đã áp dụng phí dự phòng; bạn có thể chọn ship cố định 35.000đ.', 'info');
         } finally {
             state.checkout.shippingLoading = false;
             renderCheckoutPage();
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply fixed national shipping fee.
+    async function applyFixedNationalShippingFee() {
+        const subtotal = cartSubtotal();
+        if (!subtotal) {
+            toast('Giỏ hàng đang trống.', 'error');
+            return;
+        }
+
+        if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+            state.checkout.shippingFee = 0;
+            state.checkout.shippingCalculated = true;
+            state.checkout.shippingApiError = false;
+            state.checkout.shippingFixed35k = false;
+            renderCheckoutPage();
+            toast(`Đơn từ ${fmt(FREE_SHIPPING_THRESHOLD)} được miễn phí vận chuyển.`);
+            return;
+        }
+
+        if (state.checkout.shippingFixed35k) {
+            state.checkout.shippingFixed35k = false;
+            state.checkout.shippingApiError = false;
+            if (canCalculateShopShipping()) {
+                await calculateShopShippingFee();
+            } else if (hasUsableSavedCheckoutAddress()) {
+                state.checkout.shippingFee = fallbackShippingFeeByAddress(checkoutAddressText());
+                state.checkout.shippingCalculated = true;
+                state.checkout.shippingApiError = true;
+                renderCheckoutPage();
+            } else {
+                state.checkout.shippingFee = 0;
+                state.checkout.shippingCalculated = false;
+                renderCheckoutPage();
+            }
+            toast('Đã chuyển sang phí vận chuyển GHN.');
+            return;
+        }
+
+        state.checkout.shippingFee = 35000;
+        state.checkout.shippingCalculated = true;
+        state.checkout.shippingLoading = false;
+        state.checkout.shippingApiError = false;
+        state.checkout.shippingFixed35k = true;
+        renderCheckoutPage();
+        toast('Đã áp dụng phí ship cố định toàn quốc 35.000đ.');
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm apply saved checkout address.
     async function applySavedCheckoutAddress(addressId, options = {}) {
         const address = state.savedAddresses.find((item) => String(item.id) === String(addressId));
         if (!address) return;
         state.checkout.savedAddressId = String(address.id);
         state.checkout.diaChiKhachHang = address.diaChiCuThe || addressFullText(address);
-        if (address.tenNguoiNhan) state.checkout.tenKhachHang = address.tenNguoiNhan;
+        // The customer name is prefilled from the authenticated account. A saved
+        // delivery address may belong to somebody else, so it must not overwrite
+        // that name and leave checkout with an invalid, stale recipient name.
+        if (!text(state.checkout.tenKhachHang).trim() && address.tenNguoiNhan) {
+            state.checkout.tenKhachHang = address.tenNguoiNhan;
+        }
         if (address.soDienThoai) state.checkout.soDienThoai = address.soDienThoai;
         const location = savedAddressLocation(address);
         await restoreLocationByNames(location.province, location.ward);
@@ -5822,11 +6876,14 @@
         } else if (state.cart.length && hasUsableSavedCheckoutAddress()) {
             state.checkout.shippingFee = fallbackShippingFeeByAddress(checkoutAddressText());
             state.checkout.shippingCalculated = true;
+            state.checkout.shippingApiError = cartSubtotal() < FREE_SHIPPING_THRESHOLD;
+            state.checkout.shippingFixed35k = false;
         }
         if (!options.silent) toast('Đã chọn địa chỉ giao hàng đã lưu.');
         if (options.render !== false) renderCheckoutPage();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm restore location by names.
     async function restoreLocationByNames(provinceName, wardName) {
         await loadShopProvinces();
         state.checkout.provinceId = '';
@@ -5835,6 +6892,8 @@
         state.checkout.wardName = wardName || '';
         state.checkout.shippingFee = 0;
         state.checkout.shippingCalculated = false;
+        state.checkout.shippingApiError = false;
+        state.checkout.shippingFixed35k = false;
 
         const province = state.provinces.find((item) => locationNameMatches(item.name, provinceName));
         if (!province) {
@@ -5850,6 +6909,7 @@
         state.checkout.wardName = ward.name;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply voucher.
     async function applyVoucher(codeArg) {
         const input = $('checkoutVoucherInput') || $('voucherInput');
         const code = text(codeArg || input?.value).trim();
@@ -5882,24 +6942,22 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho submit order.
     async function submitOrder() {
-        const { tenKhachHang, email, soDienThoai, diaChiKhachHang, ghiChu } = state.checkout;
         const fullAddress = checkoutAddressText();
         const selectedPaymentMethod = state.checkout.phuongThucThanhToan || 'COD';
 
-        if (!tenKhachHang.trim() || !email.trim() || !soDienThoai.trim() || !diaChiKhachHang.trim()) {
-            toast('Vui lòng nhập đầy đủ họ tên, email, số điện thoại và địa chỉ giao hàng.', 'error');
+        if (!['tenKhachHang', 'email', 'soDienThoai', 'diaChiKhachHang', 'ghiChu']
+            .every((field) => validateCheckoutField(field, field !== 'ghiChu'))) {
+            toast('Vui lòng kiểm tra lại thông tin giao hàng được đánh dấu.', 'error');
             return;
         }
 
-        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim())) {
-            toast('Email nhận thông tin đơn hàng không hợp lệ.', 'error');
-            return;
-        }
+        const { tenKhachHang, email, soDienThoai, diaChiKhachHang, ghiChu } = state.checkout;
 
         if (!canCalculateShopShipping() && !hasUsableSavedCheckoutAddress() && cartSubtotal() < FREE_SHIPPING_THRESHOLD) {
-            toast('Vui lòng chọn tỉnh/thành và xã/phường để tính phí vận chuyển.', 'error');
-            return;
+            state.checkout.shippingFee = fallbackShippingFeeByAddress(fullAddress);
+            state.checkout.shippingCalculated = true;
         }
 
         if (!state.checkout.shippingCalculated && (canCalculateShopShipping() || cartSubtotal() >= FREE_SHIPPING_THRESHOLD)) {
@@ -5954,7 +7012,7 @@
             state.checkout = defaultCheckoutState();
             saveCart();
             updateCartCount();
-            if (['BANKING', 'VNPAY', 'ZALOPAY'].includes(selectedPaymentMethod)
+            if (['BANKING', 'VNPAY'].includes(selectedPaymentMethod)
                 && money(order.tongTienThanhToan) > 0) {
                 await startConfiguredGatewayPayment(code, order, selectedPaymentMethod);
             } else {
@@ -5967,6 +7025,7 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho render gateway redirect loading.
     function renderGatewayRedirectLoading(code, gateway) {
         $('checkoutPageContent').innerHTML = `
             <section class="web-payment-shell">
@@ -5981,6 +7040,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Hiển thị và đồng bộ giao diện cho render gateway payment error.
     function renderGatewayPaymentError(message) {
         const pending = state.pendingPayment || readPendingPayment() || {};
         $('checkoutPageContent').innerHTML = `
@@ -5996,6 +7056,7 @@
         `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm start configured gateway payment.
     async function startConfiguredGatewayPayment(code, order, gateway) {
         savePendingPayment({ code, order, gateway });
         renderGatewayRedirectLoading(code, gateway);
@@ -6018,8 +7079,9 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho render continue payment choice.
     function renderContinuePaymentChoice(code, order) {
-        const availableGateways = ['BANKING', 'VNPAY', 'ZALOPAY'].filter(paymentGatewayEnabled);
+        const availableGateways = ['BANKING', 'VNPAY'].filter(paymentGatewayEnabled);
         if (!availableGateways.length) {
             renderGatewayPaymentError('Chưa có cổng thanh toán online khả dụng.');
             return;
@@ -6062,6 +7124,7 @@
         `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm continue order payment.
     async function continueOrderPayment(code) {
         const cleanCode = text(code).trim();
         if (!cleanCode) {
@@ -6083,6 +7146,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm start continue payment with gateway.
     async function startContinuePaymentWithGateway(code, gateway) {
         const cleanCode = text(code).trim();
         const selectedGateway = text(gateway).trim().toUpperCase();
@@ -6104,6 +7168,7 @@
         }
     }
     /* ================== THANH TOÁN QR THỦ CÔNG ================== */
+    // Thực hiện xử lý nghiệp vụ của hàm stop banking payment polling.
     function stopBankingPaymentPolling() {
         if (window.__bankingPollTimer) clearInterval(window.__bankingPollTimer);
         if (window.__bankingConfirmTimer) clearTimeout(window.__bankingConfirmTimer);
@@ -6111,6 +7176,7 @@
         window.__bankingConfirmTimer = null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm confirm banking payment.
     function confirmBankingPayment(code) {
         stopBankingPaymentPolling();
         const badge = $('bankingPaymentStatus');
@@ -6120,6 +7186,7 @@
             renderOrderSuccess(code, { ...state.pendingPayment?.order, phuongThucThanhToan: 'BANKING' });
         }, 400);
     }
+    // Hiển thị và đồng bộ giao diện cho render banking payment page.
     function renderBankingPaymentPage(code, order, payment = {}) {
         const amount = money(order.tongTienThanhToan);
         const content = bankingTransferContent(code);
@@ -6162,6 +7229,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm retry configured gateway payment.
     async function retryConfiguredGatewayPayment() {
         const pending = state.pendingPayment || readPendingPayment();
         if (!pending?.order?.id || !pending?.gateway) {
@@ -6171,6 +7239,7 @@
         await startConfiguredGatewayPayment(pending.code, pending.order, pending.gateway);
     }
 
+    // Hiển thị và đồng bộ giao diện cho render order success.
     function renderOrderSuccess(code, order = {}) {
         clearPendingPayment(code);
         const paymentMethod = order.phuongThucThanhToan || 'COD';
@@ -6180,8 +7249,8 @@
                     <div class="success-mark">✓</div>
                     <h1>Đặt hàng thành công!</h1>
                     <p>Cảm ơn bạn đã lựa chọn 4MenStore.<br>${onlinePayment
-                        ? `Đơn hàng đã được tiếp nhận và đang chờ xác nhận thanh toán qua <b>${esc(paymentMethodDisplayName(paymentMethod))}</b>.`
-                        : 'Đơn hàng đã được tiếp nhận và sẽ sớm được xác nhận.'}</p>
+            ? `Đơn hàng đã được tiếp nhận và đang chờ xác nhận thanh toán qua <b>${esc(paymentMethodDisplayName(paymentMethod))}</b>.`
+            : 'Đơn hàng đã được tiếp nhận và sẽ sớm được xác nhận.'}</p>
                     <div class="order-code">${esc(code)}</div>
                     <p>Mã đơn hàng đã được lưu vào lịch sử trên trình duyệt này và gửi về email của bạn.</p>
                     <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap">
@@ -6192,6 +7261,7 @@
             `;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render gateway return from url.
     function renderGatewayReturnFromUrl() {
         const params = new URLSearchParams(window.location.search);
         const result = params.get('paymentResult');
@@ -6245,6 +7315,7 @@
 
         document.addEventListener('click', (event) => {
             if (!event.target.closest('#accountWrap')) closeAccountMenu();
+            if (!event.target.closest('.searchable-select')) closeCheckoutLocationDropdowns();
         });
 
         document.addEventListener('keydown', (event) => {
@@ -6252,6 +7323,7 @@
                 closeAccountMenu();
                 closeAccountModal();
                 closeShopVoucherModal();
+                closeCheckoutLocationDropdowns();
                 toggleSizeChat(false);
             }
         });

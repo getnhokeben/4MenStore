@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-icons-20260822-1" defer></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
         *,
@@ -1254,6 +1254,35 @@
             overflow: hidden;
         }
 
+        .variant-image-list {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .variant-image-panel.variant-specific {
+            min-height: 0;
+        }
+
+        .variant-image-panel.variant-specific .variant-image-title {
+            text-transform: none;
+        }
+
+        .variant-image-panel.variant-specific .variant-image-hint {
+            padding-top: 6px;
+        }
+
+        .variant-image-panel.variant-specific .variant-image-body {
+            padding: 8px 10px 10px;
+        }
+
+        .variant-image-panel.variant-specific .variant-image-thumb,
+        .variant-image-panel.variant-specific .variant-image-upload {
+            width: 64px;
+            height: 64px;
+        }
+
         .variant-image-title {
             display: flex;
             align-items: center;
@@ -1645,7 +1674,7 @@
                             oninput="updateProductPrice(this.value)"
                             onchange="load(0)"
                     />
-                    <span class="max-label">Giá lớn nhất: <span id="maxPriceLabel">0 đ</span></span>
+                    <span class="max-label">Giá lớn nhất hiện tại: <span id="maxPriceLabel">0 đ</span></span>
                 </div>
 
                 <div class="filter-actions">
@@ -1784,7 +1813,7 @@
         </div>
         <div class="modal-body">
             <div class="variant-workspace-note">
-                Chọn trực tiếp màu sắc và kích cỡ bên dưới. Sau đó nhấn <b>Tạo biến thể</b> để nhập giá, số lượng và thêm tối đa <b>3 ảnh riêng cho mỗi màu</b>. Ảnh đầu tiên là ảnh chính của biến thể. Khu vực này chỉ dùng khi thêm mới sản phẩm.
+                Chọn trực tiếp màu sắc và kích cỡ bên dưới. Sau đó nhấn <b>Tạo biến thể</b> để nhập giá, số lượng và thêm tối đa <b>3 ảnh riêng cho từng biến thể màu – kích cỡ</b>. Ảnh đầu tiên là ảnh chính của biến thể. Khu vực này chỉ dùng khi thêm mới sản phẩm.
             </div>
 
             <div class="variant-selector-card">
@@ -1937,6 +1966,7 @@
     window._variantsNeedRefresh = false;
     let _quickAddType = null;
 
+    // Thực hiện xử lý nghiệp vụ của hàm toast.
     function toast(msg, type='success'){
         const icons = {success: '✅', error: '❌', info: 'ℹ️'};
         const w = document.getElementById('toastWrap');
@@ -1946,8 +1976,10 @@
         w.appendChild(el);
         setTimeout(()=>{ el.style.opacity='0'; el.style.transform='translateY(8px)'; el.style.transition='.3s'; setTimeout(()=>el.remove(),300) },3000);
     }
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close modal.
     function closeModal(id){ document.getElementById(id).classList.remove('show') }
     document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('show') }));
+    // Hiển thị và đồng bộ giao diện cho show product confirm.
     function showProductConfirm(title, message, okText, onOk){
         document.getElementById('confirmTitle').textContent = title;
         document.getElementById('confirmMessage').textContent = message;
@@ -1957,7 +1989,9 @@
         btn.onclick = onOk;
         document.getElementById('mdConfirm').classList.add('show');
     }
+    // Thực hiện xử lý nghiệp vụ của hàm esc.
     function esc(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
+    // Thực hiện xử lý nghiệp vụ của hàm js attr str.
     function jsAttrStr(s){
         return String(s || '')
             .replace(/\\/g, '\\\\')
@@ -1965,12 +1999,19 @@
             .replace(/"/g, '&quot;')
             .replace(/\r?\n/g, ' ');
     }
+    // Thực hiện xử lý nghiệp vụ của hàm txt of.
     function txtOf(v,k){ if(!v) return ''; return typeof v==='object'? (v[k]||'') : String(v) }
+    // Thực hiện xử lý nghiệp vụ của hàm fmt.
     function fmt(n){ return (Math.round(Number(n||0) / 1000) * 1000).toLocaleString('vi-VN') }
+    // Kiểm tra điều kiện và tính hợp lệ cho is positive money.
     function isPositiveMoney(v){ return Number(moneyRaw(v)) > 0 }
+    // Kiểm tra điều kiện và tính hợp lệ cho is non negative int.
     function isNonNegativeInt(v){ return String(v ?? '').trim() !== '' && Number.isInteger(Number(v)) && Number(v) >= 0 }
+    // Thực hiện xử lý nghiệp vụ của hàm money raw.
     function moneyRaw(v){ return String(v || '').replace(/[^\d]/g, '') }
+    // Thực hiện xử lý nghiệp vụ của hàm format money.
     function formatMoney(v){ const raw = moneyRaw(v); return raw ? Number(raw).toLocaleString('vi-VN') : '' }
+    // Thực hiện xử lý nghiệp vụ của hàm format money input.
     function formatMoneyInput(input){
         const caret = input.selectionStart || 0;
         const digitsBeforeCaret = moneyRaw(input.value.slice(0, caret)).length;
@@ -1994,15 +2035,20 @@
             });
         }
     }
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear e.
     function clearE(id){ const g=document.getElementById(id); if(g){ g.classList.remove('err'); const e=g.querySelector('.em'); if(e) e.textContent='' } }
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set e.
     function setE(id,msg){ const g=document.getElementById(id); if(g){ g.classList.add('err'); const e=g.querySelector('.em'); if(e) e.textContent=msg } }
+    // Thực hiện xử lý nghiệp vụ của hàm product price slider step.
     function productPriceSliderStep(maxPrice) {
         return 1000;
     }
+    // Thực hiện xử lý nghiệp vụ của hàm product price slider max.
     function productPriceSliderMax(maxPrice) {
         const safeMax = Number(maxPrice || 0);
         return Number.isFinite(safeMax) && safeMax > 0 ? safeMax : 0;
     }
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho setup product price range.
     function setupProductPriceRange(){
         const maxPrice = allProducts.reduce((max, p) => Math.max(max, p._maxPrice || 0), 0);
         dynamicProductMaxPrice = productPriceSliderMax(maxPrice);
@@ -2013,6 +2059,7 @@
         updateProductPrice(dynamicProductMaxPrice);
         document.getElementById('maxPriceLabel').textContent = fmt(dynamicProductMaxPrice) + ' đ';
     }
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update product price.
     function updateProductPrice(val){
         const range = document.getElementById('productPriceRange');
         const max = Number(range.max || 0);
@@ -2021,10 +2068,12 @@
         range.style.setProperty('--pct', pct + '%');
         document.getElementById('productPriceLabel').textContent = max ? `0 đ - ${fmt(current)} đ` : 'Tất cả';
     }
+    // Thực hiện xử lý nghiệp vụ của hàm product matches price.
     function productMatchesPrice(product, maxPrice){
         const prices = Array.isArray(product._variantPrices) ? product._variantPrices : [];
         return prices.some(price => Number(price || 0) <= maxPrice);
     }
+    // Xử lý tương tác người dùng cho toggle sub.
     function toggleSub(subId,arrId){
         const sub=document.getElementById(subId), arr=document.getElementById(arrId);
         const open=sub.classList.toggle('open');
@@ -2032,6 +2081,7 @@
     }
 
     // MASTER DATA
+    // Tải hoặc truy xuất dữ liệu cho fetch master catalog.
     async function fetchMasterCatalog(path) {
         const r = await fetch(`${API}/danh-muc/${path}`);
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -2039,6 +2089,7 @@
         return Array.isArray(data) ? data : (data.content || []);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load master.
     async function loadMaster(){
         try {
             [szOpts, clOpts, loOpts, pcOpts, kdOpts, xxOpts, chOpts] = await Promise.all([
@@ -2056,7 +2107,10 @@
         renderMasterSelects();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render master selects.
     function renderMasterSelects() {
+        selectedColors = selectedColors.filter(isActiveAttribute);
+        selectedSizes = selectedSizes.filter(isActiveAttribute);
         fillSelect('inXuat',xxOpts,'idXuatXu','tenXuatXu','Chọn xuất xứ');
         fillSelect('inLoai',loOpts,'idLoaiAo','tenLoai','Chọn loại áo');
         fillSelect('inKieu',kdOpts,'idKieuDang','tenKieuDang','Chọn kiểu dáng');
@@ -2068,10 +2122,11 @@
         renderVariantSummary();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render variant selector.
     function renderVariantSelector(){
         const colorWrap = document.getElementById('variantColorOptions');
         if (colorWrap) {
-            colorWrap.innerHTML = (clOpts || []).map(c => {
+            colorWrap.innerHTML = (clOpts || []).filter(isActiveAttribute).map(c => {
                 const id = c.idMauSac;
                 const selected = selectedColors.some(item => String(item.idMauSac) === String(id));
                 const hex = colorHexMap[c.tenMauSac] || '#999';
@@ -2083,7 +2138,7 @@
 
         const sizeWrap = document.getElementById('variantSizeOptions');
         if (sizeWrap) {
-            sizeWrap.innerHTML = (szOpts || []).map(s => {
+            sizeWrap.innerHTML = (szOpts || []).filter(isActiveAttribute).map(s => {
                 const id = s.idKichCo;
                 const selected = selectedSizes.some(item => String(item.idKichCo) === String(id));
                 return `<button type="button" class="variant-option ${selected ? 'selected' : ''}" onclick="toggleVariantSize(${id})">${esc(s.tenKichCo)}</button>`;
@@ -2091,6 +2146,7 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho toggle variant color.
     function toggleVariantColor(id){
         const item = clOpts.find(c => String(c.idMauSac) === String(id));
         if (!item) return;
@@ -2105,6 +2161,7 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho toggle variant size.
     function toggleVariantSize(id){
         const item = szOpts.find(s => String(s.idKichCo) === String(id));
         if (!item) return;
@@ -2119,15 +2176,22 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fill select.
     function fillSelect(id,arr,idK,lbK,placeholder){
         const el=document.getElementById(id); if(!el) return;
         const current = el.value;
         el.innerHTML=`<option value="">${placeholder}</option>` + (arr || [])
-            .filter(it => it && it[idK] != null)
+            .filter(it => it && it[idK] != null && isActiveAttribute(it))
             .map(it=>`<option value="${it[idK]}">${esc(it[lbK])}</option>`).join('');
         if (current) el.value = current;
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is active attribute.
+    function isActiveAttribute(item) {
+        return item?.trangThai !== false && item?.trangThai !== 'false';
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm gen attr code.
     function genAttrCode(prefix, name) {
         const slug = String(name || '')
             .normalize('NFD')
@@ -2139,6 +2203,7 @@
         return `${prefix}_${slug || 'NEW'}_${Date.now().toString().slice(-6)}`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm quick attr config.
     function quickAttrConfig(type) {
         return {
             xuatxu:{selId:'inXuat',idK:'idXuatXu',lbK:'tenXuatXu',slug:'xuat-xu',prefix:'XX',catalog:'xuat-xu',placeholder:'Chọn xuất xứ'},
@@ -2151,6 +2216,7 @@
         }[type];
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set catalog by type.
     function setCatalogByType(type, items) {
         if (type === 'xuatxu') xxOpts = items;
         else if (type === 'loaiao') loOpts = items;
@@ -2161,6 +2227,20 @@
         else if (type === 'kichco') szOpts = items;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize quick attribute name.
+    function normalizeQuickAttributeName(value) {
+        return String(value || '')
+            .normalize('NFC')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm quick attribute name key.
+    function quickAttributeNameKey(value) {
+        return normalizeQuickAttributeName(value).toLowerCase();
+    }
+
+    // Hiển thị và đồng bộ giao diện cho show quick add modal.
     function showQuickAddModal(type) {
         _quickAddType = type;
         const cfg = quickAttrConfig(type);
@@ -2170,7 +2250,9 @@
         document.getElementById('quickAddInput').value = '';
         document.getElementById('quickAddError').textContent = '';
         document.getElementById('quickAddConfirmBtn').onclick = function() {
-            const name = document.getElementById('quickAddInput').value.trim();
+            const input = document.getElementById('quickAddInput');
+            const name = normalizeQuickAttributeName(input.value);
+            input.value = name;
             if (!name) {
                 document.getElementById('quickAddError').textContent = 'Vui lòng nhập tên';
                 return;
@@ -2180,7 +2262,7 @@
                 return;
             }
             const source = {xuatxu:xxOpts, loaiao:loOpts, kieudang:kdOpts, phongcach:pcOpts, chatlieu:chOpts, mausac:clOpts, kichco:szOpts}[type] || [];
-            if (source.some(item => String(item[cfg.lbK] || '').trim().toLowerCase() === name.toLowerCase())) {
+            if (source.some(item => quickAttributeNameKey(item[cfg.lbK]) === quickAttributeNameKey(name))) {
                 document.getElementById('quickAddError').textContent = 'Tên đã tồn tại';
                 return;
             }
@@ -2191,6 +2273,7 @@
         setTimeout(() => document.getElementById('quickAddInput').focus(), 100);
     }
 
+    // Xử lý tương tác người dùng cho submit quick option.
     async function submitQuickOption(type, name, cfg) {
         try {
             const r = await fetch(`/api/thuoc-tinh/${cfg.slug}`, {
@@ -2237,6 +2320,7 @@
         }
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear variant images.
     function clearVariantImages(){
         Object.values(window._variantImages || {}).forEach(record => {
             (record?.images || []).forEach(image => {
@@ -2246,11 +2330,27 @@
         window._variantImages = {};
     }
 
-    function getVariantImages(colorId){
-        const record = window._variantImages[String(colorId)];
+    // Thực hiện xử lý nghiệp vụ của hàm variant image key.
+    function variantImageKey(colorId, sizeId){
+        return String(colorId) + '_' + String(sizeId);
+    }
+
+    // Tải hoặc truy xuất dữ liệu cho get variant images.
+    function getVariantImages(colorId, sizeId){
+        const record = window._variantImages[variantImageKey(colorId, sizeId)];
         return Array.isArray(record?.images) ? record.images : [];
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear variant image record.
+    function clearVariantImageRecord(key){
+        const record = window._variantImages[String(key)];
+        (record?.images || []).forEach(image => {
+            if (image?.previewUrl?.startsWith('blob:')) URL.revokeObjectURL(image.previewUrl);
+        });
+        delete window._variantImages[String(key)];
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm normalize image url.
     function normalizeImageUrl(value) {
         const raw = String(value || '').trim();
         if (!raw) return '';
@@ -2261,10 +2361,12 @@
         return '/uploads/' + raw;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product image url.
     function productImageUrl(product) {
         return normalizeImageUrl(product?.hinhAnhChinh || product?.hinhAnh || product?.imageUrl || '');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset product common image.
     function resetProductCommonImage(url = '') {
         clearProductCommonPreview();
         const normalized = normalizeImageUrl(url);
@@ -2273,11 +2375,13 @@
         renderProductCommonImage();
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear product common preview.
     function clearProductCommonPreview() {
         const image = window._productCommonImage;
         if (image?.previewUrl?.startsWith('blob:')) URL.revokeObjectURL(image.previewUrl);
     }
 
+    // Hiển thị và đồng bộ giao diện cho render product common image.
     function renderProductCommonImage() {
         const body = document.getElementById('productImageBody');
         const count = document.getElementById('productImageCount');
@@ -2308,6 +2412,7 @@
         `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm preview product common image.
     function previewProductCommonImage(input) {
         const file = input?.files?.[0];
         if (!file) return;
@@ -2318,6 +2423,7 @@
         renderProductCommonImage();
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho remove product common image.
     function removeProductCommonImage() {
         clearProductCommonPreview();
         window._productCommonImage = null;
@@ -2325,6 +2431,7 @@
         renderProductCommonImage();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm upload product common image.
     async function uploadProductCommonImage() {
         const image = window._productCommonImage;
         if (!image) return '';
@@ -2346,17 +2453,20 @@
         return data.url;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm preview variant images.
     function previewVariantImages(input) {
         const colorId = String(input.dataset.color || '');
+        const sizeId = String(input.dataset.size || '');
         const files = Array.from(input.files || []);
-        if (!colorId || !files.length) return;
+        if (!colorId || !sizeId || !files.length) return;
 
-        const current = window._variantImages[colorId] || { images: [] };
+        const key = variantImageKey(colorId, sizeId);
+        const current = window._variantImages[key] || { images: [] };
         current.images = Array.isArray(current.images) ? current.images : [];
         const remaining = Math.max(0, 3 - current.images.length);
 
         if (!remaining) {
-            toast('Mỗi màu chỉ được thêm tối đa 3 ảnh', 'error');
+            toast('Mỗi biến thể chỉ được thêm tối đa 3 ảnh', 'error');
             input.value = '';
             return;
         }
@@ -2367,15 +2477,16 @@
             previewUrl: URL.createObjectURL(file),
             url: ''
         }));
-        window._variantImages[colorId] = current;
+        window._variantImages[key] = current;
 
-        if (files.length > remaining) toast('Chỉ thêm ' + remaining + ' ảnh; mỗi màu tối đa 3 ảnh', 'info');
+        if (files.length > remaining) toast('Chỉ thêm ' + remaining + ' ảnh; mỗi biến thể tối đa 3 ảnh', 'info');
         input.value = '';
         generateVariants();
     }
 
-    function removeVariantImage(colorId, imageIndex) {
-        const key = String(colorId);
+    // Xử lý thao tác đóng, xóa hoặc hủy cho remove variant image.
+    function removeVariantImage(colorId, sizeId, imageIndex) {
+        const key = variantImageKey(colorId, sizeId);
         const current = window._variantImages[key];
         if (!current?.images?.[imageIndex]) return;
         const image = current.images[imageIndex];
@@ -2385,9 +2496,19 @@
         generateVariants();
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho remove generated variant.
+    function removeGeneratedVariant(button, colorId, sizeId) {
+        const key = variantImageKey(colorId, sizeId);
+        clearVariantImageRecord(key);
+        button?.closest('tr')?.remove();
+        document.querySelector(`[data-variant-image-key="${key}"]`)?.remove();
+        renderVariantSummary();
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm upload variant images.
     async function uploadVariantImages() {
-        const imagesByColor = {};
-        for (const [colorId, record] of Object.entries(window._variantImages || {})) {
+        const imagesByVariant = {};
+        for (const [variantKey, record] of Object.entries(window._variantImages || {})) {
             const urls = [];
             for (const image of (record?.images || [])) {
                 if (image?.file) {
@@ -2406,34 +2527,41 @@
                     urls.push(image.url);
                 }
             }
-            imagesByColor[colorId] = urls;
+            imagesByVariant[variantKey] = urls;
         }
-        return imagesByColor;
+        return imagesByVariant;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render color chips.
     function renderColorChips(){ renderVariantSelector(); renderVariantSummary(); }
+    // Hiển thị và đồng bộ giao diện cho render size chips.
     function renderSizeChips(){ renderVariantSelector(); renderVariantSummary(); }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho remove color.
     function removeColor(id){
         const key = String(id);
-        const record = window._variantImages[key];
-        (record?.images || []).forEach(image => {
-            if (image?.previewUrl?.startsWith('blob:')) URL.revokeObjectURL(image.previewUrl);
-        });
-        delete window._variantImages[key];
+        Object.keys(window._variantImages || {})
+            .filter(imageKey => imageKey.startsWith(key + '_'))
+            .forEach(clearVariantImageRecord);
         selectedColors = selectedColors.filter(c => String(c.idMauSac) !== key);
         window._variantsNeedRefresh = true;
         renderVariantSelector();
         renderVariantSummary();
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho remove size.
     function removeSize(id){
-        selectedSizes = selectedSizes.filter(s => String(s.idKichCo) !== String(id));
+        const key = String(id);
+        Object.keys(window._variantImages || {})
+            .filter(imageKey => imageKey.endsWith('_' + key))
+            .forEach(clearVariantImageRecord);
+        selectedSizes = selectedSizes.filter(s => String(s.idKichCo) !== key);
         window._variantsNeedRefresh = true;
         renderVariantSelector();
         renderVariantSummary();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render variant summary.
     function renderVariantSummary(){
         const target = document.getElementById('variantSelectionSummary');
         if (!target) return;
@@ -2443,9 +2571,10 @@
             target.textContent = 'Chưa chọn đủ màu sắc và kích cỡ.';
             return;
         }
-        target.innerHTML = `Đã chọn <strong>${selectedColors.length} màu</strong>, <strong>${selectedSizes.length} kích cỡ</strong> — sẽ tạo <strong>${totalVariants} biến thể</strong>. Đã thêm <strong>${totalImages}/${selectedColors.length * 3}</strong> ảnh.`;
+        target.innerHTML = `Đã chọn <strong>${selectedColors.length} màu</strong>, <strong>${selectedSizes.length} kích cỡ</strong> — sẽ tạo <strong>${totalVariants} biến thể</strong>. Đã thêm <strong>${totalImages}/${totalVariants * 3}</strong> ảnh riêng.`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm hydrate existing variants.
     function hydrateExistingVariants(variants){
         clearVariantImages();
         window._presetVariantValues = {};
@@ -2473,7 +2602,7 @@
                 };
             }
 
-            if (colorId != null) {
+            if (colorId != null && sizeId != null) {
                 let imageValues = v?.danhSachHinhAnh ?? v?.hinhAnhList ?? v?.images ?? v?.hinhAnhs ?? v?.hinhAnh ?? [];
                 if (typeof imageValues === 'string') {
                     try {
@@ -2484,15 +2613,16 @@
                     }
                 }
                 if (!Array.isArray(imageValues)) imageValues = [];
-                const colorKey = String(colorId);
-                const record = window._variantImages[colorKey] || { images: [] };
+                if (v?.hinhAnh && !imageValues.includes(v.hinhAnh)) imageValues.unshift(v.hinhAnh);
+                const imageKey = variantImageKey(colorId, sizeId);
+                const record = window._variantImages[imageKey] || { images: [] };
                 imageValues.filter(Boolean).forEach(url => {
                     const normalizedUrl = normalizeImageUrl(url);
                     if (record.images.length < 3 && normalizedUrl && !record.images.some(image => image.url === normalizedUrl)) {
                         record.images.push({ file: null, previewUrl: normalizedUrl, url: normalizedUrl });
                     }
                 });
-                if (record.images.length) window._variantImages[colorKey] = record;
+                if (record.images.length) window._variantImages[imageKey] = record;
             }
         });
 
@@ -2505,6 +2635,7 @@
         renderVariantSummary();
     }
 
+    // Xử lý tương tác người dùng cho open variant manager.
     function openVariantManager(){
         if (document.getElementById('productId').value) {
             toast('Biến thể chỉ được tạo khi thêm mới sản phẩm. Hãy dùng màn hình Biến thể sản phẩm để chỉnh sửa biến thể.', 'info');
@@ -2515,6 +2646,7 @@
         document.getElementById('mdVariants').classList.add('show');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply variant manager.
     function applyVariantManager(){
         if (document.getElementById('productId').value) {
             toast('Không thể cập nhật biến thể tại màn hình chỉnh sửa sản phẩm.', 'info');
@@ -2531,7 +2663,8 @@
         toast('Đã áp dụng biến thể');
     }
 
-    // ===== TẠO BIẾN THỂ KÈM TỐI ĐA 3 ẢNH THEO MÀU =====
+    // ===== TẠO BIẾN THỂ KÈM TỐI ĐA 3 ẢNH RIÊNG CHO TỪNG MÀU - KÍCH CỠ =====
+    // Thực hiện xử lý nghiệp vụ của hàm generate variants.
     function generateVariants(){
         if (document.getElementById('productId').value) {
             toast('Màn hình này không hỗ trợ cập nhật biến thể sản phẩm.', 'info');
@@ -2561,7 +2694,6 @@
             const colorId = String(c.idMauSac);
             const colorName = esc(c.tenMauSac);
             const hex = colorHexMap[c.tenMauSac] || '#999';
-            const images = getVariantImages(colorId);
             const rows = selectedSizes.map(s => {
                 const key = c.idMauSac + '_' + s.idKichCo;
                 const ex = existing[key] || window._presetVariantValues[key] || {dg:0, sl:0, sku:'', idspct:''};
@@ -2571,19 +2703,40 @@
                     <td style="font-weight:600">${esc(s.tenKichCo)}</td>
                     <td><div class="input-with-suffix"><input type="text" inputmode="numeric" class="v-input v-dg-input" value="${formatMoney(ex.dg)}" oninput="formatMoneyInput(this)" placeholder="0"><span class="suffix">đ</span></div></td>
                     <td><input type="number" class="v-input v-sl" min="0" value="${ex.sl}" placeholder="0"></td>
-                    <td><button type="button" class="vremove" onclick="this.closest('tr').remove()"><i class="fas fa-trash-alt"></i></button></td>
+                    <td><button type="button" class="vremove" onclick="removeGeneratedVariant(this, '${esc(c.idMauSac)}', '${esc(s.idKichCo)}')"><i class="fas fa-trash-alt"></i></button></td>
                 </tr>`;
             }).join('');
 
-            const thumbs = images.map((image, index) => {
-                const src = normalizeImageUrl(image.previewUrl || image.url || '');
-                return `<div class="variant-image-thumb">
-                    <img src="${esc(src)}" alt="Ảnh ${index + 1} màu ${colorName}">
-                    ${index === 0 ? '<span class="variant-image-primary">Ảnh chính</span>' : ''}
-                    <button type="button" class="variant-image-remove" title="Xóa ảnh" onclick="removeVariantImage('${colorId}', ${index})"><i class="fas fa-times"></i></button>
+            const imagePanels = selectedSizes.map(s => {
+                const sizeId = String(s.idKichCo);
+                const sizeName = esc(s.tenKichCo);
+                const imageKey = variantImageKey(colorId, sizeId);
+                const images = getVariantImages(colorId, sizeId);
+                const thumbs = images.map((image, index) => {
+                    const src = normalizeImageUrl(image.previewUrl || image.url || '');
+                    return `<div class="variant-image-thumb">
+                        <img src="${esc(src)}" alt="Ảnh ${index + 1} biến thể ${colorName} ${sizeName}">
+                        ${index === 0 ? '<span class="variant-image-primary">Ảnh chính</span>' : ''}
+                        <button type="button" class="variant-image-remove" title="Xóa ảnh" onclick="removeVariantImage('${colorId}', '${sizeId}', ${index})"><i class="fas fa-times"></i></button>
+                    </div>`;
+                }).join('');
+                const canAdd = images.length < 3;
+
+                return `<div class="variant-image-panel variant-specific" data-variant-image-key="${esc(imageKey)}">
+                    <div class="variant-image-title">
+                        <span>Ảnh ${colorName} · ${sizeName}</span>
+                        <span class="variant-image-count">${images.length}/3 ảnh</span>
+                    </div>
+                    <div class="variant-image-hint">Bộ ảnh riêng của biến thể kích cỡ ${sizeName}.</div>
+                    <div class="variant-image-body">
+                        ${thumbs}
+                        <label class="variant-image-upload ${canAdd ? '' : 'disabled'}" title="${canAdd ? 'Thêm ảnh' : 'Đã đủ 3 ảnh'}">
+                            <i class="fas fa-image"></i><span>${canAdd ? 'Thêm ảnh' : 'Đã đủ 3 ảnh'}</span>
+                            <input type="file" accept="image/*" multiple data-color="${esc(c.idMauSac)}" data-size="${esc(s.idKichCo)}" onchange="previewVariantImages(this)">
+                        </label>
+                    </div>
                 </div>`;
             }).join('');
-            const canAdd = images.length < 3;
 
             return `<div class="color-group" data-group-color="${esc(c.idMauSac)}">
                 <div class="color-group-title"><span class="color-dot" style="background:${hex};width:11px;height:11px;display:inline-block;border-radius:50%"></span>${colorName}</div>
@@ -2594,17 +2747,7 @@
                             <tbody>${rows}</tbody>
                         </table>
                     </div>
-                    <div class="variant-image-panel">
-                        <div class="variant-image-title"><span>Ảnh riêng biến thể</span><span class="variant-image-count">${images.length}/3 ảnh</span></div>
-                        <div class="variant-image-hint">Tối đa 3 ảnh riêng cho màu này. Ảnh đầu tiên là ảnh chính của biến thể.</div>
-                        <div class="variant-image-body">
-                            ${thumbs}
-                            <label class="variant-image-upload ${canAdd ? '' : 'disabled'}" title="${canAdd ? 'Thêm ảnh' : 'Đã đủ 3 ảnh'}">
-                                <i class="fas fa-image"></i><span>${canAdd ? 'Thêm ảnh' : 'Đã đủ 3 ảnh'}</span>
-                                <input type="file" accept="image/*" multiple data-color="${esc(c.idMauSac)}" onchange="previewVariantImages(this)">
-                            </label>
-                        </div>
-                    </div>
+                    <div class="variant-image-list">${imagePanels}</div>
                 </div>
             </div>`;
         }).join('');
@@ -2615,12 +2758,14 @@
         return true;
     }
 
+    // Xử lý tương tác người dùng cho open quick fill modal.
     function openQuickFillModal(){
         document.getElementById('quickDonGia').value = '';
         document.getElementById('quickSoLuong').value = '';
         document.getElementById('mdQuickFill').classList.add('show');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm confirm quick fill.
     function confirmQuickFill(){
         const donGia = formatMoney(document.getElementById('quickDonGia').value);
         const soLuong = document.getElementById('quickSoLuong').value;
@@ -2646,6 +2791,7 @@
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply quick fill.
     function applyQuickFill(donGia, soLuong){
         document.querySelectorAll('#variantGroups tr[data-color][data-size]').forEach(tr=>{
             if (donGia) {
@@ -2664,12 +2810,14 @@
     }
 
     let allProducts=[];
+    // Thực hiện xử lý nghiệp vụ của hàm fill filter sel.
     function fillFilterSel(id,arr,placeholder){
         const el=document.getElementById(id); if(!el) return;
         const cur=el.value;
         el.innerHTML=`<option value="">${placeholder}</option>`;
         arr.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; if(v===cur) o.selected=true; el.appendChild(o) });
     }
+    // Thực hiện xử lý nghiệp vụ của hàm fill filters.
     function fillFilters(){
         const xx=new Set(), cl=new Set();
         allProducts.forEach(p=>{
@@ -2680,9 +2828,12 @@
         fillFilterSel('fChatLieu',[...cl].sort(),'Chọn chất liệu');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm debounce.
     function debounce(){ clearTimeout(dbTimer); dbTimer=setTimeout(()=>load(0),400) }
+    // Thực hiện xử lý nghiệp vụ của hàm apply filter.
     function applyFilter(){ load(0) }
 
+    // Tải hoặc truy xuất dữ liệu cho get filtered products.
     function getFilteredProducts(){
         const kw=document.getElementById('searchKw').value.trim().toLowerCase();
         const xx=document.getElementById('fXuatXu').value;
@@ -2691,8 +2842,6 @@
         const maxPrice = Number(document.getElementById('productPriceRange').value || 0);
         const shouldFilterByPrice = dynamicProductMaxPrice > 0 && maxPrice < dynamicProductMaxPrice;
         return allProducts.filter(p=>{
-            const availableQty = Number(p._tongSL ?? p._soLuongTon ?? 0);
-            if (availableQty <= 0) return false;
             if(kw){
                 const ma=(p.maSp||'').toLowerCase(); const ten=(p.tenSp||'').toLowerCase();
                 if(!ma.includes(kw)&&!ten.includes(kw)) return false;
@@ -2705,9 +2854,14 @@
             }
             if(shouldFilterByPrice && !productMatchesPrice(p, maxPrice)) return false;
             return true;
+        }).sort((left,right)=>{
+            const leftOutOfStock = Number(left._tongSL ?? left._soLuongTon ?? 0) <= 0;
+            const rightOutOfStock = Number(right._tongSL ?? right._soLuongTon ?? 0) <= 0;
+            return Number(leftOutOfStock) - Number(rightOutOfStock);
         });
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load all products.
     async function loadAllProducts(){
         document.getElementById('tblWrap').innerHTML='<div class="load-state"><div class="spin"></div><div style="margin-top:10px">Đang tải...</div></div>';
         document.getElementById('pgArea').style.display='none';
@@ -2758,8 +2912,7 @@
                 }
                 return p;
             });
-            allProducts=(await Promise.all(variantPromises))
-                .filter(p => Number(p._tongSL || 0) > 0);
+            allProducts=await Promise.all(variantPromises);
             fillFilters();
             setupProductPriceRange();
             load(0);
@@ -2767,8 +2920,10 @@
             document.getElementById('tblWrap').innerHTML=`<div class="empty-state"><span class="ei">⚠️</span><p>Không kết nối được server.<br><small>${esc(e.message)}</small></p></div>`;
         }
     }
+    // Tải hoặc truy xuất dữ liệu cho load filters.
     async function loadFilters(){ await loadAllProducts(); }
 
+    // Tải hoặc truy xuất dữ liệu cho load.
     function load(page=0){
         curPage=page;
         const filtered=getFilteredProducts(); totalEl=filtered.length; totalPg=Math.max(1,Math.ceil(totalEl/PG));
@@ -2778,6 +2933,7 @@
     }
 
     // RENDER TABLE
+    // Hiển thị và đồng bộ giao diện cho render table.
     function renderTable(list){
         if(!list.length){ document.getElementById('tblWrap').innerHTML='<div class="empty-state"><span class="ei">📦</span><p>Không tìm thấy sản phẩm.</p></div>'; return; }
         const rows=list.map((p,i)=>{
@@ -2827,11 +2983,13 @@
     </table>`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm detail value.
     function detailValue(value) {
         const text = String(value ?? '').trim();
         return text ? esc(text) : '–';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm variant image urls.
     function variantImageUrls(variant) {
         const urls = [];
         const add = value => {
@@ -2864,6 +3022,7 @@
         return urls.slice(0, 3);
     }
 
+    // Xử lý tương tác người dùng cho open product detail.
     async function openProductDetail(id) {
         const body = document.getElementById('productDetailBody');
         body.innerHTML = '<div class="load-state"><div class="spin"></div><div style="margin-top:10px">Đang tải chi tiết...</div></div>';
@@ -2883,6 +3042,7 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho render product detail.
     function renderProductDetail(product, variants) {
         const commonImage = productImageUrl(product);
         const imageBlock = commonImage
@@ -2931,6 +3091,7 @@
         `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm confirm toggle status.
     function confirmToggleStatus(id, cb, name) {
         const newStatus = cb.checked;
         cb.checked = !newStatus;
@@ -2945,6 +3106,7 @@
         );
     }
 
+    // Xử lý tương tác người dùng cho toggle status.
     async function toggleStatus(id, cb) {
         const newStatus = cb.checked;
         cb.disabled = true;
@@ -2971,6 +3133,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm confirm delete.
     function confirmDelete(id, name) {
         showProductConfirm(
             'Xác nhận xóa',
@@ -2980,6 +3143,7 @@
         );
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho delete product.
     async function deleteProduct(id) {
         const btn = document.getElementById('confirmDeleteBtn');
         btn.disabled = true;
@@ -2998,6 +3162,7 @@
     }
 
     // PAGINATION
+    // Hiển thị và đồng bộ giao diện cho render pg.
     function renderPg(){
         const area=document.getElementById('pgArea'); area.style.display='flex';
         if(totalPg<=1){ area.innerHTML=''; area.style.display='none'; return; }
@@ -3012,6 +3177,7 @@
     }
 
     // CREATE / EDIT
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set extra fields visible.
     function setExtraFieldsVisible(visible){
         const extra = document.getElementById('extraFields');
         if (!extra) return;
@@ -3021,6 +3187,7 @@
         extra.style.display = visible ? 'grid' : 'none';
     }
 
+    // Xử lý tương tác người dùng cho open create.
     function openCreate(){
         document.getElementById('mdTitle').textContent = 'THÊM SẢN PHẨM';
         document.getElementById('productId').value = '';
@@ -3047,6 +3214,7 @@
         document.getElementById('mdProduct').classList.add('show');
     }
 
+    // Xử lý tương tác người dùng cho open edit.
     async function openEdit(id) {
         try {
             const r = await fetch(`${API}/${id}`);
@@ -3091,6 +3259,7 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save product.
     async function saveProduct() {
         const pid = document.getElementById('productId').value;
         const ten = document.getElementById('inTen').value.trim();
@@ -3191,6 +3360,7 @@
         );
     }
 
+    // Xử lý tương tác người dùng cho submit product.
     async function submitProduct(pid, maSp, ten, variants) {
         const btn = document.getElementById('confirmDeleteBtn');
         btn.disabled = true;
@@ -3211,9 +3381,9 @@
 
             // Chỉ lúc thêm mới mới upload ảnh và gửi danh sách biến thể.
             if (!pid) {
-                const imagesByColor = await uploadVariantImages();
+                const imagesByVariant = await uploadVariantImages();
                 variants.forEach(variant => {
-                    const imageUrls = imagesByColor[String(variant.idMauSac)] || [];
+                    const imageUrls = imagesByVariant[variantImageKey(variant.idMauSac, variant.idKichCo)] || [];
                     variant.hinhAnh = imageUrls[0] || null;
                     variant.danhSachHinhAnh = imageUrls;
                 });
@@ -3251,8 +3421,10 @@
     }
 
     // ===== HÀM SINH MÃ ĐÃ CẬP NHẬT =====
+    // Thực hiện xử lý nghiệp vụ của hàm slug code.
     function slugCode(str){ return String(str||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/gi,'d').toUpperCase().replace(/[^A-Z0-9]+/g,'').slice(0,10); }
 
+    // Thực hiện xử lý nghiệp vụ của hàm gen ma sp.
     function genMaSp(ten){
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
@@ -3277,6 +3449,7 @@
         return code;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm gen ma sku.
     function genMaSku(maSp, tenMau, tenSize){
         const m = slugCode(tenMau) || 'X';
         const s = slugCode(tenSize) || 'X';
@@ -3289,6 +3462,7 @@
         return `${maSp}-${m}-${s}`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm export excel.
     async function exportExcel(){
         try{
             toast('Đang xuất...','info');
@@ -3304,7 +3478,9 @@
         }catch{ toast('Xuất Excel thất bại','error'); }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm combo escape html.
     function comboEscapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    // Thực hiện xử lý nghiệp vụ của hàm init searchable comboboxes.
     function initSearchableComboboxes(root=document){
         root.querySelectorAll('select').forEach(select=>{
             const isHidden = select.hidden || select.type === 'hidden' || select.style.display === 'none' || select.closest('[hidden]');
@@ -3331,6 +3507,7 @@
             syncSearchCombo(select);
         });
     }
+    // Xử lý tương tác người dùng cho open search combo.
     function openSearchCombo(combo){
         if(combo.classList.contains('open')){closeSearchCombo(combo);return;}
         document.querySelectorAll('.search-combo.open').forEach(c=>{if(c!==combo)c.classList.remove('open')});
@@ -3340,7 +3517,9 @@
         renderSearchComboOptions(combo,'');
         setTimeout(()=>search.focus(),0);
     }
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close search combo.
     function closeSearchCombo(combo){combo.classList.remove('open')}
+    // Thực hiện xử lý nghiệp vụ của hàm sync search combo.
     function syncSearchCombo(select){
         const combo=select.nextElementSibling?.classList?.contains('search-combo')?select.nextElementSibling:null;
         if(!combo)return;
@@ -3348,6 +3527,7 @@
         combo.querySelector('.search-combo-display').textContent=selected?.textContent||select.querySelector('option')?.textContent||'Chọn';
         renderSearchComboOptions(combo, combo.querySelector('.search-combo-search')?.value||'');
     }
+    // Hiển thị và đồng bộ giao diện cho render search combo options.
     function renderSearchComboOptions(combo, keyword){
         const select=combo._select;
         const list=combo.querySelector('.search-combo-list');
@@ -3364,6 +3544,7 @@
     document.addEventListener('click',e=>{if(!e.target.closest('.search-combo'))document.querySelectorAll('.search-combo.open').forEach(closeSearchCombo)});
     if(!window._productSearchComboAutoSync){window._productSearchComboAutoSync=setInterval(()=>document.querySelectorAll('select.search-combo-source').forEach(syncSearchCombo),300)}
 
+    // Thực hiện xử lý nghiệp vụ của hàm init.
     async function init(){ await loadMaster(); await loadFilters(); initSearchableComboboxes(); }
     init();
 
@@ -3371,6 +3552,7 @@
     let qrScannerInstance = null;
 
     // Mở modal quét
+    // Xử lý tương tác người dùng cho open qrscanner.
     function openQRScanner() {
         document.getElementById('mdQRScanner').classList.add('show');
         document.getElementById('qr-result').textContent = '';
@@ -3379,6 +3561,7 @@
     }
 
     // Bắt đầu quét (gọi khi nhấn nút "Bắt đầu quét")
+    // Thực hiện xử lý nghiệp vụ của hàm start qrscanner.
     function startQRScanner() {
         const reader = document.getElementById('qr-reader');
         reader.innerHTML = ''; // Xóa nội dung cũ
@@ -3418,6 +3601,7 @@
     }
 
     // Xử lý kết quả quét: tìm sản phẩm theo mã (maSp hoặc idSp)
+    // Xử lý tương tác người dùng cho handle qrresult.
     function handleQRResult(qrData) {
         // Tìm trong danh sách allProducts (đã được load)
         const product = allProducts.find(p =>

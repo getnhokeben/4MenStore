@@ -17,27 +17,32 @@ public class PaymentGatewayProperties {
     private final Momo momo = new Momo();
     private final ZaloPay zalopay = new ZaloPay();
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is vn pay configured.
     public boolean isVnPayConfigured() {
         return vnpay.enabled && hasText(vnpay.tmnCode) && hasText(vnpay.hashSecret)
                 && hasText(vnpay.paymentUrl);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is momo configured.
     public boolean isMomoConfigured() {
         return momo.enabled && hasText(momo.partnerCode) && hasText(momo.accessKey)
                 && hasText(momo.secretKey) && hasText(momo.endpoint);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is zalo pay configured.
     public boolean isZaloPayConfigured() {
         return zalopay.enabled && zalopay.appId > 0 && hasText(zalopay.key1)
                 && hasText(zalopay.key2) && hasText(zalopay.endpoint)
                 && hasText(zalopay.queryEndpoint);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm base url.
     public String baseUrl() {
         String value = hasText(publicBaseUrl) ? publicBaseUrl.trim() : "http://localhost:8081";
         return value.endsWith("/") ? value.substring(0, value.length() - 1) : value;
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho has text.
     private static boolean hasText(String value) {
         return value != null && !value.isBlank();
     }

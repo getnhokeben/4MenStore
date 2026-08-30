@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 public class ShopOrderHistoryItemDTO {
     private Integer id;
     private Integer idSpct;
+    private Integer idSp;
     private String maSanPham;
     private String tenSanPham;
     private String mauSac;

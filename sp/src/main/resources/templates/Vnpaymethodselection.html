@@ -628,6 +628,7 @@
         const scanNetworkNote = document.getElementById('scanNetworkNote');
         let statusTimer = null;
 
+        // Thực hiện xử lý nghiệp vụ của hàm card checkout url.
         function cardCheckoutUrl(type) {
             const nextParams = new URLSearchParams(params);
             nextParams.set('cardType', type);
@@ -638,6 +639,7 @@
             return `${path}?${nextParams.toString()}`;
         }
 
+        // Thực hiện xử lý nghiệp vụ của hàm signed params.
         function signedParams() {
             const signed = new URLSearchParams();
             params.forEach((value, key) => {
@@ -646,6 +648,7 @@
             return signed;
         }
 
+        // Hiển thị và đồng bộ giao diện cho render qr.
         async function renderQr() {
             scanStatus.className = 'scan-status';
             scanStatus.textContent = 'Đang tạo mã QR...';
@@ -680,11 +683,13 @@
             }
         }
 
+        // Thực hiện xử lý nghiệp vụ của hàm stop status polling.
         function stopStatusPolling() {
             if (statusTimer) window.clearInterval(statusTimer);
             statusTimer = null;
         }
 
+        // Thực hiện xử lý nghiệp vụ của hàm start status polling.
         function startStatusPolling() {
             stopStatusPolling();
             const statusUrl = `/api/shop/payments/vnpay/checkout/status?${signedParams().toString()}`;
@@ -717,6 +722,7 @@
         }
 
         // Hàm xác nhận thủ công
+        // Thực hiện xử lý nghiệp vụ của hàm confirm payment manually.
         async function confirmPaymentManually() {
             const btn = document.getElementById('confirmPaymentBtn');
             btn.disabled = true;
@@ -784,3 +790,4 @@
 </script>
 </body>
 </html>
+c

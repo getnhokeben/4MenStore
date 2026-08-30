@@ -22,6 +22,7 @@ public class ShopChatbotController {
     private final ShopLiveChatService liveChatService;
 
     @PostMapping
+    // Thực hiện xử lý nghiệp vụ của hàm chat.
     public ResponseEntity<ShopChatbotResponse> chat(@Valid @RequestBody ShopChatbotRequest request,
                                                     HttpSession session) {
         ShopChatbotResponse response = chatbotService.reply(request);

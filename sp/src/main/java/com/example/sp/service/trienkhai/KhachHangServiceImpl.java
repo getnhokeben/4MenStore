@@ -2,7 +2,10 @@ package com.example.sp.service.trienkhai;
 
 import com.example.sp.model.khachhang.KhachHang;
 import com.example.sp.repository.khachhang.KhachHangRepository;
+import com.example.sp.repository.nhanvien.NhanVienRepository;
 import com.example.sp.service.tienich.GeneratedCodeUtil;
+import com.example.sp.validation.CustomerNameValidator;
+import com.example.sp.service.khachhang.CustomerAccountMailService;
 import com.example.sp.service.khachhang.KhachHangService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -10,20 +13,42 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class KhachHangServiceImpl implements KhachHangService {
 
     private static final String PHONE_PATTERN = "^(03|05|07|08|09)\\d{8}$";
     private static final String CCCD_PATTERN = "^\\d{12}$";
-    private static final String NAME_PATTERN = "^[\\p{L}][\\p{L} .'-]*$";
+    private static final String EMAIL_PATTERN = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$";
+    private static final Set<String> VALID_GENDERS =
+            Set.of("Nam", "Nữ", "Khác");
+    private static final char[] UPPER =
+            "ABCDEFGHJKLMNPQRSTUVWXYZ".toCharArray();
+    private static final char[] LOWER =
+            "abcdefghijkmnopqrstuvwxyz".toCharArray();
+    private static final char[] DIGITS = "23456789".toCharArray();
+    private static final char[] ALL_PASSWORD_CHARACTERS =
+            "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789"
+                    .toCharArray();
 
     private final KhachHangRepository khachHangRepository;
+    private final NhanVienRepository nhanVienRepository;
+    private final CustomerAccountMailService customerAccountMailService;
     private final BCryptPasswordEncoder passwordEncoder =
             new BCryptPasswordEncoder();
+    private final SecureRandom secureRandom = new SecureRandom();
 
     @Override
     @Transactional(readOnly = true)
+    // Tải hoặc truy xuất dữ liệu cho get all.
     public Page<KhachHang> getAll(
             String keyword,
             Boolean trangThai,
@@ -40,6 +65,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Override
     @Transactional(readOnly = true)
+    // Tải hoặc truy xuất dữ liệu cho find by id.
     public KhachHang findById(Integer id) {
         return khachHangRepository.findById(id)
                 .orElseThrow(() ->
@@ -49,28 +75,45 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Override
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create.
     public KhachHang create(KhachHang customer) {
+        if (customer == null) {
+            throw new IllegalArgumentException("Dữ liệu khách hàng không hợp lệ");
+        }
+
         normalize(customer);
-        validate(customer, null, true);
+        validate(customer, null);
+
+        String temporaryPassword = generateTemporaryPassword();
 
         customer.setId(null);
         customer.setMaKh(generateCustomerCode(customer.getTenKhachHang()));
         customer.setTenTaiKhoan(customer.getEmail());
-        customer.setMatKhau(passwordEncoder.encode(customer.getMatKhau()));
-        customer.setTrangThai(
-                customer.getTrangThai() == null || customer.getTrangThai()
+        customer.setMatKhau(passwordEncoder.encode(temporaryPassword));
+        customer.setTrangThai(true);
+
+        KhachHang saved = khachHangRepository.saveAndFlush(customer);
+
+        customerAccountMailService.sendInitialAccount(
+                saved,
+                temporaryPassword
         );
 
-        return khachHangRepository.save(customer);
+        return saved;
     }
 
     @Override
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update.
     public KhachHang update(Integer id, KhachHang request) {
         KhachHang current = findById(id);
 
+        if (request == null) {
+            throw new IllegalArgumentException("Dữ liệu khách hàng không hợp lệ");
+        }
+
         normalize(request);
-        validate(request, id, false);
+        validate(request, id);
 
         current.setTenKhachHang(request.getTenKhachHang());
         current.setTenTaiKhoan(request.getEmail());
@@ -84,17 +127,12 @@ public class KhachHangServiceImpl implements KhachHangService {
             current.setTrangThai(request.getTrangThai());
         }
 
-        if (!isBlank(request.getMatKhau())) {
-            current.setMatKhau(
-                    passwordEncoder.encode(request.getMatKhau())
-            );
-        }
-
         return khachHangRepository.save(current);
     }
 
     @Override
     @Transactional
+    // Xử lý tương tác người dùng cho toggle status.
     public KhachHang toggleStatus(Integer id) {
         KhachHang customer = findById(id);
 
@@ -105,6 +143,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Override
     @Transactional
+    // Thực hiện xử lý nghiệp vụ của hàm deactivate.
     public void deactivate(Integer id) {
         KhachHang customer = findById(id);
 
@@ -113,29 +152,54 @@ public class KhachHangServiceImpl implements KhachHangService {
         khachHangRepository.save(customer);
     }
 
-    private void validate(
-            KhachHang customer,
-            Integer currentId,
-            boolean creating
-    ) {
+    // Kiểm tra điều kiện và tính hợp lệ cho validate.
+    private void validate(KhachHang customer, Integer currentId) {
+        LocalDate today = LocalDate.now();
+
         if (isBlank(customer.getTenKhachHang())) {
             throw new IllegalArgumentException(
                     "Vui lòng nhập họ tên khách hàng"
             );
         }
 
-        if (!customer.getTenKhachHang().matches(NAME_PATTERN)) {
+        if (customer.getTenKhachHang().length() < 2
+                || customer.getTenKhachHang().length() > 255) {
             throw new IllegalArgumentException(
-                    "Họ tên chỉ được chứa chữ cái, khoảng trắng, dấu chấm, nháy đơn hoặc gạch ngang"
+                    "Họ tên phải từ 2 đến 255 ký tự"
             );
         }
 
-        if (
-                isBlank(customer.getSoDienThoai())
-                        || !customer.getSoDienThoai().matches(PHONE_PATTERN)
-        ) {
+        if (!CustomerNameValidator.isValid(customer.getTenKhachHang())) {
             throw new IllegalArgumentException(
-                    "Số điện thoại chính không hợp lệ"
+                    CustomerNameValidator.INVALID_MESSAGE
+            );
+        }
+
+        if (isBlank(customer.getEmail())) {
+            throw new IllegalArgumentException("Vui lòng nhập email");
+        }
+
+        if (customer.getEmail().length() > 255
+                || !customer.getEmail().matches(EMAIL_PATTERN)) {
+            throw new IllegalArgumentException("Email không hợp lệ");
+        }
+
+        if (existsEmail(customer.getEmail(), currentId)
+                || nhanVienRepository.existsByEmailIgnoreCase(
+                customer.getEmail()
+        )) {
+            throw new IllegalArgumentException("Email đã được sử dụng");
+        }
+
+        if (isBlank(customer.getSoDienThoai())) {
+            throw new IllegalArgumentException(
+                    "Vui lòng nhập số điện thoại chính"
+            );
+        }
+
+        if (!customer.getSoDienThoai().matches(PHONE_PATTERN)) {
+            throw new IllegalArgumentException(
+                    "Số điện thoại chính phải gồm 10 số và bắt đầu bằng 03, 05, 07, 08 hoặc 09"
             );
         }
 
@@ -145,33 +209,42 @@ public class KhachHangServiceImpl implements KhachHangService {
             );
         }
 
-        if (isBlank(customer.getEmail())) {
-            throw new IllegalArgumentException("Vui long nhap email");
+        if (isBlank(customer.getCccd())) {
+            throw new IllegalArgumentException("Vui lòng nhập CCCD");
         }
 
-        if (!customer.getEmail().matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
-            throw new IllegalArgumentException("Email khong hop le");
+        if (!customer.getCccd().matches(CCCD_PATTERN)) {
+            throw new IllegalArgumentException(
+                    "CCCD phải gồm đúng 12 chữ số"
+            );
         }
 
-        if (existsEmail(customer.getEmail(), currentId)) {
-            throw new IllegalArgumentException("Email da duoc su dung");
+        if (existsCccd(customer.getCccd(), currentId)) {
+            throw new IllegalArgumentException(
+                    "CCCD đã được sử dụng"
+            );
         }
 
-        if (!isBlank(customer.getCccd())) {
-            if (!customer.getCccd().matches(CCCD_PATTERN)) {
+        if (!VALID_GENDERS.contains(customer.getGioiTinh())) {
+            throw new IllegalArgumentException(
+                    "Giới tính chỉ có thể là Nam, Nữ hoặc Khác"
+            );
+        }
+
+        if (customer.getNgaySinh() != null) {
+            if (!customer.getNgaySinh().isBefore(today)) {
                 throw new IllegalArgumentException(
-                        "CCCD phải gồm đúng 12 chữ số"
+                        "Ngày sinh phải nhỏ hơn ngày hiện tại"
                 );
             }
 
-            if (existsCccd(customer.getCccd(), currentId)) {
-                throw new IllegalArgumentException(
-                        "CCCD đã được sử dụng"
-                );
+            if (customer.getNgaySinh().isBefore(today.minusYears(130))) {
+                throw new IllegalArgumentException("Ngày sinh không hợp lệ");
             }
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm exists phone.
     private boolean existsPhone(String value, Integer currentId) {
         return currentId == null
                 ? khachHangRepository.existsBySoDienThoai(value)
@@ -181,6 +254,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm exists email.
     private boolean existsEmail(String value, Integer currentId) {
         return currentId == null
                 ? khachHangRepository.existsByEmailIgnoreCase(value)
@@ -190,12 +264,14 @@ public class KhachHangServiceImpl implements KhachHangService {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm exists cccd.
     private boolean existsCccd(String value, Integer currentId) {
         return currentId == null
                 ? khachHangRepository.existsByCccd(value)
                 : khachHangRepository.existsByCccdAndIdNot(value, currentId);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm default sort.
     private Pageable defaultSort(Pageable pageable) {
         Sort sort = Sort.by(
                 Sort.Order.desc("trangThai"),
@@ -217,6 +293,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate customer code.
     private String generateCustomerCode(String name) {
         return GeneratedCodeUtil.fromNameAndDate(
                 name,
@@ -226,34 +303,79 @@ public class KhachHangServiceImpl implements KhachHangService {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize.
     private void normalize(KhachHang customer) {
-        customer.setTenKhachHang(trimToNull(customer.getTenKhachHang()));
-        customer.setSoDienThoai(normalizePhone(customer.getSoDienThoai()));
+        customer.setTenKhachHang(
+                CustomerNameValidator.normalize(customer.getTenKhachHang())
+        );
+        customer.setSoDienThoai(onlyDigits(customer.getSoDienThoai()));
         customer.setEmail(lower(trimToNull(customer.getEmail())));
         customer.setTenTaiKhoan(customer.getEmail());
-        customer.setCccd(trimToNull(customer.getCccd()));
+        customer.setCccd(onlyDigits(customer.getCccd()));
         customer.setGioiTinh(trimToNull(customer.getGioiTinh()));
-        customer.setMatKhau(trimToNull(customer.getMatKhau()));
+        customer.setMatKhau(null);
     }
 
-    private String normalizePhone(String phone) {
-        if (phone == null) {
+    // Thực hiện xử lý nghiệp vụ của hàm generate temporary password.
+    private String generateTemporaryPassword() {
+        List<Character> characters = new ArrayList<>();
+
+        characters.add(randomCharacter(UPPER));
+        characters.add(randomCharacter(LOWER));
+        characters.add(randomCharacter(DIGITS));
+
+        for (int index = characters.size(); index < 6; index++) {
+            characters.add(randomCharacter(ALL_PASSWORD_CHARACTERS));
+        }
+
+        Collections.shuffle(characters, secureRandom);
+
+        StringBuilder password = new StringBuilder();
+        for (char character : characters) {
+            password.append(character);
+        }
+
+        return password.toString();
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm random character.
+    private char randomCharacter(char[] source) {
+        return source[secureRandom.nextInt(source.length)];
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm normalize spaces.
+    private String normalizeSpaces(String value) {
+        if (value == null) {
             return null;
         }
 
-        String normalized = phone.replaceAll("\\D", "");
+        String normalized = value.trim().replaceAll("\\s+", " ");
+
+        return normalized.isEmpty() ? null : normalized;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm only digits.
+    private String onlyDigits(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        String normalized = value.replaceAll("\\D", "");
 
         return normalized.isBlank() ? null : normalized;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lower.
     private String lower(String value) {
-        return value == null ? null : value.toLowerCase();
+        return value == null ? null : value.toLowerCase(Locale.ROOT);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is blank.
     private boolean isBlank(String value) {
         return value == null || value.isBlank();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm trim to null.
     private String trimToNull(String value) {
         if (value == null) {
             return null;

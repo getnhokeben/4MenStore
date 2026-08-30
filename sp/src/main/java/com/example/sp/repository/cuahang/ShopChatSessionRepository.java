@@ -13,4 +13,6 @@ public interface ShopChatSessionRepository extends JpaRepository<ShopChatSession
     Optional<ShopChatSession> findBySessionKey(String sessionKey);
 
     List<ShopChatSession> findByTrangThaiInOrderByNgayCapNhatDesc(Collection<String> trangThai);
+
+    List<ShopChatSession> findAllByOrderByNgayCapNhatDesc();
 }

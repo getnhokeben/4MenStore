@@ -13,10 +13,12 @@ import java.nio.charset.StandardCharsets;
 public class LoginPageController {
 
     @GetMapping(value = {"/dang-nhap.html", "/dang-nhap"}, produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm dang nhap.
     public ResponseEntity<byte[]> dangNhap() throws IOException {
         return html("templates/dang-nhap.html");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm html.
     private ResponseEntity<byte[]> html(String path) throws IOException {
         byte[] html = new ClassPathResource(path).getInputStream().readAllBytes();
         return ResponseEntity.ok()

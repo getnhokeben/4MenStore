@@ -911,6 +911,7 @@
         let pendingScenario = null;
         let toastTimer;
 
+        // Hiển thị và đồng bộ giao diện cho show toast.
         function showToast(message) {
             toast.textContent = message;
             toast.classList.add('show');
@@ -918,20 +919,24 @@
             toastTimer = window.setTimeout(() => toast.classList.remove('show'), 2600);
         }
 
+        // Thực hiện xử lý nghiệp vụ của hàm only digits.
         function onlyDigits(value) {
             return value.replace(/\D/g, '');
         }
 
+        // Thực hiện xử lý nghiệp vụ của hàm format card.
         function formatCard(value) {
             return onlyDigits(value).slice(0, 19).replace(/(.{4})/g, '$1 ').trim();
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set mode.
         function setMode(mode) {
             currentMode = mode;
             const international = mode === 'international';
             internationalFields.classList.toggle('active', international);
         }
 
+        // Hiển thị và đồng bộ giao diện cho render card brand.
         function renderCardBrand(brand) {
             cardBrand.className = 'bank-logo';
             if (brand === 'NCB') {
@@ -944,6 +949,7 @@
             else if (brand === 'JCB') cardBrand.classList.add('jcb');
         }
 
+        // Thực hiện xử lý nghiệp vụ của hàm reset card form.
         function resetCardForm(mode) {
             setMode(mode);
             activeScenario = null;
@@ -963,6 +969,7 @@
             formMessage.textContent = '';
         }
 
+        // Thực hiện xử lý nghiệp vụ của hàm refresh scenario from card.
         function refreshScenarioFromCard() {
             const number = onlyDigits(cardInput.value);
             const scenario = testCards.find((card) => card.number === number);
@@ -1032,17 +1039,20 @@
             showToast('Điều khoản thanh toán an toàn của VNPay');
         });
 
+        // Kiểm tra điều kiện và tính hợp lệ cho is valid date.
         function isValidDate(value) {
             const match = value.match(/^(0[1-9]|1[0-2])\/(\d{2})$/);
             return Boolean(match);
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set processing.
         function setProcessing(processing) {
             continueButton.disabled = processing;
             cancelButton.disabled = processing;
             continueButton.textContent = processing ? 'Đang xử lý...' : 'Tiếp tục';
         }
 
+        // Xử lý tương tác người dùng cho submit scenario.
         function submitScenario(scenario, otp = '') {
             paymentOutcome.value = 'pay';
             testCardNumber.value = scenario.number;
@@ -1054,6 +1064,7 @@
             window.setTimeout(() => HTMLFormElement.prototype.submit.call(paymentForm), 450);
         }
 
+        // Xử lý tương tác người dùng cho open verification.
         function openVerification(scenario) {
             pendingScenario = scenario;
             const needsOtp = Boolean(scenario.otp);
@@ -1074,11 +1085,13 @@
             if (needsOtp) window.setTimeout(() => otpInput.focus(), 50);
         }
 
+        // Hiển thị và đồng bộ giao diện cho show declined.
         function showDeclined(message) {
             resultMessage.textContent = message;
             resultModal.classList.add('open');
         }
 
+        // Kiểm tra điều kiện và tính hợp lệ cho validate card data.
         function validateCardData() {
             const cardNumber = onlyDigits(cardInput.value);
             if (cardNumber.length < 16 || cardNumber.length > 19) {
@@ -1196,6 +1209,7 @@
         const minutes = document.getElementById('minutes');
         const seconds = document.getElementById('seconds');
 
+        // Hiển thị và đồng bộ giao diện cho render countdown.
         function renderCountdown() {
             minutes.textContent = String(Math.floor(remaining / 60)).padStart(2, '0');
             seconds.textContent = String(remaining % 60).padStart(2, '0');

@@ -5,6 +5,8 @@ import com.example.sp.dto.hoadon.XacNhanHoanHangRequest;
 import com.example.sp.dto.hoadon.XuLyGiaoHangThatBaiRequest;
 import com.example.sp.model.hoadon.HoaDon;
 import com.example.sp.model.hoadon.HoaDonChiTiet;
+import com.example.sp.model.hoadon.LichSuThanhToan;
+import com.example.sp.model.hoadon.ThanhToan;
 import com.example.sp.model.sanpham.ChiTietSanPham;
 import com.example.sp.repository.hoadon.HoaDonChiTietRepository;
 import com.example.sp.repository.hoadon.HoaDonRepository;
@@ -22,7 +24,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -95,6 +99,25 @@ class HoaDonServiceImplReturnFlowTest {
         assertFalse(Boolean.TRUE.equals(updated.getDaHoanTon()));
         verify(inventoryService, never()).restoreStock(anyInt(), anyInt());
         verify(chiTietRepo, never()).findByHoaDon_Id(anyInt());
+    }
+
+    @Test
+    void carrierCompensationCompletesLostOrderAndRecordsPayment() {
+        HoaDon order = deliveryOrder("Đã hủy");
+        order.setLyDoHoanHang("Đơn vị vận chuyển làm mất hàng");
+        order.setTongTienThanhToan(new BigDecimal("350000"));
+        when(hoaDonRepo.findByIdForUpdate(1)).thenReturn(Optional.of(order));
+        when(hoaDonRepo.save(any(HoaDon.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(ptttRepo.findFirstByMaPtttIgnoreCaseOrTenPtttIgnoreCase(any(), any()))
+                .thenReturn(Optional.empty());
+
+        HoaDon updated = service.xacNhanDonViVanChuyenDenBu(1);
+
+        assertEquals("Hoàn thành", updated.getTrangThai());
+        assertNotNull(updated.getNgayThanhToan());
+        assertTrue(updated.getGhiChuHoanHang().contains("đền bù"));
+        verify(thanhToanRepo).save(any(ThanhToan.class));
+        verify(lichSuRepo).save(any(LichSuThanhToan.class));
     }
 
     @Test
@@ -204,6 +227,23 @@ class HoaDonServiceImplReturnFlowTest {
         verify(inventoryService).deductLegacyOnlineStock(101, 2);
         assertTrue(Boolean.TRUE.equals(updated.getDaTruTon()));
         assertFalse(Boolean.TRUE.equals(updated.getDaGiuTon()));
+    }
+
+    @Test
+    void onlineOrderCannotSkipConfirmationBeforeStockDeduction() {
+        HoaDon order = deliveryOrder("Chờ xác nhận");
+        order.setDaTruTon(false);
+        when(hoaDonRepo.findByIdForUpdate(1)).thenReturn(java.util.Optional.of(order));
+
+        IllegalStateException error = assertThrows(
+                IllegalStateException.class,
+                () -> service.capNhatTrangThai(1, "Đang chuẩn bị hàng", null)
+        );
+
+        assertEquals("Phải chuyển đơn sang Đã xác nhận trước khi xử lý tiếp", error.getMessage());
+        verify(inventoryService, never()).deductLegacyOnlineStock(anyInt(), anyInt());
+        verify(inventoryService, never()).confirmOnlineReservation(anyInt(), anyInt());
+        verify(hoaDonRepo, never()).save(any(HoaDon.class));
     }
 
     @Test

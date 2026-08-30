@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
 
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-scale-20260822-2" defer></script>
     <style>
         :root{--navy:#102a56;
             --navy-hover:#173d78;--blue:#1a4a8a;--bg:#f2f5f9;--line:#e3eaf2;--ink:#263a56;--muted:#74839a;--bad:#d04452;--ok:#13815d}
@@ -33,15 +33,17 @@
         .card{background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 7px 20px rgba(40,66,101,.08)}
         .toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px;flex-wrap:wrap}.tools{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.search{position:relative;width:285px}.search span{position:absolute;left:10px;top:8px;color:#93a1b4}.input,.select,.control{height:35px;border:1px solid #dce5ef;border-radius:5px;background:#fff;color:#40546e;outline:0}.input{width:100%;padding:0 10px 0 30px}.select{padding:0 25px 0 9px;min-width:125px}.control{width:100%;padding:0 10px}.input:focus,.select:focus,.control:focus,textarea:focus{border-color:#7d9bc6;box-shadow:0 0 0 3px rgba(60,110,180,.12)}
         .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}.btn:hover{background:var(--navy-hover);border-color:var(--navy-hover);color:#fff}.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}.btn.primary:hover{background:var(--navy-hover);border-color:var(--navy-hover)}.btn:disabled{opacity:.55;cursor:not-allowed}
-        .table-card{margin-top:14px;overflow:auto}table{width:100%;min-width:1180px;border-collapse:collapse}th{height:39px;padding:0 12px;background:#f7f9fb;border-bottom:1px solid var(--line);font-size:10px;letter-spacing:.03em;text-transform:uppercase;text-align:left}td{padding:9px 12px;border-bottom:1px solid #edf2f6;color:#516178;vertical-align:middle}tbody tr:hover{background:#fbfdff}.strong{font-weight:750;color:#273b57}.muted{color:#9aa7b8}.address{max-width:230px;white-space:normal}.badge{display:inline-block;border-radius:99px;padding:4px 9px;font-size:10px;font-weight:800}.on{color:#0b895c;background:#ddf8ed}.off{color:#cc4652;background:#fff0f1}.role1{color:#315999;background:#e8efff}.role2{color:#986413;background:#fff3db}.acts{display:flex;align-items:center;gap:6px}.icon{height:28px;width:29px;border:1px solid #e1e8f0;border-radius:5px;background:#fff;color:#60738c}.icon:hover{color:var(--navy);border-color:#b6c7da}.toggle{width:30px;height:17px;position:relative;display:block}.toggle input{opacity:0}.toggle i{position:absolute;inset:0;border-radius:20px;background:#c4cfdd;cursor:pointer}.toggle i:before{content:"";position:absolute;width:13px;height:13px;left:2px;top:2px;border-radius:50%;background:#fff;transition:.2s}.toggle input:checked+i{background:#23ad84}.toggle input:checked+i:before{transform:translateX(13px)}.footer{padding:11px 15px;display:flex;justify-content:space-between;align-items:center;gap:12px}.pages{display:flex;gap:5px;align-items:center;justify-content:flex-end;margin-left:auto;flex-wrap:wrap}.pg{height:29px;min-width:29px;border:1px solid #dfe7f0;background:#fff;border-radius:5px}.pg.active{background:var(--navy);border-color:var(--navy);color:#fff}.empty{text-align:center;padding:45px;color:#7d8da1}
+        .table-card{margin-top:14px;overflow:auto}table{width:100%;min-width:1180px;border-collapse:collapse}th{height:39px;padding:0 12px;background:#f7f9fb;border-bottom:1px solid var(--line);font-size:10px;letter-spacing:.03em;text-transform:uppercase;text-align:left}td{padding:9px 12px;border-bottom:1px solid #edf2f6;color:#516178;vertical-align:middle}tbody tr:hover{background:#fbfdff}.strong{font-weight:750;color:#273b57}.muted{color:#9aa7b8}.address{max-width:230px;white-space:normal}.badge{display:inline-block;border-radius:99px;padding:4px 9px;font-size:10px;font-weight:800}.on{color:#0b895c;background:#ddf8ed}.off{color:#cc4652;background:#fff0f1}.role1{color:#315999;background:#e8efff}.role2{color:#986413;background:#fff3db}.acts{display:flex;align-items:center;gap:6px}.icon{height:28px;width:29px;border:1px solid #e1e8f0;border-radius:5px;background:#fff;color:#60738c}.icon:hover{color:var(--navy);border-color:#b6c7da}.toggle{width:30px;height:17px;position:relative;display:block}.toggle input{opacity:0}.toggle i{position:absolute;inset:0;border-radius:20px;background:#c4cfdd;cursor:pointer}.toggle i:before{content:"";position:absolute;width:13px;height:13px;left:2px;top:2px;border-radius:50%;background:#fff;transition:.2s}.toggle input:checked+i{background:#23ad84}.toggle input:checked+i:before{transform:translateX(13px)}.footer{padding:11px 15px;display:flex;justify-content:space-between;align-items:center;gap:12px}.pages{display:flex;gap:5px;align-items:center;justify-content:flex-end;margin-left:auto;flex-wrap:wrap}.pg{height:29px;min-width:29px;border:1px solid #dfe7f0;background:#fff;border-radius:5px}.pg.active{background:var(--navy);border-color:var(--navy);color:#fff}.empty{text-align:center;padding:45px;color:#7d8da1}.employee-address-select{position:relative}.employee-address-select select{display:none}.employee-address-input{width:100%;height:35px;padding:0 34px 0 10px;border:1px solid #dce5ef;border-radius:5px;background:#fff;color:#40546e;outline:0}.employee-address-select.open .employee-address-input,.employee-address-input:focus{border-color:#7d9bc6;box-shadow:0 0 0 3px rgba(60,110,180,.12)}.employee-address-toggle{position:absolute;top:0;right:0;width:35px;height:35px;border:0;background:transparent;color:#60738c;font-size:17px}.employee-address-select.open .employee-address-toggle{transform:rotate(180deg)}.employee-address-menu{position:absolute;z-index:40;top:calc(100% + 4px);right:0;left:0;display:none;max-height:210px;overflow:auto;padding:4px;border:1px solid #dce5ef;border-radius:5px;background:#fff;box-shadow:0 12px 26px rgba(35,57,88,.15)}.employee-address-select.open .employee-address-menu{display:block}.employee-address-option{display:block;width:100%;min-height:31px;padding:7px 9px;border:0;border-radius:4px;background:transparent;color:#40546e;font:inherit;font-size:12px;text-align:left}.employee-address-option:hover,.employee-address-option.active{background:#edf3ff;color:var(--navy);font-weight:700}.employee-address-empty{padding:9px;color:#8795a8;font-size:12px}
         .modal{position:fixed;inset:0;z-index:1000;background:rgba(13,31,56,.45);padding:22px;overflow:auto;display:flex;align-items:flex-start;justify-content:center}.modal[hidden]{display:none}.dialog{width:min(100%,980px);margin:auto;border-radius:10px;background:#fff;overflow:hidden;box-shadow:0 22px 70px rgba(9,25,50,.28)}.head{display:flex;align-items:center;justify-content:space-between;padding:13px 19px;border-bottom:1px solid #e7edf3}.title{font-size:17px;font-weight:800;color:#233d64}.sub{font-size:11px;color:#7d8da0;margin-top:3px}.close{border:0;background:transparent;color:#62748c;font-size:25px;line-height:1}.close:hover{color:#102a56}.form-grid{display:grid;grid-template-columns:250px 1fr;min-height:520px}.side{padding:21px;border-right:1px solid #ecf0f4}.avatar{width:86px;height:86px;border:2px dashed #d4deea;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:#f7f9fb;color:#708099;font-size:28px;font-weight:800}.side-note{text-align:center;color:#738197;font-size:11px;font-weight:700;margin:0 0 18px}.work{padding:22px 25px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}.full{grid-column:1/-1}.group{margin-bottom:12px}.label{display:block;margin-bottom:5px;font-size:10px;text-transform:uppercase;font-weight:800;color:#6c7b90}.req{color:var(--bad)}.err{display:block;min-height:13px;margin-top:4px;color:var(--bad);font-size:10px}.invalid{border-color:var(--bad)!important;box-shadow:0 0 0 3px rgba(208,68,82,.12)!important}.gender{height:35px;border:1px solid #dce5ef;border-radius:5px;padding:0 10px;display:flex;align-items:center;gap:16px}.gender label{font-size:12px;color:#506078}.rule{height:1px;background:#e9eef3;margin:18px 0 13px}.section{margin:0 0 10px;font-size:14px;color:#273e62}.note{border:1px solid #d6e3f3;background:#f6faff;border-radius:6px;padding:10px 11px;font-size:11px;line-height:1.5;color:#51667f}.form-foot{display:flex;justify-content:flex-end;gap:9px;padding:13px 19px;border-top:1px solid #e7edf3}.cccd-row{display:flex;gap:7px}.scan-btn{min-width:106px;border:1px solid #bdd0e8;background:#f6faff;color:#244f89;border-radius:5px;font-size:11px;font-weight:800}.scan-summary{border:1px solid #cce0f4;background:#f7fbff;border-radius:7px;padding:11px;margin-bottom:14px}.scan-summary[hidden]{display:none}.summary-head{display:flex;justify-content:space-between;gap:12px;color:#29496f;font-size:11px;font-weight:800;margin-bottom:9px}.summary-source{color:#657890;font-size:10px;text-align:right}.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 13px}.summary-item.full{grid-column:1/-1}.summary-item span{display:block;text-transform:uppercase;font-size:9px;font-weight:800;color:#8191a6;margin-bottom:2px}.summary-item b{font-size:11px;color:#40546c;overflow-wrap:anywhere}
         .scanner{width:min(100%,640px)}.scanner-body{padding:18px}.scanner-body p{color:#66778d;font-size:12px;line-height:1.5}.cccd-upload-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}.cccd-upload-slot{position:relative;min-height:245px;border:2px dashed #d6c29a;border-radius:10px;background:#fffaf0;overflow:hidden;cursor:pointer;transition:.15s}.cccd-upload-slot:hover{border-color:#bb8744;background:#fcf1dc;transform:translateY(-1px)}.cccd-upload-slot.has-image{border-style:solid;border-color:#dce5ef;background:#fff}.cccd-upload-slot input[type=file]{display:none}.cccd-upload-empty{min-height:245px;padding:20px;display:flex;flex-direction:column;gap:9px;align-items:center;justify-content:center;text-align:center;color:#6b7d6b;font-size:12px;font-weight:700}.cccd-upload-icon{width:48px;height:48px;border:1px solid rgba(122,82,48,.14);border-radius:50%;background:rgba(255,255,255,.86);display:flex;align-items:center;justify-content:center;font-size:22px}.cccd-upload-hint{font-size:10px;color:#8a7352;font-weight:600}.cccd-upload-slot img,.cccd-upload-slot video{width:100%;height:245px;display:block;object-fit:cover}.cccd-upload-badge{position:absolute;top:8px;left:8px;z-index:3;padding:3px 8px;border-radius:99px;background:rgba(17,24,39,.78);color:#fff;font-size:10px;font-weight:800}.cccd-upload-remove{position:absolute;right:8px;top:8px;z-index:4;width:29px;height:29px;border:0;border-radius:50%;background:rgba(220,38,38,.94);color:#fff;font-size:17px}.cccd-upload-live{position:absolute;inset:0;display:none;background:#111827}.cccd-upload-live.active{display:block}.cccd-upload-frame{position:absolute;inset:18%;border:2px solid #83ceff;border-radius:8px;box-shadow:0 0 0 999px rgba(0,0,0,.16);pointer-events:none}.status{min-height:18px;margin-top:8px;color:#5d7190;font-size:11px;font-weight:700}.scan-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}.manual{width:100%;height:78px;padding:8px;border:1px solid #dce5ef;border-radius:5px;resize:vertical;outline:0}.detail{width:min(100%,860px)}.detail-main{padding:18px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.detail-item label{display:block;color:#8191a4;text-transform:uppercase;font-size:9px;font-weight:800;margin-bottom:4px}.detail-item p{margin:0;color:#465a74}.toast{position:fixed;right:20px;bottom:20px;z-index:2000;background:#16815e;color:#fff;border-radius:7px;padding:12px 14px;font-size:12px;font-weight:700;max-width:390px;box-shadow:0 12px 28px rgba(10,31,60,.25)}.toast.bad{background:#c9424c}
         .qr-reader-wrap{border:1px solid #dce5ef;border-radius:8px;overflow:hidden;background:#f7f9fb;min-height:280px;display:flex;align-items:center;justify-content:center}.qr-reader-wrap video,.qr-reader-wrap img{width:100%!important;max-height:360px;object-fit:contain}.qr-result{margin-top:10px;border:1px solid #d6e3f3;background:#f6faff;border-radius:6px;padding:10px 11px;color:#51667f;font-size:12px;line-height:1.5}.qr-upload-label{height:34px;padding:0 12px;border:1px solid #d9e3ee;border-radius:5px;background:#fff;color:#435771;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer}.qr-upload-label:hover{background:#f7f9fc;border-color:#b8c9dd}.qr-upload-label input{display:none}
         @media(max-width:850px){.page{padding:20px 12px}.form-grid{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid #edf1f5}.fields,.summary-grid,.detail-grid{grid-template-columns:1fr}.full,.summary-item.full{grid-column:1}.search{width:100%}.footer{align-items:flex-start;flex-direction:column}.modal{padding:8px}}
+        .employee-address-select.invalid .employee-address-input{border-color:#d74b56;box-shadow:0 0 0 3px rgba(215,75,86,.12)}
     </style>
 </head>
 <body>
 <script>
+    // Kiểm tra điều kiện và tính hợp lệ cho is manager role.
     function isManagerRole(role) {
         const value = String(role || '')
             .trim()
@@ -116,8 +118,8 @@
                 </div>
                 <div class="rule"></div><h3 class="section">ĐỊA CHỈ</h3>
                 <div class="fields">
-                    <div class="group"><label class="label">Tỉnh / Thành <i class="req">*</i></label><select id="province" class="control"><option value="">-- Chọn --</option></select><small class="err"></small></div>
-                    <div class="group"><label class="label">Phường / Xã <i class="req">*</i></label><select id="ward" class="control"><option value="">-- Chọn --</option></select><small class="err"></small></div>
+                    <div class="group"><label class="label">Tỉnh / Thành <i class="req">*</i></label><div class="employee-address-select"><input class="employee-address-input" type="search" placeholder="Tìm kiếm hoặc chọn tỉnh/thành..." autocomplete="off" onfocus="openEmployeeAddressSelect(this)" oninput="filterEmployeeAddressSelect(this)"><button type="button" class="employee-address-toggle" onclick="toggleEmployeeAddressSelect(this)" aria-label="Mở danh sách tỉnh/thành">⌄</button><div class="employee-address-menu" role="listbox"></div><select id="province" class="control"><option value="">-- Chọn --</option></select></div><small class="err"></small></div>
+                    <div class="group"><label class="label">Phường / Xã <i class="req">*</i></label><div class="employee-address-select"><input class="employee-address-input" type="search" placeholder="Tìm kiếm hoặc chọn phường/xã..." autocomplete="off" onfocus="openEmployeeAddressSelect(this)" oninput="filterEmployeeAddressSelect(this)"><button type="button" class="employee-address-toggle" onclick="toggleEmployeeAddressSelect(this)" aria-label="Mở danh sách phường/xã">⌄</button><div class="employee-address-menu" role="listbox"></div><select id="ward" class="control"><option value="">-- Chọn --</option></select></div><small class="err"></small></div>
                     <div class="group"><label class="label">Số nhà / Đường <i class="req">*</i></label><input id="addressDetail" class="control" maxlength="255" placeholder="Ví dụ: 12 Nguyễn Trãi"><small class="err"></small></div>
                 </div>
                 <div class="rule"></div><h3 class="section">TÀI KHOẢN ĐĂNG NHẬP</h3><div class="note"><b>Không cần nhập mật khẩu.</b> Hệ thống tạo mật khẩu tạm thời <b>6 ký tự</b>, mã hóa BCrypt và gửi đến email nhân viên sau khi lưu.</div>
@@ -166,6 +168,9 @@
         $('phone').addEventListener('input',()=>{$('phone').value=digits($('phone').value,10);clearErr($('phone'))});
         $('cccd').addEventListener('input',()=>{$('cccd').value=digits($('cccd').value,12);state.scan=null;state.conflict=null;renderScan();clearErr($('cccd'))});
         ['birth','start','role','province','ward','addressDetail'].forEach(id=>$(id).addEventListener(id==='addressDetail'?'input':'change',()=>clearErr($(id))));
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.employee-address-select')) closeEmployeeAddressSelects();
+        });
         document.querySelectorAll('input[name="gender"]').forEach(x=>x.addEventListener('change',()=>clearErr($('genderBox'))));
         $('province').addEventListener('change',provinceChanged);
         $('scan').onclick=openCccdScanner;
@@ -175,27 +180,116 @@
         load();
     });
 
+    // Thực hiện xử lý nghiệp vụ của hàm query.
     function query(paging=true){const q=new URLSearchParams();if($('keyword').value.trim())q.set('keyword',$('keyword').value.trim());if($('filterRole').value)q.set('vaiTro',$('filterRole').value);if($('filterStatus').value)q.set('trangThai',$('filterStatus').value);if(paging){q.set('page',state.page);q.set('size',state.size)}return q}
+    // Tải hoặc truy xuất dữ liệu cho load.
     async function load(){try{state.page=Math.max(0,state.page);const d=await json(`${API}?${query().toString()}`),isList=Array.isArray(d),list=isList?d:(d.content||[]),meta=isList?{}:(d.page||{});state.total=isList?list.length:(d.totalElements??meta.totalElements??list.length);state.totalPages=state.total?Math.max(1,isList?Math.ceil(state.total/state.size):(d.totalPages??meta.totalPages??Math.ceil(state.total/state.size))):0;if(state.totalPages===0){state.page=0;state.items=[]}else if(state.page>=state.totalPages){state.page=state.totalPages-1;return load()}else{const start=state.page*state.size;state.items=isList?list.slice(start,start+state.size):list}renderRows()}catch(e){state.items=[];state.total=0;state.totalPages=0;renderRows();toast(e.message,true)}}
+    // Hiển thị và đồng bộ giao diện cho render rows.
     function renderRows(){ $('total').textContent=state.total||0;$('empty').hidden=state.items.length>0;$('rows').innerHTML=state.items.map((x,i)=>{const active=!!x.trangThai,addr=x.diaChiDisplay||x.diaChi||joinAddr(x);return `<tr><td>${state.page*state.size+i+1}</td><td><b>${esc(x.maNv)}</b></td><td class="strong">${esc(x.hoTen)}</td><td>${esc(x.email)||'<span class="muted">—</span>'}</td><td>${esc(x.soDienThoai)||'—'}</td><td><span class="badge ${x.vaiTro==='Quản lý'?'role1':'role2'}">${esc(x.vaiTro)||'—'}</span></td><td>${dateVN(x.ngayVaoLam)||'—'}</td><td class="address" title="${attr(addr)}">${esc(addr)||'—'}</td><td><span class="badge ${active?'on':'off'}">${active?'Đang làm':'Nghỉ việc'}</span></td><td><div class="acts"><button class="icon" onclick="showDetail(${x.id})" title="Xem">◉</button><button class="icon" onclick="openForm(${x.id})" title="Sửa">✎</button><label class="toggle"><input type="checkbox" ${active?'checked':''} onchange="toggleStatus(${x.id})"><i></i></label></div></td></tr>`}).join('');renderPages()}
+    // Hiển thị và đồng bộ giao diện cho render pages.
     function renderPages(){const el=$('pages');if(!state.total||!state.totalPages){el.innerHTML='';return}const total=Math.max(1,state.totalPages),current=Math.min(state.page,total-1),a=[],add=(label,page,disabled=false,active=false)=>a.push(`<button class="pg ${active?'active':''}" ${disabled?'disabled':''} onclick="goPage(${page})">${label}</button>`);add('«',0,current===0);add('‹',Math.max(0,current-1),current===0);const start=Math.max(0,current-2),end=Math.min(total-1,current+2);if(start>0){add('1',0);if(start>1)a.push('<span class="muted">…</span>')}for(let i=start;i<=end;i++)add(i+1,i,false,i===current);if(end<total-1){if(end<total-2)a.push('<span class="muted">…</span>');add(total,total-1)}add('›',Math.min(total-1,current+1),current===total-1);add('»',total-1,current===total-1);el.innerHTML=a.join('')}
+    // Thực hiện xử lý nghiệp vụ của hàm go page.
     function goPage(p){if(p<0||p>=state.totalPages||p===state.page)return;state.page=p;load()}
+    // Thực hiện xử lý nghiệp vụ của hàm export excel.
     async function exportExcel(){try{const r=await fetch(`${API}/xuat-excel?${query(false)}`);if(!r.ok)throw new Error(await readError(r));const u=URL.createObjectURL(await r.blob()),a=document.createElement('a');a.href=u;a.download='danh_sach_nhan_vien.xlsx';a.click();URL.revokeObjectURL(u)}catch(e){toast(e.message,true)}}
 
+    // Xử lý tương tác người dùng cho open form.
     async function openForm(id=null){state.editingId=id;state.scan=null;state.conflict=null;$('form').reset();clearAll();renderScan();$('formTitle').textContent=id?'Cập nhật nhân viên':'Thêm nhân viên';$('formSub').textContent=id?'Cập nhật thông tin cá nhân, công việc và địa chỉ.':'Mật khẩu tạm thời 6 ký tự sẽ được gửi đến email nhân viên.';let a={};if(id){try{const x=await json(`${API}/${id}`);$('name').value=x.hoTen||'';$('email').value=x.email||'';$('phone').value=x.soDienThoai||'';$('cccd').value=x.cccd||'';$('birth').value=toInput(x.ngaySinh);$('start').value=toInput(x.ngayVaoLam);$('role').value=x.vaiTro||'';$('addressDetail').value=x.diaChiChiTiet||x.diaChi||'';const g=document.querySelector(`input[name="gender"][value="${x.gioiTinh||'Nam'}"]`);if(g)g.checked=true;a={tinhThanh:x.tinhThanh||'',quanHuyen:x.quanHuyen||'',phuongXa:x.phuongXa||''}}catch(e){toast(e.message,true);return}}await setAddress(a);updateAvatar();$('formModal').hidden=false}
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update avatar.
     function updateAvatar(){const s=String($('name').value||'').trim().split(/\s+/).filter(Boolean);$('avatar').textContent=s.length?s.slice(-2).map(x=>x[0]).join('').toUpperCase():'NV'}
+    // Thực hiện xử lý nghiệp vụ của hàm provinces.
     async function provinces(){if(state.provinces)return state.provinces;try{const r=await fetch(`${PROVINCE_API}/`);state.provinces=r.ok?await r.json():[];return state.provinces}catch{return state.provinces=[]}}
-    function options(el,items,value=''){el.innerHTML='<option value="">-- Chọn --</option>'+items.map(x=>`<option value="${attr(x.name)}" data-code="${x.code||''}">${esc(x.name)}</option>`).join('');if(value){if(![...el.options].some(o=>o.value===value))el.insertAdjacentHTML('beforeend',`<option value="${attr(value)}">${esc(value)}</option>`);el.value=value}}
+    // Thực hiện xử lý nghiệp vụ của hàm options.
+    function options(el,items,value=''){
+        el.innerHTML='<option value="">-- Chọn --</option>'+items.map(x=>`<option value="${attr(x.name)}" data-code="${x.code||''}">${esc(x.name)}</option>`).join('');
+        if(value){
+            if(![...el.options].some(o=>o.value===value))el.insertAdjacentHTML('beforeend',`<option value="${attr(value)}">${esc(value)}</option>`);
+            el.value=value;
+        }
+        syncEmployeeAddressSelect(el);
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm sync employee address select.
+    function syncEmployeeAddressSelect(select, query=''){
+        const wrapper=select?.closest('.employee-address-select');
+        if(!wrapper) return;
+        const input=wrapper.querySelector('.employee-address-input');
+        const menu=wrapper.querySelector('.employee-address-menu');
+        const keyword=normalizeForMatch(query);
+        const selected=select.options[select.selectedIndex];
+        const list=[...select.options].slice(1).filter(option=>{
+            const text=normalizeForMatch(`${option.textContent||''} ${option.dataset.code||''}`);
+            return !keyword || text.includes(keyword);
+        });
+        if(!query && input) input.value=select.value ? (selected?.textContent||'').trim() : '';
+        if(!menu) return;
+        menu.innerHTML=list.length
+            ? list.map(option=>`<button type="button" class="employee-address-option ${option.value===select.value?'active':''}" data-value="${attr(option.value)}" onclick="chooseEmployeeAddressOption(this)">${esc(option.textContent.trim())}</button>`).join('')
+            : '<div class="employee-address-empty">Không tìm thấy kết quả phù hợp.</div>';
+    }
+
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close employee address selects.
+    function closeEmployeeAddressSelects(except=null){
+        document.querySelectorAll('.employee-address-select.open').forEach(wrapper=>{
+            if(wrapper===except) return;
+            wrapper.classList.remove('open');
+            syncEmployeeAddressSelect(wrapper.querySelector('select'));
+        });
+    }
+
+    // Xử lý tương tác người dùng cho open employee address select.
+    function openEmployeeAddressSelect(input){
+        const wrapper=input?.closest('.employee-address-select');
+        if(!wrapper || input.disabled) return;
+        closeEmployeeAddressSelects(wrapper);
+        wrapper.classList.add('open');
+        syncEmployeeAddressSelect(wrapper.querySelector('select'), input.value||'');
+    }
+
+    // Xử lý tương tác người dùng cho toggle employee address select.
+    function toggleEmployeeAddressSelect(button){
+        const wrapper=button?.closest('.employee-address-select');
+        const input=wrapper?.querySelector('.employee-address-input');
+        if(!wrapper || !input || input.disabled) return;
+        if(wrapper.classList.contains('open')) closeEmployeeAddressSelects();
+        else { openEmployeeAddressSelect(input); input.focus(); }
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm filter employee address select.
+    function filterEmployeeAddressSelect(input){
+        openEmployeeAddressSelect(input);
+        syncEmployeeAddressSelect(input.closest('.employee-address-select')?.querySelector('select'), input.value||'');
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm choose employee address option.
+    function chooseEmployeeAddressOption(option){
+        const wrapper=option?.closest('.employee-address-select');
+        const select=wrapper?.querySelector('select');
+        if(!select) return;
+        select.value=option.dataset.value||'';
+        select.dispatchEvent(new Event('change',{bubbles:true}));
+        wrapper.classList.remove('open');
+        syncEmployeeAddressSelect(select);
+    }
+    // Tải hoặc truy xuất dữ liệu cho fetch wards.
     async function fetchWards(c){try{const r=await fetch(`${PROVINCE_API}/p/${c}?depth=2`);return r.ok?(await r.json()).wards||[]:[]}catch{return []}}
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set address.
     async function setAddress(a={}){const ps=await provinces();options($('province'),ps,a.tinhThanh);options($('ward'),[],a.phuongXa);const p=ps.find(x=>x.name===a.tinhThanh);if(!p)return;options($('ward'),await fetchWards(p.code),a.phuongXa)}
+    // Thực hiện xử lý nghiệp vụ của hàm province changed.
     async function provinceChanged(){options($('ward'),[]);const c=$('province').selectedOptions[0]?.dataset.code;if(c)options($('ward'),await fetchWards(c))}
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate.
     function validate(){clearAll();let ok=true;const set=(e,m)=>{e.classList.add('invalid');e.closest('.group')?.querySelector('.err')&&(e.closest('.group').querySelector('.err').textContent=m);ok=false};const name=normalize($('name').value),email=$('email').value.trim(),phone=digits($('phone').value,10),cccd=digits($('cccd').value,12),detail=normalize($('addressDetail').value);$('name').value=name;$('phone').value=phone;$('cccd').value=cccd;$('addressDetail').value=detail;if(!/^[\p{L} .'-]{2,255}$/u.test(name))set($('name'),'Họ tên từ 2–255 ký tự, chỉ dùng chữ và dấu hợp lệ.');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))set($('email'),'Email không hợp lệ.');if(!/^(03|05|07|08|09)\d{8}$/.test(phone))set($('phone'),'SĐT Việt Nam gồm 10 số.');if(!/^\d{12}$/.test(cccd))set($('cccd'),'CCCD phải đúng 12 số.');else if(state.conflict)set($('cccd'),`CCCD đã thuộc nhân viên ${state.conflict.hoTen||''}.`);const today=new Date();today.setHours(0,0,0,0);const birth=$('birth').value?new Date(`${$('birth').value}T00:00:00`):null;if(!birth)set($('birth'),'Vui lòng chọn ngày sinh.');else{const adult=new Date(birth);adult.setFullYear(adult.getFullYear()+18);if(birth>=today||adult>today)set($('birth'),'Nhân viên phải đủ 18 tuổi.')}const start=$('start').value?new Date(`${$('start').value}T00:00:00`):null;if(!start)set($('start'),'Vui lòng chọn ngày vào làm.');else if(start>today||(birth&&start<new Date(birth.getFullYear()+18,birth.getMonth(),birth.getDate())))set($('start'),'Ngày vào làm không hợp lệ.');if(!$('role').value)set($('role'),'Vui lòng chọn vai trò.');if(!$('province').value)set($('province'),'Vui lòng chọn Tỉnh / Thành.');if(!$('ward').value)set($('ward'),'Vui lòng chọn Phường / Xã.');if(detail.length<2)set($('addressDetail'),'Vui lòng nhập số nhà / đường.');return ok}
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save form.
     async function saveForm(e){e.preventDefault();if(state.saving||!validate())return;const b=$('save');const data={hoTen:normalize($('name').value),email:$('email').value.trim().toLowerCase(),soDienThoai:digits($('phone').value,10),cccd:digits($('cccd').value,12),ngaySinh:$('birth').value,ngayVaoLam:$('start').value,gioiTinh:document.querySelector('input[name="gender"]:checked')?.value,vaiTro:$('role').value,tinhThanh:$('province').value,quanHuyen:null,phuongXa:$('ward').value,diaChiChiTiet:normalize($('addressDetail').value)};state.saving=true;b.disabled=true;b.textContent='Đang lưu...';try{await json(state.editingId?`${API}/${state.editingId}`:API,{method:state.editingId?'PUT':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});closeModal('formModal');toast(state.editingId?'Đã cập nhật nhân viên.':'Đã tạo nhân viên và gửi mật khẩu 6 ký tự qua email.');load()}catch(e){toast(e.message,true)}finally{state.saving=false;b.disabled=false;b.textContent='Lưu nhân viên'}}
 
+    // Hiển thị và đồng bộ giao diện cho show detail.
     async function showDetail(id){try{const x=await json(`${API}/${id}`);const addr=x.diaChiDisplay||x.diaChi||joinAddr(x);$('detail').innerHTML=`<div class="detail-grid"><div class="detail-item"><label>Mã NV</label><p>${esc(x.maNv)}</p></div><div class="detail-item"><label>Họ tên</label><p>${esc(x.hoTen)}</p></div><div class="detail-item"><label>Email</label><p>${esc(x.email)}</p></div><div class="detail-item"><label>Số điện thoại</label><p>${esc(x.soDienThoai)}</p></div><div class="detail-item"><label>CCCD</label><p>${esc(x.cccd)}</p></div><div class="detail-item"><label>Vai trò</label><p>${esc(x.vaiTro)}</p></div><div class="detail-item"><label>Ngày sinh</label><p>${dateVN(x.ngaySinh)||'—'}</p></div><div class="detail-item"><label>Ngày vào làm</label><p>${dateVN(x.ngayVaoLam)||'—'}</p></div><div class="detail-item full"><label>Địa chỉ</label><p>${esc(addr)||'—'}</p></div></div>`;$('detailModal').hidden=false}catch(e){toast(e.message,true)}}
-    async function toggleStatus(id){try{await json(`${API}/${id}/trang-thai`,{method:'PATCH'});toast('Đã cập nhật trạng thái.');load()}catch(e){toast(e.message,true)}}
+    // Xử lý tương tác người dùng cho toggle status.
+    async function toggleStatus(id){try{await json(`${API}/${id}/trang-thai`,{method:'PATCH'});toast('Đã cập nhật trạng thái.');load()}catch(e){toast(e.message,true);load()}}
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close modal.
     async function closeModal(id){if(id==='scannerModal')await closeCccdScanner();$(id).hidden=true}
+    // Xử lý tương tác người dùng cho open cccd scanner.
     function openCccdScanner(){
         $('cccdQrResult').textContent='Đưa mã QR CCCD vào khung hình để quét.';
         $('cccdQrReader').innerHTML='';
@@ -203,12 +297,14 @@
         $('scannerModal').hidden=false;
         setTimeout(startCccdScanner,120);
     }
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close cccd scanner.
     async function closeCccdScanner(){
         await stopCccdScanner();
         $('cccdQrReader').innerHTML='';
         $('cccdQrFile').value='';
         cccdQrBusy=false;
     }
+    // Thực hiện xử lý nghiệp vụ của hàm start cccd scanner.
     async function startCccdScanner(){
         if(cccdQrBusy)return;
         if(!window.Html5Qrcode){$('cccdQrResult').textContent='Không tải được thư viện quét QR. Kiểm tra lại kết nối Internet.';return}
@@ -226,6 +322,7 @@
             cccdQrBusy=false;
         }
     }
+    // Thực hiện xử lý nghiệp vụ của hàm stop cccd scanner.
     async function stopCccdScanner(){
         const scanner=cccdQrScanner;
         cccdQrScanner=null;
@@ -236,6 +333,7 @@
             await scanner.clear();
         }catch{}
     }
+    // Thực hiện xử lý nghiệp vụ của hàm scan cccd qr file.
     async function scanCccdQrFile(event){
         const file=event.target.files?.[0];
         if(!file)return;
@@ -254,6 +352,7 @@
             event.target.value='';
         }
     }
+    // Xử lý tương tác người dùng cho handle cccd qr success.
     async function handleCccdQrSuccess(decodedText){
         if(cccdQrBusy)return;
         cccdQrBusy=true;
@@ -266,6 +365,7 @@
         await fillEmployeeFromCccdQr(qr);
         cccdQrBusy=false;
     }
+    // Thực hiện xử lý nghiệp vụ của hàm fill employee from cccd qr.
     async function fillEmployeeFromCccdQr(qr){
         await stopCccdScanner();
 
@@ -348,6 +448,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm parse cccd qr.
     function parseCccdQr(rawText){
         const parts = String(rawText || '')
             .split('|')
@@ -381,6 +482,7 @@
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply raw address.
     async function applyRawAddress(raw) {
         const text = normalize(raw);
         if (!text) return;
@@ -404,6 +506,7 @@
         clearErr($('addressDetail'));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm resolve administrative address.
     async function resolveAdministrativeAddress(raw) {
         const fullText = normalizeForMatch(raw);
         if (!fullText) return null;
@@ -453,6 +556,7 @@
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm split address parts.
     function splitAddressParts(value) {
         return String(value || '')
             .split(',')
@@ -460,6 +564,7 @@
             .filter(Boolean);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho find best administrative match.
     function findBestAdministrativeMatch(items, fullText) {
         if (!Array.isArray(items) || !items.length) return null;
 
@@ -496,6 +601,7 @@
         return bestItem;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm build administrative aliases.
     function buildAdministrativeAliases(name) {
         const base = normalizeForMatch(name);
         const cleaned = stripAdministrativePrefix(base);
@@ -524,12 +630,14 @@
         return [...aliases].filter(Boolean);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm strip administrative prefix.
     function stripAdministrativePrefix(value) {
         return String(value || '')
             .replace(/^(thanh pho|tinh|quan|huyen|phuong|xa|thi tran|thi xa)\s+/, '')
             .trim();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize for match.
     function normalizeForMatch(value) {
         return String(value || '')
             .normalize('NFD')
@@ -541,22 +649,30 @@
             .replace(/\s+/g, ' ');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm best.
     function best(items, text) {
         return findBestAdministrativeMatch(items, normalize(text));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm aliases.
     function aliases(name) {
         return buildAdministrativeAliases(name);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm norm match.
     function normMatch(v) {
         return normalizeForMatch(v);
     }
 
+    // Hiển thị và đồng bộ giao diện cho render scan.
     function renderScan(){const s=state.scan;$('scanSummary').hidden=!s;if(!s)return;$('sumCccd').textContent=s.cccd||'—';$('sumName').textContent=s.hoTen||'—';$('sumEmail').textContent=s.email||'Chưa có email – cần nhập thủ công';$('sumBirth').textContent=dateVN(s.ngaySinh)||'—';$('sumGender').textContent=s.gioiTinh||'—';$('sumAddress').textContent=s.diaChi||'—';$('scanSource').textContent=s.source==='NHAN_VIEN'?'Email từ hồ sơ nhân viên':s.source==='KHACH_HANG'?'Email từ hồ sơ khách hàng':'Email không có trong QR'}
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set scan status.
     function setScanStatus(t){$('scanStatus').textContent=t}
-    function setErr(el,msg){el.classList.add('invalid');const e=el.closest('.group')?.querySelector('.err');if(e)e.textContent=msg}function clearErr(el){el?.classList.remove('invalid');const e=el?.closest('.group')?.querySelector('.err');if(e)e.textContent=''}function clearAll(){document.querySelectorAll('.invalid').forEach(x=>x.classList.remove('invalid'));document.querySelectorAll('.err').forEach(x=>x.textContent='')}
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set err.
+    function setErr(el,msg){el.classList.add('invalid');el.closest('.employee-address-select')?.classList.add('invalid');const e=el.closest('.group')?.querySelector('.err');if(e)e.textContent=msg}function clearErr(el){el?.classList.remove('invalid');el?.closest('.employee-address-select')?.classList.remove('invalid');const e=el?.closest('.group')?.querySelector('.err');if(e)e.textContent=''}function clearAll(){document.querySelectorAll('.invalid').forEach(x=>x.classList.remove('invalid'));document.querySelectorAll('.err').forEach(x=>x.textContent='')}
+    // Thực hiện xử lý nghiệp vụ của hàm json.
     async function json(url,opt){const r=await fetch(url,opt);if(!r.ok)throw new Error(await readError(r));return r.status===204?null:r.json()}async function readError(r){const t=await r.text();try{const x=JSON.parse(t);return x.message||x.error||Object.values(x).join('. ')}catch{return t||'Có lỗi xảy ra.'}}
+    // Thực hiện xử lý nghiệp vụ của hàm digits.
     function digits(v,n){return String(v||'').replace(/\D/g,'').slice(0,n)}function normalize(v){return String(v||'').replace(/\s+/g,' ').trim()}function titleCase(v){return normalize(v).toLocaleLowerCase('vi-VN').replace(/(^|\s)(\S)/g,(m,a,b)=>a+b.toLocaleUpperCase('vi-VN'))}function toInput(v){return v?String(v).slice(0,10):''}function dateVN(v){if(!v)return'';const p=String(v).slice(0,10).split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:v}function joinAddr(x){return [x.diaChiChiTiet,x.phuongXa,x.tinhThanh].filter(Boolean).join(', ')}function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}function attr(v){return esc(v).replace(/`/g,'&#096;')}function toast(m,bad=false){const e=document.createElement('div');e.className=`toast ${bad?'bad':''}`;e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),3200)}
     window.openForm=openForm;window.showDetail=showDetail;window.toggleStatus=toggleStatus;window.goPage=goPage;
 </script>

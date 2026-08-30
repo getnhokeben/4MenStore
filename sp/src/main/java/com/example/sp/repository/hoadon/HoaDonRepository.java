@@ -62,7 +62,38 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
 
     boolean existsByMaHoaDon(String maHoaDon);
 
+    @Query("""
+            SELECT COUNT(h)
+            FROM HoaDon h
+            WHERE h.phieuGiamGia.id = :voucherId
+              AND h.khachHang.id = :customerId
+              AND (h.trangThai IS NULL OR h.trangThai NOT IN :cancelledStatuses)
+            """)
+    long countActiveUsesByVoucherAndCustomer(
+            @Param("voucherId") Integer voucherId,
+            @Param("customerId") Integer customerId,
+            @Param("cancelledStatuses") List<String> cancelledStatuses
+    );
+
     List<HoaDon> findByLoaiDonAndTrangThaiOrderByNgayTaoAsc(String loaiDon, String trangThai);
+
+    /**
+     * Online orders that have already consumed stock but have not begun
+     * packing/shipping may be moved back to waiting for restock when a customer
+     * is paying at the counter.
+     */
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+            SELECT DISTINCT h
+            FROM HoaDonChiTiet c
+            JOIN c.hoaDon h
+            WHERE c.chiTietSanPham.idSpct = :variantId
+              AND h.loaiDon = 'Trực tuyến'
+              AND h.trangThai = 'Đã xác nhận'
+              AND h.daTruTon = true
+            ORDER BY h.ngayTao ASC
+            """)
+    List<HoaDon> findOnlineOrdersPreemptibleForCounterSale(@Param("variantId") Integer variantId);
 
     @EntityGraph(attributePaths = {"phieuGiamGia", "khachHang"})
     List<HoaDon> findByKhachHang_IdOrderByNgayTaoDesc(Integer idKhachHang);

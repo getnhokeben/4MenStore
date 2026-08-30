@@ -22,6 +22,23 @@ public interface ChiTietDotGiamGiaRepository extends JpaRepository<ChiTietDotGia
     List<Integer> findIdSpctByDotGiamGiaId(@Param("idDotGiamGia") Integer idDotGiamGia);
 
     @Query("""
+            SELECT DISTINCT c.chiTietSanPham.idSpct
+            FROM ChiTietDotGiamGia c
+            WHERE c.chiTietSanPham.idSpct IN :idSpctIds
+              AND c.trangThai = true
+              AND c.dotGiamGia.trangThai = true
+              AND c.dotGiamGia.id <> :excludedPromotionId
+              AND c.dotGiamGia.ngayBatDau < :endAt
+              AND c.dotGiamGia.ngayKetThuc > :startAt
+            """)
+    List<Integer> findVariantIdsWithOverlappingPromotion(
+            @Param("idSpctIds") List<Integer> idSpctIds,
+            @Param("startAt") LocalDateTime startAt,
+            @Param("endAt") LocalDateTime endAt,
+            @Param("excludedPromotionId") Integer excludedPromotionId
+    );
+
+    @Query("""
             SELECT c.dotGiamGia FROM ChiTietDotGiamGia c
             WHERE c.chiTietSanPham.idSpct = :idSpct
               AND c.trangThai = true

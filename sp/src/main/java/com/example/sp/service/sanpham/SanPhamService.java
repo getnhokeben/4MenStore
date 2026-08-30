@@ -57,18 +57,21 @@ public class SanPhamService {
     @Autowired private KieuDangRepository kieuDangRepo;
     @Autowired private EntityManager entityManager;
 
+    // Thực hiện xử lý nghiệp vụ của hàm trim to null.
     private String trimToNull(String value) {
         if (value == null) return null;
         String trimmed = value.trim();
         return trimmed.isEmpty() ? null : trimmed;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require text.
     private String requireText(String value, String message) {
         String trimmed = trimToNull(value);
         if (trimmed == null) throw new RuntimeException(message);
         return trimmed;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm images to json.
     private String imagesToJson(List<String> urls) {
         if (urls == null) return null;
         List<String> cleaned = urls.stream()
@@ -82,24 +85,28 @@ public class SanPhamService {
                 .collect(java.util.stream.Collectors.joining(",", "[", "]"));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm variants of.
     private List<ChiTietSanPhamRequest> variantsOf(SanPhamFullRequest request) {
         return request.getDanhSachBienThe() == null
                 ? Collections.emptyList()
                 : request.getDanhSachBienThe();
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate product request.
     private void validateProductRequest(SanPhamFullRequest request, boolean creating) {
         if (request == null) throw new RuntimeException("Dữ liệu sản phẩm không hợp lệ");
         if (creating) requireText(request.getMaSp(), "Mã sản phẩm không được để trống");
         requireText(request.getTenSp(), "Tên sản phẩm không được để trống");
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate prices.
     private void validatePrices(BigDecimal donGia) {
         if (donGia != null && donGia.compareTo(BigDecimal.ZERO) < 0) {
             throw new RuntimeException("Đơn giá không được nhỏ hơn 0");
         }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate sku.
     private String validateSku(String sku, Integer currentId) {
         String normalized = requireText(sku, "Mã chi tiết sản phẩm không được trống");
         chiTietRepo.findByMaChiTietSanPham(normalized)
@@ -110,6 +117,7 @@ public class SanPhamService {
         return normalized;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm unique product code.
     private String uniqueProductCode(String requestedCode) {
         String normalized = requireText(requestedCode, "Mã sản phẩm không được để trống");
         String base = normalized.length() > 20 ? normalized.substring(0, 20) : normalized;
@@ -126,6 +134,7 @@ public class SanPhamService {
         return candidate;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm remap sku to product code.
     private String remapSkuToProductCode(String sku, String oldProductCode, String newProductCode) {
         String normalized = trimToNull(sku);
         if (normalized == null) return sku;
@@ -136,48 +145,56 @@ public class SanPhamService {
         return normalized;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require xuat xu.
     private XuatXu requireXuatXu(Integer id) {
         if (id == null) return null;
         if (!xuatXuRepo.existsById(id)) throw new RuntimeException("Xuất xứ id=" + id + " không tồn tại");
         return entityManager.getReference(XuatXu.class, id);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require chat lieu.
     private ChatLieu requireChatLieu(Integer id) {
         if (id == null) return null;
         if (!chatLieuRepo.existsById(id)) throw new RuntimeException("Chất liệu id=" + id + " không tồn tại");
         return entityManager.getReference(ChatLieu.class, id);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require kich co.
     private KichCo requireKichCo(Integer id) {
         if (id == null) throw new RuntimeException("Vui lòng chọn kích cỡ");
         if (!kichCoRepo.existsById(id)) throw new RuntimeException("Kích cỡ id=" + id + " không tồn tại");
         return entityManager.getReference(KichCo.class, id);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require mau sac.
     private MauSac requireMauSac(Integer id) {
         if (id == null) throw new RuntimeException("Vui lòng chọn màu sắc");
         if (!mauSacRepo.existsById(id)) throw new RuntimeException("Màu sắc id=" + id + " không tồn tại");
         return entityManager.getReference(MauSac.class, id);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require loai ao.
     private LoaiAo requireLoaiAo(Integer id) {
         if (id == null) throw new RuntimeException("Vui lòng chọn loại áo");
         if (!loaiAoRepo.existsById(id)) throw new RuntimeException("Loại áo id=" + id + " không tồn tại");
         return entityManager.getReference(LoaiAo.class, id);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require phong cach mac.
     private PhongCachMac requirePhongCachMac(Integer id) {
         if (id == null) throw new RuntimeException("Vui lòng chọn phong cách");
         if (!phongCachMacRepo.existsById(id)) throw new RuntimeException("Phong cách id=" + id + " không tồn tại");
         return entityManager.getReference(PhongCachMac.class, id);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require kieu dang.
     private KieuDang requireKieuDang(Integer id) {
         if (id == null) throw new RuntimeException("Vui lòng chọn kiểu dáng");
         if (!kieuDangRepo.existsById(id)) throw new RuntimeException("Kiểu dáng id=" + id + " không tồn tại");
         return entityManager.getReference(KieuDang.class, id);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho find or create xuat xu.
     private XuatXu findOrCreateXuatXu(String tenXuatXu) {
         String normalized = trimToNull(tenXuatXu);
         if (normalized == null) return null;
@@ -191,6 +208,7 @@ public class SanPhamService {
         return xuatXuRepo.save(newXx);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho find or create chat lieu.
     private ChatLieu findOrCreateChatLieu(String tenChatLieu) {
         String normalized = trimToNull(tenChatLieu);
         if (normalized == null) return null;
@@ -204,6 +222,7 @@ public class SanPhamService {
         return chatLieuRepo.save(newCl);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply product fields.
     private void applyProductFields(SanPham sp, SanPhamFullRequest request, boolean creating) {
         sp.setTenSp(requireText(request.getTenSp(), "Tên sản phẩm không được để trống"));
         sp.setMoTa(request.getMoTa());
@@ -233,6 +252,7 @@ public class SanPhamService {
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save sub images.
     private void saveSubImages(Integer idSp, List<String> urls) {
         if (urls == null) return;
         for (String url : urls) {
@@ -245,12 +265,14 @@ public class SanPhamService {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm replace sub images.
     private void replaceSubImages(Integer idSp, List<String> urls) {
         if (urls == null) return;
         hinhAnhRepo.deleteByIdSanPham(idSp);
         saveSubImages(idSp, urls);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply variant fields.
     private void applyVariantFields(ChiTietSanPham ct, ChiTietSanPhamRequest ctDto, String nguoiThucHien, boolean creating) {
         if (ctDto == null) throw new RuntimeException("Dữ liệu biến thể không hợp lệ");
 
@@ -281,6 +303,7 @@ public class SanPhamService {
     }
 
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create product.
     public SanPham createProduct(SanPhamFullRequest request) {
         validateProductRequest(request, true);
         List<ChiTietSanPhamRequest> variants = variantsOf(request);
@@ -306,6 +329,7 @@ public class SanPhamService {
         return sp;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get products.
     public Page<SanPham> getProducts(String keyword, String chatLieu, Boolean trangThai, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("idSp").descending());
         String normalizedKeyword = normalizeSearch(keyword);
@@ -326,6 +350,7 @@ public class SanPhamService {
         return new PageImpl<>(matches.subList(fromIndex, toIndex), pageable, matches.size());
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize search.
     private String normalizeSearch(String value) {
         String trimmed = trimToNull(value);
         if (trimmed == null) return null;
@@ -336,16 +361,19 @@ public class SanPhamService {
                 .toLowerCase(Locale.ROOT);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm contains normalized.
     private boolean containsNormalized(String value, String keyword) {
         String normalizedValue = normalizeSearch(value);
         return normalizedValue != null && normalizedValue.contains(keyword);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get product variants.
     public List<ChiTietSanPham> getProductVariants(Integer idSp) {
         return chiTietRepo.findByIdSanPham(idSp);
     }
 
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update product.
     public SanPham updateProduct(Integer idSp, SanPhamFullRequest request) {
         validateProductRequest(request, false);
 
@@ -380,6 +408,7 @@ public class SanPhamService {
     }
 
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update variant.
     public ChiTietSanPham updateVariant(Integer idSpct, ChiTietSanPhamUpdateRequest request) {
         if (request == null) throw new RuntimeException("Dữ liệu biến thể không hợp lệ");
 
@@ -417,6 +446,7 @@ public class SanPhamService {
         return chiTietRepo.save(ct);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate stock not below reserved.
     private void validateStockNotBelowReserved(ChiTietSanPham variant, int requestedStock) {
         int reserved = variant.getSoLuongGiu() == null ? 0 : variant.getSoLuongGiu();
         if (requestedStock < reserved) {
@@ -426,6 +456,7 @@ public class SanPhamService {
     }
 
     @Transactional
+    // Thực hiện xử lý nghiệp vụ của hàm soft delete product.
     public void softDeleteProduct(Integer idSp) {
         SanPham sp = sanPhamRepo.findById(idSp)
                 .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));
@@ -442,6 +473,7 @@ public class SanPhamService {
     }
 
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set product status.
     public void setProductStatus(Integer idSp, boolean status) {
         SanPham sp = sanPhamRepo.findById(idSp)
                 .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));

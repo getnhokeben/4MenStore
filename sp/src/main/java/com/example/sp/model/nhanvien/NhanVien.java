@@ -86,6 +86,7 @@ public class NhanVien {
     private LocalDateTime ngayCapNhat;
 
     @Transient
+    // Tải hoặc truy xuất dữ liệu cho get dia chi display.
     public String getDiaChiDisplay() {
         String diaChiMoi = java.util.stream.Stream.of(
                         diaChiChiTiet,
@@ -100,6 +101,7 @@ public class NhanVien {
 
 
     @PrePersist
+    // Thực hiện xử lý nghiệp vụ của hàm pre persist.
     public void prePersist() {
         if (trangThai == null) {
             trangThai = true;
@@ -113,6 +115,7 @@ public class NhanVien {
     }
 
     @PreUpdate
+    // Thực hiện xử lý nghiệp vụ của hàm pre update.
     public void preUpdate() {
         ngayCapNhat = LocalDateTime.now();
     }

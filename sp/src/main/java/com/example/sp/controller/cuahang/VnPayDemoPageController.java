@@ -37,6 +37,7 @@ public class VnPayDemoPageController {
             },
             produces = MediaType.TEXT_HTML_VALUE
     )
+    // Thực hiện xử lý nghiệp vụ của hàm payment page.
     public ResponseEntity<byte[]> paymentPage() throws IOException {
         return htmlPage("templates/VnPayMethodSelection.html");
     }
@@ -45,11 +46,13 @@ public class VnPayDemoPageController {
             value = "/api/shop/payments/vnpay/checkout/card",
             produces = MediaType.TEXT_HTML_VALUE
     )
+    // Thực hiện xử lý nghiệp vụ của hàm card payment page.
     public ResponseEntity<byte[]> cardPaymentPage() throws IOException {
         return htmlPage("templates/VnPayCheckout.html");
     }
 
     @GetMapping("/api/shop/payments/vnpay/checkout/status")
+    // Kiểm tra điều kiện và tính hợp lệ cho checkout status.
     public ResponseEntity<LocalCheckoutStatus> checkoutStatus(
             @RequestParam Map<String, String> params
     ) {
@@ -60,6 +63,7 @@ public class VnPayDemoPageController {
     }
 
     @GetMapping("/api/shop/payments/vnpay/checkout/scan-confirm")
+    // Thực hiện xử lý nghiệp vụ của hàm confirm qr scan.
     public ResponseEntity<Void> confirmQrScan(@RequestParam Map<String, String> params) {
         GatewayReturnResult result = paymentGatewayService.confirmLocalVnPayQrScan(params);
         return paymentResultRedirect(result);
@@ -69,6 +73,7 @@ public class VnPayDemoPageController {
             value = "/api/shop/payments/vnpay/checkout/scan-result",
             produces = MediaType.TEXT_HTML_VALUE
     )
+    // Thực hiện xử lý nghiệp vụ của hàm scan result page.
     public ResponseEntity<byte[]> scanResultPage() throws IOException {
         return htmlPage("templates/VnPayScanResult.html");
     }
@@ -77,6 +82,7 @@ public class VnPayDemoPageController {
             value = "/api/shop/payments/qr-demo/checkout",
             produces = MediaType.TEXT_HTML_VALUE
     )
+    // Thực hiện xử lý nghiệp vụ của hàm qr demo checkout page.
     public ResponseEntity<byte[]> qrDemoCheckoutPage() throws IOException {
         if (!paymentProperties.getQrDemo().isEnabled()) {
             return ResponseEntity.notFound().build();
@@ -85,6 +91,7 @@ public class VnPayDemoPageController {
     }
 
     @GetMapping("/api/shop/payments/qr-demo/status")
+    // Thực hiện xử lý nghiệp vụ của hàm qr demo checkout status.
     public ResponseEntity<LocalCheckoutStatus> qrDemoCheckoutStatus(
             @RequestParam Map<String, String> params
     ) {
@@ -95,12 +102,14 @@ public class VnPayDemoPageController {
     }
 
     @GetMapping("/api/shop/payments/qr-demo/scan-confirm")
+    // Thực hiện xử lý nghiệp vụ của hàm confirm qr demo scan.
     public ResponseEntity<Void> confirmQrDemoScan(@RequestParam Map<String, String> params) {
         GatewayReturnResult result = paymentGatewayService.confirmQrDemoScan(params);
         String status = !result.valid() ? "invalid"
                 : result.success() ? "success"
                 : "failed";
-        String target = "/shop?paymentResult=" + status
+        String target = (paymentGatewayService.isPosOrder(result.orderCode()) ? "/ban-hang-tai-quay" : "/shop")
+                + "?paymentResult=" + status
                 + "&gateway=" + encode(result.gateway())
                 + "&orderCode=" + encode(result.orderCode());
         return ResponseEntity.status(302).location(URI.create(target)).build();
@@ -110,10 +119,12 @@ public class VnPayDemoPageController {
             value = "/api/shop/payments/qr-demo/scan-result",
             produces = MediaType.TEXT_HTML_VALUE
     )
+    // Thực hiện xử lý nghiệp vụ của hàm qr demo scan result page.
     public ResponseEntity<byte[]> qrDemoScanResultPage() throws IOException {
         return htmlPage("templates/VnPayScanResult.html");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm html page.
     private ResponseEntity<byte[]> htmlPage(String resourcePath) throws IOException {
         byte[] html;
         try (InputStream input = new ClassPathResource(resourcePath).getInputStream()) {
@@ -128,6 +139,7 @@ public class VnPayDemoPageController {
             value = "/api/shop/payments/vnpay/checkout/complete",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )
+    // Thực hiện xử lý nghiệp vụ của hàm complete payment.
     public ResponseEntity<Void> completePayment(@RequestParam Map<String, String> form) {
         Map<String, String> signedParams = new LinkedHashMap<>(form);
         String action = signedParams.remove("outcome");
@@ -150,6 +162,7 @@ public class VnPayDemoPageController {
             value = "/api/shop/payments/vnpay/checkout/wallet/complete",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )
+    // Thực hiện xử lý nghiệp vụ của hàm complete wallet payment.
     public ResponseEntity<Void> completeWalletPayment(@RequestParam Map<String, String> form) {
         Map<String, String> signedParams = new LinkedHashMap<>(form);
         String action = signedParams.remove("outcome");
@@ -162,16 +175,19 @@ public class VnPayDemoPageController {
         return paymentResultRedirect(result);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm payment result redirect.
     private ResponseEntity<Void> paymentResultRedirect(GatewayReturnResult result) {
         String status = !result.valid() ? "invalid"
                 : result.success() ? "success"
                 : "failed";
-        String target = "/shop?paymentResult=" + status
+        String target = (paymentGatewayService.isPosOrder(result.orderCode()) ? "/ban-hang-tai-quay" : "/shop")
+                + "?paymentResult=" + status
                 + "&gateway=VNPAY"
                 + "&orderCode=" + encode(result.orderCode());
         return ResponseEntity.status(302).location(URI.create(target)).build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm encode.
     private String encode(String value) {
         return URLEncoder.encode(value == null ? "" : value, StandardCharsets.UTF_8);
     }

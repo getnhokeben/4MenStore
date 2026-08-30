@@ -23,6 +23,7 @@ public class ThongKeController {
     private final DashboardService dashboardService;
 
     @GetMapping(value = {"/thong-ke", "/thong-ke.html"}, produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm view.
     public ResponseEntity<byte[]> view() throws IOException {
         byte[] html = new ClassPathResource("templates/thong-ke.html").getInputStream().readAllBytes();
         return ResponseEntity.ok()
@@ -31,14 +32,16 @@ public class ThongKeController {
     }
 
     @GetMapping("/api/thong-ke")
+    // Thực hiện xử lý nghiệp vụ của hàm data.
     public DashboardResponse data(ThongKeRequest req) {
         String from = (req.getFromDate() == null || req.getFromDate().isEmpty()) ? null : req.getFromDate();
         String to   = (req.getToDate()   == null || req.getToDate().isEmpty())   ? null : req.getToDate();
-        return dashboardService.getData(from, to);
+        return dashboardService.getData(from, to, req.getTrangThai());
     }
 
     @GetMapping("/thong-ke/top-product-ajax")
     @ResponseBody
+    // Tải hoặc truy xuất dữ liệu cho get top product ajax.
     public List<Object[]> getTopProductAjax(@RequestParam String type) {
         return dashboardService.getTopProductByType(type);
     }

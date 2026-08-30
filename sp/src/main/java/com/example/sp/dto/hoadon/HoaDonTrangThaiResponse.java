@@ -23,6 +23,7 @@ public class HoaDonTrangThaiResponse {
     private LocalDateTime ngayYeuCauHoan;
     private LocalDateTime ngayNhanHangHoan;
 
+    // Thực hiện xử lý nghiệp vụ của hàm from.
     public static HoaDonTrangThaiResponse from(HoaDon hoaDon) {
         if (hoaDon == null) {
             throw new IllegalArgumentException("Không có dữ liệu hóa đơn");

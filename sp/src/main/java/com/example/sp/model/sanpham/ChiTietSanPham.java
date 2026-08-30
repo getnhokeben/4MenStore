@@ -75,6 +75,7 @@ public class ChiTietSanPham {
     private String nguoiCapNhat;
 
     @Transient
+    // Tải hoặc truy xuất dữ liệu cho get so luong kha dung.
     public Integer getSoLuongKhaDung() {
         int stock = soLuongTon == null ? 0 : soLuongTon;
         int reserved = soLuongGiu == null ? 0 : soLuongGiu;

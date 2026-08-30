@@ -43,6 +43,7 @@ public class DotGiamGia {
     private BigDecimal soTienToiDa;
 
     @PrePersist
+    // Thực hiện xử lý nghiệp vụ của hàm pre persist.
     public void prePersist() {
         if (loaiGiamGia == null || loaiGiamGia.isBlank()) {
             loaiGiamGia = "PHAN_TRAM";

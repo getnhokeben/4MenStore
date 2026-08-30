@@ -13,15 +13,18 @@ import java.nio.charset.StandardCharsets;
 public class QuanLyNguoiDungPageController {
 
     @GetMapping(value = {"/khach-hang", "/khach-hang.html", "/khachHang/hien-thi"}, produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm khach hang.
     public ResponseEntity<byte[]> khachHang() throws IOException {
         return html("templates/khach-hang.html");
     }
 
     @GetMapping(value = {"/nhan-vien", "/nhan-vien.html", "/nhanVien/hien-thi"}, produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm nhan vien.
     public ResponseEntity<byte[]> nhanVien() throws IOException {
         return html("templates/nhan-vien.html");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm html.
     private ResponseEntity<byte[]> html(String path) throws IOException {
         byte[] html = new ClassPathResource(path).getInputStream().readAllBytes();
         return ResponseEntity.ok()

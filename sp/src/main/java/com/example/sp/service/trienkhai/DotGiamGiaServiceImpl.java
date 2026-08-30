@@ -10,10 +10,12 @@ import com.example.sp.repository.sanpham.ChiTietSanPhamRepository;
 import com.example.sp.repository.khuyenmai.DotGiamGiaRepository;
 import com.example.sp.service.tienich.GeneratedCodeUtil;
 import com.example.sp.service.tienich.MoneyRoundingUtil;
+import com.example.sp.service.tienich.SearchTextUtil;
 import com.example.sp.service.khuyenmai.DotGiamGiaService;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,6 +37,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     @Transactional
+    // Tải hoặc truy xuất dữ liệu cho get all.
     public List<DotGiamGia> getAll() {
         deactivateExpiredPromotions();
         return dotGiamGiaRepository.findAll(Sort.by(Sort.Order.desc("id")));
@@ -42,25 +45,58 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     @Transactional
+    // Tải hoặc truy xuất dữ liệu cho get all.
     public Page<DotGiamGia> getAll(String keyword, Boolean trangThai, String tienDo, LocalDateTime tuNgay, LocalDateTime denNgay, Pageable pageable) {
         deactivateExpiredPromotions();
-        return dotGiamGiaRepository.search(blankToNull(keyword), trangThai, blankToNull(tienDo), LocalDateTime.now(), tuNgay, denNgay, withDefaultSort(pageable));
+        Pageable requestedPage = withDefaultSort(pageable);
+        String searchKey = SearchTextUtil.key(keyword);
+        if (searchKey == null) {
+            return dotGiamGiaRepository.search(
+                    null,
+                    trangThai,
+                    blankToNull(tienDo),
+                    LocalDateTime.now(),
+                    tuNgay,
+                    denNgay,
+                    requestedPage
+            );
+        }
+
+        List<DotGiamGia> matches = dotGiamGiaRepository.search(
+                        null,
+                        trangThai,
+                        blankToNull(tienDo),
+                        LocalDateTime.now(),
+                        tuNgay,
+                        denNgay,
+                        Pageable.unpaged(requestedPage.getSort())
+                ).stream()
+                .filter(item -> SearchTextUtil.contains(
+                        searchKey,
+                        item.getMaDotGiamGia(),
+                        item.getTenDotGiamGia()
+                ))
+                .toList();
+        return toPage(matches, requestedPage);
     }
 
     @Override
     @Transactional
+    // Tải hoặc truy xuất dữ liệu cho find by id.
     public DotGiamGia findById(Integer id) {
         deactivateExpiredPromotions();
         return dotGiamGiaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đợt giảm giá"));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm deactivate expired promotions.
     private void deactivateExpiredPromotions() {
         dotGiamGiaRepository.deactivateExpired(LocalDateTime.now());
     }
 
     @Override
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save.
     public DotGiamGia save(DotGiamGia dg) {
         DotGiamGiaRequest request = new DotGiamGiaRequest();
         request.setId(dg.getId());
@@ -77,6 +113,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save.
     public DotGiamGia save(DotGiamGiaRequest request) {
         validate(request);
         validateStrict(request);
@@ -116,6 +153,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     @Transactional
+    // Xử lý thao tác đóng, xóa hoặc hủy cho delete.
     public void delete(Integer id) {
         DotGiamGia dot = findById(id);
         dot.setTrangThai(false);
@@ -124,6 +162,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     @Transactional
+    // Xử lý tương tác người dùng cho toggle status.
     public DotGiamGia toggleStatus(Integer id) {
         DotGiamGia dot = findById(id);
         return setStatus(id, !Boolean.TRUE.equals(dot.getTrangThai()));
@@ -131,6 +170,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
 
     @Override
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set status.
     public DotGiamGia setStatus(Integer id, Boolean trangThai) {
         if (trangThai == null) {
             return toggleStatus(id);
@@ -149,22 +189,60 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
     }
 
     @Override
+    // Tải hoặc truy xuất dữ liệu cho get selected spct ids.
     public List<Integer> getSelectedSpctIds(Integer idDotGiamGia) {
         return chiTietDotGiamGiaRepository.findIdSpctByDotGiamGiaId(idDotGiamGia);
     }
 
     @Override
-    public List<SanPhamChiTietPromotionView> getSanPhamChiTietKichHoat() {
-        return dotGiamGiaRepository.findSanPhamChiTietKichHoat();
+    // Tải hoặc truy xuất dữ liệu cho get san pham chi tiet kich hoat.
+    public List<SanPhamChiTietPromotionView> getSanPhamChiTietKichHoat(
+            LocalDateTime ngayBatDau,
+            LocalDateTime ngayKetThuc,
+            Integer excludedPromotionId
+    ) {
+        List<SanPhamChiTietPromotionView> variants = dotGiamGiaRepository.findSanPhamChiTietKichHoat();
+        if (ngayBatDau == null || ngayKetThuc == null || !ngayKetThuc.isAfter(ngayBatDau)) {
+            return variants;
+        }
+        int ignoredId = excludedPromotionId == null ? 0 : excludedPromotionId;
+        List<Integer> variantIds = variants.stream()
+                .map(SanPhamChiTietPromotionView::getIdSpct)
+                .filter(id -> id != null && id > 0)
+                .toList();
+        if (variantIds.isEmpty()) {
+            return variants;
+        }
+        java.util.Set<Integer> overlappingIds = java.util.Set.copyOf(
+                chiTietDotGiamGiaRepository.findVariantIdsWithOverlappingPromotion(
+                        variantIds, ngayBatDau, ngayKetThuc, ignoredId));
+        return variants.stream()
+                .filter(item -> !overlappingIds.contains(item.getIdSpct()))
+                .toList();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm replace san pham links.
     private void replaceSanPhamLinks(DotGiamGia dot, List<Integer> selectedSpctIds) {
-        chiTietDotGiamGiaRepository.deleteByDotGiamGiaId(dot.getId());
         if (selectedSpctIds == null || selectedSpctIds.isEmpty()) {
+            chiTietDotGiamGiaRepository.deleteByDotGiamGiaId(dot.getId());
             return;
         }
-        selectedSpctIds.stream()
+        List<Integer> distinctIds = selectedSpctIds.stream()
                 .distinct()
+                .toList();
+        List<Integer> overlaps = chiTietDotGiamGiaRepository.findVariantIdsWithOverlappingPromotion(
+                distinctIds,
+                dot.getNgayBatDau(),
+                dot.getNgayKetThuc(),
+                dot.getId());
+        if (!overlaps.isEmpty()) {
+            throw new IllegalStateException(
+                    "Sản phẩm đã thuộc một đợt giảm giá khác trong khoảng thời gian đã chọn"
+            );
+        }
+
+        chiTietDotGiamGiaRepository.deleteByDotGiamGiaId(dot.getId());
+        distinctIds.stream()
                 .forEach(idSpct -> {
                     ChiTietDotGiamGia detail = new ChiTietDotGiamGia();
                     detail.setDotGiamGia(dot);
@@ -174,6 +252,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
                 });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm with default sort.
     private Pageable withDefaultSort(Pageable pageable) {
         Sort sort = Sort.by(Sort.Order.desc("id"));
         if (pageable == null || pageable.isUnpaged()) {
@@ -185,6 +264,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate.
     private void validate(DotGiamGiaRequest request) {
         if (request == null) {
             throw new RuntimeException("Dữ liệu đợt giảm giá không hợp lệ");
@@ -211,6 +291,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate strict.
     private void validateStrict(DotGiamGiaRequest request) {
         String ma = blankToNull(request.getMaDotGiamGia());
         if (ma != null && !ma.matches("^[A-Za-z0-9_-]{3,30}$")) {
@@ -245,6 +326,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate code.
     private String generateCode(String name) {
         return GeneratedCodeUtil.fromNameAndDate(
                 name,
@@ -254,6 +336,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         );
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate start time not in past.
     private void validateStartTimeNotInPast(LocalDateTime requestedStart, LocalDateTime currentStart) {
         if (requestedStart == null) return;
         if (currentStart != null && currentStart.equals(requestedStart)) return;
@@ -262,6 +345,7 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate end time not in past.
     private void validateEndTimeNotInPast(LocalDateTime requestedEnd) {
         if (requestedEnd == null) return;
         if (requestedEnd.isBefore(LocalDateTime.now().minusMinutes(1))) {
@@ -269,10 +353,21 @@ public class DotGiamGiaServiceImpl implements DotGiamGiaService {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm blank to null.
     private String blankToNull(String value) {
         if (value == null) return null;
         String trimmed = value.trim();
         return trimmed.isEmpty() ? null : trimmed;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm to page.
+    private Page<DotGiamGia> toPage(List<DotGiamGia> items, Pageable pageable) {
+        if (pageable.isUnpaged()) {
+            return new PageImpl<>(items);
+        }
+        int fromIndex = (int) Math.min(pageable.getOffset(), items.size());
+        int toIndex = Math.min(fromIndex + pageable.getPageSize(), items.size());
+        return new PageImpl<>(items.subList(fromIndex, toIndex), pageable, items.size());
     }
 }
 

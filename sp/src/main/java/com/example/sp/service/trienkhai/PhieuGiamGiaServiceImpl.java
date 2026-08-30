@@ -1,17 +1,15 @@
 package com.example.sp.service.trienkhai;
 
 import com.example.sp.dto.khuyenmai.PhieuGiamGiaRequest;
-import com.example.sp.model.khuyenmai.KhachHangPgg;
 import com.example.sp.model.khuyenmai.PhieuGiamGia;
-import com.example.sp.repository.khuyenmai.KhachHangPggRepository;
-import com.example.sp.repository.khachhang.KhachHangRepository;
 import com.example.sp.repository.khuyenmai.PhieuGiamGiaRepository;
 import com.example.sp.service.khuyenmai.PhieuGiamGiaService;
 import com.example.sp.service.tienich.GeneratedCodeUtil;
 import com.example.sp.service.tienich.MoneyRoundingUtil;
+import com.example.sp.service.tienich.SearchTextUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,10 +25,9 @@ import java.util.List;
 public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
 
     private final PhieuGiamGiaRepository phieuGiamGiaRepository;
-    private final KhachHangPggRepository khachHangPggRepository;
-    private final KhachHangRepository khachHangRepository;
 
     @Override
+    // Tải hoặc truy xuất dữ liệu cho get all.
     public Page<PhieuGiamGia> getAll(
             String keyword,
             String loaiGiam,
@@ -40,19 +37,42 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
             LocalDateTime denNgay,
             Pageable pageable
     ) {
-        return phieuGiamGiaRepository.search(
-                blankToNull(keyword),
-                blankToNull(loaiGiam),
-                trangThai,
-                blankToNull(tienDo),
-                LocalDateTime.now(),
-                tuNgay,
-                denNgay,
-                withDefaultSort(pageable)
-        );
+        Pageable requestedPage = withDefaultSort(pageable);
+        String searchKey = SearchTextUtil.key(keyword);
+        if (searchKey == null) {
+            return phieuGiamGiaRepository.search(
+                    null,
+                    blankToNull(loaiGiam),
+                    trangThai,
+                    blankToNull(tienDo),
+                    LocalDateTime.now(),
+                    tuNgay,
+                    denNgay,
+                    requestedPage
+            );
+        }
+
+        List<PhieuGiamGia> matches = phieuGiamGiaRepository.search(
+                        null,
+                        blankToNull(loaiGiam),
+                        trangThai,
+                        blankToNull(tienDo),
+                        LocalDateTime.now(),
+                        tuNgay,
+                        denNgay,
+                        Pageable.unpaged(requestedPage.getSort())
+                ).stream()
+                .filter(item -> SearchTextUtil.contains(
+                        searchKey,
+                        item.getMaPgg(),
+                        item.getTenPgg()
+                ))
+                .toList();
+        return toPage(matches, requestedPage);
     }
 
     @Override
+    // Tải hoặc truy xuất dữ liệu cho find by id.
     public PhieuGiamGia findById(Integer id) {
         return phieuGiamGiaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu giảm giá"));
@@ -60,6 +80,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
 
     @Override
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save.
     public PhieuGiamGia save(PhieuGiamGiaRequest request) {
         validate(request);
         validateStrict(request);
@@ -108,7 +129,6 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
                         ? safeUsed(pgg)
                         : request.getSoLuongDaDung()
         );
-
         /*
          * QUAN TRỌNG:
          * - Ngày kết thúc > hiện tại => tự bật phiếu.
@@ -118,21 +138,19 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
          */
         pgg.setTrangThai(isVoucherStillActive(request.getNgayKetThuc()));
 
-        PhieuGiamGia saved = phieuGiamGiaRepository.save(pgg);
-
-        replaceKhachHangLinks(saved.getId(), request.getKhachHangIds());
-
-        return saved;
+        return phieuGiamGiaRepository.save(pgg);
     }
 
     @Override
     @Transactional
+    // Xử lý thao tác đóng, xóa hoặc hủy cho delete.
     public void delete(Integer id) {
         phieuGiamGiaRepository.softDeleteById(id);
     }
 
     @Override
     @Transactional
+    // Xử lý tương tác người dùng cho toggle status.
     public PhieuGiamGia toggleStatus(Integer id) {
         PhieuGiamGia voucher = findById(id);
         LocalDateTime now = LocalDateTime.now();
@@ -167,15 +185,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
     }
 
     @Override
-    public List<Integer> getKhachHangIds(Integer idPgg) {
-        try {
-            return khachHangPggRepository.findIdKhByIdPgg(idPgg);
-        } catch (DataAccessException ex) {
-            return List.of();
-        }
-    }
-
-    @Override
+    // Kiểm tra điều kiện và tính hợp lệ cho validate voucher.
     public boolean validateVoucher(Integer idVoucher, Double tongTien) {
         if (idVoucher == null || tongTien == null) {
             return false;
@@ -209,43 +219,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
                 .compareTo(voucher.getDieuKienDonHang()) >= 0;
     }
 
-    private void replaceKhachHangLinks(
-            Integer idPgg,
-            List<Integer> khachHangIds
-    ) {
-        try {
-            khachHangPggRepository.deleteByIdPgg(idPgg);
-        } catch (DataAccessException ex) {
-            if (khachHangIds == null || khachHangIds.isEmpty()) {
-                return;
-            }
-
-            throw new RuntimeException(
-                    "Bảng khach_hang_pgg chưa tồn tại nên chưa thể gán voucher cho khách hàng cụ thể."
-            );
-        }
-
-        if (khachHangIds == null || khachHangIds.isEmpty()) {
-            return;
-        }
-
-        try {
-            khachHangIds.stream()
-                    .distinct()
-                    .forEach(idKh -> {
-                        KhachHangPgg link = new KhachHangPgg();
-                        link.setIdPgg(idPgg);
-                        link.setIdKh(idKh);
-
-                        khachHangPggRepository.save(link);
-                    });
-        } catch (DataAccessException ex) {
-            throw new RuntimeException(
-                    "Bảng khach_hang_pgg chưa tồn tại nên chưa thể gán voucher cho khách hàng cụ thể."
-            );
-        }
-    }
-
+    // Thực hiện xử lý nghiệp vụ của hàm with default sort.
     private Pageable withDefaultSort(Pageable pageable) {
         Sort sort = Sort.by(Sort.Order.desc("id"));
 
@@ -264,6 +238,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         );
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate.
     private void validate(PhieuGiamGiaRequest request) {
         if (request == null) {
             throw new RuntimeException("Dữ liệu phiếu giảm giá không hợp lệ");
@@ -305,6 +280,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate strict.
     private void validateStrict(PhieuGiamGiaRequest request) {
         String ma = blankToNull(request.getMaPgg());
 
@@ -394,37 +370,22 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
             );
         }
 
-        if (request.getKhachHangIds() != null) {
-            List<Integer> ids = request.getKhachHangIds()
-                    .stream()
-                    .distinct()
-                    .toList();
-
-            if (ids.stream().anyMatch(id -> id == null || id <= 0)) {
-                throw new RuntimeException(
-                        "Danh sách khách hàng áp dụng không hợp lệ"
-                );
-            }
-
-            if (ids.stream().anyMatch(id -> !khachHangRepository.existsById(id))) {
-                throw new RuntimeException(
-                        "Có khách hàng áp dụng không tồn tại"
-                );
-            }
-        }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is voucher still active.
     private boolean isVoucherStillActive(LocalDateTime ngayKetThuc) {
         return ngayKetThuc != null
                 && ngayKetThuc.isAfter(LocalDateTime.now());
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm safe used.
     private Integer safeUsed(PhieuGiamGia pgg) {
         return pgg.getSoLuongDaDung() == null
                 ? 0
                 : pgg.getSoLuongDaDung();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate code.
     private String generateCode(String name) {
         return GeneratedCodeUtil.fromNameAndDate(
                 name,
@@ -434,6 +395,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         );
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate start time not in past.
     private void validateStartTimeNotInPast(LocalDateTime requestedStart, LocalDateTime currentStart) {
         if (requestedStart == null) return;
         if (currentStart != null && currentStart.equals(requestedStart)) return;
@@ -442,6 +404,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate end time not in past.
     private void validateEndTimeNotInPast(LocalDateTime requestedEnd) {
         if (requestedEnd == null) return;
         if (requestedEnd.isBefore(LocalDateTime.now().minusMinutes(1))) {
@@ -449,6 +412,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm blank to null.
     private String blankToNull(String value) {
         if (value == null) {
             return null;
@@ -457,5 +421,15 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         String trimmed = value.trim();
 
         return trimmed.isEmpty() ? null : trimmed;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm to page.
+    private Page<PhieuGiamGia> toPage(List<PhieuGiamGia> items, Pageable pageable) {
+        if (pageable.isUnpaged()) {
+            return new PageImpl<>(items);
+        }
+        int fromIndex = (int) Math.min(pageable.getOffset(), items.size());
+        int toIndex = Math.min(fromIndex + pageable.getPageSize(), items.size());
+        return new PageImpl<>(items.subList(fromIndex, toIndex), pageable, items.size());
     }
 }

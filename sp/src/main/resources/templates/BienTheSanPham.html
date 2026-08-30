@@ -14,7 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-scale-20260822-2" defer></script>
     <style>
         /* ===== GIỮ NGUYÊN TOÀN BỘ CSS NHƯ CŨ ===== */
         *,
@@ -1249,6 +1249,7 @@
     let scanner = null;
 
     // -- TOAST --
+    // Thực hiện xử lý nghiệp vụ của hàm toast2.
     function toast2(msg, type = 'success') {
         const ic = { success: '✅', error: '❌', info: 'ℹ️' };
         const w = document.getElementById('toastWrap');
@@ -1260,6 +1261,7 @@
     }
 
     // -- SIDEBAR TOGGLE --
+    // Xử lý tương tác người dùng cho toggle sub.
     function toggleSub(sid, aid) {
         const s = document.getElementById(sid), a = document.getElementById(aid);
         const op = s.classList.toggle('open');
@@ -1267,13 +1269,20 @@
     }
 
     // -- UTILS --
+    // Thực hiện xử lý nghiệp vụ của hàm esc.
     function esc(s) { if (!s) return ''; return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
+    // Thực hiện xử lý nghiệp vụ của hàm fmt.
     function fmt(n) { return (Math.round(Number(n || 0) / 1000) * 1000).toLocaleString('vi-VN') }
+    // Thực hiện xử lý nghiệp vụ của hàm money raw.
     function moneyRaw(v) { return String(v || '').replace(/[^\d]/g, '') }
+    // Thực hiện xử lý nghiệp vụ của hàm format money.
     function formatMoney(v) { const raw = moneyRaw(v); return raw ? Number(raw).toLocaleString('vi-VN') : '' }
+    // Kiểm tra điều kiện và tính hợp lệ cho is positive money.
     function isPositiveMoney(v) { return Number(moneyRaw(v)) > 0 }
+    // Kiểm tra điều kiện và tính hợp lệ cho is non negative int.
     function isNonNegativeInt(v) { return String(v ?? '').trim() !== '' && Number.isInteger(Number(v)) && Number(v) >= 0 }
 
+    // Thực hiện xử lý nghiệp vụ của hàm api fetch.
     async function apiFetch(url, options = {}) {
         const headers = {
             'Accept': 'application/json',
@@ -1283,6 +1292,7 @@
         return fetch(url, { ...options, credentials: 'same-origin', headers });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm api json.
     async function apiJson(url, options = {}) {
         const res = await apiFetch(url, options);
         const contentType = res.headers.get('content-type') || '';
@@ -1308,6 +1318,7 @@
         return JSON.parse(text);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format money input.
     function formatMoneyInput(input) {
         const caret = input.selectionStart || 0;
         const digitsBeforeCaret = moneyRaw(input.value.slice(0, caret)).length;
@@ -1334,6 +1345,7 @@
     let variantImages = [];
     let variantImagesChanged = false;
 
+    // Thực hiện xử lý nghiệp vụ của hàm image url from value.
     function imageUrlFromValue(value) {
         if (!value) return '';
         if (typeof value === 'string') return normalizeImageUrl(value);
@@ -1343,6 +1355,7 @@
         return '';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize image url.
     function normalizeImageUrl(value) {
         const raw = String(value || '').trim();
         if (!raw) return '';
@@ -1353,6 +1366,7 @@
         return '/uploads/' + raw;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get variant image urls.
     function getVariantImageUrls(variant, includeProductFallback = true) {
         const images = [];
         const add = value => {
@@ -1398,11 +1412,13 @@
         return images.slice(0, 3);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm detail value.
     function detailValue(value) {
         const text = String(value ?? '').trim();
         return text ? esc(text) : '–';
     }
 
+    // Xử lý tương tác người dùng cho open variant detail.
     function openVariantDetail(id) {
         const variant = allData.find(v => Number(v.idSpct) === Number(id));
         if (!variant) {
@@ -1446,12 +1462,14 @@
         document.getElementById('mdVariantDetail').classList.add('show');
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear local image preview.
     function clearLocalImagePreview(image) {
         if (image?.previewUrl && String(image.previewUrl).startsWith('blob:')) {
             URL.revokeObjectURL(image.previewUrl);
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset variant image editor.
     function resetVariantImageEditor(variant) {
         variantImages.forEach(clearLocalImagePreview);
         variantImages = getVariantImageUrls(variant).map(url => ({
@@ -1463,6 +1481,7 @@
         renderVariantImageSlots();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render variant image slots.
     function renderVariantImageSlots() {
         const wrap = document.getElementById('vImageSlots');
         if (!wrap) return;
@@ -1498,6 +1517,7 @@
         }).join('');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm replace variant image.
     function replaceVariantImage(input, index) {
         const file = input?.files?.[0];
         if (!file) return;
@@ -1512,6 +1532,7 @@
         renderVariantImageSlots();
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho remove variant image.
     function removeVariantImage(index) {
         clearLocalImagePreview(variantImages[index]);
         variantImages.splice(index, 1);
@@ -1519,6 +1540,7 @@
         renderVariantImageSlots();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm upload variant images.
     async function uploadVariantImages() {
         const uploadedUrls = [];
 
@@ -1548,24 +1570,29 @@
         return uploadedUrls.slice(0, 3);
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close modal.
     function closeModal(id) { document.getElementById(id).classList.remove('show') }
     document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show') }));
 
     // -- LỌC KHOẢNG GIÁ --
+    // Thực hiện xử lý nghiệp vụ của hàm to safe price.
     function toSafePrice(value) {
         const price = Number(value ?? 0);
         return Number.isFinite(price) && price >= 0 ? price : 0;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm price slider step.
     function priceSliderStep(maxPrice) {
         return 1000;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm price slider max.
     function priceSliderMax(maxPrice) {
         const safeMax = toSafePrice(maxPrice);
         return safeMax;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho setup price range.
     function setupPriceRange(options = {}) {
         const { includeUpdatedPrice = false, resetToMax = false } = options;
         const range = document.getElementById('priceRange');
@@ -1608,6 +1635,7 @@
         if (priceLabel) updatePrice(nextValue);
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update price.
     function updatePrice(value) {
         const range = document.getElementById('priceRange');
         const max = toSafePrice(range?.max);
@@ -1621,11 +1649,13 @@
         }
     }
 
+    // Tải hoặc truy xuất dữ liệu cho fetch catalog.
     async function fetchCatalog(path) {
         const data = await apiJson(`${API}/danh-muc/${path}`);
         return Array.isArray(data) ? data : (data.content || []);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fill variant select.
     function fillVariantSelect(id, items, valueKey, labelKey, placeholder) {
         const el = document.getElementById(id);
         if (!el) return;
@@ -1642,6 +1672,7 @@
         });
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load variant catalogs.
     async function loadVariantCatalogs() {
         try {
             [kichCoOptions, mauSacOptions, loaiAoOptions, phongCachOptions, kieuDangOptions] = await Promise.all([
@@ -1662,6 +1693,7 @@
     }
 
     // -- LOAD TẤT CẢ BIẾN THỂ --
+    // Thực hiện xử lý nghiệp vụ của hàm as array.
     function asArray(payload) {
         if (Array.isArray(payload)) return payload;
         if (!payload || typeof payload !== 'object') return [];
@@ -1679,6 +1711,7 @@
         return [];
     }
 
+    // Tải hoặc truy xuất dữ liệu cho fetch all products.
     async function fetchAllProducts() {
         const size = 200;
         const products = [];
@@ -1711,6 +1744,7 @@
         return [...new Map(products.filter(p => p?.idSp != null).map(p => [p.idSp, p])).values()];
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load all.
     async function loadAll() {
         document.getElementById('tblWrap').innerHTML = '<div class="load-st"><div class="spin"></div><div style="margin-top:10px">Đang tải toàn bộ biến thể...</div></div>';
         try {
@@ -1727,9 +1761,9 @@
                 }
             }));
 
-            // Khử trùng theo idSpct và ẩn biến thể đã hết tồn.
+            // Khử trùng theo idSpct; biến thể hết tồn vẫn được hiển thị ở cuối bảng.
             allData = [...new Map(results.flat()
-                .filter(v => v?.idSpct != null && isVisibleVariant(v))
+                .filter(v => v?.idSpct != null)
                 .map(v => [v.idSpct, v])).values()];
             fillFilters();
             setupPriceRange();
@@ -1744,6 +1778,7 @@
     }
 
     // -- FILL FILTER OPTIONS --
+    // Thực hiện xử lý nghiệp vụ của hàm fill filters.
     function fillFilters() {
         const sets = {
             fMau: new Set(),
@@ -1766,6 +1801,7 @@
         fillSel('fPhongCach', [...sets.fPhongCach].sort(), 'Chọn phong cách');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fill sel.
     function fillSel(id, arr, ph) {
         const el = document.getElementById(id);
         if (!el) return;
@@ -1774,21 +1810,25 @@
         arr.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; if (v === cur) o.selected = true; el.appendChild(o) });
     }
 
+    // Kiểm tra biến thể còn hàng để cho phép bật trạng thái bán.
     function isVisibleVariant(v) {
         return Number(v?.soLuongTon || 0) > 0;
     }
 
     // -- DEBOUNCE + FILTER --
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear updated variant override.
     function clearUpdatedVariantOverride() {
         forceShowUpdatedVariant = false;
         lastUpdatedVariantId = null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm deb.
     function deb() {
         clearTimeout(dbT);
         dbT = setTimeout(() => go(0), 350);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get filtered.
     function getFiltered() {
         const kw = document.getElementById('kw').value.trim().toLowerCase();
         const fMau = document.getElementById('fMau').value;
@@ -1801,7 +1841,6 @@
         const shouldFilterByPrice = dynamicMaxPrice > 0 && maxPrice < dynamicMaxPrice;
 
         const filtered = allData.filter(v => {
-            if (!isVisibleVariant(v)) return false;
             if (kw) {
                 const ma = (v.maChiTietSanPham || '').toLowerCase();
                 const maSp = (v.sanPham?.maSp || '').toLowerCase();
@@ -1820,9 +1859,14 @@
             return true;
         });
 
-        return filtered;
+        return filtered.sort((left, right) => {
+            const leftOutOfStock = Number(left.soLuongTon || 0) <= 0;
+            const rightOutOfStock = Number(right.soLuongTon || 0) <= 0;
+            return Number(leftOutOfStock) - Number(rightOutOfStock);
+        });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm go.
     function go(pg = 0) {
         page = pg;
         const filtered = getFiltered();
@@ -1835,6 +1879,7 @@
     }
 
     // -- RENDER TABLE (không còn cột QR, thêm button QR trong hành động) --
+    // Hiển thị và đồng bộ giao diện cho render.
     function render(list) {
         if (!list.length) {
             document.getElementById('tblWrap').innerHTML = '<div class="empty-st"><span>📦</span><p>Không tìm thấy biến thể nào.</p></div>';
@@ -1924,12 +1969,14 @@
         syncQrSelectPageCheckbox(list);
     }
 
+    // Xử lý tương tác người dùng cho toggle qr selection.
     function toggleQrSelection(id, checked) {
         if (checked) selectedQrVariantIds.add(id);
         else selectedQrVariantIds.delete(id);
         syncQrSelectPageCheckbox();
     }
 
+    // Xử lý tương tác người dùng cho toggle current page selection.
     function toggleCurrentPageSelection(checked) {
         const pageVariants = getFiltered().slice(page * PG, page * PG + PG);
         pageVariants.forEach(v => {
@@ -1940,6 +1987,7 @@
         go(page);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sync qr select page checkbox.
     function syncQrSelectPageCheckbox(list = getFiltered().slice(page * PG, page * PG + PG)) {
         const selectAll = document.getElementById('qrSelectPage');
         if (!selectAll) return;
@@ -1949,12 +1997,14 @@
         selectAll.indeterminate = checkedCount > 0 && checkedCount < ids.length;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get selected qr variants.
     function getSelectedQrVariants() {
         const selectedIds = new Set(selectedQrVariantIds);
         return allData.filter(v => selectedIds.has(v.idSpct));
     }
 
     // -- PAGINATION (giữ nguyên) --
+    // Hiển thị và đồng bộ giao diện cho render pg.
     function renderPg() {
         const area = document.getElementById('pgWrap');
         if (totalPg <= 1) { area.style.display = 'none'; area.innerHTML = ''; return }
@@ -1977,6 +2027,7 @@
     }
 
     // -- EXPORT EXCEL (giữ nguyên) --
+    // Thực hiện xử lý nghiệp vụ của hàm export excel.
     async function exportExcel() {
         const filtered = getFiltered();
         if (!filtered.length) { toast2('Không có dữ liệu để xuất', 'info'); return }
@@ -2009,6 +2060,7 @@
     }
 
     // -- CHỈNH SỬA BIẾN THỂ (giữ nguyên) --
+    // Xử lý tương tác người dùng cho open edit variant.
     function openEditVariant(id) {
         const variant = allData.find(v => v.idSpct === id);
         if (!variant) { toast2('Không tìm thấy biến thể', 'error'); return; }
@@ -2034,6 +2086,7 @@
         document.getElementById('vTrangThaiLabel').textContent = this.checked ? 'Đang bán' : 'Ngừng bán';
     });
 
+    // Xử lý tương tác người dùng cho toggle variant status.
     async function toggleVariantStatus(id, cb) {
         const status = cb.checked;
         const variant = allData.find(v => Number(v.idSpct) === Number(id));
@@ -2064,6 +2117,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset all list filters.
     function resetAllListFilters() {
         const keyword = document.getElementById('kw');
         if (keyword) keyword.value = '';
@@ -2078,6 +2132,7 @@
     }
 
     // ========== ĐÃ SỬA LẠI SAVE VARIANT ==========
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save variant.
     async function saveVariant() {
         const id = document.getElementById('variantId').value;
         if (!id) { toast2('Không có ID biến thể', 'error'); return; }
@@ -2186,6 +2241,7 @@
     }
 
     // ======================== QR CODE SCANNER ========================
+    // Thực hiện xử lý nghiệp vụ của hàm scan qr.
     function scanQR() {
         const modal = document.getElementById('scanModal');
         modal.classList.add('show');
@@ -2206,6 +2262,7 @@
         );
     }
 
+    // Xử lý tương tác người dùng cho on scan success.
     function onScanSuccess(decodedText, decodedResult) {
         const resultDiv = document.getElementById('scanResult');
         resultDiv.textContent = `Đã quét: ${decodedText}`;
@@ -2223,8 +2280,10 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho on scan error.
     function onScanError(err) {}
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close scan modal.
     function closeScanModal() {
         const modal = document.getElementById('scanModal');
         modal.classList.remove('show');
@@ -2234,6 +2293,7 @@
     }
 
     // ======================== TẢI QR CHO 1 BIẾN THỂ ========================
+    // Thực hiện xử lý nghiệp vụ của hàm download single qr.
     async function downloadSingleQR(id) {
         const variant = allData.find(v => v.idSpct === id);
         if (!variant) { toast2('Không tìm thấy biến thể', 'error'); return; }
@@ -2251,6 +2311,7 @@
     }
 
     // ======================== TẢI QR ĐÃ CHỌN (ZIP) ========================
+    // Thực hiện xử lý nghiệp vụ của hàm download all qr.
     async function downloadAllQR() {
         const selected = getSelectedQrVariants();
         if (!selected.length) {
@@ -2285,6 +2346,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate qrdata url.
     function generateQRDataURL(text, size) {
         return new Promise((resolve, reject) => {
             try {
@@ -2313,6 +2375,7 @@
     }
 
     // -- INIT --
+    // Thực hiện xử lý nghiệp vụ của hàm init.
     async function init() {
         await loadVariantCatalogs();
         await loadAll();
@@ -2320,7 +2383,9 @@
     init();
 
     // -- SEARCHABLE COMBOBOX --
+    // Thực hiện xử lý nghiệp vụ của hàm combo escape html.
     function comboEscapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    // Thực hiện xử lý nghiệp vụ của hàm init searchable comboboxes.
     function initSearchableComboboxes(root=document){
         root.querySelectorAll('select').forEach(select=>{
             if(select.classList.contains('search-combo-source')){syncSearchCombo(select);return;}
@@ -2341,6 +2406,7 @@
             syncSearchCombo(select);
         });
     }
+    // Xử lý tương tác người dùng cho open search combo.
     function openSearchCombo(combo){
         if(combo.classList.contains('open')){closeSearchCombo(combo);return;}
         document.querySelectorAll('.search-combo.open').forEach(c=>{if(c!==combo)c.classList.remove('open')});
@@ -2350,7 +2416,9 @@
         renderSearchComboOptions(combo,'');
         setTimeout(()=>search.focus(),0);
     }
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close search combo.
     function closeSearchCombo(combo){combo.classList.remove('open')}
+    // Thực hiện xử lý nghiệp vụ của hàm sync search combo.
     function syncSearchCombo(select){
         const combo=select.nextElementSibling?.classList?.contains('search-combo')?select.nextElementSibling:null;
         if(!combo)return;
@@ -2358,6 +2426,7 @@
         combo.querySelector('.search-combo-display').textContent=selected?.textContent||select.querySelector('option')?.textContent||'Chọn';
         renderSearchComboOptions(combo, combo.querySelector('.search-combo-search')?.value||'');
     }
+    // Hiển thị và đồng bộ giao diện cho render search combo options.
     function renderSearchComboOptions(combo, keyword){
         const select=combo._select;
         const list=combo.querySelector('.search-combo-list');
@@ -2375,6 +2444,7 @@
     document.addEventListener('DOMContentLoaded',()=>initSearchableComboboxes());
     if(!window._searchComboAutoSync){window._searchComboAutoSync=setInterval(()=>document.querySelectorAll('select.search-combo-source').forEach(syncSearchCombo),300)}
 
+    // Thực hiện xử lý nghiệp vụ của hàm bind img upload clicks.
     function bindImgUploadClicks(root=document){
         root.querySelectorAll('.img-upload').forEach(el=>{
             el.style.cursor='pointer';

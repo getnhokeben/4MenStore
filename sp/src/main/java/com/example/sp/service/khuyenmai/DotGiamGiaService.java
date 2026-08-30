@@ -30,5 +30,9 @@ public interface DotGiamGiaService {
 
     List<Integer> getSelectedSpctIds(Integer idDotGiamGia);
 
-    List<SanPhamChiTietPromotionView> getSanPhamChiTietKichHoat();
+    List<SanPhamChiTietPromotionView> getSanPhamChiTietKichHoat(
+            LocalDateTime ngayBatDau,
+            LocalDateTime ngayKetThuc,
+            Integer excludedPromotionId
+    );
 }

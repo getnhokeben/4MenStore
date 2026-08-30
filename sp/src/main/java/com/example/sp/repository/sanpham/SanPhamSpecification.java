@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.*;
 
 public class SanPhamSpecification {
+    // Kiểm tra điều kiện và tính hợp lệ cho has keyword.
     public static Specification<SanPham> hasKeyword(String keyword) {
         return (root, query, cb) -> {
             if (keyword == null || keyword.isEmpty()) return cb.conjunction();
@@ -16,6 +17,7 @@ public class SanPhamSpecification {
         };
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho has chat lieu.
     public static Specification<SanPham> hasChatLieu(String chatLieu) {
         return (root, query, cb) -> {
             if (chatLieu == null || chatLieu.isEmpty()) return cb.conjunction();
@@ -23,6 +25,7 @@ public class SanPhamSpecification {
         };
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho has thuong hieu.
     public static Specification<SanPham> hasThuongHieu(String thuongHieu) {
         // Giả sử SanPham có trường thuongHieu (có thể thêm vào entity)
         return (root, query, cb) -> {
@@ -31,6 +34,7 @@ public class SanPhamSpecification {
         };
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho has trang thai.
     public static Specification<SanPham> hasTrangThai(Boolean trangThai) {
         return (root, query, cb) -> {
             if (trangThai == null) return cb.conjunction();

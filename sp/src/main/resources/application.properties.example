@@ -1,5 +1,5 @@
 spring.application.name=sp
-spring.config.import=optional:file:config/application-local.properties,optional:file:config/vnpay-local.properties,optional:file:config/zalopay-local.properties
+spring.config.import=optional:file:config/application-local.properties,optional:file:config/vnpay-local.properties,optional:file:config/zalopay-local.properties,optional:file:sp/config/application-local.properties,optional:file:sp/config/vnpay-local.properties,optional:file:sp/config/zalopay-local.properties
 server.port=8081
 
 # Database
@@ -27,6 +27,8 @@ spring.mail.properties.mail.smtp.writetimeout=5000
 
 # Application paths
 app.employee-login-url=${EMPLOYEE_LOGIN_URL:http://localhost:8081/dang-nhap}
+app.customer-login-url=${CUSTOMER_LOGIN_URL:http://localhost:8081/dang-nhap}
+app.mail.sender-name=${MAIL_SENDER_NAME:4MenStore}
 app.upload.directory=${UPLOAD_DIRECTORY:uploads}
 
 # JPA
@@ -57,7 +59,7 @@ payment.public-base-url=${PAYMENT_PUBLIC_BASE_URL:http://localhost:8081}
 # VNPay
 payment.vnpay.enabled=${VNPAY_ENABLED:false}
 payment.vnpay.reconcile-on-return=${VNPAY_RECONCILE_ON_RETURN:false}
-payment.vnpay.local-checkout-enabled=${VNPAY_LOCAL_CHECKOUT_ENABLED:true}
+payment.vnpay.local-checkout-enabled=${VNPAY_LOCAL_CHECKOUT_ENABLED:false}
 payment.vnpay.local-scan-base-url=${VNPAY_LOCAL_SCAN_BASE_URL:}
 payment.vnpay.tmn-code=${VNPAY_TMN_CODE:}
 payment.vnpay.hash-secret=${VNPAY_HASH_SECRET:}

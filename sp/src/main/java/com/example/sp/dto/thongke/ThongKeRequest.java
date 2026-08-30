@@ -6,4 +6,5 @@ import lombok.Data;
 public class ThongKeRequest {
     private String fromDate;
     private String toDate;
+    private String trangThai;
 }

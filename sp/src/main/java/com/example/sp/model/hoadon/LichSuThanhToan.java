@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -23,6 +24,7 @@ public class LichSuThanhToan {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_hoa_don")
+    @JsonIgnore
     private HoaDon hoaDon;
 
     @Column(name = "ma_giao_dich")

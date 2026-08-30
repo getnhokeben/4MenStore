@@ -33,6 +33,7 @@ public class NhanVienController {
     private final KhachHangRepository khachHangRepository;
 
     @GetMapping
+    // Tải hoặc truy xuất dữ liệu cho get all.
     public Page<NhanVien> getAll(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String vaiTro,
@@ -48,6 +49,7 @@ public class NhanVienController {
     }
 
     @GetMapping("/tra-cuu-cccd/{cccd}")
+    // Thực hiện xử lý nghiệp vụ của hàm lookup by cccd.
     public Map<String, Object> lookupByCccd(
             @PathVariable String cccd,
             @RequestParam(required = false) Integer editingEmployeeId
@@ -73,11 +75,13 @@ public class NhanVienController {
     }
 
     @GetMapping("/{id}")
+    // Tải hoặc truy xuất dữ liệu cho get by id.
     public NhanVien getById(@PathVariable Integer id) {
         return nhanVienService.findById(id);
     }
 
     @PostMapping
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create.
     public ResponseEntity<NhanVien> create(
             @RequestBody NhanVien nhanVien
     ) {
@@ -86,6 +90,7 @@ public class NhanVienController {
     }
 
     @PutMapping("/{id}")
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update.
     public NhanVien update(
             @PathVariable Integer id,
             @RequestBody NhanVien nhanVien
@@ -94,11 +99,13 @@ public class NhanVienController {
     }
 
     @PatchMapping("/{id}/trang-thai")
+    // Xử lý tương tác người dùng cho toggle status.
     public NhanVien toggleStatus(@PathVariable Integer id) {
         return nhanVienService.toggleStatus(id);
     }
 
     @DeleteMapping("/{id}")
+    // Thực hiện xử lý nghiệp vụ của hàm deactivate.
     public ResponseEntity<Void> deactivate(
             @PathVariable Integer id
     ) {
@@ -108,6 +115,7 @@ public class NhanVienController {
     }
 
     @GetMapping("/xuat-excel")
+    // Thực hiện xử lý nghiệp vụ của hàm export excel.
     public ResponseEntity<byte[]> exportExcel(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String vaiTro,
@@ -131,6 +139,7 @@ public class NhanVienController {
                 .body(excel);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm employee lookup.
     private Map<String, Object> employeeLookup(
             NhanVien employee
     ) {
@@ -154,6 +163,7 @@ public class NhanVienController {
         return data;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm customer lookup.
     private Map<String, Object> customerLookup(
             KhachHang customer
     ) {
@@ -177,6 +187,7 @@ public class NhanVienController {
         return data;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create excel.
     private byte[] createExcel(
             List<NhanVien> employees
     ) throws IOException {
@@ -258,6 +269,7 @@ public class NhanVienController {
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create header style.
     private CellStyle createHeaderStyle(
             Workbook workbook
     ) {
@@ -279,6 +291,7 @@ public class NhanVienController {
         return style;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create data style.
     private CellStyle createDataStyle(
             Workbook workbook
     ) {
@@ -292,6 +305,7 @@ public class NhanVienController {
         return style;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm value.
     private String value(String value) {
         return value == null ? "" : value;
     }

@@ -50,6 +50,7 @@ public class ShopChatSession {
     private LocalDateTime ngayDong;
 
     @PrePersist
+    // Thực hiện xử lý nghiệp vụ của hàm pre persist.
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
         if (ngayTao == null) ngayTao = now;
@@ -58,6 +59,7 @@ public class ShopChatSession {
     }
 
     @PreUpdate
+    // Thực hiện xử lý nghiệp vụ của hàm pre update.
     public void preUpdate() {
         ngayCapNhat = LocalDateTime.now();
     }

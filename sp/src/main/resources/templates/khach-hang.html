@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
 
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-icons-20260822-1" defer></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
     <style>
@@ -127,23 +127,90 @@
             box-shadow:0 0 0 3px rgba(67,110,171,.12);
         }
 
-        .select-search{
+        .address-search-select{position:relative}
+
+        .address-search-select input{
             width:100%;
-            height:34px;
-            margin-bottom:7px;
-            padding:0 10px;
-            border:1px solid #e0e6ee;
-            border-radius:6px;
-            background:#fff;
-            color:#4a5a70;
+            height:35px;
+            padding:0 36px 0 10px;
+            border:1px solid #e3e8ee;
+            border-radius:5px;
             outline:0;
+            color:#32445e;
+            background:#fff;
             font:inherit;
+            transition:.16s;
         }
 
-        .select-search:focus{
-            border-color:#c8a474;
-            box-shadow:0 0 0 3px rgba(200,164,116,.12);
+        .address-search-select input::placeholder{color:#a4b0bf;font-style:italic}
+
+        .address-search-select input:focus,
+        .address-search-select.open input{
+            border-color:#8da7cf;
+            box-shadow:0 0 0 3px rgba(67,110,171,.12);
         }
+
+        .address-search-select.is-invalid input{
+            border-color:#d74b56;
+            box-shadow:0 0 0 3px rgba(215,75,86,.12);
+        }
+
+        .address-select-native{display:none}
+
+        .address-search-toggle{
+            position:absolute;
+            top:0;
+            right:0;
+            width:35px;
+            height:35px;
+            border:0;
+            border-radius:0 5px 5px 0;
+            background:transparent;
+            color:#526986;
+            font-size:18px;
+            cursor:pointer;
+        }
+
+        .address-search-toggle:hover{color:var(--navy)}
+
+        .address-search-select.open .address-search-toggle{transform:rotate(180deg)}
+
+        .address-select-menu{
+            position:absolute;
+            z-index:30;
+            top:calc(100% + 4px);
+            right:0;
+            left:0;
+            display:none;
+            max-height:210px;
+            overflow:auto;
+            padding:4px;
+            border:1px solid #d7e0eb;
+            border-radius:6px;
+            background:#fff;
+            box-shadow:0 12px 26px rgba(25,49,83,.15);
+        }
+
+        .address-search-select.open .address-select-menu{display:block}
+
+        .address-select-option{
+            display:block;
+            width:100%;
+            min-height:32px;
+            padding:6px 9px;
+            border:0;
+            border-radius:4px;
+            background:transparent;
+            color:#32445e;
+            font:inherit;
+            font-size:12px;
+            text-align:left;
+            cursor:pointer;
+        }
+
+        .address-select-option:hover,
+        .address-select-option.active{background:#edf4ff;color:var(--navy);font-weight:700}
+        .address-select-empty{padding:8px 9px;color:#8b98aa;font-size:12px}
 
         .btn{height:36px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:.16s;white-space:nowrap}
 
@@ -1135,7 +1202,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">CCCD</label>
+                    <label class="form-label">CCCD <span class="required">*</span></label>
 
                     <input
                             id="customerCccd"
@@ -1186,6 +1253,11 @@
                             <label style="font-size:12px;color:#54657b;display:flex;gap:5px;align-items:center">
                                 <input type="radio" name="customerGender" value="Nữ">
                                 Nữ
+                            </label>
+
+                            <label style="font-size:12px;color:#54657b;display:flex;gap:5px;align-items:center">
+                                <input type="radio" name="customerGender" value="Khác">
+                                Khác
                             </label>
                         </div>
 
@@ -1378,8 +1450,21 @@
         $('addressEditors').addEventListener('click', handleAddressEditorClick);
         $('addressEditors').addEventListener('change', handleAddressEditorChange);
         $('addressEditors').addEventListener('input', handleAddressEditorInput);
+        $('addressEditors').addEventListener('focusin', (event) => {
+            if (event.target.classList.contains('address-select-input')) {
+                openAddressSearchSelect(event.target.closest('.address-search-select'));
+            }
+        });
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.address-search-select')) {
+                closeAddressSearchSelects();
+            }
+        });
 
         $('customerName').addEventListener('input', () => {
+            $('customerName').value = $('customerName').value
+                .replace(/[^\p{L}\s]/gu, '')
+                .replace(/\s{2,}/g, ' ');
             updateEditorAvatar();
             clearFieldError($('customerName'));
         });
@@ -1401,6 +1486,11 @@
         $('customerBirthday').addEventListener('change', () => {
             clearFieldError($('customerBirthday'));
         });
+
+        document.querySelectorAll('input[name="customerGender"]')
+            .forEach((input) => input.addEventListener('change', () => {
+                clearFieldError($('genderBox'));
+            }));
 
         $('openCccdScannerBtn').addEventListener('click', openCccdScanner);
         $('closeCccdScannerBtn').addEventListener('click', closeCccdScanner);
@@ -1435,6 +1525,7 @@
         loadData();
     });
 
+    // Thực hiện xử lý nghiệp vụ của hàm current params.
     function currentParams(includePaging = true) {
         const params = new URLSearchParams();
 
@@ -1454,6 +1545,7 @@
         return params;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load data.
     async function loadData() {
         try {
             state.page = Math.max(0, state.page);
@@ -1497,6 +1589,7 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho render rows.
     function renderRows() {
         const rows = $('rows');
         const empty = $('emptyState');
@@ -1547,6 +1640,7 @@
         renderPagination();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render pagination.
     function renderPagination() {
         const holder = $('pagination');
 
@@ -1602,6 +1696,7 @@
         holder.innerHTML = parts.join('');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm change page.
     function changePage(page) {
         if (page < 0 || page >= state.totalPages || page === state.page) return;
 
@@ -1614,6 +1709,7 @@
         });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset filters.
     function resetFilters() {
         $('keywordInput').value = '';
         $('genderSelect').value = '';
@@ -1622,6 +1718,7 @@
         loadData();
     }
 
+    // Xử lý tương tác người dùng cho open customer editor.
     async function openCustomerEditor(customerId = null, focusAddress = false) {
         if (state.saving) return;
 
@@ -1704,6 +1801,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm blank address.
     function blankAddress() {
         return {
             id: null,
@@ -1719,6 +1817,7 @@
         };
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update editor avatar.
     function updateEditorAvatar() {
         const name = $('customerName').value.trim();
 
@@ -1735,6 +1834,7 @@
         `;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render address editors.
     function renderAddressEditors() {
         const container = $('addressEditors');
 
@@ -1783,19 +1883,27 @@
 
                     <div class="form-group span-2">
                         <label class="form-label">Tỉnh / Thành <span class="required">*</span></label>
-                        <input class="select-search" type="search" placeholder="Tìm kiếm tỉnh/thành..." oninput="filterAddressSelectOptions(this, this.parentElement.querySelector('.province-select'))">
-                        <select class="form-control province-select" data-field="thanhPho">
-                            <option value="">-- Chọn --</option>
-                        </select>
+                        <div class="address-search-select">
+                            <input type="search" class="address-select-input" placeholder="Tìm kiếm hoặc chọn tỉnh/thành..." autocomplete="off" aria-label="Tìm kiếm tỉnh/thành">
+                            <button type="button" class="address-search-toggle" aria-label="Mở danh sách tỉnh/thành">⌄</button>
+                            <div class="address-select-menu" role="listbox"></div>
+                            <select class="form-control province-select address-select-native" data-field="thanhPho">
+                                <option value="">-- Chọn --</option>
+                            </select>
+                        </div>
                         <small class="field-error"></small>
                     </div>
 
                     <div class="form-group span-2">
                         <label class="form-label">Phường / Xã <span class="required">*</span></label>
-                        <input class="select-search" type="search" placeholder="Tìm kiếm phường/xã..." oninput="filterAddressSelectOptions(this, this.parentElement.querySelector('.ward-select'))">
-                        <select class="form-control ward-select" data-field="phuong">
-                            <option value="">-- Chọn --</option>
-                        </select>
+                        <div class="address-search-select">
+                            <input type="search" class="address-select-input" placeholder="Tìm kiếm hoặc chọn phường/xã..." autocomplete="off" aria-label="Tìm kiếm phường/xã">
+                            <button type="button" class="address-search-toggle" aria-label="Mở danh sách phường/xã">⌄</button>
+                            <div class="address-select-menu" role="listbox"></div>
+                            <select class="form-control ward-select address-select-native" data-field="phuong">
+                                <option value="">-- Chọn --</option>
+                            </select>
+                        </div>
                         <small class="field-error"></small>
                     </div>
 
@@ -1813,6 +1921,7 @@
         });
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get provinces.
     async function getProvinces() {
         if (state.provinces) return state.provinces;
 
@@ -1830,6 +1939,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm prepare address selects.
     async function prepareAddressSelects(index, address) {
         const card = document.querySelector(`[data-address-index="${index}"]`);
         if (!card) return;
@@ -1871,6 +1981,7 @@
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fill select.
     function fillSelect(select, options, currentValue) {
         if (!select) return;
 
@@ -1883,20 +1994,23 @@
             `).join('')}
         `;
 
-        if (!currentValue) return;
+        if (currentValue) {
+            const found = [...select.options].some((option) => option.value === currentValue);
 
-        const found = [...select.options].some((option) => option.value === currentValue);
+            if (!found) {
+                select.insertAdjacentHTML(
+                    'beforeend',
+                    `<option value="${escAttr(currentValue)}">${esc(currentValue)}</option>`
+                );
+            }
 
-        if (!found) {
-            select.insertAdjacentHTML(
-                'beforeend',
-                `<option value="${escAttr(currentValue)}">${esc(currentValue)}</option>`
-            );
+            select.value = currentValue;
         }
 
-        select.value = currentValue;
+        renderAddressSearchSelect(select);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize address search.
     function normalizeAddressSearch(value) {
         return String(value || '')
             .normalize('NFD')
@@ -1906,15 +2020,71 @@
             .toLowerCase();
     }
 
-    function filterAddressSelectOptions(input, select) {
-        if (!select) return;
-        const keyword = normalizeAddressSearch(input?.value || '');
-        [...select.options].forEach((option, index) => {
-            const searchable = normalizeAddressSearch(`${option.textContent || ''} ${option.dataset?.code || ''}`);
-            option.hidden = index > 0 && keyword && !searchable.includes(keyword);
+    // Hiển thị và đồng bộ giao diện cho render address search select.
+    function renderAddressSearchSelect(select, query = '') {
+        const wrapper = select?.closest('.address-search-select');
+        if (!wrapper) return;
+
+        const input = wrapper.querySelector('.address-select-input');
+        const menu = wrapper.querySelector('.address-select-menu');
+        const selectedOption = select.options[select.selectedIndex];
+        const normalizedQuery = normalizeAddressSearch(query);
+        const options = [...select.options].slice(1).filter((option) => {
+            const searchable = normalizeAddressSearch(`${option.textContent || ''} ${option.dataset.code || ''}`);
+            return !normalizedQuery || searchable.includes(normalizedQuery);
+        });
+
+        if (input && query === '') {
+            input.value = select.value ? (selectedOption?.textContent || '').trim() : '';
+        }
+
+        if (!menu) return;
+        menu.innerHTML = options.length
+            ? options.map((option) => `
+                <button
+                    type="button"
+                    class="address-select-option ${option.value === select.value ? 'active' : ''}"
+                    data-address-select-value="${escAttr(option.value)}"
+                    title="${escAttr(option.textContent.trim())}"
+                >${esc(option.textContent.trim())}</button>
+            `).join('')
+            : '<div class="address-select-empty">Không tìm thấy kết quả phù hợp.</div>';
+    }
+
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close address search selects.
+    function closeAddressSearchSelects(except = null) {
+        document.querySelectorAll('.address-search-select.open').forEach((wrapper) => {
+            if (wrapper === except) return;
+            wrapper.classList.remove('open');
+
+            const select = wrapper.querySelector('select');
+            if (select) renderAddressSearchSelect(select);
         });
     }
 
+    // Xử lý tương tác người dùng cho open address search select.
+    function openAddressSearchSelect(wrapper) {
+        if (!wrapper) return;
+        closeAddressSearchSelects(wrapper);
+        wrapper.classList.add('open');
+
+        const select = wrapper.querySelector('select');
+        const input = wrapper.querySelector('.address-select-input');
+        if (select) renderAddressSearchSelect(select, input?.value || '');
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm choose address search select option.
+    function chooseAddressSearchSelectOption(wrapper, value) {
+        const select = wrapper?.querySelector('select');
+        if (!select) return;
+
+        select.value = value;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        wrapper.classList.remove('open');
+        renderAddressSearchSelect(select);
+    }
+
+    // Tải hoặc truy xuất dữ liệu cho fetch wards.
     async function fetchWards(provinceCode) {
         try {
             const response = await fetch(`${PROVINCE_API}/p/${provinceCode}?depth=2`);
@@ -1926,7 +2096,29 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho handle address editor click.
     function handleAddressEditorClick(event) {
+        const selectOption = event.target.closest('[data-address-select-value]');
+        if (selectOption) {
+            chooseAddressSearchSelectOption(
+                selectOption.closest('.address-search-select'),
+                selectOption.dataset.addressSelectValue
+            );
+            return;
+        }
+
+        const selectToggle = event.target.closest('.address-search-toggle');
+        if (selectToggle) {
+            const wrapper = selectToggle.closest('.address-search-select');
+            if (wrapper.classList.contains('open')) {
+                closeAddressSearchSelects();
+            } else {
+                openAddressSearchSelect(wrapper);
+                wrapper.querySelector('.address-select-input')?.focus();
+            }
+            return;
+        }
+
         const removeButton = event.target.closest('[data-remove-address]');
         if (!removeButton) return;
 
@@ -1946,6 +2138,7 @@
         renderAddressEditors();
     }
 
+    // Xử lý tương tác người dùng cho handle address editor change.
     async function handleAddressEditorChange(event) {
         const card = event.target.closest('[data-address-index]');
         if (!card) return;
@@ -1996,7 +2189,18 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho handle address editor input.
     function handleAddressEditorInput(event) {
+        if (event.target.classList.contains('address-select-input')) {
+            const wrapper = event.target.closest('.address-search-select');
+            const select = wrapper?.querySelector('select');
+            if (select) {
+                openAddressSearchSelect(wrapper);
+                renderAddressSearchSelect(select, event.target.value);
+            }
+            return;
+        }
+
         const field = event.target.dataset.field;
         if (!field) return;
 
@@ -2011,6 +2215,7 @@
         clearFieldError(event.target);
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save customer.
     async function saveCustomer(event) {
         event.preventDefault();
 
@@ -2018,7 +2223,7 @@
 
         const isUpdate = Boolean(state.editingId);
 
-        if (!validateCustomerForm(isUpdate)) {
+        if (!validateCustomerForm()) {
             toast('Vui lòng kiểm tra lại các trường đang báo lỗi.', true);
             return;
         }
@@ -2076,7 +2281,10 @@
 
             await loadData();
         } catch (error) {
-            toast(error.message || 'Không thể lưu khách hàng.', true);
+            const message = error.message || 'Không thể lưu khách hàng.';
+            const invalidField = applyCustomerServerErrors(error, message);
+            invalidField?.focus();
+            toast(message, true);
         } finally {
             state.saving = false;
             saveButton.disabled = false;
@@ -2084,7 +2292,8 @@
         }
     }
 
-    function validateCustomerForm(isUpdate) {
+    // Kiểm tra điều kiện và tính hợp lệ cho validate customer form.
+    function validateCustomerForm() {
         clearValidation($('customerForm'));
 
         let valid = true;
@@ -2107,15 +2316,15 @@
         } else if (name.value.length < 2 || name.value.length > 255) {
             setInvalid(name, 'Họ tên phải từ 2 đến 255 ký tự.');
             valid = false;
-        } else if (!/^[\p{L} .'-]+$/u.test(name.value)) {
-            setInvalid(name, 'Họ tên chỉ được chứa chữ cái, khoảng trắng, dấu chấm, nháy đơn hoặc gạch ngang.');
+        } else if (!/^[\p{L}]+(?: [\p{L}]+)+$/u.test(name.value)) {
+            setInvalid(name, 'Họ tên phải có ít nhất 2 từ, chỉ được chứa chữ cái và khoảng trắng.');
             valid = false;
         }
 
-        if (!email.value && !isUpdate) {
-            setInvalid(email, 'Vui lòng nhập email để gửi tài khoản và mật khẩu tạm thời.');
+        if (!email.value) {
+            setInvalid(email, 'Vui lòng nhập email.');
             valid = false;
-        } else if (email.value) {
+        } else {
             if (email.value.length > 255) {
                 setInvalid(email, 'Email không được vượt quá 255 ký tự.');
                 valid = false;
@@ -2133,7 +2342,10 @@
             valid = false;
         }
 
-        if (cccd.value && !/^\d{12}$/.test(cccd.value)) {
+        if (!cccd.value) {
+            setInvalid(cccd, 'Vui lòng nhập CCCD.');
+            valid = false;
+        } else if (!/^\d{12}$/.test(cccd.value)) {
             setInvalid(cccd, 'CCCD phải gồm đúng 12 chữ số.');
             valid = false;
         }
@@ -2169,6 +2381,51 @@
         return valid;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply customer server errors.
+    function applyCustomerServerErrors(error, fallbackMessage) {
+        const fieldMap = {
+            tenKhachHang: $('customerName'),
+            email: $('customerEmail'),
+            soDienThoai: $('customerPhone'),
+            cccd: $('customerCccd'),
+            ngaySinh: $('customerBirthday'),
+            gioiTinh: $('genderBox')
+        };
+        const messages = error?.fieldErrors || {};
+        let firstInvalid = null;
+
+        Object.entries(messages).forEach(([field, message]) => {
+            const input = fieldMap[field];
+            if (!input) return;
+            setInvalid(input, message);
+            firstInvalid ||= input;
+        });
+
+        if (firstInvalid) return firstInvalid;
+
+        const message = String(fallbackMessage || '').toLowerCase();
+        const input = message.includes('email')
+            ? $('customerEmail')
+            : message.includes('điện thoại')
+                ? $('customerPhone')
+                : message.includes('cccd')
+                    ? $('customerCccd')
+                    : message.includes('ngày sinh')
+                        ? $('customerBirthday')
+                        : message.includes('giới tính')
+                            ? $('genderBox')
+                            : message.includes('họ tên')
+                                ? $('customerName')
+                                : null;
+
+        if (input) {
+            setInvalid(input, fallbackMessage);
+        }
+
+        return input;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm collect and validate addresses.
     function collectAndValidateAddresses() {
         clearValidation($('addressEditors'));
 
@@ -2268,6 +2525,7 @@
         return addresses;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save address changes.
     async function saveAddressChanges(customerId, addresses) {
         for (const addressId of [...state.deletedAddressIds]) {
             const response = await fetch(`${API}/${customerId}/dia-chi/${addressId}`, {
@@ -2318,6 +2576,7 @@
         state.draftAddresses = addresses;
     }
 
+    // Xử lý tương tác người dùng cho open customer detail.
     async function openCustomerDetail(customerId) {
         state.detailId = customerId;
 
@@ -2338,6 +2597,7 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho render detail.
     function renderDetail(customer, addresses) {
         $('detailProfile').innerHTML = `
             <h3>Thông tin khách hàng</h3>
@@ -2395,6 +2655,7 @@
             `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm detail field.
     function detailField(label, value) {
         return `
             <div class="detail-field">
@@ -2406,6 +2667,7 @@
         `;
     }
 
+    // Xử lý tương tác người dùng cho toggle status.
     async function toggleStatus(customerId) {
         try {
             const response = await fetch(`${API}/${customerId}/trang-thai`, {
@@ -2424,6 +2686,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm export excel.
     async function exportExcel() {
         try {
             const response = await fetch(`${API}/xuat-excel?${currentParams(false).toString()}`);
@@ -2450,11 +2713,13 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set invalid.
     function setInvalid(element, message) {
         if (!element) return;
 
         element.classList.add('is-invalid');
         element.setAttribute('aria-invalid', 'true');
+        element.closest('.address-search-select')?.classList.add('is-invalid');
 
         const group = element.closest('.form-group');
         if (!group) return;
@@ -2465,11 +2730,13 @@
         }
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear field error.
     function clearFieldError(element) {
         if (!element) return;
 
         element.classList.remove('is-invalid');
         element.removeAttribute('aria-invalid');
+        element.closest('.address-search-select')?.classList.remove('is-invalid');
 
         const group = element.closest('.form-group');
         if (!group) return;
@@ -2480,6 +2747,7 @@
         }
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear validation.
     function clearValidation(root) {
         root.querySelectorAll('.is-invalid').forEach((element) => {
             element.classList.remove('is-invalid');
@@ -2491,6 +2759,7 @@
         });
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close modal.
     function closeModal(id, force = false) {
         if (state.saving && !force) return;
 
@@ -2505,12 +2774,14 @@
     let cccdQrScanner = null;
     let cccdQrBusy = false;
 
+    // Xử lý tương tác người dùng cho open cccd scanner.
     function openCccdScanner() {
         $('cccdQrResult').textContent = 'Đưa mã QR CCCD vào khung hình để quét.';
         $('cccdScannerModal').hidden = false;
         setTimeout(startCccdScanner, 120);
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close cccd scanner.
     async function closeCccdScanner() {
         await stopCccdScanner();
         $('cccdScannerModal').hidden = true;
@@ -2518,6 +2789,7 @@
         $('cccdQrFile').value = '';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm start cccd scanner.
     async function startCccdScanner() {
         if (cccdQrBusy) return;
 
@@ -2556,6 +2828,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm stop cccd scanner.
     async function stopCccdScanner() {
         const scanner = cccdQrScanner;
         cccdQrScanner = null;
@@ -2573,6 +2846,7 @@
         } catch {}
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm scan cccd qr file.
     async function scanCccdQrFile(event) {
         const file = event.target.files?.[0];
         if (!file) return;
@@ -2600,6 +2874,7 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho handle cccd qr success.
     async function handleCccdQrSuccess(decodedText) {
         if (cccdQrBusy) return;
 
@@ -2622,6 +2897,7 @@
         cccdQrBusy = false;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fill customer from cccd qr.
     async function fillCustomerFromCccdQr(qr, rawText = '') {
         await stopCccdScanner();
 
@@ -2694,6 +2970,7 @@
         toast('Đã điền thông tin khách hàng từ mã QR CCCD.');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm parse cccd qr.
     function parseCccdQr(rawText) {
         const text = String(rawText || '').trim();
 
@@ -2742,6 +3019,7 @@
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply customer qr address.
     async function applyCustomerQrAddress(raw) {
         const parsed = await resolveCustomerQrAddress(raw);
 
@@ -2798,6 +3076,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm resolve customer qr address.
     async function resolveCustomerQrAddress(raw) {
         const fullText = normalizeCustomerQrMatch(raw);
 
@@ -2857,6 +3136,7 @@
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm split customer qr address parts.
     function splitCustomerQrAddressParts(value) {
         return String(value || '')
             .split(',')
@@ -2864,6 +3144,7 @@
             .filter(Boolean);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho find best customer qr administrative match.
     function findBestCustomerQrAdministrativeMatch(items, fullText) {
         if (!Array.isArray(items) || !items.length) return null;
 
@@ -2900,6 +3181,7 @@
         return bestItem;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm build customer qr administrative aliases.
     function buildCustomerQrAdministrativeAliases(name) {
         const base = normalizeCustomerQrMatch(name);
         const cleaned = stripCustomerQrAdministrativePrefix(base);
@@ -2928,12 +3210,14 @@
         return [...aliases].filter(Boolean);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm strip customer qr administrative prefix.
     function stripCustomerQrAdministrativePrefix(value) {
         return String(value || '')
             .replace(/^(thanh pho|tinh|quan|huyen|phuong|xa|thi tran|thi xa)\s+/, '')
             .trim();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize customer qr match.
     function normalizeCustomerQrMatch(value) {
         return String(value || '')
             .normalize('NFD')
@@ -2945,6 +3229,7 @@
             .replace(/\s+/g, ' ');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to customer title case.
     function toCustomerTitleCase(value) {
         return normalizeSpaces(value)
             .toLocaleLowerCase('vi-VN')
@@ -2953,49 +3238,74 @@
             });
     }
 
+    // Tải hoặc truy xuất dữ liệu cho fetch json.
     async function fetchJson(url, options) {
         const response = await fetch(url, options);
 
         if (!response.ok) {
-            throw new Error(await readError(response));
+            const detail = await readErrorDetail(response);
+            const error = new Error(detail.message);
+            error.fieldErrors = detail.fieldErrors;
+            throw error;
         }
 
         return response.status === 204 ? null : response.json();
     }
 
+    // Tải hoặc truy xuất dữ liệu cho read error.
     async function readError(response) {
+        const detail = await readErrorDetail(response);
+        return detail.message;
+    }
+
+    // Tải hoặc truy xuất dữ liệu cho read error detail.
+    async function readErrorDetail(response) {
         const text = await response.text();
 
         try {
             const value = JSON.parse(text);
 
-            if (value.message) return value.message;
-            if (value.error) return value.error;
-            if (value.errors) return Object.values(value.errors).join('. ');
+            const fieldErrors = value.errors && typeof value.errors === 'object'
+                ? value.errors
+                : {};
+            const message = value.message ||
+                value.error ||
+                Object.values(fieldErrors).join('. ') ||
+                Object.values(value)
+                    .filter((item) => typeof item === 'string')
+                    .join('. ') ||
+                'Có lỗi xảy ra.';
 
-            return Object.values(value).join('. ');
+            return { message, fieldErrors };
         } catch {
-            return text || 'Có lỗi xảy ra.';
+            return {
+                message: text || 'Có lỗi xảy ra.',
+                fieldErrors: {}
+            };
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize spaces.
     function normalizeSpaces(value) {
         return String(value || '')
             .replace(/\s+/g, ' ')
             .trim();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm only digits.
     function onlyDigits(value, maxLength) {
         return String(value || '')
             .replace(/\D/g, '')
             .slice(0, maxLength);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm empty to null.
     function emptyToNull(value) {
         const text = String(value || '').trim();
         return text || null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm initials.
     function initials(value) {
         return String(value || '')
             .trim()
@@ -3007,6 +3317,7 @@
             .toUpperCase() || 'KH';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format date.
     function formatDate(value) {
         if (!value) return '';
 
@@ -3014,10 +3325,12 @@
         return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : value;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to date input.
     function toDateInput(value) {
         return value ? String(value).slice(0, 10) : '';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm join address.
     function joinAddress(address) {
         return [
             address.diaChiCuThe,
@@ -3026,6 +3339,7 @@
         ].filter(Boolean).join(', ');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm esc.
     function esc(value) {
         return String(value ?? '').replace(/[&<>"']/g, (char) => ({
             '&': '&amp;',
@@ -3036,10 +3350,12 @@
         }[char]));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm esc attr.
     function escAttr(value) {
         return esc(value).replace(/`/g, '&#096;');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm toast.
     function toast(message, error = false) {
         const element = document.createElement('div');
 

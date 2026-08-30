@@ -38,6 +38,7 @@ public class ShopChatMessage {
     private LocalDateTime ngayTao;
 
     @PrePersist
+    // Thực hiện xử lý nghiệp vụ của hàm pre persist.
     public void prePersist() {
         if (ngayTao == null) ngayTao = LocalDateTime.now();
         if (aiGenerated == null) aiGenerated = false;

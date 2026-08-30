@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý đợt giảm giá</title>
     <!-- Giữ nguyên sidebar/taskbar của dự án -->
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-scale-20260822-2" defer></script>
     <style>
         :root{
             --navy:#112a58;
@@ -123,17 +123,34 @@
         .product-tools{display:grid;grid-template-columns:minmax(180px,1.6fr) 150px 130px 96px;gap:8px;margin-bottom:12px}
         .product-tools .control{height:35px;font-size:11.5px}
         .product-table{max-height:442px;overflow:auto;border:1px solid #e7ebf0;border-radius:8px;background:#fff}
-        .product-table table{width:100%;min-width:1100px;table-layout:fixed}
+        .product-table table{width:100%;min-width:860px;table-layout:fixed}
         .product-table th:nth-child(1){width:46px!important}
         .product-table th:nth-child(2){width:58px!important}
-        .product-table th:nth-child(3){width:280px!important}
-        .product-table th:nth-child(4){width:220px!important}
-        .product-table th:nth-child(5){width:120px!important}
-        .product-table th:nth-child(6){width:100px!important}
-        .product-table th:nth-child(7){width:140px!important}
-        .product-table th:nth-child(8){width:90px!important}
+        .product-table th:nth-child(3){width:auto!important}
+        .product-table th:nth-child(4){width:110px!important}
+        .product-table th:nth-child(5){width:145px!important}
+        .product-table th:nth-child(6){width:105px!important}
         .product-table th{height:37px;position:sticky;top:0;z-index:1;background:#f6f7f9}
         .product-table td{height:48px;padding:7px 12px;font-size:11.5px}
+        .product-row{cursor:pointer}
+        .product-row:hover td{background:#f8fbff}
+        .product-summary{display:flex;align-items:center;gap:10px;min-width:0}
+        .product-summary-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+        .product-summary-copy strong{overflow:hidden;color:#26384f;font-size:12px;text-overflow:ellipsis;white-space:nowrap}
+        .product-summary-copy span{color:#7f8a9a;font-size:10.5px}
+        .product-state{color:#4b6283;font-size:10.5px;font-weight:700}
+        .variant-expand{height:28px;padding:0 9px;border:1px solid #d8e2ef;border-radius:5px;background:#fff;color:#284d84;font-size:10.5px;font-weight:800;cursor:pointer;white-space:nowrap}
+        .variant-expand:hover{border-color:#8eabd2;background:#eef5ff}
+        .variant-children td{height:auto!important;padding:0!important;background:#fbfcff}
+        .variants-detail{margin:0 12px 10px;border:1px solid #e6ebf2;border-radius:7px;overflow:hidden;background:#fff}
+        .variants-detail table{width:100%;min-width:0;table-layout:auto}
+        .variants-detail th{position:static!important;height:31px!important;padding:7px 10px!important;background:#f5f8fc!important;color:#708098;font-size:10px}
+        .variants-detail td{height:39px!important;padding:6px 10px!important;border-top:1px solid #edf1f5;font-size:10.5px}
+        .variants-detail th:nth-child(1){width:40px!important}
+        .variants-detail th:nth-child(2){width:145px!important}
+        .variants-detail th:nth-child(3),.variants-detail th:nth-child(4){width:110px!important}
+        .variants-detail th:nth-child(5){width:125px!important}
+        .variants-detail th:nth-child(6){width:80px!important}
         .check{width:15px;height:15px;accent-color:var(--navy);cursor:pointer}
         .stock-ok{color:#129e78;font-weight:700}
         .stock-out{color:#e25d62;font-weight:700}
@@ -322,12 +339,12 @@
             <section class="card variants-card">
                 <div class="variant-top">
                     <div>
-                        <h2>Chọn sản phẩm chi tiết áp dụng</h2>
-                        <p id="chooseSub">Chọn theo mã SPCT để áp dụng giảm giá.</p>
+                        <h2>Chọn sản phẩm áp dụng</h2>
+                        <p id="chooseSub">Tick sản phẩm để chọn tất cả biến thể, hoặc mở sản phẩm để chọn từng biến thể.</p>
                     </div>
                 </div>
                 <div class="product-tools">
-                    <div class="input-wrap"><span class="input-icon">⌕</span><input id="spctSearch" class="control search" autocomplete="off" placeholder="Tìm mã SPCT, tên sản phẩm..."></div>
+                    <div class="input-wrap"><span class="input-icon">⌕</span><input id="spctSearch" class="control search" autocomplete="off" placeholder="Tìm mã, tên sản phẩm hoặc biến thể..."></div>
                     <select id="colorFilter" class="control"><option value="">Tất cả màu sắc</option></select>
                     <select id="sizeFilter" class="control"><option value="">Tất cả kích cỡ</option></select>
                     <button class="btn primary" id="searchProductBtn" type="button">Tìm kiếm</button>
@@ -338,17 +355,15 @@
                         <tr>
                             <th style="width:46px"><input class="check" id="checkAll" type="checkbox" aria-label="Chọn tất cả kết quả"></th>
                             <th style="width:58px">STT</th>
-                            <th style="width:260px">Sản phẩm</th>
-                            <th style="width:130px">Mã SPCT</th>
-                            <th style="width:105px">Màu sắc</th>
-                            <th style="width:90px">Kích cỡ</th>
-                            <th style="width:120px">Giá bán</th>
-                            <th style="width:86px">Tồn kho</th>
+                            <th>Sản phẩm</th>
+                            <th style="width:110px">Biến thể</th>
+                            <th style="width:145px">Trạng thái chọn</th>
+                            <th style="width:105px">Thao tác</th>
                         </tr>
                         </thead>
                         <tbody id="spctRows"></tbody>
                     </table>
-                    <div class="empty hidden" id="spctEmpty">Không tìm thấy sản phẩm chi tiết phù hợp.</div>
+                    <div class="empty hidden" id="spctEmpty">Không tìm thấy sản phẩm phù hợp.</div>
                 </div>
             </section>
         </div>
@@ -408,6 +423,7 @@
         spcts: [],
         selectedSpctIds: new Set(),
         selectedSpctOrder: [],
+        expandedProductKeys: new Set(),
         loadingSpcts: null,
         editingPromotion: null,
         syncingExpiredPromotions: false,
@@ -442,7 +458,10 @@
         promotionForm.elements.giaTriGiamGia.addEventListener('input', renderSelectedRows);
         [promotionForm.elements.ngayBatDau, promotionForm.elements.ngayKetThuc].forEach(input => {
             input.addEventListener('click', () => openPromotionDatePicker(input));
-            input.addEventListener('change', () => normalizePromotionDateInput(input));
+            input.addEventListener('change', async () => {
+                normalizePromotionDateInput(input);
+                await refreshPromotionCandidates();
+            });
             input.addEventListener('blur', () => normalizePromotionDateInput(input));
         });
         promotionForm.elements.ngayBatDau.addEventListener('focus', enforceStartDateMinimum);
@@ -461,6 +480,7 @@
         setInterval(refreshExpiredPromotionStatuses, 30000);
     });
 
+    // Thực hiện xử lý nghiệp vụ của hàm debounce.
     function debounce(fn, delay) {
         let timeout;
         return (...args) => {
@@ -469,6 +489,7 @@
         };
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load data.
     async function loadData(page = state.page) {
         state.page = Math.max(0, Number(page) || 0);
         const params = buildFilterParams(true);
@@ -492,6 +513,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm build filter params.
     function buildFilterParams(withPaging) {
         const data = new FormData(filterForm);
         const params = new URLSearchParams();
@@ -523,6 +545,7 @@
         return params;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize page response.
     function normalizePageResponse(data) {
         const pageMeta = data && data.page ? data.page : {};
         const content = Array.isArray(data) ? data : (data && Array.isArray(data.content) ? data.content : []);
@@ -537,6 +560,7 @@
         };
     }
 
+    // Hiển thị và đồng bộ giao diện cho render list.
     function renderList() {
         const rows = $('rows');
         const empty = $('empty');
@@ -564,6 +588,7 @@
         renderPager();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render pager.
     function renderPager() {
         const wrap = $('pagerActions');
         const current = state.page;
@@ -581,6 +606,7 @@
         wrap.innerHTML = html;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm calculate page buttons.
     function calculatePageButtons(current, total) {
         if (total <= 5) return Array.from({ length: total }, (_, i) => i);
         const pages = [0];
@@ -593,11 +619,13 @@
         return pages;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm change page.
     function changePage(page) {
         if (!Number.isFinite(Number(page)) || page < 0 || page >= state.totalPages || page === state.page) return;
         loadData(page);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset filters.
     async function resetFilters() {
         const ok = await confirmAction('Bạn có chắc chắn muốn đặt lại tất cả điều kiện tìm kiếm không?');
         if (!ok) return;
@@ -606,10 +634,12 @@
         loadData();
     }
 
+    // Xử lý tương tác người dùng cho open form.
     async function openForm(id = null) {
         promotionForm.reset();
         state.selectedSpctIds = new Set();
         state.selectedSpctOrder = [];
+        state.expandedProductKeys = new Set();
         state.editingPromotion = null;
         resetVariantFilters();
         promotionForm.elements.trangThai.value = 'true';
@@ -625,12 +655,13 @@
         $('formView').classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        await ensureSpctsLoaded();
         if (id) await loadPromotionForEdit(id);
+        await refreshPromotionCandidates();
         renderSpctRows();
         renderSelectedRows();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ensure spcts loaded.
     async function ensureSpctsLoaded() {
         if (state.spcts.length) return;
         if (state.loadingSpcts) return state.loadingSpcts;
@@ -638,9 +669,17 @@
         return state.loadingSpcts;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load spcts.
     async function loadSpcts() {
         try {
-            const response = await fetch(`${API}/san-pham-chi-tiet`);
+            const params = new URLSearchParams();
+            const start = withSeconds(normalizePromotionDateTime(promotionForm.elements.ngayBatDau.value));
+            const end = withSeconds(normalizePromotionDateTime(promotionForm.elements.ngayKetThuc.value));
+            const excludedId = Number(promotionForm.elements.id.value || 0);
+            if (start) params.set('ngayBatDau', start);
+            if (end) params.set('ngayKetThuc', end);
+            if (Number.isFinite(excludedId) && excludedId > 0) params.set('excludedPromotionId', String(excludedId));
+            const response = await fetch(`${API}/san-pham-chi-tiet?${params.toString()}`);
             if (!response.ok) {
                 toast(await readError(response), true);
                 return;
@@ -658,10 +697,31 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm refresh promotion candidates.
+    async function refreshPromotionCandidates() {
+        const selectedBefore = new Set(state.selectedSpctIds);
+        state.spcts = [];
+        await ensureSpctsLoaded();
+        const availableIds = new Set(state.spcts.map(item => item.idSpct));
+        const removed = [...selectedBefore].filter(id => !availableIds.has(id));
+        if (removed.length) {
+            state.selectedSpctIds = new Set([...state.selectedSpctIds].filter(id => availableIds.has(id)));
+            state.selectedSpctOrder = state.selectedSpctOrder.filter(id => availableIds.has(id));
+            toast('Một số SPCT đã có đợt giảm giá trùng thời gian nên đã được bỏ chọn.', true);
+        }
+        renderSpctRows();
+        renderSelectedRows();
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm normalize spct.
     function normalizeSpct(item) {
         const rawId = item?.idSpct ?? item?.id ?? item?.idSanPhamChiTiet;
         const parsedId = Number(rawId);
         return {
+            idSp: Number.isFinite(Number(item?.idSp ?? item?.idSanPham ?? item?.sanPham?.idSp))
+                ? Number(item?.idSp ?? item?.idSanPham ?? item?.sanPham?.idSp)
+                : null,
+            maSp: String(item?.maSp ?? item?.maSanPham ?? item?.sanPham?.maSp ?? '').trim(),
             idSpct: Number.isFinite(parsedId) ? parsedId : null,
             maSpct: String(item?.maSpct ?? item?.maChiTietSanPham ?? item?.maSanPhamChiTiet ?? item?.maSPCT ?? '').trim(),
             tenSp: String(item?.tenSp ?? item?.tenSanPham ?? item?.sanPham?.tenSp ?? item?.sanPham?.tenSanPham ?? '').trim(),
@@ -675,6 +735,7 @@
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm compare spct newest first.
     function compareSpctNewestFirst(left, right) {
         const leftTime = Date.parse(left.ngayTao || left.ngayCapNhat || '');
         const rightTime = Date.parse(right.ngayTao || right.ngayCapNhat || '');
@@ -683,6 +744,7 @@
         return Number(right.idSpct || 0) - Number(left.idSpct || 0);
     }
 
+    // Hiển thị và đồng bộ giao diện cho populate variant filters.
     function populateVariantFilters() {
         const colors = uniqueValues('tenMauSac');
         const sizes = uniqueValues('tenKichCo');
@@ -692,17 +754,20 @@
         refillSelect($('selectedSizeFilter'), sizes, 'Tất cả kích cỡ');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm unique values.
     function uniqueValues(key) {
         return [...new Set(state.spcts.map(item => item[key]).filter(Boolean))]
             .sort((a, b) => String(a).localeCompare(String(b), 'vi', { numeric: true }));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm refill select.
     function refillSelect(select, values, defaultText) {
         const previous = select.value;
         select.innerHTML = `<option value="">${esc(defaultText)}</option>` + values.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
         if (values.includes(previous)) select.value = previous;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load promotion for edit.
     async function loadPromotionForEdit(id) {
         try {
             let item = state.items.find(current => Number(current.id) === Number(id));
@@ -737,6 +802,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset variant filters.
     function resetVariantFilters() {
         ['spctSearch','selectedSearch','colorFilter','sizeFilter','selectedColorFilter','selectedSizeFilter'].forEach(id => {
             const element = $(id);
@@ -746,7 +812,8 @@
         $('checkAll').indeterminate = false;
     }
 
-    function renderSpctRows() {
+    // Hiển thị và đồng bộ giao diện cho render spct rows legacy.
+    function renderSpctRowsLegacy() {
         const keyword = $('spctSearch').value.trim().toLowerCase();
         const color = $('colorFilter').value;
         const size = $('sizeFilter').value;
@@ -769,11 +836,13 @@
         updateCheckAll(variants);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm matches spct.
     function matchesSpct(item, keyword, color, size) {
         const haystack = [item.maSpct, item.tenSp, item.tenMauSac, item.tenKichCo].join(' ').toLowerCase();
         return (!keyword || haystack.includes(keyword)) && (!color || item.tenMauSac === color) && (!size || item.tenKichCo === size);
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update check all.
     function updateCheckAll(visible) {
         const checkAll = $('checkAll');
         if (!visible.length) {
@@ -786,6 +855,7 @@
         checkAll.indeterminate = count > 0 && count < visible.length;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm select spct.
     function selectSpct(id) {
         if (!Number.isFinite(id)) return;
         const item = state.spcts.find(current => current.idSpct === id);
@@ -797,11 +867,13 @@
         state.selectedSpctOrder = [id, ...state.selectedSpctOrder.filter(current => current !== id)];
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm unselect spct.
     function unselectSpct(id) {
         state.selectedSpctIds.delete(id);
         state.selectedSpctOrder = state.selectedSpctOrder.filter(current => current !== id);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm selected spct items.
     function selectedSpctItems() {
         const byId = new Map(state.spcts.map(item => [item.idSpct, item]));
         const orderedIds = state.selectedSpctOrder.filter(id => state.selectedSpctIds.has(id));
@@ -810,7 +882,8 @@
         return state.selectedSpctOrder.map(id => byId.get(id)).filter(Boolean);
     }
 
-    function toggleAllVisible(checked) {
+    // Xử lý tương tác người dùng cho toggle all visible legacy.
+    function toggleAllVisibleLegacy(checked) {
         const keyword = $('spctSearch').value.trim().toLowerCase();
         const color = $('colorFilter').value;
         const size = $('sizeFilter').value;
@@ -831,6 +904,165 @@
         renderSelectedRows();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product key.
+    function productKey(item) {
+        if (Number.isFinite(item.idSp)) return `sp-${item.idSp}`;
+        const source = `${item.maSp || ''}|${item.tenSp || ''}`;
+        let hash = 0;
+        for (let index = 0; index < source.length; index += 1) {
+            hash = ((hash << 5) - hash) + source.charCodeAt(index);
+            hash |= 0;
+        }
+        return `sp-name-${Math.abs(hash)}`;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm product groups.
+    function productGroups() {
+        const groups = new Map();
+        state.spcts.forEach(item => {
+            const key = productKey(item);
+            if (!groups.has(key)) {
+                groups.set(key, {
+                    key,
+                    idSp: item.idSp,
+                    maSp: item.maSp,
+                    tenSp: item.tenSp || 'Sản phẩm chưa đặt tên',
+                    anh: item.anh,
+                    variants: []
+                });
+            }
+            groups.get(key).variants.push(item);
+        });
+        return [...groups.values()]
+            .map(group => ({
+                ...group,
+                variants: [...group.variants].sort(compareSpctNewestFirst)
+            }))
+            .sort((left, right) => compareSpctNewestFirst(left.variants[0], right.variants[0]));
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm matches product.
+    function matchesProduct(group, keyword, color, size) {
+        const haystack = [
+            group.maSp,
+            group.tenSp,
+            ...group.variants.flatMap(item => [item.maSpct, item.tenMauSac, item.tenKichCo])
+        ].join(' ').toLowerCase();
+        const hasMatchingVariant = group.variants.some(item =>
+            (!color || item.tenMauSac === color) && (!size || item.tenKichCo === size)
+        );
+        return (!keyword || haystack.includes(keyword)) && hasMatchingVariant;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm visible product groups.
+    function visibleProductGroups() {
+        const keyword = $('spctSearch').value.trim().toLowerCase();
+        const color = $('colorFilter').value;
+        const size = $('sizeFilter').value;
+        return productGroups().filter(group => matchesProduct(group, keyword, color, size));
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm product selection.
+    function productSelection(group) {
+        const selectedCount = group.variants.filter(item => state.selectedSpctIds.has(item.idSpct)).length;
+        return {
+            selectedCount,
+            total: group.variants.length,
+            all: selectedCount === group.variants.length && group.variants.length > 0,
+            partial: selectedCount > 0 && selectedCount < group.variants.length
+        };
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render product variant rows.
+    function renderProductVariantRows(group) {
+        return group.variants.map(item => {
+            const selected = state.selectedSpctIds.has(item.idSpct);
+            return `<tr>
+                <td><input class="check" type="checkbox" ${selected ? 'checked' : ''} onclick="event.stopPropagation()" onchange="toggleSpct(${item.idSpct}, this.checked)" aria-label="Chọn ${esc(item.maSpct)}"></td>
+                <td class="code">${esc(item.maSpct)}</td>
+                <td>${attrPill(item.tenMauSac, 'color')}</td>
+                <td>${attrPill(item.tenKichCo, 'size')}</td>
+                <td>${money(item.giaBan)}</td>
+                <td class="stock-ok">${item.soLuongTon}</td>
+            </tr>`;
+        }).join('');
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render spct rows.
+    function renderSpctRows() {
+        const groups = visibleProductGroups();
+        $('spctEmpty').classList.toggle('hidden', groups.length > 0);
+        $('spctRows').innerHTML = groups.map((group, index) => {
+            const selection = productSelection(group);
+            const expanded = state.expandedProductKeys.has(group.key);
+            const status = selection.all
+                ? `Đã chọn toàn bộ ${selection.total}`
+                : selection.partial
+                    ? `Đã chọn ${selection.selectedCount}/${selection.total}`
+                    : `Chưa chọn (${selection.total} biến thể)`;
+            return `<tr class="product-row" onclick="toggleProductDetails('${group.key}')">
+                <td><input class="check" type="checkbox" ${selection.all ? 'checked' : ''} data-product-partial="${selection.partial}" onclick="event.stopPropagation()" onchange="toggleProduct('${group.key}', this.checked)" aria-label="Chọn toàn bộ biến thể ${esc(group.tenSp)}"></td>
+                <td>${index + 1}</td>
+                <td><div class="product-summary">${safeImage(group.anh, group.tenSp)}<div class="product-summary-copy"><strong>${esc(group.tenSp)}</strong><span>${esc(group.maSp || 'Chưa có mã sản phẩm')}</span></div></div></td>
+                <td>${group.variants.length}</td>
+                <td><span class="product-state">${status}</span></td>
+                <td><button class="variant-expand" type="button" onclick="event.stopPropagation();toggleProductDetails('${group.key}')">${expanded ? 'Ẩn biến thể' : 'Xem biến thể'}</button></td>
+            </tr>
+            ${expanded ? `<tr class="variant-children"><td colspan="6"><div class="variants-detail"><table><thead><tr><th></th><th>Mã SPCT</th><th>Màu sắc</th><th>Kích cỡ</th><th>Giá bán</th><th>Tồn kho</th></tr></thead><tbody>${renderProductVariantRows(group)}</tbody></table></div></td></tr>` : ''}`;
+        }).join('');
+        $('spctRows').querySelectorAll('[data-product-partial="true"]').forEach(input => { input.indeterminate = true; });
+        updateProductCheckAll(groups);
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update product check all.
+    function updateProductCheckAll(groups) {
+        const checkAll = $('checkAll');
+        if (!groups.length) {
+            checkAll.checked = false;
+            checkAll.indeterminate = false;
+            return;
+        }
+        const selections = groups.map(productSelection);
+        checkAll.checked = selections.every(selection => selection.all);
+        checkAll.indeterminate = !checkAll.checked && selections.some(selection => selection.selectedCount > 0);
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set product selection.
+    function setProductSelection(group, checked) {
+        const ids = group.variants.map(item => item.idSpct);
+        if (checked) {
+            ids.forEach(id => state.selectedSpctIds.add(id));
+            state.selectedSpctOrder = [...ids, ...state.selectedSpctOrder.filter(id => !ids.includes(id))];
+        } else {
+            ids.forEach(id => state.selectedSpctIds.delete(id));
+            state.selectedSpctOrder = state.selectedSpctOrder.filter(id => !ids.includes(id));
+        }
+    }
+
+    // Xử lý tương tác người dùng cho toggle product.
+    function toggleProduct(productKeyValue, checked) {
+        const group = productGroups().find(item => item.key === productKeyValue);
+        if (!group) return;
+        setProductSelection(group, checked);
+        renderSpctRows();
+        renderSelectedRows();
+    }
+
+    // Xử lý tương tác người dùng cho toggle product details.
+    function toggleProductDetails(productKeyValue) {
+        if (state.expandedProductKeys.has(productKeyValue)) state.expandedProductKeys.delete(productKeyValue);
+        else state.expandedProductKeys.add(productKeyValue);
+        renderSpctRows();
+    }
+
+    // Xử lý tương tác người dùng cho toggle all visible.
+    function toggleAllVisible(checked) {
+        visibleProductGroups().forEach(group => setProductSelection(group, checked));
+        renderSpctRows();
+        renderSelectedRows();
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render selected rows.
     function renderSelectedRows() {
         const keyword = $('selectedSearch').value.trim().toLowerCase();
         const color = $('selectedColorFilter').value;
@@ -838,7 +1070,12 @@
         const discount = Number(promotionForm.elements.giaTriGiamGia.value || 0);
         const allSelected = selectedSpctItems();
         const visible = allSelected.filter(item => matchesSpct(item, keyword, color, size));
-        $('chooseSub').textContent = `Đã chọn ${allSelected.length} mã SPCT để áp dụng.`;
+        const selectedProductCount = productGroups()
+            .filter(group => group.variants.some(item => state.selectedSpctIds.has(item.idSpct)))
+            .length;
+        $('chooseSub').textContent = allSelected.length
+            ? `Đã chọn ${allSelected.length} biến thể thuộc ${selectedProductCount} sản phẩm.`
+            : 'Tick sản phẩm để chọn tất cả biến thể, hoặc mở sản phẩm để chọn từng biến thể.';
         $('selectedSub').textContent = allSelected.length ? `Đang áp dụng cho ${allSelected.length} sản phẩm chi tiết.` : 'Chưa chọn sản phẩm chi tiết nào.';
         $('selectedEmpty').hidden = visible.length > 0;
         $('selectedRows').innerHTML = visible.map((item, index) => {
@@ -857,12 +1094,14 @@
         }).join('');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm safe image.
     function safeImage(url, alt) {
         const source = String(url || '').trim();
         if (!source) return '<span class="thumb thumb-placeholder">🖼</span>';
         return `<img class="thumb" src="${esc(source)}" alt="${esc(alt || 'ảnh SPCT')}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'thumb thumb-placeholder',textContent:'🖼'}))">`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm first image.
     function firstImage(value) {
         if (Array.isArray(value)) return firstImage(value[0]);
         const text = String(value || '').trim();
@@ -876,6 +1115,7 @@
         return text;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm variant info.
     function variantInfo(item) {
         return `<div class="variant-info no-thumb">
             <div class="variant-text">
@@ -885,10 +1125,12 @@
         </div>`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm attr pill.
     function attrPill(value, type) {
         return `<span class="attr-pill ${type || ''}">${esc(value || '-')}</span>`;
     }
 
+    // Xử lý tương tác người dùng cho toggle spct.
     function toggleSpct(id, checked) {
         const numericId = Number(id);
         if (!Number.isFinite(numericId)) return;
@@ -898,6 +1140,7 @@
         renderSelectedRows();
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save promotion.
     async function savePromotion(event) {
         event.preventDefault();
         const data = Object.fromEntries(new FormData(promotionForm).entries());
@@ -957,6 +1200,7 @@
         }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate promotion.
     function validatePromotion(data, isUpdate) {
         if (!/^[A-Za-z0-9_-]{6,30}$/.test(data.maDotGiamGia)) return 'Mã đợt giảm giá không hợp lệ.';
         if (!data.tenDotGiamGia) return 'Vui lòng nhập tên đợt giảm giá.';
@@ -975,6 +1219,7 @@
         return '';
     }
 
+    // Xử lý tương tác người dùng cho toggle status.
     async function toggleStatus(id, checkbox) {
         const item = state.items.find(current => Number(current.id) === Number(id));
         if (!item) return;
@@ -1005,6 +1250,7 @@
      * Đặt trạng thái theo giá trị cụ thể, KHÔNG dùng cách chỉ gọi API để đảo trạng thái.
      * Hỗ trợ cả hai URL thường dùng trong dự án để không bị lệch route giữa controller cũ/mới.
      */
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set promotion status.
     async function setPromotionStatus(id, targetStatus) {
         const numericId = Number(id);
         if (!Number.isFinite(numericId)) {
@@ -1044,6 +1290,7 @@
         }
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get promotion by id.
     async function getPromotionById(id, createResponse) {
         // POST/PUT có thể trả lại DTO vừa lưu. Nếu không có, lấy lại theo id.
         if (createResponse) {
@@ -1066,12 +1313,14 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm refresh expired promotion statuses.
     async function refreshExpiredPromotionStatuses() {
         if ($('listView').classList.contains('hidden')) return;
         await synchronizeExpiredPromotions();
         renderList();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm synchronize expired promotions.
     async function synchronizeExpiredPromotions() {
         if (state.syncingExpiredPromotions) return;
         const now = Date.now();
@@ -1096,6 +1345,7 @@
         if (hasError) toast('Không thể tự tắt một số đợt giảm giá đã hết hạn.', true);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm export excel.
     async function exportExcel() {
         const params = buildFilterParams(false);
         if (!params) return;
@@ -1129,17 +1379,20 @@
         }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is promotion expired.
     function isPromotionExpired(item, now = Date.now()) {
         const end = parseDate(item?.ngayKetThuc);
         return Boolean(end && end.getTime() <= now);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get progress.
     function getProgress(item) {
         if (isPromotionExpired(item)) return { text:'Hết hạn', className:'expired' };
         if (item?.trangThai) return { text:'Đang diễn ra', className:'active' };
         return { text:'Đã tắt', className:'disabled' };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate promotion code.
     function generatePromotionCode() {
         const now = new Date();
         const pad = value => String(value).padStart(2, '0');
@@ -1148,6 +1401,7 @@
         return `EVENT${seed}${tail}`;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set default dates.
     function setDefaultDates() {
         const start = new Date();
         start.setSeconds(0, 0);
@@ -1157,12 +1411,14 @@
         promotionForm.elements.ngayKetThuc.value = formatDateTimeInput(end);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm refresh date time minimums.
     function refreshDateTimeMinimums() {
         const min = toDateTimeLocalValue(new Date());
         if (promotionForm.elements.ngayBatDau) promotionForm.elements.ngayBatDau.dataset.min = min;
         if (promotionForm.elements.ngayKetThuc) promotionForm.elements.ngayKetThuc.dataset.min = min;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm enforce start date minimum.
     function enforceStartDateMinimum() {
         refreshDateTimeMinimums();
 
@@ -1177,29 +1433,34 @@
         }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is past start date.
     function isPastStartDate(value) {
         const start = parseDate(normalizePromotionDateTime(value));
         return Boolean(start && start.getTime() < Date.now() - 60000);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is unchanged start date.
     function isUnchangedStartDate(value) {
         const original = parseDate(state.editingPromotion?.ngayBatDau);
         const current = parseDate(value);
         return Boolean(original && current && original.getTime() === current.getTime());
     }
 
+    // Hiển thị và đồng bộ giao diện cho show list.
     function showList() {
         $('formView').classList.add('hidden');
         $('listView').classList.remove('hidden');
         window.scrollTo({ top:0, behavior:'smooth' });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm with seconds.
     function withSeconds(value) {
         if (!value) return '';
         const string = String(value).trim();
         return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(string) ? `${string}:00` : string;
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is valid local date time.
     function isValidLocalDateTime(value) {
         const text = normalizePromotionDateTime(value);
         if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?$/.test(text)) return false;
@@ -1207,6 +1468,7 @@
         return !Number.isNaN(date.getTime());
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to date time local value.
     function toDateTimeLocalValue(value) {
         if (!value) return '';
         if (value instanceof Date) {
@@ -1220,6 +1482,7 @@
         return Number.isNaN(date.getTime()) ? '' : toDateTimeLocalValue(date);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize promotion date time.
     function normalizePromotionDateTime(value) {
         if (!value) return '';
 
@@ -1251,6 +1514,7 @@
         return Number.isNaN(date.getTime()) ? '' : toDateTimeLocalValue(date);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format date time input.
     function formatDateTimeInput(value) {
         const normalized = normalizePromotionDateTime(value);
         const match = normalized.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
@@ -1258,12 +1522,14 @@
         return `${match[3]}/${match[2]}/${match[1]} ${match[4]}:${match[5]}`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize promotion date input.
     function normalizePromotionDateInput(input) {
         if (!input || !input.value) return;
         const formatted = formatDateTimeInput(input.value);
         if (formatted) input.value = formatted;
     }
 
+    // Xử lý tương tác người dùng cho open promotion date picker.
     function openPromotionDatePicker(input) {
         if (!input) return;
 
@@ -1305,6 +1571,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm parse date.
     function parseDate(value) {
         if (!value) return null;
         const text = String(value).trim();
@@ -1316,6 +1583,7 @@
         return Number.isNaN(date.getTime()) ? null : date;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format date time.
     function formatDateTime(value) {
         if (!value) return '';
         const text = String(value);
@@ -1327,6 +1595,7 @@
         return `${pad(date.getHours())}:${pad(date.getMinutes())} ${pad(date.getDate())}/${pad(date.getMonth()+1)}/${date.getFullYear()}`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm date cell.
     function dateCell(value) {
         const formatted = formatDateTime(value);
         if (!formatted) return '<span class="muted">-</span>';
@@ -1334,21 +1603,25 @@
         return `<div class="date-cell"><strong>${esc(parts[1] || '')}</strong><span>${esc(parts[0] || '')}</span></div>`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format discount.
     function formatDiscount(item) {
         const amount = Number(item?.giaTriGiamGia ?? 0);
         return `${Number.isInteger(amount) ? amount : amount.toLocaleString('vi-VN', {maximumFractionDigits:2})}%`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm money.
     function money(value) {
         return `${(Math.round(Number(value || 0) / 1000) * 1000).toLocaleString('vi-VN')} đ`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm date for file.
     function dateForFile() {
         const date = new Date();
         const pad = item => String(item).padStart(2, '0');
         return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm download file.
     function downloadFile(blob, filename) {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -1360,6 +1633,7 @@
         URL.revokeObjectURL(url);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho read error.
     async function readError(response) {
         try {
             const text = await response.text();
@@ -1371,6 +1645,7 @@
         } catch { return 'Có lỗi xảy ra.'; }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm confirm action.
     function confirmAction(message) {
         return new Promise(resolve => {
             const backdrop = $('confirmBackdrop');
@@ -1400,6 +1675,7 @@
         });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm toast.
     function toast(message, error = false) {
         const toastEl = document.createElement('div');
         toastEl.className = `toast ${error ? 'error' : ''}`;
@@ -1408,6 +1684,7 @@
         setTimeout(() => toastEl.remove(), 3500);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm esc.
     function esc(value) {
         return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
     }

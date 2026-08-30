@@ -41,6 +41,7 @@ public class ChiTietDotGiamGia {
     private LocalDateTime ngayTao;
 
     @PrePersist
+    // Thực hiện xử lý nghiệp vụ của hàm pre persist.
     public void prePersist() {
         if (trangThai == null) {
             trangThai = true;

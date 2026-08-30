@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-2" defer></script>
+    <script src="/js/app-shell.js?v=ui-icons-20260822-1" defer></script>
 
     <style>
         *{
@@ -273,12 +273,13 @@
             display:inline-flex;
             align-items:center;
             gap:14px;
-            padding:0;
-            border:none;
-            border-radius:0;
-            background:transparent;
-            min-width:240px;
+            padding:14px 18px;
+            border:1px solid #f1d6af;
+            border-radius:12px;
+            background:#fffaf3;
+            min-width:260px;
             justify-content:flex-start;
+            box-shadow:0 8px 22px rgba(15,23,42,.07);
         }
 
         .current-status-icon{
@@ -313,8 +314,8 @@
         }
 
         .current-status-card.cancel{
-            border-color:transparent;
-            background:transparent;
+            border-color:#fecaca;
+            background:#fff7f7;
         }
 
         .current-status-card.cancel .current-status-icon{
@@ -326,8 +327,8 @@
         }
 
         .current-status-card.success{
-            border-color:transparent;
-            background:transparent;
+            border-color:#bbf7d0;
+            background:#f5fff8;
         }
 
         .current-status-card.success .current-status-icon{
@@ -713,21 +714,98 @@
             background:#f8fafc;
         }
 
+        .invoice-edit-dialog{width:min(920px,100%)}
+        .invoice-product-picker-dialog{width:min(980px,100%)}
+        .invoice-product-picker-filters{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-bottom:14px}
+        .invoice-product-picker-filters label{display:block;margin-bottom:5px;color:#52637a;font-size:11px;font-weight:800}
+        .invoice-product-picker-filters input,.invoice-product-picker-filters select{width:100%;height:39px;padding:0 10px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#334155;font:inherit;font-size:12px}
+        .invoice-product-picker-scroll{max-height:475px;overflow:auto;border:1px solid #e2e8f0;border-radius:8px}
+        .invoice-product-picker-table{width:100%;min-width:780px;border-collapse:collapse;font-size:12px}
+        .invoice-product-picker-table th{padding:10px;text-align:left;background:#f8fafc;color:#64748b;font-size:10px;text-transform:uppercase}
+        .invoice-product-picker-table td{padding:12px 10px;border-top:1px solid #edf2f7;color:#334155;vertical-align:middle}
+        .invoice-product-picker-table .invoice-product-name{font-size:12px}
+        .invoice-picker-thumb{width:48px;height:58px;display:grid;place-items:center;overflow:hidden;border:1px solid #e1e8f2;border-radius:8px;background:#f4f7fb;color:#74839a;font-size:18px}
+        .invoice-picker-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .2s ease}
+        .invoice-product-picker-table tr:hover .invoice-picker-thumb img{transform:scale(1.06)}
+        .invoice-product-picker-table tbody tr{transition:background .15s ease}
+        .invoice-product-picker-table tbody tr:hover{background:#f7faff}
+        .invoice-variant-btn.invoice-variant-rich{display:inline-flex;align-items:center;gap:7px;min-width:150px;border-radius:10px;padding:6px 8px;text-align:left;vertical-align:top}
+        .invoice-variant-thumb{width:32px;height:39px;display:grid;place-items:center;flex:none;overflow:hidden;border-radius:6px;background:#f1f5f9;color:#8290a4;font-size:15px}
+        .invoice-variant-thumb img{width:100%;height:100%;object-fit:cover}
+        .invoice-variant-copy{display:block;min-width:0;line-height:1.3}
+        .invoice-variant-copy strong{display:block;color:#233a60;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .invoice-variant-copy small{display:block;color:#77859a;font-size:10px}
+        .invoice-edit-help{display:flex;gap:10px;margin-bottom:16px;padding:11px 12px;border:1px solid #bfdbfe;border-radius:9px;background:#eff6ff;color:#1e3a5f;font-size:12px;line-height:1.55}
+        .invoice-edit-help i{margin-top:2px;color:#1d4f91}
+        .invoice-edit-field{margin-bottom:18px}
+        .invoice-edit-field label,.invoice-edit-section-title{display:block;margin-bottom:7px;color:#334155;font-size:12px;font-weight:800}
+        .invoice-edit-field textarea,.invoice-product-search{width:100%;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#17243a;font:inherit;outline:none}
+        .invoice-edit-field textarea{min-height:72px;padding:10px 11px;resize:vertical;line-height:1.5}
+        .invoice-edit-field input,.invoice-edit-field select{width:100%;height:40px;padding:0 11px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#17243a;font:inherit;outline:none}
+        .invoice-edit-field input:focus,.invoice-edit-field select:focus{border-color:#1d4f91;box-shadow:0 0 0 3px rgba(29,79,145,.10)}
+        .invoice-recipient-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:12px}
+        .invoice-address-preview{margin:0 0 12px;padding:10px 11px;border:1px dashed #bfdbfe;border-radius:8px;background:#f8fbff;color:#475569;font-size:12px;line-height:1.5}
+        .invoice-address-preview strong{color:#1e3a5f}
+        .invoice-address-change-btn{margin:0 0 10px;padding:7px 10px;border:1px solid #9db9e1;border-radius:7px;background:#fff;color:#1d4f91;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+        .invoice-address-change-btn:hover{background:#eff6ff}
+        .invoice-address-picker-dialog{width:min(700px,100%)}
+        .invoice-saved-address-list{display:grid;gap:9px;max-height:420px;overflow:auto}
+        .invoice-saved-address{display:flex;gap:10px;padding:12px;border:1px solid #dbe5f1;border-radius:9px;background:#fff;cursor:pointer}
+        .invoice-saved-address:hover,.invoice-saved-address.selected{border-color:#1d4f91;background:#f4f8ff}
+        .invoice-saved-address input{margin-top:3px;accent-color:#1d4f91}
+        .invoice-saved-address strong{display:block;color:#1e293b;font-size:13px}.invoice-saved-address span{display:block;margin-top:3px;color:#64748b;font-size:12px;line-height:1.45}
+        .invoice-product-search{height:40px;padding:0 12px}
+        .invoice-edit-field textarea:focus,.invoice-product-search:focus{border-color:#1d4f91;box-shadow:0 0 0 3px rgba(29,79,145,.10)}
+        .invoice-editor-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px}
+        .invoice-editor-pane{min-height:300px;padding:14px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc}
+        .invoice-editor-caption{margin:0 0 11px;color:#64748b;font-size:12px;line-height:1.45}
+        .invoice-product-results,.invoice-edit-cart{display:flex;flex-direction:column;gap:8px}
+        .invoice-search-empty{padding:16px 10px;color:#94a3b8;font-size:12px;text-align:center}
+        .invoice-product-result,.invoice-edit-cart-item{padding:11px;border:1px solid #dbe3ed;border-radius:8px;background:#fff}
+        .invoice-product-result-top,.invoice-edit-cart-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+        .invoice-product-name,.invoice-edit-cart-name{display:block;color:#17243a;font-size:13px;font-weight:800;line-height:1.4}
+        .invoice-product-meta,.invoice-edit-cart-meta{display:block;margin-top:3px;color:#64748b;font-size:11px;line-height:1.4}
+        .invoice-product-attributes{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+        .invoice-product-attribute{padding:3px 6px;border-radius:999px;background:#eff6ff;color:#315888;font-size:10px;font-weight:700;line-height:1.25}
+        .invoice-edit-cart-total{display:block;margin-top:7px;color:#173d78;font-size:12px;font-weight:800}
+        .invoice-link-btn{padding:0;border:0;background:transparent;color:#1d4f91;font:inherit;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
+        .invoice-add-product-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;border:1px dashed #7194c8;border-radius:8px;background:#eff6ff;color:#173d78;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+        .invoice-add-product-btn:hover{background:#dcecff;border-color:#1d4f91}
+        .invoice-variant-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+        .invoice-variant-btn{padding:7px 8px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#334155;font:inherit;font-size:11px;line-height:1.35;cursor:pointer}
+        .invoice-variant-btn:hover{border-color:#1d4f91;background:#eff6ff;color:#173d78}
+        .invoice-variant-btn:disabled{cursor:not-allowed;opacity:.55}
+        .invoice-edit-cart-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}
+        .invoice-quantity-control{display:flex;align-items:center;gap:5px}
+        .invoice-quantity-control button{width:28px;height:28px;border:1px solid #cbd5e1;border-radius:6px;background:#fff;color:#334155;font-weight:800;cursor:pointer}
+        .invoice-quantity-control input{width:44px;height:28px;padding:0 4px;border:1px solid #cbd5e1;border-radius:6px;text-align:center;font:inherit;font-size:12px;font-weight:800}
+        .invoice-remove-item{margin-top:6px;padding:0;border:0;background:transparent;color:#dc2626;font:inherit;font-size:11px;font-weight:700;cursor:pointer}
+        .invoice-edit-saving{opacity:.7;pointer-events:none}
+
+        @media (max-width:760px){
+            .invoice-editor-grid{grid-template-columns:1fr}
+            .invoice-editor-pane{min-height:unset}
+            .invoice-recipient-grid{grid-template-columns:1fr}
+            .invoice-product-picker-filters{grid-template-columns:1fr 1fr}
+        }
+
         .page-toast{
             position:fixed;
+            top:24px;
             right:24px;
-            bottom:24px;
             z-index:9999;
-            max-width:360px;
-            padding:12px 16px;
-            border-radius:10px;
+            width:min(620px,calc(100vw - 40px));
+            padding:18px 24px;
+            border-radius:14px;
             color:#fff;
             background:#15803d;
-            font-weight:700;
-            font-size:13px;
-            box-shadow:0 16px 36px rgba(15,23,42,.18);
+            font-weight:800;
+            font-size:17px;
+            line-height:1.35;
+            text-align:center;
+            box-shadow:0 20px 44px rgba(15,23,42,.28);
             opacity:0;
-            transform:translateY(10px);
+            transform:translateY(-18px);
             pointer-events:none;
             transition:.2s ease;
         }
@@ -739,6 +817,14 @@
 
         .page-toast.error{
             background:#dc2626;
+            border:2px solid #fff;
+            font-size:18px;
+            box-shadow:0 20px 48px rgba(185,28,28,.35);
+        }
+
+        @media (max-width:760px){
+            .page-toast{top:12px;right:12px;width:calc(100vw - 24px);padding:15px 18px;font-size:15px}
+            .page-toast.error{font-size:16px}
         }
 
         /* =========================
@@ -957,14 +1043,31 @@
         .panel-title i,.block-title i{color:#536a86}
         .stepper{width:100%;display:block;margin:0}
         .status-track{display:grid;grid-template-columns:repeat(var(--step-count,5),minmax(92px,1fr));align-items:start;position:relative;padding:28px 10px 0}
-        .status-track::before{content:"";position:absolute;left:42px;right:42px;top:45px;height:2px;background:#dfe5ee}
-        .timeline-step{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;color:#6b7280;font-size:12px;font-weight:700;text-align:center;z-index:1}
-        .timeline-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid #dfe5ee;color:#64748b;box-shadow:0 4px 14px rgba(15,23,42,.07)}
-        .timeline-step.done .timeline-dot{background:#102a56;border-color:#102a56;color:#fff}
-        .timeline-step.current .timeline-dot{background:#f59e0b;border-color:#f59e0b;color:#fff;box-shadow:0 7px 18px rgba(245,158,11,.24)}
-        .timeline-step.current .timeline-label,.timeline-step.done .timeline-label{color:#24364f}
-        .timeline-step.cancel .timeline-dot{background:#dc2626;border-color:#dc2626;color:#fff}
-        .timeline-step.success .timeline-dot{background:#16a34a;border-color:#16a34a;color:#fff}
+        .status-track::before{content:"";position:absolute;left:42px;right:42px;top:45px;height:2px;background:#e5e9f0}
+
+        /* Mặc định: trạng thái chưa tới được làm mờ */
+        .timeline-step{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;color:#94a3b8;font-size:12px;font-weight:700;text-align:center;z-index:1;opacity:.34;transition:.2s ease}
+        .timeline-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f8fafc;border:2px solid #dfe5ee;color:#94a3b8;box-shadow:none;transition:.2s ease}
+        .timeline-label{transition:.2s ease}
+
+        /* Trạng thái đã qua: vẫn nhận biết được nhưng không tranh sự chú ý */
+        .timeline-step.done{opacity:.52}
+        .timeline-step.done .timeline-dot{background:#64748b;border-color:#64748b;color:#fff;box-shadow:none}
+        .timeline-step.done .timeline-label{color:#64748b;font-weight:700}
+
+        /* Trạng thái hiện tại: nổi bật nhất */
+        .timeline-step.current{opacity:1;transform:translateY(-5px)}
+        .timeline-step.current .timeline-dot{width:46px;height:46px;background:#f59e0b;border:3px solid #fff;color:#fff;font-size:17px;box-shadow:0 0 0 3px rgba(245,158,11,.22),0 10px 24px rgba(245,158,11,.30)}
+        .timeline-step.current .timeline-label{color:#17243a;font-size:13px;font-weight:900}
+        /*.timeline-step.current::after{content:"HIỆN TẠI";display:inline-flex;align-items:center;justify-content:center;min-height:20px;padding:3px 8px;border-radius:999px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;font-size:9px;font-weight:900;letter-spacing:.45px;line-height:1}*/
+
+        /* Trạng thái đặc biệt hiện tại */
+        .timeline-step.current.cancel .timeline-dot{background:#dc2626;border-color:#fff;box-shadow:0 0 0 3px rgba(220,38,38,.18),0 10px 24px rgba(220,38,38,.26)}
+        .timeline-step.current.cancel .timeline-label{color:#b91c1c}
+        .timeline-step.current.cancel::after{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+        .timeline-step.current.success .timeline-dot{background:#16a34a;border-color:#fff;box-shadow:0 0 0 3px rgba(22,163,74,.18),0 10px 24px rgba(22,163,74,.25)}
+        .timeline-step.current.success .timeline-label{color:#15803d}
+        .timeline-step.current.success::after{background:#f0fdf4;color:#15803d;border-color:#bbf7d0}
         .status-track-loading,.empty-history{padding:28px 12px;text-align:center;color:#9aa4b2;font-size:13px}
         .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
         .info-grid.single-column{grid-template-columns:1fr}
@@ -994,9 +1097,25 @@
         .pay-row{align-items:flex-start;gap:12px;margin-bottom:12px;color:#4b5563}
         .pay-label{min-width:0;line-height:1.35}
         .pay-label-title{display:block}
-        .pay-label-detail{display:block;margin-top:2px;color:#64748b;font-size:12px;overflow-wrap:anywhere}
+        .pay-label-detail{display:block;margin-top:2px;color:#64748b;font-size:12px;overflow-wrap:anywhere;white-space:pre-line}
+        .voucher-update-notice{display:block;margin-top:5px;color:#b45309;font-size:11px;font-weight:700;line-height:1.4}
         .pay-amount{flex:0 0 auto;white-space:nowrap;text-align:right;color:#111827;font-weight:800}
         .pay-row > span:last-child{color:#111827;font-weight:800}
+        .payment-method-row{display:block;margin:15px 0 14px;padding-top:14px;border-top:1px dashed #dbe3ed}
+        .payment-method-label{display:flex;align-items:center;gap:7px;margin-bottom:9px;color:#475569;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.35px}
+        .payment-method-label i{width:22px;height:22px;display:grid;place-items:center;border-radius:7px;background:#eaf1ff;color:#285cae;font-size:10px}
+        .payment-method-list{display:flex;flex-wrap:wrap;gap:7px;width:100%;min-width:0;padding:9px;border:1px solid #dce6f3;border-radius:10px;background:linear-gradient(135deg,#f8fbff,#f4f7fb);text-align:left;white-space:normal}
+        .payment-method-chip{min-width:0;display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #d6e2f2;border-radius:8px;background:#fff;color:#173d78;font-size:12px;font-weight:800;line-height:1.35;box-shadow:0 2px 6px rgba(15,23,42,.04);overflow-wrap:anywhere}
+        .payment-method-chip i{flex:0 0 auto;color:#3267c8;font-size:11px}
+        .payment-method-chip.cash{border-color:#cce9dc;color:#137a55}
+        .payment-method-chip.cash i{color:#15946a}
+        .payment-method-chip.wallet{border-color:#eadcf8;color:#7e22ce}
+        .payment-method-chip.wallet i{color:#9333ea}
+        .payment-method-chip.cod{border-color:#f4dfb8;color:#9a5b0a}
+        .payment-method-chip.cod i{color:#d97706}
+        .payment-method-chip.pending{border-style:dashed;border-color:#d7dee8;background:#f8fafc;color:#7b8797;font-weight:700}
+        .payment-method-chip.pending i{color:#94a3b8}
+        .payment-method-chip.loading{color:#7b8797;font-weight:700}
         .discount-value{color:#15946a!important}
         .pay-total-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-top:16px;margin-top:8px;border-top:1px solid #dfe5ee;color:#111827;text-transform:uppercase;font-weight:900}
         .pay-total-row strong{color:#b91c1c;font-size:20px}
@@ -1037,7 +1156,7 @@
         @media print{
             @page{
                 size:A4;
-                margin:12mm;
+                margin:7mm;
             }
 
             *{
@@ -1050,7 +1169,7 @@
                 color:#111827 !important;
                 display:block !important;
                 min-height:auto !important;
-                font-size:11px !important;
+                font-size:10px !important;
             }
 
             .sidebar,
@@ -1069,15 +1188,16 @@
                 margin:0 !important;
                 padding:0 !important;
                 width:100% !important;
+                zoom:.86;
             }
 
             .print-brand{
                 display:flex !important;
                 align-items:flex-start;
                 justify-content:space-between;
-                gap:18px;
-                padding-bottom:14px;
-                margin-bottom:16px;
+                gap:12px;
+                padding-bottom:7px;
+                margin-bottom:8px;
                 border-bottom:2px solid #102a56;
             }
 
@@ -1088,28 +1208,28 @@
             }
 
             .print-logo{
-                width:54px;
-                height:54px;
-                border:2px solid #102a56;
+                width:36px;
+                height:36px;
+                border:1px solid #102a56;
                 border-radius:50%;
                 display:flex;
                 align-items:center;
                 justify-content:center;
                 color:#102a56;
                 font-weight:900;
-                font-size:23px;
+                font-size:16px;
                 letter-spacing:.5px;
             }
 
             .print-shop-name{
-                font-size:19px;
+                font-size:15px;
                 font-weight:900;
                 color:#102a56;
                 line-height:1.1;
             }
 
             .print-shop-sub{
-                margin-top:4px;
+                margin-top:2px;
                 color:#4b5563;
                 line-height:1.45;
                 font-size:11px;
@@ -1123,8 +1243,8 @@
             }
 
             .invoice-head{
-                margin:0 0 16px !important;
-                padding:12px 14px;
+                margin:0 0 8px !important;
+                padding:7px 9px;
                 border:1px solid #d8e0eb;
                 border-radius:8px;
                 background:#f8fafc !important;
@@ -1132,9 +1252,9 @@
             }
 
             .invoice-head h1{
-                margin:0 0 5px !important;
+                margin:0 0 2px !important;
                 color:#102a56 !important;
-                font-size:20px !important;
+                font-size:16px !important;
                 text-transform:uppercase;
             }
 
@@ -1159,16 +1279,16 @@
                 box-shadow:none !important;
                 border:1px solid #d8e0eb !important;
                 border-radius:8px !important;
-                padding:12px !important;
-                margin:0 0 12px !important;
+                padding:8px !important;
+                margin:0 0 7px !important;
                 break-inside:avoid;
             }
 
             .info-grid{
                 display:grid !important;
                 grid-template-columns:1fr 1fr !important;
-                gap:12px !important;
-                margin-bottom:12px;
+                gap:7px !important;
+                margin-bottom:7px;
             }
 
             .info-grid.single-column{
@@ -1182,12 +1302,12 @@
             .block-title,
             .panel-title{
                 min-height:auto !important;
-                margin:0 0 9px !important;
-                padding:0 0 7px !important;
+                margin:0 0 5px !important;
+                padding:0 0 4px !important;
                 background:transparent !important;
                 border-bottom:1px solid #d8e0eb !important;
                 color:#102a56 !important;
-                font-size:12px !important;
+                font-size:10px !important;
                 text-transform:uppercase;
             }
 
@@ -1198,9 +1318,9 @@
             .info-row{
                 display:grid !important;
                 grid-template-columns:78px minmax(0,1fr);
-                gap:7px !important;
-                margin-bottom:6px !important;
-                line-height:1.35;
+                gap:5px !important;
+                margin-bottom:3px !important;
+                line-height:1.2;
             }
 
             .lbl{
@@ -1218,10 +1338,22 @@
                 overflow:visible !important;
             }
 
+            .customer-profile,
+            .customer-avatar,
+            .customer-eyebrow,
+            #khEmail,
+            #customerPhoneRow + .customer-meta-item{
+                display:none !important;
+            }
+
+            .customer-meta-grid{
+                gap:3px !important;
+            }
+
             table{
                 width:100% !important;
                 border-collapse:collapse !important;
-                font-size:10.5px !important;
+                font-size:8.5px !important;
                 table-layout:fixed;
             }
 
@@ -1232,14 +1364,14 @@
             }
 
             thead th{
-                padding:7px 6px !important;
+                padding:4px 3px !important;
                 color:#fff !important;
-                font-size:9px !important;
+                font-size:8px !important;
                 line-height:1.2;
             }
 
             tbody td{
-                padding:7px 6px !important;
+                padding:4px 3px !important;
                 border:1px solid #e5e7eb !important;
                 line-height:1.25;
                 vertical-align:top;
@@ -1269,31 +1401,32 @@
             table th:nth-child(11),table td:nth-child(11){width:88px !important;text-align:right}
 
             .invoice-side .side-card:first-child{
-                width:310px !important;
+                width:260px !important;
+                padding:8px !important;
                 margin-left:auto !important;
                 border-color:#102a56 !important;
                 background:#fff !important;
             }
 
             .pay-row{
-                margin-bottom:7px !important;
-                font-size:11px !important;
+                margin-bottom:4px !important;
+                font-size:9px !important;
             }
 
             .pay-total-row{
-                margin-top:9px !important;
-                padding-top:9px !important;
+                margin-top:5px !important;
+                padding-top:5px !important;
                 border-top:2px solid #102a56 !important;
-                font-size:14px !important;
+                font-size:11px !important;
             }
 
             .pay-total-row strong{
                 color:#c81d25 !important;
-                font-size:17px !important;
+                font-size:14px !important;
             }
 
             .summary-badges{
-                margin-top:8px !important;
+                margin-top:4px !important;
             }
 
             .summary-badge{
@@ -1303,13 +1436,7 @@
             }
 
             .print-signatures{
-                display:grid !important;
-                grid-template-columns:1fr 1fr;
-                gap:40px;
-                margin-top:26px;
-                page-break-inside:avoid;
-                text-align:center;
-                color:#111827;
+                display:none !important;
             }
 
             .signature-title{
@@ -1449,75 +1576,75 @@
                     Danh sách sản phẩm (0)
                 </div>
 
-            <table>
+                <table>
 
-                <thead>
-                <tr>
-                    <th width="60">STT</th>
-                    <th>Mã SP</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Màu sắc</th>
-                    <th>Kích cỡ</th>
-                    <th>Kiểu dáng</th>
-                    <th>Loại áo</th>
-                    <th>Phong cách</th>
-                    <th width="90">SL</th>
-                    <th width="140">Đơn giá</th>
-                    <th width="160">Thành tiền</th>
-                </tr>
-                </thead>
+                    <thead>
+                    <tr>
+                        <th width="60">STT</th>
+                        <th>Mã SP</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Màu sắc</th>
+                        <th>Kích cỡ</th>
+                        <th>Kiểu dáng</th>
+                        <th>Loại áo</th>
+                        <th>Phong cách</th>
+                        <th width="90">SL</th>
+                        <th width="140">Đơn giá</th>
+                        <th width="160">Thành tiền</th>
+                    </tr>
+                    </thead>
 
-                <tbody id="tblProductBody">
+                    <tbody id="tblProductBody">
 
-                <tr>
-                    <td colspan="11"
-                        style="
+                    <tr>
+                        <td colspan="11"
+                            style="
                                 text-align:center;
                                 padding:30px;
                                 color:#888;">
-                        Đang tải dữ liệu...
-                    </td>
-                </tr>
+                            Đang tải dữ liệu...
+                        </td>
+                    </tr>
 
-                </tbody>
+                    </tbody>
 
-                <tfoot>
+                    <tfoot>
 
-                <tr>
-                    <td colspan="8"
-                        style="
-                            text-align:right;
-                            font-weight:bold;">
-                        Tổng số lượng:
-                    </td>
-
-                    <td id="txtTongSoLuong"
-                        style="
-                            text-align:center;
-                            font-weight:bold;">
-                        0
-                    </td>
-
-                    <td
+                    <tr>
+                        <td colspan="8"
                             style="
                             text-align:right;
                             font-weight:bold;">
-                        Tổng cộng:
-                    </td>
+                            Tổng số lượng:
+                        </td>
 
-                    <td id="txtFootTongCong"
-                        style="
+                        <td id="txtTongSoLuong"
+                            style="
+                            text-align:center;
+                            font-weight:bold;">
+                            0
+                        </td>
+
+                        <td
+                                style="
+                            text-align:right;
+                            font-weight:bold;">
+                            Tổng cộng:
+                        </td>
+
+                        <td id="txtFootTongCong"
+                            style="
                             color:var(--gold);
                             font-size:15px;
                             font-weight:bold;">
-                        0 đ
-                    </td>
+                            0 đ
+                        </td>
 
-                </tr>
+                    </tr>
 
-                </tfoot>
+                    </tfoot>
 
-            </table>
+                </table>
 
             </section>
         </div>
@@ -1537,6 +1664,7 @@
                     <span class="pay-label">
                         <span class="pay-label-title" id="discountLabel">Giảm giá voucher</span>
                         <span class="pay-label-detail" id="discountDetail"></span>
+                        <span class="voucher-update-notice" id="voucherUpdateNotice" hidden><i class="fa-solid fa-circle-info"></i> Phiếu giảm giá đã được cập nhật sau khi hóa đơn được xác nhận. Tổng tiền của hóa đơn vẫn giữ theo ưu đãi lúc chốt.</span>
                     </span>
                     <span id="pGiamGia" class="pay-amount discount-value">- 0 đ</span>
                 </div>
@@ -1544,9 +1672,17 @@
                     <span class="pay-label">Phí vận chuyển</span>
                     <span id="pPhiVanChuyen" class="pay-amount">0 đ</span>
                 </div>
-                <div class="pay-row">
-                    <span class="pay-label">Phương thức thanh toán</span>
-                    <span id="pPhuongThuc" class="pay-amount">...</span>
+                <div class="pay-row payment-method-row">
+                    <span class="payment-method-label">
+                        <i class="fa-solid fa-wallet"></i>
+                        Phương thức thanh toán
+                    </span>
+                    <div id="pPhuongThuc" class="payment-method-list" aria-live="polite">
+                        <span class="payment-method-chip loading">
+                            <i class="fa-solid fa-spinner"></i>
+                            Đang cập nhật
+                        </span>
+                    </div>
                 </div>
                 <div class="pay-row">
                     <span class="pay-label">Hình thức nhận hàng</span>
@@ -1658,10 +1794,6 @@
                 <textarea id="deliveryFailureNote" maxlength="1000"
                           placeholder="Ví dụ: đã gọi khách lúc 15:30; mã biên bản vận chuyển; yêu cầu tạo đơn giao lại..."></textarea>
             </div>
-            <div class="return-warning" style="margin-top:14px;margin-bottom:0">
-                <i class="fa-solid fa-circle-info"></i>
-                <span>Nếu đơn đã thanh toán online, cần kiểm tra thêm nghiệp vụ hoàn tiền cho khách. Thao tác này chỉ xử lý trạng thái đơn và tồn kho.</span>
-            </div>
         </div>
         <div class="return-dialog-actions">
             <button class="confirm-btn cancel" type="button" onclick="closeDeliveryFailureDialog()">Đóng</button>
@@ -1701,6 +1833,101 @@
         </div>
     </div>
 </div>
+<div class="confirm-layer" id="invoiceEditLayer" onclick="handleInvoiceEditBackdrop(event)">
+    <div class="return-dialog invoice-edit-dialog" role="dialog" aria-modal="true" aria-labelledby="invoiceEditTitle">
+        <div class="return-dialog-head">
+            <div>
+                <h3 id="invoiceEditTitle">Sửa hóa đơn</h3>
+                <p>Điều chỉnh địa chỉ nhận hàng, số lượng hoặc thêm sản phẩm theo yêu cầu của khách.</p>
+            </div>
+            <button class="return-close-btn" type="button" onclick="closeInvoiceEditDialog()" aria-label="Đóng">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="return-dialog-body" id="invoiceEditBody">
+            <div class="invoice-edit-help">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Chỉ sửa được khi đơn chưa xác nhận hoặc thanh toán. Tổng tiền, voucher và phí giao hàng sẽ được tính lại khi lưu.</span>
+            </div>
+            <div class="invoice-edit-field" id="invoiceEditAddressField">
+                <span class="invoice-edit-section-title">Thông tin người nhận</span>
+                <button class="invoice-address-change-btn" type="button" onclick="openInvoiceAddressPicker()"><i class="fa-solid fa-location-dot"></i> Thay đổi địa chỉ giao hàng</button>
+                <div class="invoice-recipient-grid">
+                    <div>
+                        <label for="invoiceEditRecipientName">Tên khách hàng</label>
+                        <input id="invoiceEditRecipientName" maxlength="255" placeholder="Nguyễn Văn A">
+                    </div>
+                    <div>
+                        <label for="invoiceEditRecipientPhone">Số điện thoại</label>
+                        <input id="invoiceEditRecipientPhone" inputmode="numeric" maxlength="10" placeholder="Số điện thoại người nhận">
+                    </div>
+                    <div>
+                        <label for="invoiceEditProvince">Tỉnh/Thành phố</label>
+                        <select id="invoiceEditProvince" onchange="onInvoiceEditProvinceChange()"><option value="">Chọn tỉnh/thành</option></select>
+                    </div>
+                    <div>
+                        <label for="invoiceEditWard">Xã/Phường</label>
+                        <select id="invoiceEditWard" onchange="updateInvoiceEditFullAddress()"><option value="">Chọn xã/phường</option></select>
+                    </div>
+                </div>
+                <label for="invoiceEditAddress">Địa chỉ cụ thể</label>
+                <textarea id="invoiceEditAddress" maxlength="500" placeholder="Số nhà, tên đường" oninput="updateInvoiceEditFullAddress()"></textarea>
+                <p class="invoice-address-preview" id="invoiceEditFullAddress"><strong>Địa chỉ giao hàng đầy đủ:</strong> Chưa có địa chỉ.</p>
+            </div>
+            <div class="invoice-editor-grid">
+                <section class="invoice-editor-pane">
+                    <span class="invoice-edit-section-title">Thêm sản phẩm</span>
+                    <p class="invoice-editor-caption">Mở màn hình thêm sản phẩm để tìm và chọn đúng biến thể như bán hàng tại quầy.</p>
+                    <button class="invoice-add-product-btn" type="button" onclick="openInvoiceProductPicker()">
+                        <i class="fa-solid fa-plus"></i> Thêm sản phẩm
+                    </button>
+                </section>
+                <section class="invoice-editor-pane">
+                    <span class="invoice-edit-section-title">Sản phẩm trong hóa đơn</span>
+                    <p class="invoice-editor-caption">Bạn có thể tăng, giảm số lượng hoặc bỏ sản phẩm khỏi đơn.</p>
+                    <div class="invoice-edit-cart" id="invoiceEditCart"></div>
+                </section>
+            </div>
+        </div>
+        <div class="return-dialog-actions">
+            <button class="confirm-btn cancel" type="button" onclick="closeInvoiceEditDialog()">Hủy</button>
+            <button class="confirm-btn ok" id="saveInvoiceEditBtn" type="button" onclick="saveInvoiceEdit()">Lưu thay đổi</button>
+        </div>
+    </div>
+</div>
+<div class="confirm-layer" id="invoiceAddressPickerLayer" onclick="handleInvoiceAddressPickerBackdrop(event)">
+    <div class="return-dialog invoice-address-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="invoiceAddressPickerTitle">
+        <div class="return-dialog-head"><div><h3 id="invoiceAddressPickerTitle">Chọn địa chỉ giao hàng</h3><p>Chọn một địa chỉ đã lưu của khách hàng để tự điền thông tin người nhận.</p></div><button class="return-close-btn" type="button" onclick="closeInvoiceAddressPicker()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="return-dialog-body"><div class="invoice-saved-address-list" id="invoiceSavedAddressList"></div></div>
+        <div class="return-dialog-actions"><button class="confirm-btn cancel" type="button" onclick="closeInvoiceAddressPicker()">Hủy</button><button class="confirm-btn ok" type="button" onclick="applySelectedInvoiceAddress()">Chọn địa chỉ</button></div>
+    </div>
+</div>
+<div class="confirm-layer" id="invoiceProductPickerLayer" onclick="handleInvoiceProductPickerBackdrop(event)">
+    <div class="return-dialog invoice-product-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="invoiceProductPickerTitle">
+        <div class="return-dialog-head">
+            <div>
+                <h3 id="invoiceProductPickerTitle">Thêm sản phẩm</h3>
+                <p>Tìm sản phẩm và chọn màu sắc, kích cỡ cần thêm vào hóa đơn.</p>
+            </div>
+            <button class="return-close-btn" type="button" onclick="closeInvoiceProductPicker()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="return-dialog-body">
+            <div class="invoice-product-picker-filters">
+                <div>
+                    <label for="invoiceProductSearch">Tìm mã / tên</label>
+                    <input id="invoiceProductSearch" type="search" autocomplete="off" placeholder="Nhập mã SP, SKU hoặc tên" oninput="scheduleInvoiceProductSearch(this.value)">
+                </div>
+            </div>
+            <div class="invoice-product-picker-scroll">
+                <table class="invoice-product-picker-table">
+                    <thead><tr><th>Ảnh</th><th>Mã sản phẩm</th><th>Tên</th><th>Tồn kho</th><th>Giá</th><th>Biến thể</th></tr></thead>
+                    <tbody id="invoiceProductResults"><tr><td colspan="6" class="invoice-search-empty">Đang tải sản phẩm...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="return-dialog-actions"><button class="confirm-btn cancel" type="button" onclick="closeInvoiceProductPicker()">Xong</button></div>
+    </div>
+</div>
 <div class="page-toast" id="pageToast"></div>
 
 <!-- ====================================
@@ -1715,7 +1942,14 @@
     let chiTietHoaDonData = [];
     let confirmResolver = null;
     let toastTimer = null;
+    let invoiceEditItems = [];
+    let invoiceProductSearchTimer = null;
+    let invoiceVariantCache = new Map();
+    let invoiceSavedAddresses = [];
+    let invoiceSelectedAddressId = null;
+    const INVOICE_ADDRESS_API = "https://provinces.open-api.vn/api/v2";
 
+    // Thực hiện xử lý nghiệp vụ của hàm escape html.
     function escapeHtml(value) {
         return String(value ?? "").replace(/[&<>"']/g, c => ({
             "&": "&amp;",
@@ -1726,21 +1960,46 @@
         }[c]));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm invoice image url.
+    function invoiceImageUrl(item) {
+        const raw = item?.imageUrl || item?.hinhAnh || item?.img || item?.anhDaiDien || item?.duongDanAnh;
+        if (!raw) return "";
+        return /^(https?:)?\/\//i.test(raw) || String(raw).startsWith("/") ? raw : `/uploads/${raw}`;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm invoice product image html.
+    function invoiceProductImageHtml(product) {
+        const url = invoiceImageUrl(product);
+        if (!url) return '<div class="invoice-picker-thumb">👕</div>';
+        return `<div class="invoice-picker-thumb"><img src="${escapeHtml(url)}" alt="${escapeHtml(product.tenSp || "Sản phẩm")}" onerror="this.parentElement.innerHTML='👕'"></div>`;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm invoice variant image html.
+    function invoiceVariantImageHtml(variant) {
+        const url = invoiceImageUrl(variant);
+        if (!url) return '<span class="invoice-variant-thumb">👕</span>';
+        return `<span class="invoice-variant-thumb"><img src="${escapeHtml(url)}" alt="${escapeHtml(variant.tenSanPham || "Biến thể")}" onerror="this.parentElement.innerHTML='👕'"></span>`;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm normalize text.
     function normalizeText(value) {
         return String(value || "")
             .trim()
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[đĐ]/g, c => c === "đ" ? "d" : "D")
             .replace(/đ/g, "d")
             .replace(/Đ/g, "D")
             .toLowerCase();
     }
 
+    // Hiển thị và đồng bộ giao diện cho display order type.
     function displayOrderType(order) {
         const rawType = String(order?.loaiDon || "Tại quầy").trim();
         return normalizeText(rawType) === "giao hang" ? "Tại quầy" : rawType;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fulfillment method.
     function fulfillmentMethod(order) {
         const explicitMethod = String(order?.hinhThucNhanHang || "").trim();
         if (explicitMethod) return explicitMethod;
@@ -1750,12 +2009,14 @@
             : "Tại quầy";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm workflow order type.
     function workflowOrderType(order) {
         const category = displayOrderType(order);
         if (["truc tuyen", "online"].includes(normalizeText(category))) return "Trực tuyến";
         return normalizeText(fulfillmentMethod(order)) === "giao hang" ? "Giao hàng" : "Tại quầy";
     }
 
+    // Hiển thị và đồng bộ giao diện cho show page toast.
     function showPageToast(message, type = "success") {
         const toast = document.getElementById("pageToast");
         if (!toast) return;
@@ -1763,9 +2024,477 @@
         toast.className = "page-toast " + (type === "error" ? "error" : "");
         requestAnimationFrame(() => toast.classList.add("show"));
         clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), type === "error" ? 6000 : 3200);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho can edit invoice.
+    function canEditInvoice(order = hoaDonData) {
+        const orderType = normalizeText(order?.loaiDon);
+        const status = normalizeText(order?.trangThai);
+        const counterOrder = ["tai quay", "truc tiep"].includes(orderType);
+        const onlineOrder = ["truc tuyen", "online"].includes(orderType);
+        return (counterOrder && status === "cho thanh toan")
+            || (onlineOrder && ["cho xac nhan", "cho thanh toan", "cho thanh toan online"].includes(status));
+    }
+
+    // Xử lý tương tác người dùng cho open invoice edit dialog.
+    async function openInvoiceEditDialog() {
+        if (!canEditInvoice()) {
+            showPageToast("Đơn này đã được xác nhận hoặc thanh toán nên không thể sửa.", "error");
+            return;
+        }
+
+        await loadDanhSachSanPham();
+        invoiceEditItems = chiTietHoaDonData
+            .filter(item => Number.isInteger(Number(item.idSpct)))
+            .map(item => ({
+                idSpct: Number(item.idSpct),
+                tenSanPham: item.tenSanPham || "Sản phẩm",
+                maSanPham: item.maSanPham || "",
+                mauSac: item.mauSac || "",
+                kichCo: item.kichCo || "",
+                kieuDang: item.kieuDang || "",
+                loaiAo: item.loaiAo || "",
+                phongCach: item.phongCach || "",
+                soLuong: Math.max(1, Number(item.soLuong || 1)),
+                donGia: Number(item.donGia || 0)
+            }));
+
+        if (!invoiceEditItems.length && chiTietHoaDonData.length) {
+            showPageToast("Không thể đọc biến thể sản phẩm trong hóa đơn.", "error");
+            return;
+        }
+
+        const isDelivery = normalizeText(fulfillmentMethod(hoaDonData)) === "giao hang";
+        const addressField = document.getElementById("invoiceEditAddressField");
+        addressField.hidden = !isDelivery;
+        document.getElementById("invoiceEditRecipientName").value = hoaDonData?.tenKhachHang || "";
+        document.getElementById("invoiceEditRecipientPhone").value = hoaDonData?.soDienThoai || "";
+        await populateInvoiceEditAddress(await resolveInvoiceEditAddress());
+        document.getElementById("invoiceProductSearch").value = "";
+        invoiceVariantCache = new Map();
+        document.getElementById("invoiceProductResults").innerHTML =
+            '<tr><td colspan="6" class="invoice-search-empty">Bấm “Thêm sản phẩm” để chọn sản phẩm.</td></tr>';
+        renderInvoiceEditCart();
+        document.getElementById("invoiceEditLayer").classList.add("open");
+    }
+
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close invoice edit dialog.
+    function closeInvoiceEditDialog() {
+        document.getElementById("invoiceEditLayer")?.classList.remove("open");
+        closeInvoiceAddressPicker();
+        closeInvoiceProductPicker();
+    }
+
+    // Xử lý tương tác người dùng cho handle invoice edit backdrop.
+    function handleInvoiceEditBackdrop(event) {
+        if (event.target?.id === "invoiceEditLayer") closeInvoiceEditDialog();
+    }
+
+    // Xử lý tương tác người dùng cho open invoice product picker.
+    function openInvoiceProductPicker() {
+        const layer = document.getElementById("invoiceProductPickerLayer");
+        layer?.classList.add("open");
+        searchInvoiceProducts(document.getElementById("invoiceProductSearch")?.value || "");
+        setTimeout(() => document.getElementById("invoiceProductSearch")?.focus(), 0);
+    }
+
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close invoice product picker.
+    function closeInvoiceProductPicker() {
+        document.getElementById("invoiceProductPickerLayer")?.classList.remove("open");
+    }
+
+    // Xử lý tương tác người dùng cho handle invoice product picker backdrop.
+    function handleInvoiceProductPickerBackdrop(event) {
+        if (event.target?.id === "invoiceProductPickerLayer") closeInvoiceProductPicker();
+    }
+
+    // Xử lý tương tác người dùng cho open invoice address picker.
+    async function openInvoiceAddressPicker() {
+        const customerId = invoiceCustomerId();
+        if (!customerId) {
+            showPageToast("Hóa đơn chưa gắn khách hàng có địa chỉ đã lưu.", "error");
+            return;
+        }
+        const list = document.getElementById("invoiceSavedAddressList");
+        list.innerHTML = '<div class="invoice-search-empty">Đang tải địa chỉ...</div>';
+        document.getElementById("invoiceAddressPickerLayer")?.classList.add("open");
+        try {
+            const response = await fetch(`/api/khach-hang/${customerId}/dia-chi`);
+            if (!response.ok) throw new Error("Không tải được địa chỉ của khách hàng");
+            invoiceSavedAddresses = await response.json();
+            invoiceSelectedAddressId = invoiceSavedAddresses.find(item => item.macDinh)?.id || invoiceSavedAddresses[0]?.id || null;
+            renderInvoiceSavedAddresses();
+        } catch (error) {
+            list.innerHTML = `<div class="invoice-search-empty">${escapeHtml(error.message || "Không tải được địa chỉ.")}</div>`;
+        }
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render invoice saved addresses.
+    function renderInvoiceSavedAddresses() {
+        const list = document.getElementById("invoiceSavedAddressList");
+        if (!list) return;
+        if (!invoiceSavedAddresses.length) {
+            list.innerHTML = '<div class="invoice-search-empty">Khách hàng chưa có địa chỉ đã lưu.</div>';
+            return;
+        }
+        list.innerHTML = invoiceSavedAddresses.map(address => `
+            <label class="invoice-saved-address ${Number(address.id) === Number(invoiceSelectedAddressId) ? "selected" : ""}">
+                <input type="radio" name="invoiceSavedAddress" value="${Number(address.id)}" ${Number(address.id) === Number(invoiceSelectedAddressId) ? "checked" : ""} onchange="selectInvoiceSavedAddress(${Number(address.id)})">
+                <span><strong>${escapeHtml(address.tenNguoiNhan || hoaDonData?.tenKhachHang || "Người nhận")}${address.macDinh ? " · Mặc định" : ""}</strong><span>${escapeHtml(address.soDienThoai || hoaDonData?.soDienThoai || "Chưa có số điện thoại")}</span><span>${escapeHtml(fullCustomerAddress(address) || "Địa chỉ chưa đầy đủ")}</span></span>
+            </label>`).join("");
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm select invoice saved address.
+    function selectInvoiceSavedAddress(addressId) {
+        invoiceSelectedAddressId = Number(addressId);
+        renderInvoiceSavedAddresses();
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm apply selected invoice address.
+    async function applySelectedInvoiceAddress() {
+        const address = invoiceSavedAddresses.find(item => Number(item.id) === Number(invoiceSelectedAddressId));
+        if (!address) return;
+        document.getElementById("invoiceEditRecipientName").value = address.tenNguoiNhan || hoaDonData?.tenKhachHang || "";
+        document.getElementById("invoiceEditRecipientPhone").value = address.soDienThoai || hoaDonData?.soDienThoai || "";
+        await populateInvoiceEditAddress(fullCustomerAddress(address));
+        closeInvoiceAddressPicker();
+        showPageToast("Đã chọn địa chỉ giao hàng mới. Nhấn Lưu thay đổi để cập nhật hóa đơn.");
+    }
+
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close invoice address picker.
+    function closeInvoiceAddressPicker() {
+        document.getElementById("invoiceAddressPickerLayer")?.classList.remove("open");
+    }
+
+    // Xử lý tương tác người dùng cho handle invoice address picker backdrop.
+    function handleInvoiceAddressPickerBackdrop(event) {
+        if (event.target?.id === "invoiceAddressPickerLayer") closeInvoiceAddressPicker();
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm invoice customer id.
+    function invoiceCustomerId() {
+        return hoaDonData?.idKhachHang || hoaDonData?.khachHang?.id || hoaDonData?.khachHang?.idKh || null;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm full customer address.
+    function fullCustomerAddress(address) {
+        if (!address) return "";
+        return String(address.diaChiDayDu || [address.diaChiCuThe, address.phuong, address.thanhPho].filter(Boolean).join(", ")).trim();
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm resolve invoice edit address.
+    async function resolveInvoiceEditAddress() {
+        const currentAddress = String(hoaDonData?.diaChiKhachHang || "").trim();
+        const customerId = invoiceCustomerId();
+        if (!customerId) return currentAddress;
+        try {
+            const response = await fetch(`/api/khach-hang/${customerId}/dia-chi`);
+            if (!response.ok) return currentAddress;
+            const addresses = await response.json();
+            const saved = (Array.isArray(addresses) ? addresses : []).find(item => item.macDinh) || addresses?.[0];
+            const savedAddress = fullCustomerAddress(saved);
+            return savedAddress || currentAddress;
+        } catch {
+            return currentAddress;
+        }
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho address key.
+    function addressKey(value) {
+        return normalizeText(value)
+            .replace(/\b(tinh|thanh pho|phuong|xa)\b/g, "")
+            .replace(/[^a-z0-9]/g, "");
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm select invoice address option.
+    function selectInvoiceAddressOption(select, name) {
+        const target = addressKey(name);
+        if (!select || !target) return false;
+        const option = [...select.options].find(item => {
+            const candidate = addressKey(item.dataset.name || item.textContent);
+            return candidate === target || candidate.includes(target) || target.includes(candidate);
+        });
+        if (!option) return false;
+        select.value = option.value;
+        return true;
+    }
+
+    // Tải hoặc truy xuất dữ liệu cho load invoice edit provinces.
+    async function loadInvoiceEditProvinces() {
+        const select = document.getElementById("invoiceEditProvince");
+        if (!select || select.dataset.loaded) return;
+        const response = await fetch(`${INVOICE_ADDRESS_API}/p/`);
+        if (!response.ok) throw new Error("Không tải được tỉnh/thành");
+        const provinces = await response.json();
+        select.innerHTML = '<option value="">Chọn tỉnh/thành</option>' + provinces
+            .map(province => `<option value="${province.code}" data-name="${escapeHtml(province.name)}">${escapeHtml(province.name)}</option>`)
+            .join("");
+        select.dataset.loaded = "true";
+    }
+
+    // Xử lý tương tác người dùng cho on invoice edit province change.
+    async function onInvoiceEditProvinceChange() {
+        const province = document.getElementById("invoiceEditProvince");
+        const ward = document.getElementById("invoiceEditWard");
+        if (!province || !ward) return;
+        ward.innerHTML = '<option value="">Chọn xã/phường</option>';
+        if (!province.value) {
+            updateInvoiceEditFullAddress();
+            return;
+        }
+        try {
+            const response = await fetch(`${INVOICE_ADDRESS_API}/p/${encodeURIComponent(province.value)}?depth=2`);
+            if (!response.ok) throw new Error("Không tải được xã/phường");
+            const data = await response.json();
+            ward.innerHTML += (data.wards || [])
+                .map(item => `<option value="${item.code}" data-name="${escapeHtml(item.name)}">${escapeHtml(item.name)}</option>`)
+                .join("");
+        } catch (error) {
+            showPageToast(error.message, "error");
+        }
+        updateInvoiceEditFullAddress();
+    }
+
+    // Hiển thị và đồng bộ giao diện cho populate invoice edit address.
+    async function populateInvoiceEditAddress(fullAddress) {
+        const detail = document.getElementById("invoiceEditAddress");
+        const province = document.getElementById("invoiceEditProvince");
+        const ward = document.getElementById("invoiceEditWard");
+        const parts = String(fullAddress || "").split(",").map(item => item.trim()).filter(Boolean);
+        const provinceName = parts.length >= 2 ? parts.at(-1) : "";
+        const wardName = parts.length >= 3 ? parts.at(-2) : "";
+        detail.value = String(fullAddress || "");
+        province.value = "";
+        ward.innerHTML = '<option value="">Chọn xã/phường</option>';
+        try {
+            await loadInvoiceEditProvinces();
+            if (selectInvoiceAddressOption(province, provinceName)) {
+                await onInvoiceEditProvinceChange();
+                if (selectInvoiceAddressOption(ward, wardName)) {
+                    detail.value = parts.slice(0, -2).join(", ");
+                }
+            }
+        } catch (error) {
+            // The saved full address is still available for editing if the location API is unavailable.
+        }
+        updateInvoiceEditFullAddress();
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm invoice edit full address.
+    function invoiceEditFullAddress() {
+        const detail = document.getElementById("invoiceEditAddress")?.value.trim() || "";
+        const ward = document.getElementById("invoiceEditWard")?.selectedOptions?.[0]?.dataset?.name || "";
+        const province = document.getElementById("invoiceEditProvince")?.selectedOptions?.[0]?.dataset?.name || "";
+        return [detail, ward, province].filter(Boolean).join(", ");
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update invoice edit full address.
+    function updateInvoiceEditFullAddress() {
+        const preview = document.getElementById("invoiceEditFullAddress");
+        if (!preview) return;
+        const address = invoiceEditFullAddress();
+        preview.innerHTML = `<strong>Địa chỉ giao hàng đầy đủ:</strong> ${escapeHtml(address || "Chưa có địa chỉ.")}`;
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render invoice edit cart.
+    function renderInvoiceEditCart() {
+        const container = document.getElementById("invoiceEditCart");
+        if (!container) return;
+        if (!invoiceEditItems.length) {
+            container.innerHTML = '<div class="invoice-search-empty">Chưa có sản phẩm. Hãy chọn ít nhất một sản phẩm để lưu.</div>';
+            return;
+        }
+        container.innerHTML = invoiceEditItems.map(item => {
+            const variant = [item.mauSac, item.kichCo ? `Size ${item.kichCo}` : ""].filter(Boolean).join(" · ") || "Chưa có thông tin biến thể";
+            const attributes = [
+                item.mauSac && `Màu: ${item.mauSac}`,
+                item.kichCo && `Size: ${item.kichCo}`,
+                item.kieuDang && `Kiểu dáng: ${item.kieuDang}`,
+                item.loaiAo && `Loại áo: ${item.loaiAo}`,
+                item.phongCach && `Phong cách: ${item.phongCach}`
+            ].filter(Boolean);
+            const lineTotal = Number(item.donGia || 0) * Number(item.soLuong || 0);
+            return `
+                <div class="invoice-edit-cart-item">
+                    <div>
+                        <span class="invoice-edit-cart-name">${escapeHtml(item.tenSanPham)}</span>
+                        <span class="invoice-edit-cart-meta">${escapeHtml([item.maSanPham, variant].filter(Boolean).join(" · "))}</span>
+                        ${attributes.length ? `<div class="invoice-product-attributes">${attributes.map(attribute => `<span class="invoice-product-attribute">${escapeHtml(attribute)}</span>`).join("")}</div>` : ""}
+                        <span class="invoice-edit-cart-total">${item.soLuong} × ${formatđ(item.donGia)} = ${formatđ(lineTotal)}</span>
+                        <button class="invoice-remove-item" type="button" onclick="removeInvoiceEditItem(${item.idSpct})">Bỏ sản phẩm</button>
+                    </div>
+                    <div class="invoice-quantity-control">
+                        <button type="button" onclick="changeInvoiceEditQuantity(${item.idSpct},-1)" aria-label="Giảm số lượng">−</button>
+                        <input type="number" min="1" value="${item.soLuong}" onchange="setInvoiceEditQuantity(${item.idSpct},this.value)" aria-label="Số lượng">
+                        <button type="button" onclick="changeInvoiceEditQuantity(${item.idSpct},1)" aria-label="Tăng số lượng">+</button>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm change invoice edit quantity.
+    function changeInvoiceEditQuantity(idSpct, change) {
+        const item = invoiceEditItems.find(entry => entry.idSpct === Number(idSpct));
+        if (!item) return;
+        item.soLuong = Math.max(1, Number(item.soLuong || 1) + Number(change || 0));
+        renderInvoiceEditCart();
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set invoice edit quantity.
+    function setInvoiceEditQuantity(idSpct, value) {
+        const item = invoiceEditItems.find(entry => entry.idSpct === Number(idSpct));
+        if (!item) return;
+        item.soLuong = Math.max(1, Math.floor(Number(value) || 1));
+        renderInvoiceEditCart();
+    }
+
+    // Xử lý thao tác đóng, xóa hoặc hủy cho remove invoice edit item.
+    function removeInvoiceEditItem(idSpct) {
+        invoiceEditItems = invoiceEditItems.filter(item => item.idSpct !== Number(idSpct));
+        renderInvoiceEditCart();
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm schedule invoice product search.
+    function scheduleInvoiceProductSearch(keyword) {
+        clearTimeout(invoiceProductSearchTimer);
+        invoiceProductSearchTimer = setTimeout(() => searchInvoiceProducts(keyword), 250);
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm search invoice products.
+    async function searchInvoiceProducts(keyword) {
+        const query = String(keyword || "").trim();
+        const container = document.getElementById("invoiceProductResults");
+        if (!container) return;
+        container.innerHTML = '<tr><td colspan="6" class="invoice-search-empty">Đang tải sản phẩm...</td></tr>';
+        try {
+            const response = await fetch(`/api/shop/products?keyword=${encodeURIComponent(query)}&page=0&size=20&sort=newest`);
+            if (!response.ok) throw new Error("Không thể tìm sản phẩm");
+            const page = await response.json();
+            const products = (Array.isArray(page?.content) ? page.content : Array.isArray(page) ? page : [])
+                .filter(product => Number(product.tongTon || 0) > 0);
+            if (!products.length) {
+                container.innerHTML = '<tr><td colspan="6" class="invoice-search-empty">Không tìm thấy sản phẩm phù hợp.</td></tr>';
+                return;
+            }
+            container.innerHTML = products.map(product => `
+                <tr>
+                    <td>${invoiceProductImageHtml(product)}</td>
+                    <td>${escapeHtml(product.maSp || "")}</td>
+                    <td><span class="invoice-product-name">${escapeHtml(product.tenSp || "Sản phẩm")}</span></td>
+                    <td>${Number(product.tongTon || 0)}</td>
+                    <td>${formatđ(product.giaBan || product.donGia || product.giaThapNhat || 0)}</td>
+                    <td><div id="invoiceVariants-${product.idSp}"><button class="invoice-variant-btn" type="button" onclick="loadInvoiceProductVariants(${product.idSp})">Xem biến thể</button></div></td>
+                </tr>
+            `).join("");
+        } catch (error) {
+            container.innerHTML = '<tr><td colspan="6" class="invoice-search-empty">Không tải được danh sách sản phẩm.</td></tr>';
+        }
+    }
+
+    // Tải hoặc truy xuất dữ liệu cho load invoice product variants.
+    async function loadInvoiceProductVariants(productId) {
+        const container = document.getElementById(`invoiceVariants-${productId}`);
+        if (!container) return;
+        const oldVariants = container.querySelector(".invoice-variant-list");
+        if (oldVariants) {
+            container.innerHTML = `<button class="invoice-variant-btn" type="button" onclick="loadInvoiceProductVariants(${productId})">Xem biến thể</button>`;
+            return;
+        }
+        try {
+            const response = await fetch(`/api/shop/products/${productId}/variants`);
+            if (!response.ok) throw new Error("Không thể tải biến thể");
+            const variants = await response.json();
+            const availableVariants = (Array.isArray(variants) ? variants : [])
+                .filter(variant => Number(variant.soLuongTon || 0) > 0);
+            availableVariants.forEach(variant => invoiceVariantCache.set(Number(variant.idSpct), {
+                idSpct: Number(variant.idSpct),
+                tenSanPham: variant.tenSanPham || "Sản phẩm",
+                maSanPham: variant.maChiTietSanPham || "",
+                mauSac: variant.mauSac?.ten || "",
+                kichCo: variant.kichCo?.ten || "",
+                donGia: Number(variant.donGia || 0)
+            }));
+            const variantsHtml = availableVariants.length
+                ? availableVariants.map(variant => {
+                    const label = [variant.mauSac?.ten, variant.kichCo?.ten ? `Size ${variant.kichCo.ten}` : ""].filter(Boolean).join(" · ") || variant.maChiTietSanPham;
+                    return `<button class="invoice-variant-btn invoice-variant-rich" type="button" onclick="addInvoiceEditVariant(${Number(variant.idSpct)})">
+                        ${invoiceVariantImageHtml(variant)}
+                        <span class="invoice-variant-copy"><strong>${escapeHtml(label)}</strong><small>Tồn ${Number(variant.soLuongTon || 0)}</small>${formatđ(variant.donGia)}</span>
+                    </button>`;
+                }).join("")
+                : '<span class="invoice-search-empty">Sản phẩm hiện đã hết hàng.</span>';
+            container.innerHTML = `<div class="invoice-variant-list">${variantsHtml}</div>`;
+        } catch (error) {
+            showPageToast("Không tải được biến thể sản phẩm.", "error");
+        }
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho add invoice edit variant.
+    function addInvoiceEditVariant(idSpct) {
+        const variant = invoiceVariantCache.get(Number(idSpct));
+        if (!variant?.idSpct) return;
+        const existing = invoiceEditItems.find(item => item.idSpct === Number(variant.idSpct));
+        if (existing) {
+            existing.soLuong += 1;
+        } else {
+            invoiceEditItems.push({ ...variant, idSpct: Number(variant.idSpct), soLuong: 1 });
+        }
+        renderInvoiceEditCart();
+        showPageToast("Đã thêm sản phẩm vào hóa đơn.");
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save invoice edit.
+    async function saveInvoiceEdit() {
+        if (!canEditInvoice()) {
+            showPageToast("Đơn này không còn ở trạng thái có thể sửa.", "error");
+            closeInvoiceEditDialog();
+            return;
+        }
+        if (!invoiceEditItems.length) {
+            showPageToast("Hóa đơn cần có ít nhất một sản phẩm.", "error");
+            return;
+        }
+        const isDelivery = normalizeText(fulfillmentMethod(hoaDonData)) === "giao hang";
+        const address = invoiceEditFullAddress();
+        if (isDelivery && !address) {
+            showPageToast("Vui lòng nhập địa chỉ giao hàng.", "error");
+            return;
+        }
+
+        const button = document.getElementById("saveInvoiceEditBtn");
+        const dialogBody = document.getElementById("invoiceEditBody");
+        button.disabled = true;
+        button.textContent = "Đang lưu...";
+        dialogBody.classList.add("invoice-edit-saving");
+        try {
+            const response = await fetch(`/hoa-don/${idHoaDon}/chinh-sua`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    diaChiKhachHang: isDelivery ? address : null,
+                    tenKhachHang: isDelivery ? document.getElementById("invoiceEditRecipientName").value.trim() : null,
+                    soDienThoai: isDelivery ? document.getElementById("invoiceEditRecipientPhone").value.trim() : null,
+                    sanPhams: invoiceEditItems.map(item => ({ idSpct: item.idSpct, soLuong: item.soLuong }))
+                })
+            });
+            if (!response.ok) {
+                throw new Error(await readErrorMessage(response, "Không thể lưu thay đổi hóa đơn"));
+            }
+            closeInvoiceEditDialog();
+            await Promise.all([loadThongTinHoaDon(), loadDanhSachSanPham()]);
+            showPageToast("Đã cập nhật hóa đơn và tính lại tổng tiền.");
+        } catch (error) {
+            showPageToast(error.message || "Không thể lưu thay đổi hóa đơn", "error");
+        } finally {
+            button.disabled = false;
+            button.textContent = "Lưu thay đổi";
+            dialogBody.classList.remove("invoice-edit-saving");
+        }
+    }
+
+    // Xử lý tương tác người dùng cho open confirm dialog.
     function openConfirmDialog({ title, message, confirmText = "Xác nhận", danger = false, icon = "fa-circle-question" }) {
         return new Promise(resolve => {
             const layer = document.getElementById("pageConfirmLayer");
@@ -1780,6 +2509,7 @@
         });
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close confirm dialog.
     function closeConfirmDialog(result) {
         const layer = document.getElementById("pageConfirmLayer");
         layer?.classList.remove("open");
@@ -1789,11 +2519,12 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho handle confirm backdrop.
     function handleConfirmBackdrop(event) {
         if (event.target?.id === "pageConfirmLayer") closeConfirmDialog(false);
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
         const printDate = document.getElementById("printDate");
         if (printDate) printDate.innerText = formatDateTime(new Date().toISOString());
 
@@ -1802,13 +2533,16 @@
             return;
         }
 
-        loadThongTinHoaDon();
-        loadDanhSachSanPham();
+        await Promise.all([loadThongTinHoaDon(), loadDanhSachSanPham()]);
+        if (urlParams.get("edit") === "1") {
+            openInvoiceEditDialog();
+        }
     });
 
     // ====================================
     // NÚT CHUYỂN TRẠNG THÁI
     // ====================================
+    // Tải hoặc truy xuất dữ liệu cho get next status action.
     function getNextStatusAction(trangThai, loaiDon) {
         const orderType = normalizeText(loaiDon);
         const status = normalizeText(trangThai);
@@ -1816,7 +2550,7 @@
         const isCounterOrder = ["tai quay", "truc tiep"].includes(orderType);
         const isShippingOrder = ["giao hang", "dang giao"].includes(orderType);
         const isCancelled = status === "da huy" || status === "huy";
-        const isFinalStatus = ["hoan thanh", "da thanh toan"].includes(status);
+        const isFinalStatus = ["hoan thanh", "da thanh toan", "hoan tat"].includes(status);
 
         if (!canChangeStatus || isCancelled || isFinalStatus) return null;
 
@@ -1833,6 +2567,9 @@
             }
             return { nextStatus: "Đã xác nhận", nextLabel: "Xác nhận đơn" };
         }
+        if (status === "cho nhap hang") {
+            return { nextStatus: "Đã xác nhận", nextLabel: "Xác nhận đã có hàng" };
+        }
         if (status === "da xac nhan") {
             return { nextStatus: "Đang chuẩn bị hàng", nextLabel: "Chuyển sang chuẩn bị hàng" };
         }
@@ -1845,13 +2582,14 @@
         return null;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render action buttons.
     function renderActionButtons(trangThai, loaiDon) {
         const container = document.getElementById("actionButtons");
         if (!container) return;
 
         const status = normalizeText(trangThai);
         const isCancelled = status === "da huy" || status === "huy";
-        const isFinalStatus = ["hoan thanh", "da thanh toan"].includes(status);
+        const isFinalStatus = ["hoan thanh", "da thanh toan", "hoan tat"].includes(status);
         const isWaitingReturn = status === "cho hang hoan" || status === "cho hoan hang";
         const isInTransit = status === "dang giao hang";
         const action = getNextStatusAction(trangThai, loaiDon);
@@ -1881,19 +2619,36 @@
             const note = hoaDonData?.ghiChuHoanHang
                 ? `<div style="margin-top:5px">${escapeHtml(hoaDonData.ghiChuHoanHang)}</div>`
                 : "";
+            const carrierLost = normalizeText(hoaDonData.lyDoHoanHang).includes("van chuyen lam mat");
             container.innerHTML = `
                 <div class="incident-summary">
                     <strong><i class="fa-solid fa-triangle-exclamation"></i> ${escapeHtml(hoaDonData.lyDoHoanHang)}</strong>
-                    ${normalizeText(hoaDonData.lyDoHoanHang).includes("van chuyen lam mat")
-                        ? "Đơn đã hủy và không hoàn tồn kho."
-                        : "Đơn đã được hủy."}
+                    ${carrierLost
+                ? "Đơn đã hủy và không hoàn tồn kho."
+                : "Đơn đã được hủy."}
                     ${note}
                 </div>
+                ${carrierLost ? `
+                    <button class="status-action-btn warning" onclick="confirmCarrierCompensation()"><i class="fa-solid fa-handshake"></i> Trao đổi với ship / xác nhận đền bù</button>
+                    <button class="status-action-btn primary" onclick="createReplacementDeliveryOrder()"><i class="fa-solid fa-truck-arrow-right"></i> Tạo đơn giao lại miễn phí</button>
+                ` : ""}
             `;
             return;
         }
 
         let html = "";
+
+        if (isFinalStatus) {
+            html += `<button class="status-action-btn success" onclick="createAdditionalOrder()"><i class="fa-solid fa-cart-plus"></i> Tạo đơn mua thêm</button>`;
+        }
+
+        if (canEditInvoice()) {
+            html += `<button class="status-action-btn primary" onclick="openInvoiceEditDialog()"><i class="fa-solid fa-pen-to-square"></i> Sửa hóa đơn</button>`;
+        }
+
+        if (status === "cho xac nhan") {
+            html += `<button class="status-action-btn warning" onclick="doCapNhatTrangThai('Chờ nhập hàng')"><i class="fa-solid fa-boxes-stacked"></i> Đặt chờ nhập hàng</button>`;
+        }
 
         if (action && action.nextStatus !== "Hoàn thành") {
             html += `<button class="status-action-btn primary" onclick="doCapNhatTrangThai('${action.nextStatus}')"><i class="fa-solid fa-arrows-rotate"></i> ${action.nextLabel}</button>`;
@@ -1912,6 +2667,83 @@
         container.innerHTML = html;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create additional order.
+    async function createAdditionalOrder() {
+        const confirmed = await openConfirmDialog({
+            title: "Tạo đơn mua thêm",
+            message: "Hệ thống sẽ tạo một hóa đơn mới, sao chép thông tin khách hàng và giao hàng từ đơn này. Sản phẩm và thanh toán sẽ được thực hiện riêng.",
+            confirmText: "Tạo đơn mới",
+            icon: "fa-cart-plus"
+        });
+        if (!confirmed) return;
+
+        setStatusActionsBusy(true);
+        try {
+            const response = await fetch(`/hoa-don/${idHoaDon}/don-mua-them`, { method: "POST" });
+            if (!response.ok) {
+                throw new Error(await readErrorMessage(response, "Không thể tạo đơn mua thêm"));
+            }
+            const created = await response.json();
+            if (!created?.id) throw new Error("Không nhận được mã hóa đơn mới");
+            window.location.href = `hoa-don-chi-tiet.html?id=${encodeURIComponent(created.id)}&edit=1`;
+        } catch (error) {
+            showPageToast(error.message || "Không thể tạo đơn mua thêm", "error");
+            setStatusActionsBusy(false);
+        }
+    }
+
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create replacement delivery order.
+    async function createReplacementDeliveryOrder() {
+        const confirmed = await openConfirmDialog({
+            title: "Tạo đơn giao lại",
+            message: "Hệ thống sẽ tạo đơn giao lại miễn phí, sao chép khách và địa chỉ. Hãy chọn sản phẩm thay thế trước khi xác nhận đơn.",
+            confirmText: "Tạo đơn giao lại",
+            icon: "fa-truck-arrow-right"
+        });
+        if (!confirmed) return;
+
+        setStatusActionsBusy(true);
+        try {
+            const response = await fetch(`/hoa-don/${idHoaDon}/don-giao-lai`, { method: "POST" });
+            if (!response.ok) {
+                throw new Error(await readErrorMessage(response, "Không thể tạo đơn giao lại"));
+            }
+            const created = await response.json();
+            if (!created?.id) throw new Error("Không nhận được mã hóa đơn giao lại");
+            window.location.href = `hoa-don-chi-tiet.html?id=${encodeURIComponent(created.id)}&edit=1`;
+        } catch (error) {
+            showPageToast(error.message || "Không thể tạo đơn giao lại", "error");
+            setStatusActionsBusy(false);
+        }
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm confirm carrier compensation.
+    async function confirmCarrierCompensation() {
+        const amount = formatđ(hoaDonData?.tongTienThanhToan || 0);
+        const confirmed = await openConfirmDialog({
+            title: "Xác nhận ship đền bù",
+            message: `Xác nhận đã trao đổi và đơn vị vận chuyển đồng ý đền bù ${amount}? Hóa đơn sẽ chuyển sang Hoàn thành và được ghi nhận là giao dịch đền bù vận chuyển.`,
+            confirmText: "Xác nhận đền bù",
+            icon: "fa-handshake"
+        });
+        if (!confirmed) return;
+
+        setStatusActionsBusy(true);
+        try {
+            const response = await fetch(`/hoa-don/${idHoaDon}/xac-nhan-den-bu-van-chuyen`, { method: "POST" });
+            if (!response.ok) {
+                throw new Error(await readErrorMessage(response, "Không thể xác nhận đền bù vận chuyển"));
+            }
+            applyStatusUpdate(await response.json());
+            showPageToast("Đã ghi nhận ship đền bù và hoàn thành hóa đơn.");
+        } catch (error) {
+            showPageToast(error.message || "Không thể xác nhận đền bù vận chuyển", "error");
+        } finally {
+            setStatusActionsBusy(false);
+        }
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render history actions.
     function renderHistoryActions(trangThai, loaiDon) {
         const container = document.getElementById("lichSuActions");
         if (!container) return;
@@ -1921,7 +2753,6 @@
             return;
         }
         const action = getNextStatusAction(trangThai, loaiDon);
-
         if (!action || action.nextStatus !== "Hoàn thành") {
             container.innerHTML = "";
             return;
@@ -1935,6 +2766,7 @@
         `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm do cap nhat trang thai.
     async function doCapNhatTrangThai(trangThaiMoi) {
         const confirmed = await openConfirmDialog({
             title: "Chuyển trạng thái",
@@ -1964,6 +2796,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply status update.
     function applyStatusUpdate(updatedOrder) {
         if (!updatedOrder) return;
 
@@ -1986,6 +2819,7 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set status actions busy.
     function setStatusActionsBusy(isBusy) {
         document.querySelectorAll("#actionButtons button, #lichSuActions button").forEach((button) => {
             button.disabled = isBusy;
@@ -1994,6 +2828,7 @@
         });
     }
 
+    // Tải hoặc truy xuất dữ liệu cho read error message.
     async function readErrorMessage(response, fallback) {
         try {
             const contentType = response.headers.get("content-type") || "";
@@ -2008,6 +2843,7 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho open delivery failure dialog.
     function openDeliveryFailureDialog(defaultType = "KHACH_KHONG_NHAN") {
         const selected = document.querySelector(
             `input[name="deliveryFailureType"][value="${defaultType}"]`
@@ -2017,14 +2853,17 @@
         document.getElementById("deliveryFailureLayer").classList.add("open");
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close delivery failure dialog.
     function closeDeliveryFailureDialog() {
         document.getElementById("deliveryFailureLayer")?.classList.remove("open");
     }
 
+    // Xử lý tương tác người dùng cho handle delivery failure backdrop.
     function handleDeliveryFailureBackdrop(event) {
         if (event.target?.id === "deliveryFailureLayer") closeDeliveryFailureDialog();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm confirm delivery failure.
     async function confirmDeliveryFailure() {
         const type = document.querySelector('input[name="deliveryFailureType"]:checked')?.value;
         if (!type) {
@@ -2065,10 +2904,12 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm do yeu cau hoan hang.
     function doYeuCauHoanHang() {
         openDeliveryFailureDialog("KHACH_KHONG_NHAN");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm do huy don.
     async function doHuyDon() {
         if (normalizeText(hoaDonData?.trangThai) === "dang giao hang") {
             return openDeliveryFailureDialog();
@@ -2101,6 +2942,7 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho open return stock dialog.
     async function openReturnStockDialog() {
         try {
             if (!chiTietHoaDonData.length) {
@@ -2150,14 +2992,17 @@
         }
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close return stock dialog.
     function closeReturnStockDialog() {
         document.getElementById("returnStockLayer")?.classList.remove("open");
     }
 
+    // Xử lý tương tác người dùng cho handle return backdrop.
     function handleReturnBackdrop(event) {
         if (event.target?.id === "returnStockLayer") closeReturnStockDialog();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm confirm returned stock.
     async function confirmReturnedStock() {
         const inputs = [...document.querySelectorAll(".return-stock-quantity")];
         if (!inputs.length) {
@@ -2217,10 +3062,12 @@
     // FORMAT MONEY
     // ====================================
 
+    // Thực hiện xử lý nghiệp vụ của hàm formatđ.
     function formatđ(value) {
         return (Math.round(Number(value || 0) / 1000) * 1000).toLocaleString("vi-VN") + " đ";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm voucher discount text.
     function voucherDiscountText(voucher) {
         if (!voucher) return "";
         const value = Number(voucher.giaTri || 0);
@@ -2231,12 +3078,38 @@
         return formatđ(value);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm voucher display.
     function voucherDisplay(hd) {
         const voucher = hd?.phieuGiamGia;
         if (!voucher) return "";
         return [voucher.maPgg, voucherDiscountText(voucher)].filter(Boolean).join(" - ");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm voucher snapshot display.
+    function voucherSnapshotDisplay(hd) {
+        if (!hd?.pggSnapshotMa) return "";
+        return [
+            hd.pggSnapshotMa,
+            voucherDiscountText({ loaiGiam: hd.pggSnapshotLoai, giaTri: hd.pggSnapshotGiaTri })
+        ].filter(Boolean).join(" - ");
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm voucher was updated after confirmation.
+    function voucherWasUpdatedAfterConfirmation(hd) {
+        const snapshotCode = hd?.pggSnapshotMa;
+        const current = hd?.phieuGiamGia;
+        if (!snapshotCode || !current) return Boolean(snapshotCode);
+        const sameMoney = (left, right) => Number(left || 0) === Number(right || 0);
+        return snapshotCode !== current.maPgg
+            || String(hd.pggSnapshotTen || "") !== String(current.tenPgg || "")
+            || String(hd.pggSnapshotLoai || "") !== String(current.loaiGiam || "")
+            || !sameMoney(hd.pggSnapshotGiaTri, current.giaTri)
+            || !sameMoney(hd.pggSnapshotGiaTriToiDa, current.giaTriToiDa)
+            || !sameMoney(hd.pggSnapshotDieuKien, current.dieuKienDonHang)
+            || current.trangThai === false;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm price cell.
     function priceCell(item) {
         const original = Number(item.giaGoc || item.donGia || 0);
         const current = Number(item.donGia || 0);
@@ -2254,6 +3127,7 @@
     // FORMAT DATETIME
     // ====================================
 
+    // Thực hiện xử lý nghiệp vụ của hàm format date time.
     function formatDateTime(dateStr) {
 
         if (!dateStr) return "...";
@@ -2271,6 +3145,7 @@
         return `${hh}:${mm}:${ss} ${dd}/${MM}/${yyyy}`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm employee role.
     function employeeRole(nhanVien) {
         if (!nhanVien) return "";
         const raw = (nhanVien.vaiTro || "").trim();
@@ -2287,6 +3162,7 @@
         return raw;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm infer payment method from order.
     function inferPaymentMethodFromOrder(order = hoaDonData) {
         const direct = order?.hinhThucThanhToan || order?.phuongThucThanhToan?.tenPttt || order?.phuongThucThanhToan;
         if (direct) return paymentMethodLabel(direct);
@@ -2300,6 +3176,7 @@
         return paidAtCounter ? "Tiền mặt" : "COD";
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is generic payment label.
     function isGenericPaymentLabel(value) {
         const normalized = normalizeText(value).replace(/[_-]+/g, " ");
         return !normalized
@@ -2308,6 +3185,7 @@
             || normalized === "thanh toan don hang";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm payment method label.
     function paymentMethodLabel(value) {
         const raw = String(value || "").trim();
         const normalized = normalizeText(raw).replace(/[_-]+/g, " ");
@@ -2330,6 +3208,7 @@
         return raw;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm payment history method.
     function paymentHistoryMethod(item) {
         if (item?.hinhThucThanhToan && !isGenericPaymentLabel(item.hinhThucThanhToan)) {
             return paymentMethodLabel(item.hinhThucThanhToan);
@@ -2340,23 +3219,75 @@
         return inferPaymentMethodFromOrder();
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is successful payment history.
+    function isSuccessfulPaymentHistory(item) {
+        const status = normalizeText(item?.trangThai);
+        return ["thanh cong", "da thanh toan", "paid", "success", "successful"].includes(status);
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm summarize payment methods.
     function summarizePaymentMethods(historyItems) {
         const methods = (historyItems || [])
+            .filter(isSuccessfulPaymentHistory)
             .map(paymentHistoryMethod)
             .filter(Boolean);
         const uniqueMethods = [...new Set(methods)];
-        if (!uniqueMethods.length) return inferPaymentMethodFromOrder();
-        if (uniqueMethods.includes("Tiền mặt") && uniqueMethods.includes("Chuyển khoản")) {
-            return "Tiền mặt + Chuyển khoản";
-        }
+        if (!uniqueMethods.length) return "";
         return uniqueMethods.join(" + ");
     }
 
+    // Hiển thị và đồng bộ giao diện cho render payment methods.
+    function renderPaymentMethods(value) {
+        const container = document.getElementById("pPhuongThuc");
+        if (!container) return;
+
+        const methods = String(value || "")
+            .split(/\s*\+\s*/)
+            .map(method => method.trim())
+            .filter(Boolean);
+
+        const uniqueMethods = [...new Set(methods.length ? methods : ["Chưa có giao dịch thành công"])];
+        container.replaceChildren(...uniqueMethods.map(method => {
+            const normalized = normalizeText(method);
+            const chip = document.createElement("span");
+            const icon = document.createElement("i");
+            const label = document.createElement("span");
+
+            chip.className = "payment-method-chip";
+            if (normalized.includes("chua co giao dich thanh cong")) {
+                chip.classList.add("pending");
+                icon.className = "fa-regular fa-clock";
+            } else if (normalized.includes("tien mat")) {
+                chip.classList.add("cash");
+                icon.className = "fa-solid fa-money-bill-wave";
+            } else if (normalized.includes("cod") || normalized.includes("nhan hang")) {
+                chip.classList.add("cod");
+                icon.className = "fa-solid fa-truck-fast";
+            } else if (normalized.includes("zalo") || normalized.includes("momo") || normalized.includes("vi")) {
+                chip.classList.add("wallet");
+                icon.className = "fa-solid fa-mobile-screen-button";
+            } else if (normalized.includes("online") || normalized.includes("vnpay")) {
+                icon.className = "fa-solid fa-credit-card";
+            } else if (normalized.includes("chuyen khoan") || normalized.includes("bank")) {
+                icon.className = "fa-solid fa-building-columns";
+            } else {
+                icon.className = "fa-solid fa-wallet";
+            }
+
+            icon.setAttribute("aria-hidden", "true");
+            label.textContent = method;
+            chip.append(icon, label);
+            return chip;
+        }));
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm extract customer email from note.
     function extractCustomerEmailFromNote(note) {
         const match = String(note || "").match(/(?:^|\n)CUSTOMER_EMAIL:\s*([^\s\n]+)/i);
         return match?.[1]?.trim() || "";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm clean order note.
     function cleanOrderNote(note) {
         const visible = String(note || "")
             .split(/\r?\n/)
@@ -2366,14 +3297,17 @@
         return visible || "Không có ghi chú";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm status badge class.
     function statusBadgeClass(status) {
         const normalized = normalizeText(status);
         if (normalized === "da huy" || normalized === "huy") return "cancel";
         if (normalized === "cho hang hoan" || normalized === "cho hoan hang") return "returning";
+        if (normalized === "cho nhap hang") return "returning";
         if (["hoan thanh", "da thanh toan", "hoan tat"].includes(normalized)) return "success";
         return "";
     }
 
+    // Hiển thị và đồng bộ giao diện cho render history fallback.
     function renderHistoryFallback(message) {
         const hd = hoaDonData || {};
         const method = paymentMethodLabel(inferPaymentMethodFromOrder(hd));
@@ -2382,6 +3316,8 @@
         const paidAtCounter = ["tai quay", "truc tiep", "giao hang", "dang giao"].includes(orderType)
             && !["cho thanh toan", "cho xac nhan", "cho thanh toan online"].includes(normalizedStatus);
         const status = message || (paidAtCounter ? "Đã thanh toán" : (hd.trangThai || "Chờ xử lý"));
+        const hasSuccessfulPayment = Boolean(hd.ngayThanhToan)
+            || ["da thanh toan", "hoan thanh", "hoan tat"].includes(normalizedStatus);
         const historyTime = hd.ngayThanhToan || hd.ngayTao;
         document.getElementById("lichSuList").innerHTML = `
             <div class="history-item">
@@ -2398,14 +3334,14 @@
                 </span>
             </div>
         `;
-        const paymentMethodEl = document.getElementById("pPhuongThuc");
-        if (paymentMethodEl) paymentMethodEl.innerText = method;
+        renderPaymentMethods(hasSuccessfulPayment ? method : "");
     }
 
     // ====================================
     // QUAY LẠI
     // ====================================
 
+    // Thực hiện xử lý nghiệp vụ của hàm go back invoice.
     function goBackInvoice() {
         window.location.href = "hoa-don.html";
     }
@@ -2414,10 +3350,12 @@
     // IN HÓA ĐƠN
     // ====================================
 
+    // Thực hiện xử lý nghiệp vụ của hàm export pdf.
     function exportPDF() {
         window.print();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render single current status.
     function renderSingleCurrentStatus(stepper, status, normalizedStatus) {
         const isCancelled = normalizedStatus === "da huy" || normalizedStatus === "huy";
         const isSuccess = ["hoan thanh", "da thanh toan", "hoan tat"].includes(normalizedStatus);
@@ -2441,6 +3379,7 @@
     // UPDATE CURRENT STATUS
     // ====================================
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update stepper.
     function updateStepper(trangThai, loaiDon) {
 
         const stepper = document.getElementById("stepperContainer");
@@ -2454,6 +3393,7 @@
         const isShippingOrder = ["giao hang", "dang giao"].includes(orderType);
         const isCancelled = normalizedStatus === "da huy" || normalizedStatus === "huy";
         const isWaitingReturn = normalizedStatus === "cho hang hoan" || normalizedStatus === "cho hoan hang";
+        const isWaitingRestock = normalizedStatus === "cho nhap hang";
 
         if (isCounterOrder) {
             renderSingleCurrentStatus(stepper, status, normalizedStatus);
@@ -2476,9 +3416,14 @@
             return;
         }
 
+        if (isWaitingRestock) {
+            renderSingleCurrentStatus(stepper, status, normalizedStatus);
+            return;
+        }
+
         const firstStep = isCounterOrder
-                ? "Chờ thanh toán"
-                : normalizedStatus === "cho thanh toan online"
+            ? "Chờ thanh toán"
+            : normalizedStatus === "cho thanh toan online"
                 ? "Chờ thanh toán online"
                 : normalizedStatus === "cho thanh toan"
                     ? "Chờ thanh toán"
@@ -2507,13 +3452,13 @@
         }
 
         const steps = isCounterOrder
-                ? ["Chờ thanh toán", "Hoàn thành"]
-                : isShippingOrder
-                    ? [firstStep, "Đang chuẩn bị hàng", "Đang giao hàng", "Hoàn thành"]
-                    : [firstStep, "Đã xác nhận", "Đang chuẩn bị hàng", "Đang giao hàng", "Hoàn thành"];
+            ? ["Chờ thanh toán", "Hoàn thành"]
+            : isShippingOrder
+                ? [firstStep, "Đang chuẩn bị hàng", "Đang giao hàng", "Hoàn thành"]
+                : [firstStep, "Đã xác nhận", "Đang chuẩn bị hàng", "Đang giao hàng", "Hoàn thành"];
         const effectiveStatus = isCounterOrder
-                ? (["hoan thanh", "da thanh toan", "hoan tat"].includes(normalizedStatus) ? "Hoàn thành" : "Chờ thanh toán")
-                : (["da thanh toan", "hoan tat"].includes(normalizedStatus) ? "Hoàn thành" : status);
+            ? (["hoan thanh", "da thanh toan", "hoan tat"].includes(normalizedStatus) ? "Hoàn thành" : "Chờ thanh toán")
+            : (["da thanh toan", "hoan tat"].includes(normalizedStatus) ? "Hoàn thành" : status);
         let currentIndex = steps.findIndex(step => normalizeText(step) === normalizeText(effectiveStatus));
         if (currentIndex < 0 && normalizeText(effectiveStatus).includes("xac nhan")) {
             currentIndex = steps.includes("Đã xác nhận") ? steps.indexOf("Đã xác nhận") : steps.indexOf("Đang chuẩn bị hàng");
@@ -2525,15 +3470,15 @@
         stepper.innerHTML = `
             <div class="status-track" style="--step-count:${steps.length}">
                 ${steps.map((step, index) => {
-                    const state = index < currentIndex ? "done" : index === currentIndex ? "current" : "";
-                    const finalClass = index === steps.length - 1 && index <= currentIndex ? " success" : "";
-                    return `
+            const state = index < currentIndex ? "done" : index === currentIndex ? "current" : "";
+            const finalClass = index === steps.length - 1 && index <= currentIndex ? " success" : "";
+            return `
                         <div class="timeline-step ${state}${finalClass}">
                             <div class="timeline-dot"><i class="fa-solid ${icons[step] || "fa-circle"}"></i></div>
                             <div class="timeline-label">${escapeHtml(step)}</div>
                         </div>
                     `;
-                }).join("")}
+        }).join("")}
             </div>
         `;
     }
@@ -2542,6 +3487,7 @@
     // LOAD THÔNG TIN HÓA ĐƠN
     // ====================================
 
+    // Tải hoặc truy xuất dữ liệu cho load thong tin hoa don.
     async function loadThongTinHoaDon() {
 
         try {
@@ -2619,17 +3565,27 @@
             document.getElementById("pTongTienHang").innerText =
                 formatđ(hd.tongTienGoc);
 
+            const confirmedDiscount = hd.pggSnapshotMa
+                ? hd.pggSnapshotSoTienGiam
+                : hd.soTienGiam;
             document.getElementById("pGiamGia").innerText =
-                "- " + formatđ(hd.soTienGiam);
+                "- " + formatđ(confirmedDiscount);
             const discountLabel = document.getElementById("discountLabel");
             const discountDetail = document.getElementById("discountDetail");
+            const voucherUpdateNotice = document.getElementById("voucherUpdateNotice");
             if (discountLabel) {
-                const label = voucherDisplay(hd);
-                discountLabel.innerText = "Giảm giá voucher";
+                const original = voucherSnapshotDisplay(hd);
+                const current = voucherDisplay(hd);
+                const changed = voucherWasUpdatedAfterConfirmation(hd);
+                const label = original || current;
+                discountLabel.innerText = original ? "Giảm giá voucher (đã chốt)" : "Giảm giá voucher";
                 if (discountDetail) {
-                    discountDetail.innerText = label ? label : "";
+                    discountDetail.innerText = changed
+                        ? `Lúc chốt: ${original}\nHiện tại: ${current || "Phiếu đã không còn khả dụng"}`
+                        : label;
                     discountDetail.style.display = label ? "block" : "none";
                 }
+                if (voucherUpdateNotice) voucherUpdateNotice.hidden = !changed;
             }
 
             document.getElementById("pPhiVanChuyen").innerText =
@@ -2671,6 +3627,7 @@
     // LOAD DANH SÁCH SẢN PHẨM
     // ====================================
 
+    // Tải hoặc truy xuất dữ liệu cho load danh sach san pham.
     async function loadDanhSachSanPham() {
 
         try {
@@ -2739,6 +3696,7 @@
     // LOAD LỊCH SỬ THANH TOÁN
     // ====================================
 
+    // Tải hoặc truy xuất dữ liệu cho load lich su thanh toan.
     async function loadLichSuThanhToan() {
 
         try {
@@ -2751,10 +3709,11 @@
             }
 
             const data = await response.json();
+            const historyItems = Array.isArray(data) ? data : [];
 
             let html = "";
 
-            data.forEach(item => {
+            historyItems.forEach(item => {
                 const method = paymentHistoryMethod(item);
                 const status = item.trangThai || item.loaiThanhToan || "Thành công";
 
@@ -2781,22 +3740,16 @@
             `;
             });
 
-            if (data.length === 0) {
+            if (historyItems.length === 0) {
                 renderHistoryFallback();
                 return;
             }
 
             document.getElementById("lichSuList").innerHTML = html;
 
-            // Lấy phương thức TT từ bản ghi đầu tiên
-            if (data.length > 0) {
-                const pttt = summarizePaymentMethods(data);
-                const paymentMethodEl = document.getElementById("pPhuongThuc");
-                if (paymentMethodEl) paymentMethodEl.innerText = pttt;
-            } else {
-                const paymentMethodEl = document.getElementById("pPhuongThuc");
-                if (paymentMethodEl) paymentMethodEl.innerText = inferPaymentMethodFromOrder();
-            }
+            // Chỉ tổng hợp phương thức của các giao dịch thanh toán thành công.
+            renderPaymentMethods(summarizePaymentMethods(historyItems));
+            renderHistoryActions(hoaDonData?.trangThai, workflowOrderType(hoaDonData));
 
         } catch (e) {
 

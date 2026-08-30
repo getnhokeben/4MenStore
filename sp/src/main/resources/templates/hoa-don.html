@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Quản lý Hóa đơn – 4MenStore</title>
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-2" defer></script>
+    <script src="/js/app-shell.js?v=ui-icons-20260822-1" defer></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
@@ -104,6 +104,7 @@
         .status-badge.pending{background:#fef3c7;color:#a16207}
         .status-badge.processing{background:#e0f2fe;color:#0369a1}
         .status-badge.preparing{background:#ffedd5;color:#c2410c}
+        .status-badge.ready{background:#ccfbf1;color:#0f766e}
         .status-badge.shipping{background:#ede9fe;color:#6d28d9}
         .status-badge.returning{background:#fef3c7;color:#92400e}
         .status-badge.cancelled{background:#fee2e2;color:#b91c1c}
@@ -279,7 +280,7 @@
                 <label>Khoảng giá: <span id="priceRangeLabel">0 đ – đang tải...</span></label>
                 <input type="range" id="priceMax" min="0" max="10000000" step="100000" value="10000000"
                        oninput="onPriceChange(this.value)" />
-                <div class="price-max-label">Giá lớn nhất: <span id="priceMaxLabel">đang tải...</span></div>
+                <div class="price-max-label">Giá lớn nhất hiện tại: <span id="priceMaxLabel">đang tải...</span></div>
             </div>
         </div>
     </div>
@@ -302,12 +303,16 @@
 
         <div class="status-tabs">
             <button class="tab-btn active" onclick="filterStatus(this,'')">Tất cả</button>
+            <button class="tab-btn" onclick="filterStatus(this,'Chờ thanh toán online')">Chờ thanh toán online</button>
             <button class="tab-btn" onclick="filterStatus(this,'Chờ xác nhận')">Chờ xác nhận</button>
+            <button class="tab-btn" onclick="filterStatus(this,'Chờ nhập hàng')">Chờ nhập hàng</button>
             <button class="tab-btn" onclick="filterStatus(this,'Đã xác nhận')">Đã xác nhận</button>
             <button class="tab-btn" onclick="filterStatus(this,'Đang chuẩn bị hàng')">Đang chuẩn bị hàng</button>
+            <button class="tab-btn" onclick="filterStatus(this,'Chờ giao hàng')">Chờ giao hàng</button>
             <button class="tab-btn" onclick="filterStatus(this,'Đang giao hàng')">Đang giao hàng</button>
             <button class="tab-btn" onclick="filterStatus(this,'Chờ hàng hoàn')">Chờ hàng hoàn</button>
             <button class="tab-btn" onclick="filterStatus(this,'Hoàn thành')">Hoàn thành</button>
+            <button class="tab-btn" onclick="filterStatus(this,'Đã thanh toán')">Đã thanh toán</button>
             <button class="tab-btn" onclick="filterStatus(this,'Đã hủy')">Đã hủy</button>
         </div>
 
@@ -348,11 +353,13 @@
     let priceFilterTouched = false;
     let debounceTimer = null;
 
+    // Thực hiện xử lý nghiệp vụ của hàm format money.
     function formatMoney(n) {
         if (!n) return "0 đ";
         return (Math.round(Number(n) / 1000) * 1000).toLocaleString("vi-VN") + " đ";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format date.
     function formatDate(d) {
         if (!d) return "";
         const date = new Date(d);
@@ -365,10 +372,12 @@
         });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format price.
     function formatPrice(n) {
         return (Math.round(Number(n || 0) / 1000) * 1000).toLocaleString("vi-VN") + " đ";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm escape html.
     function escapeHtml(value) {
         return String(value ?? "")
             .replace(/&/g, "&amp;")
@@ -379,6 +388,7 @@
     }
 
     // Load giá max từ API khi trang mở
+    // Tải hoặc truy xuất dữ liệu cho load gia max.
     async function loadGiaMax() {
         try {
             const res = await fetch("/hoa-don/api/gia-max");
@@ -400,6 +410,7 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho on price change.
     function onPriceChange(val) {
         priceFilterTouched = true;
         priceMaxValue = parseInt(val);
@@ -413,6 +424,7 @@
     }
 
     // Lọc tự động có debounce 400ms
+    // Thực hiện xử lý nghiệp vụ của hàm auto filter.
     function autoFilter() {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
@@ -420,6 +432,7 @@
         }, 400);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load data.
     async function loadData(page = curPage) {
         curPage = Math.max(0, Number(page) || 0);
         const maHD = document.getElementById("filterMaHD").value.trim();
@@ -431,13 +444,7 @@
         if (tuNgay) queryObj.tuNgay = tuNgay;
         if (denNgay) queryObj.denNgay = denNgay;
         if (loaiDon) queryObj.loaiDon = loaiDon;
-        if (currentStatus) {
-            if (currentStatus === "Hoàn thành") {
-                queryObj.trangThai = "Hoàn thành|Đã thanh toán";
-            } else {
-                queryObj.trangThai = currentStatus;
-            }
-        }
+        if (currentStatus) queryObj.trangThai = currentStatus;
         if (priceFilterTouched && priceMaxAll > 0 && priceMaxValue < priceMaxAll) queryObj.maxGia = priceMaxValue;
         const params = new URLSearchParams(queryObj);
         try {
@@ -456,10 +463,13 @@
         }
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get status dot.
     function getStatusDot(trangThai) {
-        if (trangThai === "Chờ xác nhận") return "pending";
+        if (trangThai === "Chờ thanh toán online" || trangThai === "Chờ xác nhận") return "pending";
+        if (trangThai === "Chờ nhập hàng") return "pending";
         if (trangThai === "Đã xác nhận") return "processing";
         if (trangThai === "Đang chuẩn bị hàng") return "preparing";
+        if (trangThai === "Chờ giao hàng") return "ready";
         if (trangThai === "Đang giao hàng") return "shipping";
         if (trangThai === "Chờ hàng hoàn") return "returning";
         if (trangThai === "Hoàn thành" || trangThai === "Đã thanh toán") return "success";
@@ -467,6 +477,7 @@
         return "processing";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm order type class.
     function orderTypeClass(loaiDon) {
         const value = String(loaiDon || "").normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
@@ -479,6 +490,7 @@
         return "default";
     }
 
+    // Hiển thị và đồng bộ giao diện cho display order type.
     function displayOrderType(order) {
         const rawType = String(order?.loaiDon || "Tại quầy").trim();
         const normalized = rawType.normalize("NFD")
@@ -489,6 +501,7 @@
         return normalized === "giao hang" ? "Tại quầy" : rawType;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render table.
     function renderTable() {
         const tbody = document.getElementById("tableBody");
         if (!dataList.length) {
@@ -527,6 +540,7 @@
         }).join("");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm employee role.
     function employeeRole(nhanVien) {
         if (!nhanVien) return "";
         const raw = (nhanVien.vaiTro || "").trim();
@@ -543,11 +557,13 @@
         return raw;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get trang thai options.
     function getTrangThaiOptions(trangThai) {
-        const all = ["Chờ xác nhận","Đã xác nhận","Đang chuẩn bị hàng","Đang giao hàng","Chờ hàng hoàn","Hoàn thành","Đã thanh toán","Đã hủy"];
+        const all = ["Chờ thanh toán online","Chờ xác nhận","Chờ nhập hàng","Đã xác nhận","Đang chuẩn bị hàng","Chờ giao hàng","Đang giao hàng","Chờ hàng hoàn","Hoàn thành","Đã thanh toán","Đã hủy"];
         return all.map(opt => `<option value="${opt}" ${opt === trangThai ? 'selected' : ''}>${opt}</option>`).join("");
     }
 
+    // Tải hoặc truy xuất dữ liệu cho read api error.
     async function readApiError(response, fallback) {
         try {
             const contentType = response.headers.get("content-type") || "";
@@ -562,6 +578,7 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update status quick.
     async function updateStatusQuick(id, trangThaiMoi, trangThaiCu) {
         if (trangThaiMoi === trangThaiCu) return;
         if (trangThaiMoi === "Đã thanh toán") {
@@ -588,11 +605,13 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm dong modal phuong thuc.
     function dongModalPhuongThuc() {
         document.getElementById("modalPhuongThuc").style.display = "none";
         _pendingThanhToanId = null; loadData();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm xac nhan thanh toan.
     async function xacNhanThanhToan() {
         const phuongThuc = document.querySelector('input[name="pttt"]:checked')?.value || "Tiền mặt";
         document.getElementById("modalPhuongThuc").style.display = "none";
@@ -609,6 +628,7 @@
         finally { _pendingThanhToanId = null; loadData(); }
     }
 
+    // Hiển thị và đồng bộ giao diện cho render pg.
     function renderPg() {
         const area = document.getElementById("pgArea");
         area.style.display = "flex";
@@ -628,12 +648,16 @@
       <div class="pg-nav"><button class="pg-btn" onclick="load(0)" ${curPage === 0 ? "disabled" : ""}>«</button><button class="pg-btn" onclick="load(${curPage - 1})" ${curPage === 0 ? "disabled" : ""}>← Trước</button>${nums}<button class="pg-btn" onclick="load(${curPage + 1})" ${curPage >= totalPg - 1 ? "disabled" : ""}>Sau →</button><button class="pg-btn" onclick="load(${totalPg - 1})" ${curPage >= totalPg - 1 ? "disabled" : ""}>»</button></div>`;
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load.
     function load(page = 0) { loadData(page); }
+    // Thực hiện xử lý nghiệp vụ của hàm apply filter.
     function applyFilter() { loadData(0); }
+    // Thực hiện xử lý nghiệp vụ của hàm filter status.
     function filterStatus(btn, status) {
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active"); currentStatus = status; loadData(0);
     }
+    // Thực hiện xử lý nghiệp vụ của hàm xuat excel.
     function xuatExcel() {
         let maHD = document.getElementById("filterMaHD").value.trim();
         let tuNgay = document.getElementById("filterFrom").value;

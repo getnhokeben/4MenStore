@@ -7,12 +7,15 @@ import com.example.sp.model.hoadon.HoaDonChiTiet;
 import com.example.sp.model.hoadon.LichSuThanhToan;
 import com.example.sp.model.hoadon.PhuongThucThanhToan;
 import com.example.sp.model.hoadon.ThanhToan;
+import com.example.sp.model.khuyenmai.PhieuGiamGia;
 import com.example.sp.model.sanpham.ChiTietSanPham;
 import com.example.sp.repository.hoadon.HoaDonChiTietRepository;
 import com.example.sp.repository.hoadon.HoaDonRepository;
 import com.example.sp.repository.hoadon.LichSuThanhToanRepository;
 import com.example.sp.repository.hoadon.PhuongThucThanhToanRepository;
 import com.example.sp.repository.hoadon.ThanhToanRepository;
+import com.example.sp.repository.khuyenmai.PhieuGiamGiaRepository;
+import com.example.sp.repository.khuyenmai.ChiTietDotGiamGiaRepository;
 import com.example.sp.service.tonkho.InventoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,6 +59,8 @@ class ShopPaymentGatewayServiceTest {
     private final ThanhToanRepository paymentRepository = mock(ThanhToanRepository.class);
     private final PhuongThucThanhToanRepository methodRepository = mock(PhuongThucThanhToanRepository.class);
     private final LichSuThanhToanRepository historyRepository = mock(LichSuThanhToanRepository.class);
+    private final PhieuGiamGiaRepository voucherRepository = mock(PhieuGiamGiaRepository.class);
+    private final ChiTietDotGiamGiaRepository promotionDetailRepository = mock(ChiTietDotGiamGiaRepository.class);
     private final InventoryService inventoryService = mock(InventoryService.class);
     private ShopPaymentGatewayService service;
 
@@ -74,8 +79,18 @@ class ShopPaymentGatewayServiceTest {
                 paymentRepository,
                 methodRepository,
                 historyRepository,
+                voucherRepository,
+                promotionDetailRepository,
                 inventoryService
         );
+        ChiTietSanPham defaultVariant = new ChiTietSanPham();
+        defaultVariant.setIdSpct(101);
+        defaultVariant.setDonGia(new BigDecimal("250000"));
+        HoaDonChiTiet defaultItem = HoaDonChiTiet.builder()
+                .chiTietSanPham(defaultVariant)
+                .soLuong(1)
+                .build();
+        when(orderItemRepository.findByHoaDon_Id(42)).thenReturn(List.of(defaultItem));
     }
 
     @Test
@@ -105,6 +120,12 @@ class ShopPaymentGatewayServiceTest {
     void roundsVnPayAmountToNearestThousand() {
         HoaDon order = payableOrder();
         order.setTongTienThanhToan(new BigDecimal("250500"));
+        ChiTietSanPham variant = new ChiTietSanPham();
+        variant.setIdSpct(101);
+        variant.setDonGia(new BigDecimal("250500"));
+        when(orderItemRepository.findByHoaDon_Id(42)).thenReturn(List.of(
+                HoaDonChiTiet.builder().chiTietSanPham(variant).soLuong(1).build()
+        ));
         PhuongThucThanhToan method = PhuongThucThanhToan.builder()
                 .id(1).maPttt("VNPAY").tenPttt("VNPay").trangThai(true).build();
         when(orderRepository.findById(42)).thenReturn(Optional.of(order));
@@ -134,6 +155,50 @@ class ShopPaymentGatewayServiceTest {
                 "https://shop.example/api/shop/payments/vnpay/checkout?"
         ));
         assertTrue(response.getPaymentUrl().contains("vnp_SecureHash="));
+    }
+
+    @Test
+    void routesDemoVnPayToCardCheckoutWhenSandboxCredentialsAreUnavailable() {
+        properties.getVnpay().setEnabled(false);
+        properties.getVnpay().setTmnCode("");
+        properties.getVnpay().setHashSecret("");
+        properties.getVnpay().setLocalCheckoutEnabled(true);
+        properties.getQrDemo().setEnabled(true);
+
+        HoaDon order = payableOrder();
+        ThanhToan payment = ThanhToan.builder()
+                .id(13)
+                .hoaDon(order)
+                .maGiaoDich("VP42TDEMO")
+                .soTien(new BigDecimal("250000"))
+                .trangThai("Chá» thanh toÃ¡n")
+                .build();
+        PhuongThucThanhToan method = PhuongThucThanhToan.builder()
+                .id(1).maPttt("VNPAY").tenPttt("VNPay").trangThai(true).build();
+        when(orderRepository.findById(42)).thenReturn(Optional.of(order));
+        when(methodRepository.findFirstByMaPtttIgnoreCaseOrTenPtttIgnoreCase("VNPAY", "VNPay"))
+                .thenReturn(Optional.of(method));
+        when(paymentRepository.save(any(ThanhToan.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(paymentRepository.findFirstByMaGiaoDichOrderByIdDesc(any()))
+                .thenReturn(Optional.of(payment));
+        when(orderRepository.save(any(HoaDon.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ShopPaymentResponse response = service.createPayment(42, "HD42", "VNPAY", "127.0.0.1");
+        Map<String, String> params = queryParams(response.getPaymentUrl());
+
+        assertTrue(response.getPaymentUrl().startsWith(
+                "https://shop.example/api/shop/payments/vnpay/checkout?"
+        ));
+        assertEquals("LOCALDEMO", params.get("vnp_TmnCode"));
+
+        ShopPaymentGatewayService.GatewayReturnResult result =
+                service.completeLocalVnPayTestCheckout(
+                        params, "pay", "9704198526191432198", "07/15", "", "123456"
+                );
+
+        assertTrue(result.valid());
+        assertTrue(result.success());
+        assertNotNull(order.getNgayThanhToan());
     }
 
     @Test
@@ -246,6 +311,51 @@ class ShopPaymentGatewayServiceTest {
         assertFalse(Boolean.TRUE.equals(order.getDaGiuTon()));
         assertTrue(Boolean.TRUE.equals(order.getDaTruTon()));
         assertEquals("Đã xác nhận", order.getTrangThai());
+    }
+
+    @Test
+    void successfulGatewayPaymentDeductsUnreservedStockWhenOrderBecomesConfirmed() {
+        properties.getVnpay().setLocalCheckoutEnabled(true);
+        HoaDon order = payableOrder();
+        order.setDaGiuTon(false);
+        order.setDaTruTon(false);
+        ThanhToan payment = ThanhToan.builder()
+                .id(26)
+                .hoaDon(order)
+                .maGiaoDich("VP42TUNRESERVED")
+                .soTien(new BigDecimal("250000"))
+                .trangThai("Chờ thanh toán")
+                .build();
+        ChiTietSanPham variant = new ChiTietSanPham();
+        variant.setIdSpct(101);
+        HoaDonChiTiet item = HoaDonChiTiet.builder()
+                .hoaDon(order)
+                .chiTietSanPham(variant)
+                .soLuong(2)
+                .build();
+
+        when(paymentRepository.findFirstByMaGiaoDichOrderByIdDesc("VP42TUNRESERVED"))
+                .thenReturn(Optional.of(payment));
+        when(orderItemRepository.findByHoaDon_Id(42)).thenReturn(List.of(item));
+        when(paymentRepository.save(any(ThanhToan.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(orderRepository.save(any(HoaDon.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("vnp_TmnCode", TEST_TMN_CODE);
+        params.put("vnp_TxnRef", "VP42TUNRESERVED");
+        params.put("vnp_Amount", "25000000");
+        params.put("vnp_SecureHash", sign(params));
+
+        ShopPaymentGatewayService.GatewayReturnResult result =
+                service.completeLocalVnPayTestCheckout(
+                        params, "pay", "4456530000001005", "12/26", "123", ""
+                );
+
+        assertTrue(result.success());
+        assertEquals("Đã xác nhận", order.getTrangThai());
+        verify(inventoryService).deductOnlineStock(101, 2);
+        assertFalse(Boolean.TRUE.equals(order.getDaGiuTon()));
+        assertTrue(Boolean.TRUE.equals(order.getDaTruTon()));
     }
 
     @Test
@@ -436,6 +546,10 @@ class ShopPaymentGatewayServiceTest {
     void declinesInsufficientBalanceNcbTestCard() {
         properties.getVnpay().setLocalCheckoutEnabled(true);
         HoaDon order = payableOrder();
+        PhieuGiamGia voucher = new PhieuGiamGia();
+        voucher.setId(9);
+        voucher.setSoLuongDaDung(1);
+        order.setPhieuGiamGia(voucher);
         ThanhToan payment = ThanhToan.builder()
                 .id(16)
                 .hoaDon(order)
@@ -446,6 +560,9 @@ class ShopPaymentGatewayServiceTest {
         when(paymentRepository.findFirstByMaGiaoDichOrderByIdDesc("VP42TDECLINED"))
                 .thenReturn(Optional.of(payment));
         when(paymentRepository.save(any(ThanhToan.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(voucherRepository.findByIdForUpdate(9)).thenReturn(Optional.of(voucher));
+        when(voucherRepository.save(any(PhieuGiamGia.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(orderRepository.save(any(HoaDon.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Map<String, String> params = new LinkedHashMap<>();
         params.put("vnp_TmnCode", TEST_TMN_CODE);
@@ -461,6 +578,17 @@ class ShopPaymentGatewayServiceTest {
         assertTrue(result.valid());
         assertFalse(result.success());
         assertNull(order.getNgayThanhToan());
+        assertEquals("Thất bại", payment.getTrangThai());
+        assertEquals("Đã hủy", order.getTrangThai());
+        assertEquals(0, voucher.getSoLuongDaDung());
+
+        service.completeLocalVnPayTestCheckout(
+                params, "pay", "9704198526191432198", "07/15", "", "123456"
+        );
+
+        assertNull(order.getNgayThanhToan());
+        assertEquals("Đã hủy", order.getTrangThai());
+        assertEquals("Thất bại", payment.getTrangThai());
     }
 
     @Test

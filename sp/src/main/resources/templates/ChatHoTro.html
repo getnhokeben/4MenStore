@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="/js/app-shell.js?v=live-chat-20260722-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-icons-20260822-1" defer></script>
     <style>
         *{box-sizing:border-box;margin:0;padding:0}
         :root{--sw:220px;--bg:#eef2f7;--white:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;--navy:#102a56;--navy-hover:#0b1f3f;--blue:#2563eb;--green:#16a34a;--amber:#b7791f;--red:#dc2626;--r:14px}
@@ -37,7 +37,7 @@
         .session-card strong{display:block;font-size:13px;color:var(--text)}
         .session-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px}
         .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:800}
-        .badge.waiting{background:#fff7ed;color:var(--amber)}.badge.staff{background:#dcfce7;color:var(--green)}.badge.ai{background:#eef4ff;color:var(--navy)}
+        .badge.waiting{background:#fff7ed;color:var(--amber)}.badge.staff{background:#dcfce7;color:var(--green)}.badge.ai{background:#eef4ff;color:var(--navy)}.badge.closed{background:#f1f5f9;color:#64748b}.badge.expired{background:#fef2f2;color:var(--red)}
         .thread{height:calc(100vh - 190px);display:flex;flex-direction:column}
         .thread-customer-card{display:none;padding:12px 16px;border-bottom:1px solid var(--border);background:#f8fbff;color:#334155}
         .thread-customer-card.show{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -77,7 +77,7 @@
     <div class="chat-layout">
         <section class="panel">
             <div class="panel-head">
-                <strong>Phiên đang mở</strong>
+                <strong>Tất cả phiên chat</strong>
                 <span class="muted" id="sessionCount">0 phiên</span>
             </div>
             <div class="session-tools">
@@ -130,12 +130,14 @@
         refreshTimer = setInterval(refresh, 3500);
     });
 
+    // Thực hiện xử lý nghiệp vụ của hàm api.
     async function api(url, options = {}) {
         const response = await fetch(url, {...options, credentials:'same-origin'});
         if (!response.ok) throw new Error(await response.text() || 'Không tải được dữ liệu');
         return response.status === 204 ? null : response.json();
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load sessions.
     async function loadSessions() {
         try {
             sessions = await api('/api/staff/chat-sessions');
@@ -146,10 +148,12 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm refresh.
     async function refresh() {
         await loadSessions();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render sessions.
     function renderSessions() {
         const keyword = ($('sessionSearch')?.value || '').trim().toLowerCase();
         const filtered = keyword
@@ -163,7 +167,7 @@
             : sessions;
         $('sessionCount').textContent = `${filtered.length}/${sessions.length} phiên`;
         $('waitingCount').textContent = `${sessions.filter(item => item.status === 'WAITING_STAFF').length} chờ`;
-        $('liveCount').textContent = `${sessions.filter(item => item.status === 'STAFF_JOINED').length} đang chat`;
+        $('liveCount').textContent = `${sessions.filter(item => ['AI', 'WAITING_STAFF', 'STAFF_JOINED'].includes(item.status)).length} hoạt động`;
         $('sessionList').innerHTML = filtered.length ? filtered.map(session => `
             <button class="session-card ${Number(session.id) === Number(currentId) ? 'active' : ''}" type="button" onclick="openSession(${session.id})">
                 <span class="session-avatar">${esc(initials(session.customerName || 'KO'))}</span>
@@ -173,26 +177,29 @@
                         <span>${esc(session.customerEmail || 'Khách vãng lai')}</span>
                         <span class="badge ${statusClass(session.status)}">${statusText(session.status)}</span>
                     </div>
-                    <div class="muted">Cập nhật ${esc(fmtTime(session.updatedAt))}</div>
+                    <div class="muted">${isActiveSession(session.status) ? 'Đang hoạt động' : 'Không còn hoạt động'} · Cập nhật ${esc(fmtTime(session.updatedAt))}</div>
                 </span>
             </button>
         `).join('') : '<div class="empty">Không có phiên phù hợp.</div>';
     }
 
+    // Xử lý tương tác người dùng cho open session.
     async function openSession(id, focus = true) {
         currentId = id;
         const session = await api(`/api/staff/chat-sessions/${id}`);
         $('threadTitle').textContent = session.customerName || 'Khách online';
         $('threadSubtitle').textContent = `${statusText(session.status)}${session.employeeName ? ' · ' + session.employeeName : ''}`;
         renderCustomerCard(session);
-        $('closeBtn').disabled = false;
-        $('replyInput').disabled = false;
-        $('replyBtn').disabled = false;
+        const ended = session.status === 'CLOSED' || session.status === 'EXPIRED';
+        $('closeBtn').disabled = ended;
+        $('replyInput').disabled = ended;
+        $('replyBtn').disabled = ended;
         renderMessages(session.messages || []);
         renderSessions();
-        if (focus) $('replyInput').focus();
+        if (focus && !ended) $('replyInput').focus();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render messages.
     function renderMessages(messages) {
         $('messageList').innerHTML = messages.length ? messages.map(message => `
             <div class="msg ${messageClass(message.senderType)}">
@@ -203,6 +210,7 @@
         $('messageList').scrollTop = $('messageList').scrollHeight;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render customer card.
     function renderCustomerCard(session) {
         const card = $('threadCustomerCard');
         card.classList.add('show');
@@ -215,6 +223,7 @@
         `;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho insert quick reply.
     function insertQuickReply(text) {
         const input = $('replyInput');
         if (input.disabled) return;
@@ -222,12 +231,14 @@
         input.focus();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm initials.
     function initials(name) {
         const words = String(name || '').trim().split(/\s+/).filter(Boolean);
         if (!words.length) return 'K';
         return words.slice(-2).map(word => word[0]).join('').toUpperCase();
     }
 
+    // Xử lý tương tác người dùng cho send reply.
     async function sendReply(event) {
         event.preventDefault();
         const message = $('replyInput').value.trim();
@@ -247,6 +258,7 @@
         }
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close current session.
     async function closeCurrentSession() {
         if (!currentId) return;
         await api(`/api/staff/chat-sessions/${currentId}/close`, {method:'POST'});
@@ -263,19 +275,31 @@
         await loadSessions();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm status text.
     function statusText(status) {
+        if (status === 'EXPIRED') return 'Hết hạn (30 phút)';
+        if (status === 'CLOSED') return 'Đã kết thúc';
         if (status === 'WAITING_STAFF') return 'Chờ nhân viên';
         if (status === 'STAFF_JOINED') return 'Đang chat';
         if (status === 'AI') return 'AI hỗ trợ';
         return status || 'Không rõ';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm status class.
     function statusClass(status) {
         if (status === 'WAITING_STAFF') return 'waiting';
         if (status === 'STAFF_JOINED') return 'staff';
+        if (status === 'CLOSED') return 'closed';
+        if (status === 'EXPIRED') return 'expired';
         return 'ai';
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is active session.
+    function isActiveSession(status) {
+        return ['AI', 'WAITING_STAFF', 'STAFF_JOINED'].includes(status);
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm message class.
     function messageClass(type) {
         const value = String(type || '').toLowerCase();
         if (value === 'staff') return 'staff';
@@ -284,6 +308,7 @@
         return 'customer';
     }
 
+    // Xử lý tương tác người dùng cho sender text.
     function senderText(type) {
         if (type === 'STAFF') return 'Nhân viên';
         if (type === 'AI') return 'Trợ lý AI';

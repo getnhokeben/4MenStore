@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public interface PhieuGiamGiaService {
 
@@ -19,8 +18,6 @@ public interface PhieuGiamGiaService {
     void delete(Integer id);
 
     PhieuGiamGia toggleStatus(Integer id);
-
-    List<Integer> getKhachHangIds(Integer idPgg);
 
     boolean validateVoucher(Integer idVoucher, Double tongTien);
 }

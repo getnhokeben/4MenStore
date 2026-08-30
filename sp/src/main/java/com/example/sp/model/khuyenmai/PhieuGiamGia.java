@@ -59,6 +59,7 @@ public class PhieuGiamGia {
     private String doiTuong;
 
     @PrePersist
+    // Thực hiện xử lý nghiệp vụ của hàm pre persist.
     public void prePersist() {
         if (soLuongDaDung == null) {
             soLuongDaDung = 0;
@@ -68,6 +69,7 @@ public class PhieuGiamGia {
         }
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get doi tuong.
     public String getDoiTuong() {
         return Objects.requireNonNullElse(doiTuong, "CONG_KHAI");
     }

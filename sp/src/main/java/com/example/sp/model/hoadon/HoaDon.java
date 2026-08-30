@@ -95,6 +95,41 @@ public class HoaDon {
     @Column(name = "ngay_nhan_hang_hoan")
     private LocalDateTime ngayNhanHangHoan;
 
+    @Column(name = "pgg_snapshot_ma", length = 100)
+    private String pggSnapshotMa;
+
+    @Column(name = "pgg_snapshot_ten", length = 255)
+    private String pggSnapshotTen;
+
+    @Column(name = "pgg_snapshot_loai", length = 50)
+    private String pggSnapshotLoai;
+
+    @Column(name = "pgg_snapshot_gia_tri")
+    private BigDecimal pggSnapshotGiaTri;
+
+    @Column(name = "pgg_snapshot_gia_tri_toi_da")
+    private BigDecimal pggSnapshotGiaTriToiDa;
+
+    @Column(name = "pgg_snapshot_dieu_kien")
+    private BigDecimal pggSnapshotDieuKien;
+
+    @Column(name = "pgg_snapshot_so_tien_giam")
+    private BigDecimal pggSnapshotSoTienGiam;
+
+    // Thực hiện xử lý nghiệp vụ của hàm capture voucher snapshot.
+    public void captureVoucherSnapshot() {
+        if (pggSnapshotMa != null || phieuGiamGia == null) {
+            return;
+        }
+        pggSnapshotMa = phieuGiamGia.getMaPgg();
+        pggSnapshotTen = phieuGiamGia.getTenPgg();
+        pggSnapshotLoai = phieuGiamGia.getLoaiGiam();
+        pggSnapshotGiaTri = phieuGiamGia.getGiaTri();
+        pggSnapshotGiaTriToiDa = phieuGiamGia.getGiaTriToiDa();
+        pggSnapshotDieuKien = phieuGiamGia.getDieuKienDonHang();
+        pggSnapshotSoTienGiam = soTienGiam;
+    }
+
     @Column(name = "ngay_tao")
     private LocalDateTime ngayTao;
 

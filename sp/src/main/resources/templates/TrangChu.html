@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-icons-20260822-1" defer></script>
     <style>
         :root {
             --bg: #f2f5f9;
@@ -185,6 +185,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', initDashboard);
 
+    // Thực hiện xử lý nghiệp vụ của hàm init dashboard.
     async function initDashboard() {
         const user = await getCurrentEmployee();
 
@@ -205,6 +206,7 @@
         renderCards(isManager);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get current employee.
     async function getCurrentEmployee() {
         try {
             const response = await fetch('/api/nhanvien/auth/me', {
@@ -221,6 +223,7 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho render cards.
     function renderCards(isManager) {
         const cards = isManager
             ? [
@@ -266,6 +269,7 @@
         document.getElementById('dashboardGrid').innerHTML = cards.join('');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm card metric.
     function cardMetric(title, value) {
         return `
             <article class="card">
@@ -276,6 +280,7 @@
         `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm card links.
     function cardLinks(title, links) {
         return `
             <article class="card">
@@ -292,6 +297,7 @@
         `;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm card text.
     function cardText(title, text) {
         return `
             <article class="card">
@@ -301,6 +307,7 @@
         `;
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is manager role.
     function isManagerRole(role) {
         const value = String(role || '')
             .trim()

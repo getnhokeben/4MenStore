@@ -27,7 +27,7 @@ public class SanPhamFullRequest {
 
     private List<String> danhSachHinhAnhPhu;
 
-    @NotEmpty(message = "Sản phẩm phải có ít nhất một biến thể chi tiết")
+    // Chỉ luồng tạo sản phẩm mới bắt buộc có biến thể; cập nhật có thể giữ nguyên biến thể hiện có.
     @Valid
     private List<ChiTietSanPhamRequest> danhSachBienThe;
 }

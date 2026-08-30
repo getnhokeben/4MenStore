@@ -40,6 +40,7 @@ public class KhachHangController {
             new BCryptPasswordEncoder();
 
     @GetMapping
+    // Tải hoặc truy xuất dữ liệu cho get all.
     public Page<KhachHang> getAll(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Boolean trangThai,
@@ -55,11 +56,13 @@ public class KhachHangController {
     }
 
     @GetMapping("/{id:\\d+}")
+    // Tải hoặc truy xuất dữ liệu cho get by id.
     public KhachHang getById(@PathVariable Integer id) {
         return khachHangService.findById(id);
     }
 
     @PostMapping
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create.
     public ResponseEntity<?> create(
             @Valid @RequestBody KhachHang request,
             BindingResult bindingResult
@@ -75,6 +78,7 @@ public class KhachHangController {
     }
 
     @PutMapping("/{id:\\d+}")
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update.
     public ResponseEntity<?> update(
             @PathVariable Integer id,
             @Valid @RequestBody KhachHang request,
@@ -91,11 +95,13 @@ public class KhachHangController {
     }
 
     @PatchMapping("/{id:\\d+}/trang-thai")
+    // Xử lý tương tác người dùng cho toggle status.
     public KhachHang toggleStatus(@PathVariable Integer id) {
         return khachHangService.toggleStatus(id);
     }
 
     @DeleteMapping("/{id:\\d+}")
+    // Thực hiện xử lý nghiệp vụ của hàm deactivate.
     public ResponseEntity<Void> deactivate(@PathVariable Integer id) {
         khachHangService.deactivate(id);
 
@@ -120,26 +126,32 @@ public class KhachHangController {
         })
         private String xacNhanMatKhau;
 
+        // Tải hoặc truy xuất dữ liệu cho get mat khau cu.
         public String getMatKhauCu() {
             return matKhauCu;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set mat khau cu.
         public void setMatKhauCu(String matKhauCu) {
             this.matKhauCu = matKhauCu;
         }
 
+        // Tải hoặc truy xuất dữ liệu cho get mat khau moi.
         public String getMatKhauMoi() {
             return matKhauMoi;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set mat khau moi.
         public void setMatKhauMoi(String matKhauMoi) {
             this.matKhauMoi = matKhauMoi;
         }
 
+        // Tải hoặc truy xuất dữ liệu cho get xac nhan mat khau.
         public String getXacNhanMatKhau() {
             return xacNhanMatKhau;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set xac nhan mat khau.
         public void setXacNhanMatKhau(String xacNhanMatKhau) {
             this.xacNhanMatKhau = xacNhanMatKhau;
         }
@@ -150,6 +162,7 @@ public class KhachHangController {
             method = {RequestMethod.PUT, RequestMethod.POST}
     )
     @Transactional
+    // Thực hiện xử lý nghiệp vụ của hàm change password.
     public ResponseEntity<?> changePassword(
             @RequestBody ChangePasswordRequest request,
             HttpSession session
@@ -240,6 +253,7 @@ public class KhachHangController {
     }
 
     @GetMapping("/xuat-excel")
+    // Thực hiện xử lý nghiệp vụ của hàm export excel.
     public ResponseEntity<byte[]> exportExcel(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Boolean trangThai,
@@ -262,6 +276,7 @@ public class KhachHangController {
                 .body(data);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm matches password.
     private boolean matchesPassword(
             String rawPassword,
             String storedPassword
@@ -275,6 +290,7 @@ public class KhachHangController {
                 : storedPassword.equals(rawPassword);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is bcrypt hash.
     private boolean isBcryptHash(String value) {
         return value != null && (
                 value.startsWith("$2a$")
@@ -283,6 +299,7 @@ public class KhachHangController {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm validation errors.
     private Map<String, Object> validationErrors(
             BindingResult bindingResult
     ) {
@@ -301,6 +318,7 @@ public class KhachHangController {
         );
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create excel.
     private byte[] createExcel(List<KhachHang> customers)
             throws IOException {
 
@@ -380,6 +398,7 @@ public class KhachHangController {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm text.
     private String text(String value) {
         return value == null ? "" : value;
     }

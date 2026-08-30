@@ -4,6 +4,8 @@
     import java.time.LocalDateTime;
 
     public interface SanPhamChiTietPromotionView {
+        Integer getIdSp();
+        String getMaSp();
         Integer getIdSpct();
         String getMaSpct();
         String getTenSp();

@@ -16,6 +16,7 @@ public class ShopLiveChatDTO {
     private String employeeName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private LocalDateTime expiresAt;
     private List<Message> messages;
 
     @Data

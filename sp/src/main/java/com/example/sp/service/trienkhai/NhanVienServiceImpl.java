@@ -32,6 +32,7 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     private static final Set<String> VALID_ROLES =
             Set.of("Quản lý", "Nhân viên");
+    private static final String MANAGER_ROLE = "Quản lý";
 
     private static final char[] UPPER =
             "ABCDEFGHJKLMNPQRSTUVWXYZ".toCharArray();
@@ -56,6 +57,7 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     @Transactional(readOnly = true)
+    // Tải hoặc truy xuất dữ liệu cho get all.
     public Page<NhanVien> getAll(
             String keyword,
             String vaiTro,
@@ -72,6 +74,7 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     @Transactional(readOnly = true)
+    // Tải hoặc truy xuất dữ liệu cho find by id.
     public NhanVien findById(Integer id) {
         return nhanVienRepository.findById(id)
                 .orElseThrow(() ->
@@ -81,7 +84,11 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create.
     public NhanVien create(NhanVien nhanVien) {
+        if (nhanVien == null) {
+            throw new IllegalArgumentException("Dữ liệu nhân viên không hợp lệ");
+        }
         normalize(nhanVien);
         validate(nhanVien, null);
 
@@ -103,11 +110,16 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update.
     public NhanVien update(Integer id, NhanVien request) {
         NhanVien current = findById(id);
 
+        if (request == null) {
+            throw new IllegalArgumentException("Dữ liệu nhân viên không hợp lệ");
+        }
         normalize(request);
         validate(request, id);
+        ensureManagerRoleIsRetained(current, !MANAGER_ROLE.equals(request.getVaiTro()));
 
         current.setHoTen(request.getHoTen());
         current.setSoDienThoai(request.getSoDienThoai());
@@ -129,8 +141,10 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     @Transactional
+    // Xử lý tương tác người dùng cho toggle status.
     public NhanVien toggleStatus(Integer id) {
         NhanVien employee = findById(id);
+        ensureManagerRoleIsRetained(employee, Boolean.TRUE.equals(employee.getTrangThai()));
 
         employee.setTrangThai(!Boolean.TRUE.equals(employee.getTrangThai()));
 
@@ -139,14 +153,30 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     @Transactional
+    // Thực hiện xử lý nghiệp vụ của hàm deactivate.
     public void deactivate(Integer id) {
         NhanVien employee = findById(id);
+        ensureManagerRoleIsRetained(employee, Boolean.TRUE.equals(employee.getTrangThai()));
 
         employee.setTrangThai(false);
 
         nhanVienRepository.save(employee);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ensure manager role is retained.
+    private void ensureManagerRoleIsRetained(NhanVien employee, boolean removingManagerAccess) {
+        if (!removingManagerAccess
+                || !MANAGER_ROLE.equals(employee.getVaiTro())
+                || !Boolean.TRUE.equals(employee.getTrangThai())) {
+            return;
+        }
+
+        if (!nhanVienRepository.existsByVaiTroAndTrangThaiTrueAndIdNot(MANAGER_ROLE, employee.getId())) {
+            throw new IllegalArgumentException("Hệ thống phải còn ít nhất một quản lý đang hoạt động");
+        }
+    }
+
+    // Kiểm tra điều kiện và tính hợp lệ cho validate.
     private void validate(NhanVien employee, Integer currentId) {
         LocalDate today = LocalDate.now();
 
@@ -293,6 +323,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate address part.
     private void validateAddressPart(String value, String message) {
         if (isBlank(value)) {
             throw new IllegalArgumentException(message);
@@ -305,6 +336,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm exists email.
     private boolean existsEmail(String value, Integer currentId) {
         return currentId == null
                 ? nhanVienRepository.existsByEmailIgnoreCase(value)
@@ -314,6 +346,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm exists phone.
     private boolean existsPhone(String value, Integer currentId) {
         return currentId == null
                 ? nhanVienRepository.existsBySoDienThoai(value)
@@ -323,6 +356,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm exists cccd.
     private boolean existsCccd(String value, Integer currentId) {
         return currentId == null
                 ? nhanVienRepository.existsByCccd(value)
@@ -332,6 +366,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate ma nv.
     private String generateMaNv(String name) {
         return GeneratedCodeUtil.fromNameAndDate(
                 name,
@@ -341,6 +376,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate temporary password.
     private String generateTemporaryPassword() {
         List<Character> characters = new ArrayList<>();
 
@@ -363,10 +399,12 @@ public class NhanVienServiceImpl implements NhanVienService {
         return password.toString();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm random character.
     private char randomCharacter(char[] source) {
         return source[secureRandom.nextInt(source.length)];
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm with default sort.
     private Pageable withDefaultSort(Pageable pageable) {
         Sort sort = Sort.by(
                 Sort.Order.desc("trangThai"),
@@ -388,6 +426,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize.
     private void normalize(NhanVien employee) {
         employee.setHoTen(normalizeSpaces(employee.getHoTen()));
         employee.setEmail(lower(trimToNull(employee.getEmail())));
@@ -405,6 +444,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         employee.setMatKhau(null);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sync legacy address.
     private void syncLegacyAddress(NhanVien employee) {
         employee.setDiaChi(java.util.stream.Stream.of(
                         employee.getDiaChiChiTiet(),
@@ -415,6 +455,7 @@ public class NhanVienServiceImpl implements NhanVienService {
                 .collect(java.util.stream.Collectors.joining(", ")));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize spaces.
     private String normalizeSpaces(String value) {
         if (value == null) {
             return null;
@@ -425,6 +466,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         return normalized.isEmpty() ? null : normalized;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm only digits.
     private String onlyDigits(String value) {
         if (value == null) {
             return null;
@@ -435,10 +477,12 @@ public class NhanVienServiceImpl implements NhanVienService {
         return digits.isEmpty() ? null : digits;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lower.
     private String lower(String value) {
         return value == null ? null : value.toLowerCase();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm trim to null.
     private String trimToNull(String value) {
         if (value == null) {
             return null;
@@ -449,6 +493,7 @@ public class NhanVienServiceImpl implements NhanVienService {
         return trimmed.isEmpty() ? null : trimmed;
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is blank.
     private boolean isBlank(String value) {
         return value == null || value.isBlank();
     }

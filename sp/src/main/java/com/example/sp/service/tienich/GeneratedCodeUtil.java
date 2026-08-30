@@ -11,9 +11,11 @@ public final class GeneratedCodeUtil {
     private static final int MAX_CODE_LENGTH = 15;
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("ddMMyyyy");
 
+    // Thực hiện xử lý nghiệp vụ của hàm generated code util.
     private GeneratedCodeUtil() {
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm from name and date.
     public static String fromNameAndDate(String name, LocalDateTime createdAt, String fallbackName, Predicate<String> exists) {
         String base = normalizeCodePart(name);
         if (base.isBlank()) {
@@ -36,6 +38,7 @@ public final class GeneratedCodeUtil {
         throw new IllegalStateException("Khong the tao ma duy nhat");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize code part.
     private static String normalizeCodePart(String value) {
         if (value == null) {
             return "";

@@ -50,6 +50,22 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     List<ChiTietSanPham> findActiveSellableVariantsByProductId(@Param("idSp") Integer idSp);
 
     @Query("""
+        SELECT ct FROM ChiTietSanPham ct
+        JOIN FETCH ct.sanPham sp
+        LEFT JOIN FETCH sp.chatLieu
+        LEFT JOIN FETCH sp.xuatXu
+        LEFT JOIN FETCH ct.kichCo
+        LEFT JOIN FETCH ct.mauSac
+        LEFT JOIN FETCH ct.loaiAo
+        LEFT JOIN FETCH ct.phongCachMac
+        LEFT JOIN FETCH ct.kieuDang
+        WHERE sp.idSp = :idSp
+          AND sp.trangThai = true
+          AND ct.trangThai = true
+    """)
+    List<ChiTietSanPham> findActiveVariantsByProductId(@Param("idSp") Integer idSp);
+
+    @Query("""
         SELECT CASE WHEN COUNT(ct) > 0 THEN true ELSE false END
         FROM ChiTietSanPham ct
         JOIN ct.sanPham sp

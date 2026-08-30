@@ -33,6 +33,7 @@ import com.example.sp.repository.khachhang.KhachHangRepository;
 import com.example.sp.repository.khuyenmai.PhieuGiamGiaRepository;
 import com.example.sp.service.tienich.GeneratedCodeUtil;
 import com.example.sp.service.tienich.MoneyRoundingUtil;
+import com.example.sp.validation.CustomerNameValidator;
 import com.example.sp.service.hoadon.OrderStatusMailService;
 import com.example.sp.service.tonkho.InventoryService;
 import lombok.RequiredArgsConstructor;
@@ -77,6 +78,7 @@ public class ShopService {
     private final InventoryService inventoryService;
 
     @Transactional(readOnly = true)
+    // Tải hoặc truy xuất dữ liệu cho get products.
     public Page<ShopProductDTO> getProducts(
             String keyword,
             String loaiAo,
@@ -132,22 +134,25 @@ public class ShopService {
     }
 
     @Transactional(readOnly = true)
+    // Tải hoặc truy xuất dữ liệu cho get product.
     public ShopProductDTO getProduct(Integer idSp) {
-        List<ChiTietSanPham> variants = chiTietRepo.findActiveSellableVariantsByProductId(idSp);
+        List<ChiTietSanPham> variants = chiTietRepo.findActiveVariantsByProductId(idSp);
         if (variants.isEmpty()) {
-            throw new IllegalArgumentException("Sản phẩm không tồn tại hoặc đã hết hàng");
+            throw new IllegalArgumentException("Sản phẩm hiện không còn kinh doanh");
         }
         return toProductDTO(variants);
     }
 
     @Transactional(readOnly = true)
+    // Tải hoặc truy xuất dữ liệu cho get variants.
     public List<ShopVariantDTO> getVariants(Integer idSp) {
-        return chiTietRepo.findActiveSellableVariantsByProductId(idSp).stream()
+        return chiTietRepo.findActiveVariantsByProductId(idSp).stream()
                 .map(this::toVariantDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
+    // Tải hoặc truy xuất dữ liệu cho get voucher.
     public ShopVoucherDTO getVoucher(String code, BigDecimal subtotal) {
         PhieuGiamGia voucher = findVoucherByCode(code)
                 .orElseThrow(() -> new IllegalArgumentException("Mã giảm giá không tồn tại"));
@@ -157,6 +162,7 @@ public class ShopService {
     }
 
     @Transactional(readOnly = true)
+    // Tải hoặc truy xuất dữ liệu cho get vouchers.
     public List<ShopVoucherDTO> getVouchers(BigDecimal subtotal) {
         BigDecimal safeSubtotal = MoneyRoundingUtil.roundNonNegative(subtotal);
         return voucherRepo.findByTrangThaiTrue().stream()
@@ -173,6 +179,7 @@ public class ShopService {
     }
 
     @Transactional(readOnly = true)
+    // Tải hoặc truy xuất dữ liệu cho get order history.
     public List<ShopOrderHistoryDTO> getOrderHistory(Integer customerId) {
         if (customerId == null) {
             return List.of();
@@ -183,6 +190,7 @@ public class ShopService {
     }
 
     @Transactional(readOnly = true)
+    // Thực hiện xử lý nghiệp vụ của hàm lookup order.
     public ShopOrderHistoryDTO lookupOrder(String maHoaDon) {
         String code = requireText(maHoaDon, "Vui long nhap ma don hang");
         return hoaDonRepo.findFirstByMaHoaDonIgnoreCase(code)
@@ -191,9 +199,21 @@ public class ShopService {
     }
 
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create order.
     public ShopOrderResponse createOrder(ShopOrderRequest request, Integer customerId) {
         KhachHang customer = resolveCustomer(customerId);
-        String name = requireText(firstNonBlank(request.getTenKhachHang(), customer == null ? null : customer.getTenKhachHang()), "Vui lòng nhập họ tên");
+        String name = requireText(
+                CustomerNameValidator.normalize(firstNonBlank(
+                        request.getTenKhachHang(),
+                        customer == null ? null : customer.getTenKhachHang()
+                )),
+                "Vui lòng nhập họ tên"
+        );
+        if (!CustomerNameValidator.isValid(name)) {
+            throw new IllegalArgumentException(
+                    CustomerNameValidator.INVALID_MESSAGE
+            );
+        }
         String phone = normalizePhone(firstNonBlank(request.getSoDienThoai(), customer == null ? null : customer.getSoDienThoai()));
         String email = requireEmail(firstNonBlank(request.getEmail(), customer == null ? null : customer.getEmail()));
         String address = requireText(firstNonBlank(request.getDiaChiKhachHang(), customer == null ? null : customer.getDiaChi()), "Vui lòng nhập địa chỉ giao hàng");
@@ -203,20 +223,11 @@ public class ShopService {
         Map<Integer, Integer> quantityByVariant = mergeItems(request.getItems());
         List<OrderLine> lines = new ArrayList<>();
         BigDecimal subtotal = BigDecimal.ZERO;
-        boolean deductStockImmediately = false;
-        boolean reserveUntilGatewayCallback = isGatewayPayment(paymentMethod);
-
         for (Map.Entry<Integer, Integer> entry : quantityByVariant.entrySet()) {
             int quantity = entry.getValue();
-            ChiTietSanPham variant;
-            if (deductStockImmediately) {
-                variant = inventoryService.deductOnlineStock(entry.getKey(), quantity);
-            } else if (reserveUntilGatewayCallback) {
-                variant = inventoryService.reserveOnline(entry.getKey(), quantity);
-            } else {
-                // COD is validated now, then deducted only when admin confirms.
-                variant = inventoryService.validateOnlineAvailability(entry.getKey(), quantity);
-            }
+            // Creating an online order must not change either physical or available stock.
+            // Stock is deducted atomically only when the order becomes "Đã xác nhận".
+            ChiTietSanPham variant = inventoryService.validateOnlineAvailability(entry.getKey(), quantity);
 
             BigDecimal price = MoneyRoundingUtil.roundNonNegative(salePrice(variant));
             BigDecimal lineTotal = MoneyRoundingUtil.roundNonNegative(price.multiply(BigDecimal.valueOf(quantity)));
@@ -231,13 +242,11 @@ public class ShopService {
             discount = calculateDiscount(voucher, subtotal);
         }
 
-        BigDecimal shipFee = MoneyRoundingUtil.roundNonNegative(request.getPhiVanChuyen() == null
-                ? estimateShippingFee(address, subtotal)
-                : request.getPhiVanChuyen());
+        // Never trust a shipping amount supplied by the browser.  It can be
+        // displayed as a quote, but the final order always uses this server-side calculation.
+        BigDecimal shipFee = estimateShippingFee(address, subtotal);
         BigDecimal total = MoneyRoundingUtil.roundNonNegative(subtotal.subtract(discount).add(shipFee));
-        String initialStatus = deductStockImmediately
-                ? "Đã xác nhận"
-                : "COD".equals(paymentMethod) ? "Chờ xác nhận" : "Chờ thanh toán online";
+        String initialStatus = "COD".equals(paymentMethod) ? "Chờ xác nhận" : "Chờ thanh toán online";
 
         HoaDon order = HoaDon.builder()
                 .maHoaDon(generateOrderCode(name))
@@ -252,8 +261,8 @@ public class ShopService {
                 .soDienThoai(phone)
                 .ghiChu(note)
                 .trangThai(initialStatus)
-                .daGiuTon(reserveUntilGatewayCallback)
-                .daTruTon(deductStockImmediately)
+                .daGiuTon(false)
+                .daTruTon(false)
                 .ngayTao(LocalDateTime.now())
                 .ngayCapNhat(LocalDateTime.now())
                 .khachHang(customer)
@@ -291,6 +300,7 @@ public class ShopService {
     }
 
     @Transactional(readOnly = true)
+    // Thực hiện xử lý nghiệp vụ của hàm estimate shipping fee.
     public BigDecimal estimateShippingFee(String address, BigDecimal subtotal) {
         BigDecimal safeSubtotal = MoneyRoundingUtil.roundNonNegative(subtotal);
         if (safeSubtotal.compareTo(new BigDecimal("500000")) >= 0) {
@@ -307,9 +317,10 @@ public class ShopService {
         if (containsAny(normalizedAddress, "hải phòng", "hai phong", "cần thơ", "can tho", "bình dương", "binh duong", "đồng nai", "dong nai")) {
             return new BigDecimal("30000");
         }
-        return new BigDecimal("38000");
+        return new BigDecimal("35000");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm resolve customer.
     private KhachHang resolveCustomer(Integer customerId) {
         if (customerId == null) return null;
         return khachHangRepo.findById(customerId)
@@ -317,6 +328,7 @@ public class ShopService {
                 .orElse(null);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to product dto.
     private ShopProductDTO toProductDTO(List<ChiTietSanPham> variants) {
         SanPham product = variants.get(0).getSanPham();
         PriceInfo displayPrice = variants.stream()
@@ -371,6 +383,7 @@ public class ShopService {
                 .build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm price info.
     private PriceInfo priceInfo(ChiTietSanPham variant) {
         BigDecimal original = MoneyRoundingUtil.roundNonNegative(variant.getDonGia());
         Optional<DotGiamGia> campaign = activeCampaign(variant);
@@ -380,9 +393,11 @@ public class ShopService {
         return new PriceInfo(original, current, campaign);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm price info.
     private record PriceInfo(BigDecimal original, BigDecimal current, Optional<DotGiamGia> campaign) {
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to variant dto.
     private ShopVariantDTO toVariantDTO(ChiTietSanPham variant) {
         SanPham product = variant.getSanPham();
         String image = firstImage(variant);
@@ -411,6 +426,7 @@ public class ShopService {
                 .build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to order response.
     private ShopOrderResponse toOrderResponse(HoaDon order, String email) {
         return ShopOrderResponse.builder()
                 .id(order.getId())
@@ -426,6 +442,7 @@ public class ShopService {
                 .build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to order history dto.
     private ShopOrderHistoryDTO toOrderHistoryDTO(HoaDon order) {
         List<ShopOrderHistoryItemDTO> items = hoaDonChiTietRepo.findByHoaDon_Id(order.getId()).stream()
                 .map(this::toOrderHistoryItemDTO)
@@ -457,6 +474,7 @@ public class ShopService {
                 .build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to order history item dto.
     private ShopOrderHistoryItemDTO toOrderHistoryItemDTO(HoaDonChiTiet item) {
         ChiTietSanPham variant = item.getChiTietSanPham();
         SanPham product = variant == null ? null : variant.getSanPham();
@@ -467,6 +485,7 @@ public class ShopService {
         return ShopOrderHistoryItemDTO.builder()
                 .id(item.getId())
                 .idSpct(variant == null ? null : variant.getIdSpct())
+                .idSp(product == null ? null : product.getIdSp())
                 .maSanPham(product == null ? null : product.getMaSp())
                 .tenSanPham(product == null ? "Sản phẩm" : product.getTenSp())
                 .mauSac(variant == null ? null : tenMauSac(variant.getMauSac()))
@@ -482,6 +501,7 @@ public class ShopService {
                 .build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to voucher dto.
     private ShopVoucherDTO toVoucherDTO(PhieuGiamGia voucher, BigDecimal subtotal, String selectedCode) {
         BigDecimal condition = MoneyRoundingUtil.roundNonNegative(voucher.getDieuKienDonHang());
         BigDecimal needMore = MoneyRoundingUtil.roundNonNegative(condition.subtract(subtotal));
@@ -522,6 +542,7 @@ public class ShopService {
                 .build();
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate voucher.
     private void validateVoucher(PhieuGiamGia voucher, BigDecimal subtotal) {
         if (!Boolean.TRUE.equals(voucher.getTrangThai())) {
             throw new IllegalArgumentException("Mã giảm giá đã tắt");
@@ -545,6 +566,7 @@ public class ShopService {
         }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is voucher in sale window.
     private boolean isVoucherInSaleWindow(PhieuGiamGia voucher) {
         LocalDateTime now = LocalDateTime.now();
         if (voucher.getNgayBatDau() != null && now.isBefore(voucher.getNgayBatDau())) return false;
@@ -552,6 +574,7 @@ public class ShopService {
         return true;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm calculate discount.
     private BigDecimal calculateDiscount(PhieuGiamGia voucher, BigDecimal subtotal) {
         BigDecimal value = isPercentVoucher(voucher.getLoaiGiam())
                 ? money(voucher.getGiaTri())
@@ -571,21 +594,32 @@ public class ShopService {
         return MoneyRoundingUtil.roundNonNegative(discount.min(subtotal));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm resolve voucher.
     private Optional<PhieuGiamGia> resolveVoucher(Integer idVoucher, String maVoucher) {
-        if (idVoucher != null) return voucherRepo.findById(idVoucher);
-        String code = trimToNull(maVoucher);
-        return code == null ? Optional.empty() : findVoucherByCode(code);
+        Optional<PhieuGiamGia> found;
+        if (idVoucher != null) {
+            found = voucherRepo.findById(idVoucher);
+        } else {
+            String code = trimToNull(maVoucher);
+            found = code == null ? Optional.empty() : findVoucherByCode(code);
+        }
+        return found.flatMap(voucher -> voucherRepo.findByIdForUpdate(voucher.getId()));
     }
 
+    // Tải hoặc truy xuất dữ liệu cho find voucher by code.
     private Optional<PhieuGiamGia> findVoucherByCode(String code) {
         String normalized = trimToNull(code);
         return normalized == null ? Optional.empty() : voucherRepo.findFirstByMaPggIgnoreCase(normalized);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm merge items.
     private Map<Integer, Integer> mergeItems(List<ShopOrderItemRequest> items) {
+        if (items == null || items.isEmpty() || items.size() > 50) {
+            throw new IllegalArgumentException("Giỏ hàng không hợp lệ");
+        }
         Map<Integer, Integer> merged = new LinkedHashMap<>();
         for (ShopOrderItemRequest item : items) {
-            if (item.getIdSpct() == null || item.getSoLuong() == null || item.getSoLuong() < 1) {
+            if (item == null || item.getIdSpct() == null || item.getSoLuong() == null || item.getSoLuong() < 1) {
                 throw new IllegalArgumentException("Dữ liệu giỏ hàng không hợp lệ");
             }
             merged.merge(item.getIdSpct(), item.getSoLuong(), Integer::sum);
@@ -593,6 +627,7 @@ public class ShopService {
         return merged;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm matches keyword.
     private boolean matchesKeyword(ChiTietSanPham variant, String keyword) {
         if (keyword == null) return true;
         SanPham product = variant.getSanPham();
@@ -609,16 +644,19 @@ public class ShopService {
         return text.contains(keyword);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm matches lookup.
     private boolean matchesLookup(Set<String> filters, String value) {
         return filters.isEmpty() || filters.contains(normalize(value));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm matches price.
     private boolean matchesPrice(BigDecimal price, BigDecimal min, BigDecimal max) {
         BigDecimal safePrice = money(price);
         if (min != null && safePrice.compareTo(min) < 0) return false;
         return max == null || safePrice.compareTo(max) <= 0;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sale price.
     private BigDecimal salePrice(ChiTietSanPham variant) {
         BigDecimal original = MoneyRoundingUtil.roundNonNegative(variant.getDonGia());
         return activeCampaign(variant)
@@ -626,6 +664,7 @@ public class ShopService {
                 .orElse(original);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm active campaign.
     private Optional<DotGiamGia> activeCampaign(ChiTietSanPham variant) {
         BigDecimal original = MoneyRoundingUtil.roundNonNegative(variant.getDonGia());
         return chiTietDotGiamGiaRepo.findActivePromotionsByVariantId(variant.getIdSpct(), LocalDateTime.now()).stream()
@@ -633,6 +672,7 @@ public class ShopService {
                 .min(Comparator.comparing(campaign -> campaignPrice(original, campaign)));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm campaign price.
     private BigDecimal campaignPrice(BigDecimal original, DotGiamGia campaign) {
         BigDecimal value = "PHAN_TRAM".equalsIgnoreCase(campaign.getLoaiGiamGia())
                 ? money(campaign.getGiaTriGiamGia())
@@ -648,6 +688,7 @@ public class ShopService {
         return MoneyRoundingUtil.roundNonNegative(original.subtract(reduction));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product comparator.
     private Comparator<ShopProductDTO> productComparator(String sort) {
         String normalized = normalize(sort);
         Comparator<ShopProductDTO> newest = Comparator
@@ -662,6 +703,7 @@ public class ShopService {
         return newest;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm split filter.
     private Set<String> splitFilter(String value) {
         Set<String> result = new LinkedHashSet<>();
         String normalized = trimToNull(value);
@@ -673,6 +715,7 @@ public class ShopService {
         return result;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm distinct.
     private List<ShopLookupDTO> distinct(Collection<ShopLookupDTO> values) {
         Map<String, ShopLookupDTO> result = new LinkedHashMap<>();
         for (ShopLookupDTO value : values) {
@@ -683,6 +726,7 @@ public class ShopService {
         return new ArrayList<>(result.values());
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm first image.
     private String firstImage(SanPham product) {
         String mainImage = trimToNull(product.getHinhAnh());
         if (mainImage != null) return mainImage;
@@ -694,6 +738,7 @@ public class ShopService {
                 .orElse(null);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm first image.
     private String firstImage(ChiTietSanPham variant) {
         String mainImage = trimToNull(variant.getHinhAnh());
         if (mainImage != null) return mainImage;
@@ -704,6 +749,7 @@ public class ShopService {
         return firstImage(variant.getSanPham());
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm first gallery image.
     private String firstGalleryImage(String value) {
         String raw = trimToNull(value);
         if (raw == null) return null;
@@ -720,6 +766,7 @@ public class ShopService {
         return null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm image url.
     private String imageUrl(String value) {
         String image = trimToNull(value);
         if (image == null) return null;
@@ -730,68 +777,84 @@ public class ShopService {
         return "/uploads/" + image;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lookup.
     private ShopLookupDTO lookup(ChatLieu value) {
         return value == null ? null : ShopLookupDTO.builder().id(value.getIdChatLieu()).ten(value.getTenChatLieu()).build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lookup.
     private ShopLookupDTO lookup(XuatXu value) {
         return value == null ? null : ShopLookupDTO.builder().id(value.getIdXuatXu()).ten(value.getTenXuatXu()).build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lookup.
     private ShopLookupDTO lookup(KichCo value) {
         return value == null ? null : ShopLookupDTO.builder().id(value.getIdKichCo()).ten(value.getTenKichCo()).build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lookup.
     private ShopLookupDTO lookup(MauSac value) {
         return value == null ? null : ShopLookupDTO.builder().id(value.getIdMauSac()).ten(value.getTenMauSac()).build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lookup.
     private ShopLookupDTO lookup(LoaiAo value) {
         return value == null ? null : ShopLookupDTO.builder().id(value.getIdLoaiAo()).ten(value.getTenLoai()).build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lookup.
     private ShopLookupDTO lookup(PhongCachMac value) {
         return value == null ? null : ShopLookupDTO.builder().id(value.getIdPhongCachMac()).ten(value.getTenPhongCach()).build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lookup.
     private ShopLookupDTO lookup(KieuDang value) {
         return value == null ? null : ShopLookupDTO.builder().id(value.getIdKieuDang()).ten(value.getTenKieuDang()).build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ten chat lieu.
     private String tenChatLieu(ChatLieu value) {
         return value == null ? null : value.getTenChatLieu();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ten kich co.
     private String tenKichCo(KichCo value) {
         return value == null ? null : value.getTenKichCo();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ten mau sac.
     private String tenMauSac(MauSac value) {
         return value == null ? null : value.getTenMauSac();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ten loai ao.
     private String tenLoaiAo(LoaiAo value) {
         return value == null ? null : value.getTenLoai();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ten xuat xu.
     private String tenXuatXu(XuatXu value) {
         return value == null ? null : value.getTenXuatXu();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ten phong cach.
     private String tenPhongCach(PhongCachMac value) {
         return value == null ? null : value.getTenPhongCach();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ten kieu dang.
     private String tenKieuDang(KieuDang value) {
         return value == null ? null : value.getTenKieuDang();
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is percent voucher.
     private boolean isPercentVoucher(String type) {
         String normalized = normalize(type);
         return normalized != null
                 && (normalized.contains("phan") || normalized.contains("percent") || normalized.contains("%"));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm voucher display.
     private String voucherDisplay(PhieuGiamGia voucher) {
         if (voucher == null) return null;
         String label = firstNonBlank(voucher.getTenPgg(), voucher.getMaPgg());
@@ -800,6 +863,7 @@ public class ShopService {
         return discount == null ? label : label + " - " + discount;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm voucher discount text.
     private String voucherDiscountText(PhieuGiamGia voucher) {
         if (voucher == null) return null;
         BigDecimal value = money(voucher.getGiaTri());
@@ -809,16 +873,19 @@ public class ShopService {
         return formatMoneyText(MoneyRoundingUtil.roundNonNegative(value)) + " đ";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm strip money.
     private String stripMoney(BigDecimal value) {
         return money(value).stripTrailingZeros().toPlainString();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format money text.
     private String formatMoneyText(BigDecimal value) {
         java.text.NumberFormat formatter = java.text.NumberFormat.getNumberInstance(new Locale("vi", "VN"));
         formatter.setMaximumFractionDigits(0);
         return formatter.format(money(value));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate order code.
     private String generateOrderCode(String customerName) {
         return GeneratedCodeUtil.fromNameAndDate(
                 customerName,
@@ -828,6 +895,7 @@ public class ShopService {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize phone.
     private String normalizePhone(String value) {
         String phone = requireText(value, "Vui lòng nhập số điện thoại").replaceAll("\\D", "");
         if (!phone.matches("^(03|05|07|08|09)\\d{8}$")) {
@@ -836,6 +904,7 @@ public class ShopService {
         return phone;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require email.
     private String requireEmail(String value) {
         String email = requireText(value, "Vui long nhap email nhan thong tin don hang").toLowerCase(Locale.ROOT);
         if (!email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
@@ -844,17 +913,20 @@ public class ShopService {
         return email;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm first non blank.
     private String firstNonBlank(String first, String second) {
         String value = trimToNull(first);
         return value == null ? trimToNull(second) : value;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require text.
     private String requireText(String value, String message) {
         String trimmed = trimToNull(value);
         if (trimmed == null) throw new IllegalArgumentException(message);
         return trimmed;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize.
     private String normalize(String value) {
         String trimmed = trimToNull(value);
         if (trimmed == null) return null;
@@ -866,23 +938,28 @@ public class ShopService {
                 .toLowerCase(Locale.ROOT);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm trim to null.
     private String trimToNull(String value) {
         if (value == null) return null;
         String trimmed = value.trim();
         return trimmed.isEmpty() ? null : trimmed;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm safe.
     private String safe(String value) {
         return value == null ? "" : value;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm money.
     private BigDecimal money(BigDecimal value) {
         return value == null ? BigDecimal.ZERO : value;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm order line.
     private record OrderLine(ChiTietSanPham variant, int quantity, BigDecimal price, BigDecimal lineTotal) {
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize payment method.
     private String normalizePaymentMethod(String value) {
         String normalized = trimToNull(value);
         if (normalized == null) return "COD";
@@ -893,13 +970,7 @@ public class ShopService {
         };
     }
 
-    private boolean isGatewayPayment(String paymentMethod) {
-        return "VNPAY".equals(paymentMethod)
-                || "ZALOPAY".equals(paymentMethod)
-                || "BANKING".equals(paymentMethod)
-                || "ONLINE".equals(paymentMethod);
-    }
-
+    // Thực hiện xử lý nghiệp vụ của hàm build order note.
     private String buildOrderNote(String note, String paymentMethod, String email) {
         String trimmedNote = trimToNull(note);
         String paymentLine = "Phương thức thanh toán: " + paymentMethod;
@@ -907,6 +978,7 @@ public class ShopService {
         return OrderStatusMailService.appendCustomerEmailMarker(visibleNote, email);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho read payment method.
     private String readPaymentMethod(String note) {
         if (note == null) return "COD";
         for (String line : note.split("\n")) {
@@ -917,6 +989,7 @@ public class ShopService {
         return "COD";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm contains any.
     private boolean containsAny(String text, String... keywords) {
         for (String keyword : keywords) {
             if (text.contains(keyword)) return true;

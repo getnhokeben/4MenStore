@@ -37,6 +37,7 @@ public class ShopAuthController {
             new SecureRandom();
 
     @PostMapping("/login")
+    // Thực hiện xử lý nghiệp vụ của hàm login.
     public ShopCustomerDTO login(
             @Valid @RequestBody ShopLoginRequest request,
             HttpSession session
@@ -51,6 +52,7 @@ public class ShopAuthController {
     }
 
     @PostMapping("/register")
+    // Thực hiện xử lý nghiệp vụ của hàm register.
     public ShopCustomerDTO register(
             @Valid @RequestBody ShopRegisterRequest request,
             HttpSession session
@@ -65,6 +67,7 @@ public class ShopAuthController {
     }
 
     @GetMapping("/me")
+    // Thực hiện xử lý nghiệp vụ của hàm me.
     public ResponseEntity<ShopCustomerDTO> me(HttpSession session) {
         Integer customerId = (Integer) session.getAttribute(
                 ShopSessionKeys.CUSTOMER_ID
@@ -81,6 +84,7 @@ public class ShopAuthController {
     }
 
     @PostMapping("/logout")
+    // Thực hiện xử lý nghiệp vụ của hàm logout.
     public ResponseEntity<?> logout(HttpSession session) {
         session.invalidate();
 
@@ -100,26 +104,32 @@ public class ShopAuthController {
         @JsonAlias({"confirmPassword", "confirmNewPassword"})
         private String xacNhanMatKhau;
 
+        // Tải hoặc truy xuất dữ liệu cho get mat khau cu.
         public String getMatKhauCu() {
             return matKhauCu;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set mat khau cu.
         public void setMatKhauCu(String matKhauCu) {
             this.matKhauCu = matKhauCu;
         }
 
+        // Tải hoặc truy xuất dữ liệu cho get mat khau moi.
         public String getMatKhauMoi() {
             return matKhauMoi;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set mat khau moi.
         public void setMatKhauMoi(String matKhauMoi) {
             this.matKhauMoi = matKhauMoi;
         }
 
+        // Tải hoặc truy xuất dữ liệu cho get xac nhan mat khau.
         public String getXacNhanMatKhau() {
             return xacNhanMatKhau;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set xac nhan mat khau.
         public void setXacNhanMatKhau(String xacNhanMatKhau) {
             this.xacNhanMatKhau = xacNhanMatKhau;
         }
@@ -130,6 +140,7 @@ public class ShopAuthController {
             method = {RequestMethod.POST, RequestMethod.PUT}
     )
     @Transactional
+    // Thực hiện xử lý nghiệp vụ của hàm change password.
     public ResponseEntity<?> changePassword(
             @RequestBody ChangePasswordRequest request,
             HttpSession session
@@ -214,10 +225,12 @@ public class ShopAuthController {
     public static class ForgotPasswordRequest {
         private String email;
 
+        // Tải hoặc truy xuất dữ liệu cho get email.
         public String getEmail() {
             return email;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set email.
         public void setEmail(String email) {
             this.email = email;
         }
@@ -225,6 +238,7 @@ public class ShopAuthController {
 
     @PostMapping({"/quen-mat-khau", "/forgot-password"})
     @Transactional(rollbackFor = Exception.class)
+    // Thực hiện xử lý nghiệp vụ của hàm forgot password.
     public ResponseEntity<?> forgotPassword(
             @RequestBody ForgotPasswordRequest request
     ) {
@@ -275,6 +289,7 @@ public class ShopAuthController {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm matches password.
     private boolean matchesPassword(
             String rawPassword,
             String storedPassword
@@ -288,6 +303,7 @@ public class ShopAuthController {
                 : storedPassword.equals(rawPassword);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is bcrypt hash.
     private boolean isBcryptHash(String value) {
         return value != null && (
                 value.startsWith("$2a$")
@@ -296,6 +312,7 @@ public class ShopAuthController {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate temporary password.
     private String generateTemporaryPassword() {
         String upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
         String lower = "abcdefghijkmnopqrstuvwxyz";

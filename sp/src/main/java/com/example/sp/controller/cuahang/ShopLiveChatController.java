@@ -24,6 +24,7 @@ public class ShopLiveChatController {
     private final ShopLiveChatService liveChatService;
 
     @GetMapping(value = "/chat-ho-tro", produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm staff page.
     public ResponseEntity<byte[]> staffPage() throws IOException {
         byte[] html = new ClassPathResource("templates/ChatHoTro.html").getInputStream().readAllBytes();
         return ResponseEntity.ok()
@@ -32,35 +33,41 @@ public class ShopLiveChatController {
     }
 
     @GetMapping("/api/shop/chat-sessions/current")
+    // Thực hiện xử lý nghiệp vụ của hàm current.
     public ResponseEntity<ShopLiveChatDTO> current(HttpSession session) {
         ShopLiveChatDTO dto = liveChatService.currentCustomerSession(session);
         return dto == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(dto);
     }
 
     @PostMapping("/api/shop/chat-sessions/new")
+    // Thực hiện xử lý nghiệp vụ của hàm new customer session.
     public ResponseEntity<Void> newCustomerSession(HttpSession session) {
         liveChatService.startNewCustomerSession(session);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/api/shop/chat-sessions/request-staff")
+    // Thực hiện xử lý nghiệp vụ của hàm request staff.
     public ShopLiveChatDTO requestStaff(HttpSession session) {
         return liveChatService.requestStaff(session);
     }
 
     @PostMapping("/api/shop/chat-sessions/customer/messages")
+    // Thực hiện xử lý nghiệp vụ của hàm customer message.
     public ShopLiveChatDTO customerMessage(@Valid @RequestBody ShopLiveChatMessageRequest request,
                                            HttpSession session) {
         return liveChatService.customerMessage(session, request.getMessage());
     }
 
     @GetMapping("/api/staff/chat-sessions")
+    // Thực hiện xử lý nghiệp vụ của hàm staff sessions.
     public ResponseEntity<List<ShopLiveChatDTO>> staffSessions(HttpSession session) {
         if (!isEmployee(session)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return ResponseEntity.ok(liveChatService.staffSessions());
     }
 
     @GetMapping("/api/staff/chat-sessions/{id}")
+    // Thực hiện xử lý nghiệp vụ của hàm staff session.
     public ResponseEntity<ShopLiveChatDTO> staffSession(@PathVariable Integer id,
                                                        HttpSession session) {
         if (!isEmployee(session)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -68,6 +75,7 @@ public class ShopLiveChatController {
     }
 
     @PostMapping("/api/staff/chat-sessions/{id}/messages")
+    // Thực hiện xử lý nghiệp vụ của hàm staff reply.
     public ResponseEntity<ShopLiveChatDTO> staffReply(@PathVariable Integer id,
                                                      @Valid @RequestBody ShopLiveChatMessageRequest request,
                                                      HttpSession session) {
@@ -77,16 +85,19 @@ public class ShopLiveChatController {
     }
 
     @PostMapping("/api/staff/chat-sessions/{id}/close")
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close.
     public ResponseEntity<ShopLiveChatDTO> close(@PathVariable Integer id,
                                                 HttpSession session) {
         if (!isEmployee(session)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return ResponseEntity.ok(liveChatService.closeSession(id));
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is employee.
     private boolean isEmployee(HttpSession session) {
         return employeeId(session) != null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm employee id.
     private Integer employeeId(HttpSession session) {
         return session == null ? null : (Integer) session.getAttribute(KhoaSessionNhanVien.NHANVIEN_ID);
     }

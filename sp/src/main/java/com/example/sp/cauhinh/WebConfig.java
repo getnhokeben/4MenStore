@@ -12,8 +12,9 @@ public class WebConfig implements WebMvcConfigurer {
     private final UploadStorageProperties uploadStorageProperties;
 
     @Override
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho add resource handlers.
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations(uploadStorageProperties.resourceLocation());
+                .addResourceLocations(uploadStorageProperties.resourceLocations());
     }
 }

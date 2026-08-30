@@ -295,6 +295,15 @@
             line-height: 1.45;
         }
 
+        .authForm[hidden] { display: none; }
+
+        .registerNote {
+            margin: -2px 0 14px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
         .leftFoot {
             color: #738096;
             font-size: 12px;
@@ -567,27 +576,76 @@
     </a>
 
     <div class="formArea">
-        <p class="eyebrow" id="loginEyebrow">Hệ thống 4MenStore</p>
-        <h1 id="loginTitle">Đăng nhập<br>vào 4MenStore</h1>
+        <p class="eyebrow" id="authEyebrow">Hệ thống 4MenStore</p>
+        <h1 id="authTitle">Đăng nhập<br>vào 4MenStore</h1>
 
-        <div class="field">
-            <input id="email" type="email" placeholder=" " autocomplete="email" />
-            <label for="email" id="identifierLabel">Email</label>
-            <span class="icon">✉</span>
-        </div>
+        <form id="loginForm" class="authForm" novalidate>
+            <div class="field">
+                <input id="email" type="email" placeholder=" " autocomplete="email" required />
+                <label for="email">Email</label>
+                <span class="icon">✉</span>
+            </div>
 
-        <div class="field">
-            <input id="matKhau" type="password" placeholder=" " autocomplete="current-password" />
-            <label for="matKhau">Mật khẩu</label>
-            <span class="icon" id="togglePwd" title="Hiện / ẩn mật khẩu">👁</span>
-        </div>
+            <div class="field">
+                <input id="matKhau" type="password" placeholder=" " autocomplete="current-password" required />
+                <label for="matKhau">Mật khẩu</label>
+                <span class="icon" id="togglePwd" title="Hiện / ẩn mật khẩu">👁</span>
+            </div>
 
-        <button id="btn" class="btn" type="button">Đăng nhập</button>
+            <button id="loginButton" class="btn" type="submit">Đăng nhập</button>
 
-        <div class="metaRow">
-            <button class="link" id="openForgot" type="button">Quên mật khẩu?</button>
-            <a class="role-badge" href="/shop">Mua hàng không cần đăng nhập</a>
-        </div>
+            <div class="metaRow">
+                <button class="link" id="openForgot" type="button">Quên mật khẩu?</button>
+                <button class="role-badge" id="showRegister" type="button">Tạo tài khoản</button>
+            </div>
+        </form>
+
+        <form id="registerForm" class="authForm" hidden novalidate>
+            <p class="registerNote">Tạo tài khoản để theo dõi đơn hàng và mua sắm nhanh hơn.</p>
+
+            <div class="field">
+                <input id="registerName" type="text" placeholder=" " autocomplete="name" maxlength="255" required />
+                <label for="registerName">Họ và tên</label>
+                <span class="icon">👤</span>
+            </div>
+
+            <div class="field">
+                <input id="registerPhone" type="tel" placeholder=" " autocomplete="tel" inputmode="numeric" required />
+                <label for="registerPhone">Số điện thoại</label>
+                <span class="icon">☎</span>
+            </div>
+
+            <div class="field">
+                <input id="registerEmail" type="email" placeholder=" " autocomplete="email" maxlength="255" required />
+                <label for="registerEmail">Email</label>
+                <span class="icon">✉</span>
+            </div>
+
+            <div class="field">
+                <input id="registerAddress" type="text" placeholder=" " autocomplete="street-address" maxlength="255" />
+                <label for="registerAddress">Địa chỉ (không bắt buộc)</label>
+                <span class="icon">⌂</span>
+            </div>
+
+            <div class="field">
+                <input id="registerPassword" type="password" placeholder=" " autocomplete="new-password" minlength="6" maxlength="100" required />
+                <label for="registerPassword">Mật khẩu</label>
+                <span class="icon" id="toggleRegisterPwd" title="Hiện / ẩn mật khẩu">👁</span>
+            </div>
+
+            <div class="field">
+                <input id="registerPasswordConfirmation" type="password" placeholder=" " autocomplete="new-password" minlength="6" maxlength="100" required />
+                <label for="registerPasswordConfirmation">Xác nhận mật khẩu</label>
+                <span class="icon">✓</span>
+            </div>
+
+            <button id="registerButton" class="btn" type="submit">Tạo tài khoản</button>
+
+            <div class="metaRow">
+                <button class="link" id="showLogin" type="button">Đã có tài khoản? Đăng nhập</button>
+                <a class="role-badge" href="/shop">Mua hàng không cần đăng nhập</a>
+            </div>
+        </form>
 
         <div id="err" class="errMsg" role="alert" aria-live="polite"></div>
     </div>
@@ -655,10 +713,19 @@
 
 </div>
 <script>
-    const loginButton = document.getElementById('btn');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginButton = document.getElementById('loginButton');
+    const registerButton = document.getElementById('registerButton');
     const loginError = document.getElementById('err');
     const identifierInput = document.getElementById('email');
     const passwordInput = document.getElementById('matKhau');
+    const registerNameInput = document.getElementById('registerName');
+    const registerPhoneInput = document.getElementById('registerPhone');
+    const registerEmailInput = document.getElementById('registerEmail');
+    const registerAddressInput = document.getElementById('registerAddress');
+    const registerPasswordInput = document.getElementById('registerPassword');
+    const registerPasswordConfirmationInput = document.getElementById('registerPasswordConfirmation');
 
     const forgotOverlay = document.getElementById('forgotOverlay');
     const forgotInput = document.getElementById('forgotEmail');
@@ -666,8 +733,41 @@
     const forgotSuccess = document.getElementById('forgotOk');
     const sendForgotButton = document.getElementById('sendForgot');
 
-    loginButton.addEventListener('click', login);
+    loginForm.addEventListener('submit', event => {
+        event.preventDefault();
+        login();
+    });
 
+    registerForm.addEventListener('submit', event => {
+        event.preventDefault();
+        register();
+    });
+
+    document.getElementById('showRegister').addEventListener('click', showRegister);
+    document.getElementById('showLogin').addEventListener('click', showLogin);
+
+    // Hiển thị và đồng bộ giao diện cho show register.
+    function showRegister() {
+        loginError.textContent = '';
+        hideForgot();
+        loginForm.hidden = true;
+        registerForm.hidden = false;
+        document.getElementById('authEyebrow').textContent = 'Khách hàng 4MenStore';
+        document.getElementById('authTitle').innerHTML = 'Tạo tài khoản<br>mới';
+        setTimeout(() => registerNameInput.focus(), 0);
+    }
+
+    // Hiển thị và đồng bộ giao diện cho show login.
+    function showLogin() {
+        loginError.textContent = '';
+        registerForm.hidden = true;
+        loginForm.hidden = false;
+        document.getElementById('authEyebrow').textContent = 'Hệ thống 4MenStore';
+        document.getElementById('authTitle').innerHTML = 'Đăng nhập<br>vào 4MenStore';
+        setTimeout(() => identifierInput.focus(), 0);
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm login.
     async function login() {
         loginError.textContent = '';
 
@@ -707,16 +807,83 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm register.
+    async function register() {
+        loginError.textContent = '';
+
+        const tenKhachHang = registerNameInput.value.trim().replace(/\s+/g, ' ');
+        const soDienThoai = registerPhoneInput.value.replace(/\D/g, '');
+        const email = registerEmailInput.value.trim();
+        const diaChi = registerAddressInput.value.trim();
+        const matKhau = registerPasswordInput.value;
+        const xacNhanMatKhau = registerPasswordConfirmationInput.value;
+
+        if (!tenKhachHang || !soDienThoai || !email || !matKhau || !xacNhanMatKhau) {
+            loginError.textContent = 'Vui lòng điền đầy đủ các trường bắt buộc.';
+            return;
+        }
+
+        if (!/^[\p{L}]+(?: [\p{L}]+)+$/u.test(tenKhachHang)) {
+            loginError.textContent = 'Họ tên phải có ít nhất 2 từ, chỉ được chứa chữ cái và khoảng trắng.';
+            return;
+        }
+
+        if (!/^(03|05|07|08|09)\d{8}$/.test(soDienThoai)) {
+            loginError.textContent = 'Số điện thoại không đúng định dạng Việt Nam.';
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            loginError.textContent = 'Email không đúng định dạng.';
+            return;
+        }
+
+        if (matKhau.length < 6 || matKhau.length > 100) {
+            loginError.textContent = 'Mật khẩu phải có từ 6 đến 100 ký tự.';
+            return;
+        }
+
+        if (matKhau !== xacNhanMatKhau) {
+            loginError.textContent = 'Xác nhận mật khẩu không khớp.';
+            return;
+        }
+
+        registerButton.disabled = true;
+        registerButton.textContent = 'Đang tạo tài khoản…';
+
+        try {
+            const response = await fetch('/api/shop/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                    tenKhachHang,
+                    soDienThoai,
+                    email,
+                    diaChi,
+                    matKhau
+                })
+            });
+
+            if (!response.ok) {
+                loginError.textContent = await readServerMessage(response);
+                return;
+            }
+
+            window.location.href = '/shop';
+        } catch {
+            loginError.textContent = 'Lỗi kết nối, vui lòng thử lại.';
+        } finally {
+            registerButton.disabled = false;
+            registerButton.textContent = 'Tạo tài khoản';
+        }
+    }
+
     document.addEventListener('keydown', event => {
         if (event.key === 'Escape') {
             hideForgot();
-        }
-
-        if (
-            event.key === 'Enter' &&
-            document.activeElement?.id !== 'forgotEmail'
-        ) {
-            login();
         }
     });
 
@@ -724,6 +891,20 @@
         passwordInput.type = passwordInput.type === 'password'
             ? 'text'
             : 'password';
+    });
+
+    registerNameInput.addEventListener('input', () => {
+        registerNameInput.value = registerNameInput.value
+            .replace(/[^\p{L}\s]/gu, '')
+            .replace(/\s{2,}/g, ' ');
+    });
+
+    document.getElementById('toggleRegisterPwd').addEventListener('click', () => {
+        const type = registerPasswordInput.type === 'password'
+            ? 'text'
+            : 'password';
+        registerPasswordInput.type = type;
+        registerPasswordConfirmationInput.type = type;
     });
 
     document.getElementById('openForgot').addEventListener('click', () => {
@@ -744,6 +925,7 @@
         setTimeout(() => forgotInput.focus(), 60);
     });
 
+    // Thực hiện xử lý nghiệp vụ của hàm hide forgot.
     function hideForgot() {
         forgotOverlay.style.display = 'none';
         forgotOverlay.setAttribute('aria-hidden', 'true');
@@ -765,6 +947,7 @@
 
     sendForgotButton.addEventListener('click', submitForgotPassword);
 
+    // Xử lý tương tác người dùng cho submit forgot password.
     async function submitForgotPassword() {
         forgotError.textContent = '';
         forgotSuccess.textContent = '';
@@ -814,6 +997,7 @@
         }
     }
 
+    // Tải hoặc truy xuất dữ liệu cho read server message.
     async function readServerMessage(response) {
         const text = await response.text();
 

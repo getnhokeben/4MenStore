@@ -64,8 +64,12 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
             Integer id
     );
 
+    boolean existsByVaiTroAndTrangThaiTrueAndIdNot(
+            String vaiTro,
+            Integer id
+    );
+
     Optional<NhanVien> findByEmailIgnoreCase(String email);
 
     Optional<NhanVien> findByCccd(String cccd);
 }
-

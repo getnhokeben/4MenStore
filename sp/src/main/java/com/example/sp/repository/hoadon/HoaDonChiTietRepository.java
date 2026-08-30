@@ -21,6 +21,7 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, In
     @Query("""
         SELECT new com.example.sp.dto.hoadon.HoaDonChiTietDTO(
             ct.id,
+            spct.idSpct,
             sp.maSp,
             sp.tenSp,
             ms.tenMauSac,
@@ -50,4 +51,16 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, In
         WHERE ct.hoaDon.id = :idHoaDon
         """)
     List<HoaDonChiTietDTO> findChiTietByHoaDonId(@Param("idHoaDon") Integer idHoaDon);
+
+    @Query("""
+        SELECT CASE WHEN COUNT(ct) > 0 THEN true ELSE false END
+        FROM HoaDonChiTiet ct
+        JOIN ct.hoaDon hd
+        JOIN ct.chiTietSanPham spct
+        WHERE hd.khachHang.id = :customerId
+          AND spct.sanPham.idSp = :productId
+          AND LOWER(COALESCE(hd.trangThai, '')) IN ('hoàn thành', 'hoan thanh', 'hoàn tất', 'hoan tat')
+        """)
+    boolean hasCompletedOrderProduct(@Param("customerId") Integer customerId,
+                                     @Param("productId") Integer productId);
 }

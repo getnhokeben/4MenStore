@@ -13,15 +13,18 @@ import java.nio.charset.StandardCharsets;
 public class HoaDonPageController {
 
     @GetMapping(value = {"/hoa-don", "/hoa-don.html"}, produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm hoa don.
     public ResponseEntity<byte[]> hoaDon() throws IOException {
         return html("templates/hoa-don.html");
     }
 
     @GetMapping(value = "/hoa-don-chi-tiet.html", produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm hoa don chi tiet.
     public ResponseEntity<byte[]> hoaDonChiTiet() throws IOException {
         return html("templates/hoa-don-chi-tiet.html");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm html.
     private ResponseEntity<byte[]> html(String path) throws IOException {
         byte[] html = new ClassPathResource(path).getInputStream().readAllBytes();
         return ResponseEntity.ok()

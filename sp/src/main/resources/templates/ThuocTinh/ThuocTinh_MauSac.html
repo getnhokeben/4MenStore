@@ -6,7 +6,7 @@
     <title>Quản lý Màu sắc | 4MenStore</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-scale-20260822-1" defer></script>
     <style>
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
         :root{--sw:220px;--sbg:#2b1d0e;--sact:#7a5230;--gold:#c8a474;--navy:#102a56;--navy-hover:#173d78;--bg:#f3f4f6;--white:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;--r:8px;--success:#16a34a;--danger:#dc2626}
@@ -203,6 +203,7 @@
     let deleteId = null;
     let debounceTimer = null;
 
+    // Thực hiện xử lý nghiệp vụ của hàm toast.
     function toast(msg, type = 'success') {
         const icons = { success: '✅', error: '❌', info: 'ℹ️' };
         const wrap = document.getElementById('toastWrap');
@@ -213,13 +214,20 @@
         setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(8px)'; el.style.transition = '.3s'; setTimeout(() => el.remove(), 300); }, 3000);
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close modal.
     function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+    // Xử lý tương tác người dùng cho toggle sub.
     function toggleSub(subId, arrId) { const sub = document.getElementById(subId); const arr = document.getElementById(arrId); const open = sub.classList.toggle('open'); arr.style.transform = open ? 'rotate(90deg)' : 'rotate(0deg)'; }
+    // Thực hiện xử lý nghiệp vụ của hàm debounce.
     function debounce() { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => applyFilters(), 400); }
+    // Thực hiện xử lý nghiệp vụ của hàm esc.
     function esc(s) { if (!s) return ''; return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+    // Thực hiện xử lý nghiệp vụ của hàm format date.
     function formatDate(d) { if (!d) return ''; const dt = new Date(d); return dt.toLocaleDateString('vi-VN') + ' ' + dt.toLocaleTimeString('vi-VN'); }
+    // Thực hiện xử lý nghiệp vụ của hàm generate attribute code.
     function generateAttributeCode(prefix) { return prefix + Date.now().toString().slice(-8) + Math.floor(Math.random() * 90 + 10); }
 
+    // Tải hoặc truy xuất dữ liệu cho load data.
     async function loadData() {
         const wrap = document.getElementById('tblWrap');
         wrap.innerHTML = '<div class="load-state"><div class="spin"></div><div style="margin-top:10px">Đang tải...</div></div>';
@@ -235,6 +243,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply filters.
     function applyFilters() {
         const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
         filteredData = allData.filter(item => {
@@ -248,6 +257,7 @@
         renderPagination();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render table.
     function renderTable() {
         const wrap = document.getElementById('tblWrap');
         const start = currentPage * PAGE_SIZE;
@@ -264,6 +274,7 @@
         wrap.innerHTML = `<table><thead><tr><th>STT</th><th>Mã màu</th><th>Tên màu</th><th>Trạng thái</th><th>Hành động</th></tr></thead><tbody>${rows}</tbody></table>`;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render pagination.
     function renderPagination() {
         const pgWrap = document.getElementById('pgWrap');
         const totalPages = Math.max(1, Math.ceil(totalElements / PAGE_SIZE));
@@ -281,12 +292,14 @@
         pgWrap.style.display = 'block';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm go page.
     function goPage(page) {
         currentPage = page;
         renderTable();
         renderPagination();
     }
 
+    // Xử lý tương tác người dùng cho open create.
     function openCreate() {
         document.getElementById('mdTitle').textContent = 'Thêm màu sắc';
         document.getElementById('editId').value = '';
@@ -296,6 +309,7 @@
         document.getElementById('mdForm').classList.add('show');
     }
 
+    // Xử lý tương tác người dùng cho open edit.
     function openEdit(id) {
         const item = allData.find(d => d.idMauSac === id);
         if (!item) { toast('Không tìm thấy dữ liệu!', 'error'); return; }
@@ -307,6 +321,7 @@
         document.getElementById('mdForm').classList.add('show');
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save.
     async function save() {
         const id = document.getElementById('editId').value;
         const ma = document.getElementById('inMa').value.trim() || generateAttributeCode('MS');
@@ -325,6 +340,7 @@
         } catch (e) { toast('Lỗi: ' + e.message, 'error'); }
     }
 
+    // Xử lý tương tác người dùng cho open delete.
     function openDelete(id) {
         deleteId = id;
         document.getElementById('mdConfirm').classList.add('show');
@@ -339,6 +355,7 @@
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm export excel.
     async function exportExcel() {
         try {
             toast('Đang xuất...', 'info');
@@ -355,7 +372,9 @@
     document.addEventListener('DOMContentLoaded', () => { loadData(); });
     document.querySelectorAll('.modal-bg').forEach(el => { el.addEventListener('click', e => { if (e.target === el) el.classList.remove('show'); }); });
 
+    // Thực hiện xử lý nghiệp vụ của hàm combo escape html.
     function comboEscapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    // Thực hiện xử lý nghiệp vụ của hàm init searchable comboboxes.
     function initSearchableComboboxes(root=document){
         root.querySelectorAll('select').forEach(select=>{
             if(select.classList.contains('search-combo-source')){syncSearchCombo(select);return;}
@@ -376,6 +395,7 @@
             syncSearchCombo(select);
         });
     }
+    // Xử lý tương tác người dùng cho open search combo.
     function openSearchCombo(combo){
         if(combo.classList.contains('open')){closeSearchCombo(combo);return;}
         document.querySelectorAll('.search-combo.open').forEach(c=>{if(c!==combo)c.classList.remove('open')});
@@ -385,7 +405,9 @@
         renderSearchComboOptions(combo,'');
         setTimeout(()=>search.focus(),0);
     }
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close search combo.
     function closeSearchCombo(combo){combo.classList.remove('open')}
+    // Thực hiện xử lý nghiệp vụ của hàm sync search combo.
     function syncSearchCombo(select){
         const combo=select.nextElementSibling?.classList?.contains('search-combo')?select.nextElementSibling:null;
         if(!combo)return;
@@ -393,6 +415,7 @@
         combo.querySelector('.search-combo-display').textContent=selected?.textContent||select.querySelector('option')?.textContent||'Chon';
         renderSearchComboOptions(combo, combo.querySelector('.search-combo-search')?.value||'');
     }
+    // Hiển thị và đồng bộ giao diện cho render search combo options.
     function renderSearchComboOptions(combo, keyword){
         const select=combo._select;
         const list=combo.querySelector('.search-combo-list');

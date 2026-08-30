@@ -27,6 +27,7 @@ public class DiaChiKhachHangService {
     private final KhachHangRepository khachHangRepository;
 
     @Transactional(readOnly = true)
+    // Tải hoặc truy xuất dữ liệu cho find by customer.
     public List<DiaChiKhachHangDTO> findByCustomer(Integer customerId) {
         ensureCustomer(customerId);
 
@@ -38,6 +39,7 @@ public class DiaChiKhachHangService {
     }
 
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create.
     public DiaChiKhachHangDTO create(
             Integer customerId,
             DiaChiKhachHangRequest request
@@ -68,6 +70,7 @@ public class DiaChiKhachHangService {
     }
 
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update.
     public DiaChiKhachHangDTO update(
             Integer customerId,
             Integer addressId,
@@ -94,6 +97,7 @@ public class DiaChiKhachHangService {
     }
 
     @Transactional
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set default.
     public DiaChiKhachHangDTO setDefault(
             Integer customerId,
             Integer addressId
@@ -112,6 +116,7 @@ public class DiaChiKhachHangService {
     }
 
     @Transactional
+    // Xử lý thao tác đóng, xóa hoặc hủy cho delete.
     public void delete(Integer customerId, Integer addressId) {
         DiaChi address = findAddress(customerId, addressId);
 
@@ -137,6 +142,7 @@ public class DiaChiKhachHangService {
         syncLegacyDefaultAddress(customerId);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply request.
     private void applyRequest(
             DiaChi address,
             DiaChiKhachHangRequest request
@@ -151,6 +157,7 @@ public class DiaChiKhachHangService {
         address.setDiaChiCuThe(clean(request.getDiaChiCuThe()));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sync legacy default address.
     private void syncLegacyDefaultAddress(Integer customerId) {
         KhachHang customer = ensureCustomer(customerId);
 
@@ -181,6 +188,7 @@ public class DiaChiKhachHangService {
         khachHangRepository.save(customer);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho find address.
     private DiaChi findAddress(Integer customerId, Integer addressId) {
         ensureCustomer(customerId);
 
@@ -193,6 +201,7 @@ public class DiaChiKhachHangService {
                 );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ensure customer.
     private KhachHang ensureCustomer(Integer customerId) {
         return khachHangRepository.findById(customerId)
                 .orElseThrow(() ->
@@ -202,6 +211,7 @@ public class DiaChiKhachHangService {
                 );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to dto.
     private DiaChiKhachHangDTO toDto(DiaChi address) {
         return DiaChiKhachHangDTO.builder()
                 .id(address.getId())
@@ -219,6 +229,7 @@ public class DiaChiKhachHangService {
                 .build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm full address.
     private String fullAddress(DiaChi address) {
         return Stream.of(
                         address.getDiaChiCuThe(),
@@ -229,10 +240,12 @@ public class DiaChiKhachHangService {
                 .collect(Collectors.joining(", "));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate code.
     private String generateCode() {
         return "DC" + LocalDateTime.now().format(CODE_FORMAT);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize phone.
     private String normalizePhone(String value) {
         String phone = value == null ? "" : value.replaceAll("\\D", "");
 
@@ -245,6 +258,7 @@ public class DiaChiKhachHangService {
         return phone;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm clean.
     private String clean(String value) {
         if (value == null) {
             return null;

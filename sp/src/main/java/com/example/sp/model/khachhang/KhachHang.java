@@ -1,5 +1,6 @@
 package com.example.sp.model.khachhang;
 
+import com.example.sp.validation.CustomerNameValidator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -34,6 +35,10 @@ public class KhachHang {
 
     @NotBlank(message = "Tên khách hàng không được để trống")
     @Size(max = 255, message = "Tên khách hàng không được vượt quá 255 ký tự")
+    @Pattern(
+            regexp = CustomerNameValidator.PATTERN,
+            message = CustomerNameValidator.INVALID_MESSAGE
+    )
     @Column(name = "ten_khach_hang", length = 255)
     private String tenKhachHang;
     @Column(name = "ten_tai_khoan", length = 255)
@@ -110,6 +115,7 @@ public class KhachHang {
     private Integer tinhThanhCode;
 
     @Transient
+    // Tải hoặc truy xuất dữ liệu cho get dia chi display.
     public String getDiaChiDisplay() {
         if (diaChi != null && !diaChi.isBlank()) {
             return diaChi;
@@ -124,6 +130,7 @@ public class KhachHang {
         return result.toString();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm append address part.
     private void appendAddressPart(StringBuilder builder, String value) {
         if (value == null || value.isBlank()) {
             return;
@@ -137,6 +144,7 @@ public class KhachHang {
     }
 
     @PrePersist
+    // Thực hiện xử lý nghiệp vụ của hàm pre persist.
     public void prePersist() {
         if (trangThai == null) {
             trangThai = true;

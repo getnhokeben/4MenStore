@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
 @Service
 public class GhnShippingService {
 
+    private static final BigDecimal DEFAULT_FALLBACK_FEE = new BigDecimal("35000");
+
     private static final Pattern TOTAL_PATTERN =
             Pattern.compile("\"total\"\\s*:\\s*(\\d+)");
 
@@ -43,10 +45,12 @@ public class GhnShippingService {
     @Value("${ghn.api.service-type-id:2}")
     private int serviceTypeId;
 
+    // Thực hiện xử lý nghiệp vụ của hàm provinces.
     public String provinces() {
         return get("/master-data/province");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm districts.
     public String districts(Integer provinceId) {
         if (provinceId == null || provinceId <= 0) {
             throw new IllegalArgumentException("Vui lòng chọn tỉnh/thành phố");
@@ -55,6 +59,7 @@ public class GhnShippingService {
         return get("/master-data/district?province_id=" + provinceId);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm wards.
     public String wards(Integer districtId) {
         if (districtId == null || districtId <= 0) {
             throw new IllegalArgumentException("Vui lòng chọn quận/huyện");
@@ -63,6 +68,7 @@ public class GhnShippingService {
         return get("/master-data/ward?district_id=" + districtId);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm calculate fee.
     public BigDecimal calculateFee(
             Integer toDistrictId,
             String toWardCode,
@@ -115,21 +121,48 @@ public class GhnShippingService {
     }
 
     /**
+     * The carrier quote is preferred, but a carrier outage must never block
+     * checkout or invoice creation.
+     */
+    // Thực hiện xử lý nghiệp vụ của hàm calculate fee with fallback.
+    public BigDecimal calculateFeeWithFallback(
+            Integer toDistrictId,
+            String toWardCode,
+            BigDecimal insuranceValue,
+            String provinceName,
+            String wardName
+    ) {
+        try {
+            return calculateFee(toDistrictId, toWardCode, insuranceValue);
+        } catch (RuntimeException ignored) {
+            return calculateFallbackFee(provinceName, wardName, insuranceValue);
+        }
+    }
+
+    /**
      * Tính cước cho địa chỉ hành chính 2 cấp sau sáp nhập.
      * GHN vẫn yêu cầu mã huyện ở API fee cũ, vì vậy luồng mới dùng bảng cước theo tỉnh
      * cho tới khi nhà vận chuyển cung cấp endpoint tính phí 2 cấp ổn định.
      */
+    // Thực hiện xử lý nghiệp vụ của hàm calculate two tier fee.
     public BigDecimal calculateTwoTierFee(
             String provinceName,
             String wardName,
             BigDecimal orderValue
     ) {
-        if (provinceName == null || provinceName.isBlank()) {
-            throw new IllegalArgumentException("Vui lòng chọn tỉnh/thành phố");
-        }
-        if (wardName == null || wardName.isBlank()) {
-            throw new IllegalArgumentException("Vui lòng chọn xã/phường");
-        }
+        return calculateFallbackFee(provinceName, wardName, orderValue);
+    }
+
+    /**
+     * Local address-based fee table. It has no network or GHN configuration
+     * dependency and is therefore safe as the last checkout fallback.
+     */
+    // Thực hiện xử lý nghiệp vụ của hàm calculate fallback fee.
+    public BigDecimal calculateFallbackFee(
+            String provinceName,
+            String wardName,
+            BigDecimal orderValue
+    ) {
 
         BigDecimal value = orderValue == null ? BigDecimal.ZERO : orderValue.max(BigDecimal.ZERO);
         if (value.compareTo(new BigDecimal("500000")) >= 0) {
@@ -144,9 +177,10 @@ public class GhnShippingService {
                 || province.contains("binh duong") || province.contains("dong nai")) {
             return new BigDecimal("30000");
         }
-        return new BigDecimal("38000");
+        return DEFAULT_FALLBACK_FEE;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize location.
     private String normalizeLocation(String value) {
         return Normalizer.normalize(value == null ? "" : value, Normalizer.Form.NFD)
                 .replaceAll("\\p{M}", "")
@@ -155,6 +189,7 @@ public class GhnShippingService {
                 .toLowerCase(Locale.ROOT);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get.
     private String get(String path) {
         requireToken();
 
@@ -165,6 +200,7 @@ public class GhnShippingService {
         return send(request);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm post.
     private String post(String path, String body) {
         requireToken();
 
@@ -179,6 +215,7 @@ public class GhnShippingService {
         return send(request);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm base request.
     private HttpRequest.Builder baseRequest(String path) {
         String cleanBaseUrl = baseUrl == null
                 ? ""
@@ -197,6 +234,7 @@ public class GhnShippingService {
                 .header("User-Agent", "4MenStore-POS/1.0");
     }
 
+    // Xử lý tương tác người dùng cho send.
     private String send(HttpRequest request) {
         try {
             HttpResponse<String> response = httpClient().send(
@@ -242,6 +280,7 @@ public class GhnShippingService {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm http client.
     private HttpClient httpClient() {
         HttpClient client = httpClient;
         if (client == null) {
@@ -265,6 +304,7 @@ public class GhnShippingService {
         return client;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require token.
     private void requireToken() {
         if (token == null
                 || token.isBlank()
@@ -276,6 +316,7 @@ public class GhnShippingService {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm require configured.
     private void requireConfigured() {
         requireToken();
 
@@ -292,6 +333,7 @@ public class GhnShippingService {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm extract message.
     private String extractMessage(String body, String fallback) {
         Matcher matcher = MESSAGE_PATTERN.matcher(
                 body == null ? "" : body
@@ -302,6 +344,7 @@ public class GhnShippingService {
                 : fallback;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm escape json.
     private String escapeJson(String value) {
         return String.valueOf(value)
                 .replace("\\", "\\\\")

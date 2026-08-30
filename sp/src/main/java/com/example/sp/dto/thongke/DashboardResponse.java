@@ -15,4 +15,5 @@ public class DashboardResponse {
     private List<Object[]> chart;
     private List<Object[]> lowStock;
     private List<Object[]> topProduct;
+    private List<Object[]> topCustomer;
 }

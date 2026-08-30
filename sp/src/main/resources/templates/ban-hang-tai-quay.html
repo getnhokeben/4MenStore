@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,700;14..32,900&display=swap" rel="stylesheet" />
 
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-icons-20260822-1" defer></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
 
     <style>
@@ -484,6 +484,18 @@
             box-shadow: 0 0 0 3px rgba(200,164,116,.12);
         }
 
+        .pos-search-select{position:relative}
+        .pos-search-select .pos-select-input{width:100%;height:38px;padding:9px 38px 9px 11px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);outline:none;font:inherit}
+        .pos-search-select.open .pos-select-input,.pos-search-select .pos-select-input:focus{border-color:#c8a474;box-shadow:0 0 0 3px rgba(200,164,116,.12)}
+        .pos-search-select .pos-select-toggle{position:absolute;top:0;right:0;width:38px;height:38px;border:0;background:transparent;color:var(--muted);font-size:17px;cursor:pointer}
+        .pos-search-select.open .pos-select-toggle{transform:rotate(180deg)}
+        .pos-search-select .pos-select-menu{position:absolute;z-index:35;top:calc(100% + 4px);right:0;left:0;display:none;max-height:220px;overflow:auto;padding:4px;border:1px solid var(--border);border-radius:7px;background:#fff;box-shadow:0 12px 26px rgba(30,45,70,.16)}
+        .pos-search-select.open .pos-select-menu{display:block}
+        .pos-search-select .pos-select-option{display:block;width:100%;min-height:32px;padding:7px 9px;border:0;border-radius:5px;background:transparent;color:var(--text);font:inherit;font-size:12px;text-align:left;cursor:pointer}
+        .pos-search-select .pos-select-option:hover,.pos-search-select .pos-select-option.active{background:#edf3ff;color:var(--primary);font-weight:700}
+        .pos-search-select .pos-select-empty{padding:9px;color:var(--muted);font-size:12px}
+        .pos-search-select select{display:none}
+
         .row {
             margin-top: 12px;
         }
@@ -779,9 +791,79 @@
             opacity: .9;
         }
 
+        .checkout-payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .customer-payment-methods {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            width: min(720px, 100%);
+            margin: 12px auto 18px;
+        }
+
+        .customer-payment-methods .pay-tab {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 9px;
+            text-align: center;
+        }
+
+        .checkout-payment-methods .pay-tab {
+            min-height: 72px;
+            padding: 9px 11px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .pay-tab-icon {
+            display: inline-grid;
+            place-items: center;
+            width: 58px;
+            height: 58px;
+            flex: none;
+            border-radius: 17px;
+            color: #fff;
+            font-size: 24px;
+            border: 1px solid rgba(255,255,255,.42);
+            box-shadow: 0 7px 15px rgba(15,23,42,.16), inset 0 1px 0 rgba(255,255,255,.28);
+        }
+
+        .pay-tab-label { display: block; line-height: 1.25; font-weight: 850; }
+        .pay-tab.active .pay-tab-icon { background: rgba(255,255,255,.18); color: #fff; }
+        .pay-icon-mixed { display: inline-flex; gap: 3px; }
+        .pay-icon-mixed i:first-child { font-size: 18px; }
+        .pay-icon-mixed i:last-child { font-size: 16px; }
+        .pay-icon-cash{background:linear-gradient(145deg,#22c55e,#15803d)}
+        .pay-icon-transfer{background:linear-gradient(145deg,#3b82f6,#1d4ed8)}
+        .pay-icon-mixed{background:linear-gradient(145deg,#f59e0b,#c2410c)}
+        .pay-icon-card{background:linear-gradient(145deg,#a855f7,#6d28d9)}
+        #summaryPayCash.active .pay-tab-icon,#payCashTab.active .pay-tab-icon,#summaryPayTransfer.active .pay-tab-icon,#payTransferTab.active .pay-tab-icon,#summaryPayMixed.active .pay-tab-icon,#payMixedTab.active .pay-tab-icon,#summaryPayCard.active .pay-tab-icon,#payCardTab.active .pay-tab-icon{background:rgba(255,255,255,.18);color:#fff}
+        .pay-tab.active .pay-tab-icon{box-shadow:none!important}
+        .pay-tabs .pay-tab{display:flex;align-items:center;justify-content:center;gap:9px;text-align:center}
+
+        .payment-mode-hint {
+            min-height: 18px;
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
         .pay-tabs {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             margin: 12px 0;
         }
@@ -808,6 +890,30 @@
         .money-input {
             text-align: right;
             font-weight: 800;
+        }
+
+        .card-payment-note {
+            display: none;
+            margin: 12px 0;
+            padding: 12px;
+            border: 1px solid #c9d8f2;
+            border-radius: 8px;
+            background: #f5f8ff;
+            color: #274a86;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .card-payment-note.visible {
+            display: block;
+        }
+
+        .phone-validation,
+        .customer-validation {
+            min-height: 18px;
+            margin-top: 5px;
+            color: var(--red);
+            font-size: 11px;
         }
 
         .transfer-actions {
@@ -943,7 +1049,7 @@
 
         .filter-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: minmax(0, 1fr);
             gap: 12px;
             margin-bottom: 14px;
         }
@@ -954,6 +1060,24 @@
             border: 1px solid var(--line);
             border-radius: 8px;
         }
+
+        .product-scroll table { min-width: 720px; }
+        .product-thumb {
+            width: 48px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border: 1px solid #e1e8f2;
+            border-radius: 8px;
+            background: #f4f7fb;
+            color: #74839a;
+            font-size: 18px;
+        }
+        .product-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .2s ease; }
+        tr:hover .product-thumb img { transform: scale(1.06); }
+        .product-scroll tbody tr { transition: background .15s ease; }
+        .product-scroll tbody tr:hover { background: #f7faff; }
 
         .variant-chip {
             border: 1px solid var(--line);
@@ -971,6 +1095,23 @@
             border-color: var(--blue);
             color: var(--blue);
         }
+
+        .variant-chip.variant-chip-rich {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 154px;
+            border-radius: 10px;
+            padding: 6px 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .variant-thumb { width: 34px; height: 40px; display:grid; place-items:center; flex:none; overflow:hidden; border-radius:6px; background:#f1f5f9; color:#8290a4; }
+        .variant-thumb img { width:100%; height:100%; object-fit:cover; }
+        .variant-copy { min-width:0; display:block; line-height:1.3; }
+        .variant-copy strong { display:block; color:#233a60; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .variant-copy small { display:block; color:#77859a; font-size:10px; }
+        .variant-chip-rich .promo-badge { margin-top:3px; font-size:9px; }
 
         .promo-badge {
             display: inline-flex;
@@ -1118,6 +1259,7 @@
             .pay-tabs {
                 grid-template-columns: 1fr;
             }
+            .customer-payment-methods { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
     </style>
 </head>
@@ -1164,23 +1306,11 @@
                     <div class="label">Tìm mã / tên</div>
                     <input class="input" id="productKeyword" placeholder="Nhập mã SP, SKU hoặc tên">
                 </div>
-                <div>
-                    <div class="label">Cổ áo</div>
-                    <select class="input"><option>Tất cả</option></select>
-                </div>
-                <div>
-                    <div class="label">Tay áo</div>
-                    <select class="input"><option>Tất cả</option></select>
-                </div>
-                <div>
-                    <div class="label">Xuất xứ</div>
-                    <select class="input"><option>Tất cả</option></select>
-                </div>
             </div>
             <div class="product-scroll">
                 <table>
                     <thead>
-                    <tr><th>Mã sản phẩm</th><th>Tên</th><th>Tồn kho</th><th>Giá</th><th>Biến thể</th></tr>
+                    <tr><th>Ảnh</th><th>Mã sản phẩm</th><th>Tên</th><th>Tồn kho</th><th>Giá</th><th>Biến thể</th></tr>
                     </thead>
                     <tbody id="productChoices"></tbody>
                 </table>
@@ -1258,11 +1388,12 @@
                 <span id="paymentModalTotal" data-total="0">0 đ</span>
             </div>
             <div class="pay-tabs">
-                <button id="payCashTab" class="pay-tab" type="button" onclick="setPayMode('CASH')">Tiền mặt</button>
-                <button id="payTransferTab" class="pay-tab" type="button" onclick="setPayMode('TRANSFER')">Chuyển khoản</button>
-                <button id="payMixedTab" class="pay-tab" type="button" onclick="setPayMode('MIXED')">Kết hợp</button>
+                <button id="payCashTab" class="pay-tab" type="button" onclick="setPayMode('CASH')"><i class="fa-solid fa-money-bill-1 pay-tab-icon pay-icon-cash"></i><span class="pay-tab-label">Tiền mặt</span></button>
+                <button id="payTransferTab" class="pay-tab" type="button" onclick="setPayMode('TRANSFER')"><i class="fa-solid fa-building-columns pay-tab-icon pay-icon-transfer"></i><span class="pay-tab-label">Chuyển khoản</span></button>
+                <button id="payMixedTab" class="pay-tab" type="button" onclick="setPayMode('MIXED')"><span class="pay-tab-icon pay-icon-mixed" aria-hidden="true"><i class="fa-solid fa-credit-card"></i><i class="fa-solid fa-money-bill-1"></i></span><span class="pay-tab-label">Kết hợp</span></button>
+                <button id="payCardTab" class="pay-tab" type="button" onclick="setPayMode('CARD')"><i class="fa-solid fa-credit-card pay-tab-icon pay-icon-card"></i><span class="pay-tab-label">Thẻ ATM / VNPay</span></button>
             </div>
-            <div class="row two">
+            <div class="row two" id="paymentAmountFields">
                 <div>
                     <div class="label">Tiền mặt</div>
                     <input class="input money-input" id="cashInput" inputmode="numeric" value="0" oninput="formatPaymentInput(this);updatePaymentFields()">
@@ -1271,6 +1402,9 @@
                     <div class="label">Chuyển khoản</div>
                     <input class="input money-input" id="transferInput" inputmode="numeric" value="0" oninput="formatPaymentInput(this);updatePaymentFields()">
                 </div>
+            </div>
+            <div class="card-payment-note" id="cardPaymentNote">
+                Bạn sẽ được chuyển sang cổng VNPay để thanh toán bằng thẻ ATM/Visa/Mastercard.
             </div>
             <div class="sum-row"><span>Tiền thiếu</span><b id="missingDisplay" class="red">0 đ</b></div>
             <div class="sum-row"><span>Tiền thừa</span><b id="changeDisplay" class="green">0 đ</b></div>
@@ -1320,7 +1454,7 @@
     // ================================================================
     let orders = [];
     let activeOrderId = null;
-    let payMode = 'MIXED';
+    let payMode = 'CASH';
     let productSearchTimer;
     let customerSearchTimer;
     let shippingFeeTimer = null;
@@ -1333,6 +1467,7 @@
     const selectedCustomerIdByOrderId = new Map();
     const selectedAddressKeyByOrderId = new Map();
     const selectedLocationByOrderId = new Map();
+    const deliveryInfoEditingByOrderId = new Set();
 
     const BANK_CODE = 'VCB';
     const BANK_ACCOUNT = '9921508504';
@@ -1352,11 +1487,13 @@
     const esc = v => (v ?? '').toString().replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
         .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save active order id.
     function saveActiveOrderId(id = activeOrderId) {
         if (id) localStorage.setItem(ACTIVE_POS_ORDER_KEY, String(id));
         else localStorage.removeItem(ACTIVE_POS_ORDER_KEY);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm restore active order id.
     function restoreActiveOrderId() {
         const storedId = Number(localStorage.getItem(ACTIVE_POS_ORDER_KEY));
         return Number.isFinite(storedId) && orders.some(order => order.id === storedId)
@@ -1364,11 +1501,13 @@
             : null;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set active order.
     function setActiveOrder(id) {
         activeOrderId = id || null;
         saveActiveOrderId(activeOrderId);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho read order drafts.
     function readOrderDrafts() {
         try {
             return JSON.parse(localStorage.getItem(POS_ORDER_DRAFTS_KEY) || '{}') || {};
@@ -1377,16 +1516,19 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm write order drafts.
     function writeOrderDrafts(drafts) {
         localStorage.setItem(POS_ORDER_DRAFTS_KEY, JSON.stringify(drafts || {}));
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear order draft.
     function clearOrderDraft(id) {
         const drafts = readOrderDrafts();
         delete drafts[String(id)];
         writeOrderDrafts(drafts);
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save order draft.
     function saveOrderDraft(order, draft) {
         if (!order?.id || !draft) return;
         const drafts = readOrderDrafts();
@@ -1397,6 +1539,7 @@
         writeOrderDrafts(drafts);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm build order draft.
     function buildOrderDraft(order) {
         if (!order?.id) return null;
         const location = getLocationState(order);
@@ -1416,12 +1559,14 @@
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm remember active order draft.
     function rememberActiveOrderDraft() {
         const order = currentOrder();
         const draft = buildOrderDraft(order);
         if (order && draft) saveOrderDraft(order, draft);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply order draft.
     function applyOrderDraft(order) {
         if (!order?.id) return order;
         const draft = readOrderDrafts()[String(order.id)];
@@ -1447,6 +1592,7 @@
         return next;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm price cell.
     function priceCell(item) {
         const current = Number(item.donGia || 0);
         const original = Number(item.giaGoc || current);
@@ -1456,10 +1602,12 @@
         return fmt(current);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm promo badge.
     function promoBadge(name) {
         return name ? `<span class="promo-badge">Đang giảm: ${esc(name)}</span>` : '<span class="promo-badge">Đang giảm</span>';
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product price html.
     function productPriceHtml(product) {
         const current = Number(product.giaBanMin || 0);
         const original = Number(product.giaGocMin || current);
@@ -1473,26 +1621,51 @@
         return `<span>${fmt(current)}</span>`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product meta price.
     function productMetaPrice(product) {
         return product.dangGiamGia
             ? `Giá giảm từ ${fmt(product.giaBanMin)}`
             : `Giá từ ${fmt(product.giaBanMin)}`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product image html.
+    function productImageHtml(product) {
+        const source = product?.imageUrl || product?.hinhAnh || product?.img || product?.anhDaiDien || product?.duongDanAnh;
+        const raw = Array.isArray(source)
+            ? (source[0]?.duongDanAnh || source[0]?.url || source[0]?.hinhAnh || '')
+            : source;
+        if (!raw) return '<div class="product-thumb">👕</div>';
+        const url = /^(https?:)?\/\//i.test(raw) || String(raw).startsWith('/') ? raw : `/uploads/${raw}`;
+        return `<div class="product-thumb"><img src="${esc(url)}" alt="${esc(product.tenSp || 'Sản phẩm')}" onerror="this.parentElement.innerHTML='👕'"></div>`;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm variant image html.
+    function variantImageHtml(variant) {
+        const raw = variant?.imageUrl || variant?.hinhAnh;
+        if (!raw) return '<span class="variant-thumb">👕</span>';
+        const url = /^(https?:)?\/\//i.test(raw) || String(raw).startsWith('/') ? raw : `/uploads/${raw}`;
+        return `<span class="variant-thumb"><img src="${esc(url)}" alt="${esc(variant.tenSanPham || 'Biến thể')}" onerror="this.parentElement.innerHTML='👕'"></span>`;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm variant chip html.
     function variantChipHtml(variant) {
         if (Number(variant.soLuongTon || 0) <= 0) return '';
         const label = `${esc(variant.mauSac?.ten||'-')} / ${esc(variant.kichCo?.ten||'-')}`;
         if (variant.dangGiamGia) {
-            return `<button class="variant-chip" onclick="addVariant(${variant.idSpct})">
-                <span>${label} · tồn ${variant.soLuongTon}</span><br>
-                <span class="price-old">${fmt(variant.giaGoc)}</span>
-                <span class="price-sale">${fmt(variant.donGia)}</span><br>
-                ${promoBadge(variant.tenDotGiamGia)}
+            return `<button class="variant-chip variant-chip-rich" onclick="addVariant(${variant.idSpct})">
+                ${variantImageHtml(variant)}
+                <span class="variant-copy"><strong>${label}</strong><small>Tồn ${variant.soLuongTon}</small>
+                <span class="price-old">${fmt(variant.giaGoc)}</span> <span class="price-sale">${fmt(variant.donGia)}</span><br>
+                ${promoBadge(variant.tenDotGiamGia)}</span>
             </button>`;
         }
-        return `<button class="variant-chip" onclick="addVariant(${variant.idSpct})">${label} · tồn ${variant.soLuongTon} · ${fmt(variant.donGia)}</button>`;
+        return `<button class="variant-chip variant-chip-rich" onclick="addVariant(${variant.idSpct})">
+            ${variantImageHtml(variant)}
+            <span class="variant-copy"><strong>${label}</strong><small>Tồn ${variant.soLuongTon}</small><span class="price-sale">${fmt(variant.donGia)}</span></span>
+        </button>`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm toast.
     function toast(message, type = 'success') {
         const box = el('toast');
         box.textContent = message;
@@ -1501,6 +1674,7 @@
         box._hide = setTimeout(() => box.classList.remove('show'), 2600);
     }
 
+    // Hiển thị và đồng bộ giao diện cho show confirm.
     function showConfirm({ title = 'Xác nhận', message = '', okText = 'Xác nhận', cancelText = 'Hủy' } = {}) {
         el('confirmTitle').textContent = title;
         el('confirmMessage').textContent = message;
@@ -1510,6 +1684,7 @@
         return new Promise(resolve => { confirmResolver = resolve; });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm resolve confirm.
     function resolveConfirm(value) {
         el('confirmModal').classList.remove('open');
         if (confirmResolver) { confirmResolver(Boolean(value));
@@ -1519,6 +1694,7 @@
     // ================================================================
     //  API
     // ================================================================
+    // Thực hiện xử lý nghiệp vụ của hàm api.
     async function api(url, options = {}) {
         const res = await fetch(url, {
             ...options,
@@ -1552,10 +1728,12 @@
     // ================================================================
     //  ORDER CRUD
     // ================================================================
+    // Thực hiện xử lý nghiệp vụ của hàm current order.
     function currentOrder() {
         return orders.find(o => o.id === activeOrderId) || null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm snapshot shipping draft.
     function snapshotShippingDraft(order) {
         if (!order || order.loaiDon !== 'Giao hàng') return null;
         const location = getLocationState(order);
@@ -1572,6 +1750,7 @@
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm keep local shipping draft.
     function keepLocalShippingDraft(existingOrder, updatedOrder) {
         const draft = snapshotShippingDraft(existingOrder);
         if (!draft) return updatedOrder;
@@ -1592,6 +1771,7 @@
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm upsert order.
     function upsertOrder(order, options = {}) {
         const i = orders.findIndex(o => o.id === order.id);
         const nextOrder = options.keepLocalShippingDraft && i >= 0
@@ -1607,6 +1787,7 @@
     // ================================================================
     //  LOAD ORDERS WITH AUTO-CANCEL AT END OF DAY
     // ================================================================
+    // Tải hoặc truy xuất dữ liệu cho load pending orders.
     async function loadPendingOrders() {
         try {
             const rawOrders = await api('/api/pos/orders');
@@ -1645,6 +1826,7 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create order.
     async function createOrder() {
         try {
             upsertOrder(await api('/api/pos/orders', { method: 'POST' }));
@@ -1657,6 +1839,7 @@
     // ================================================================
     //  RENDER (giữ nguyên như cũ)
     // ================================================================
+    // Hiển thị và đồng bộ giao diện cho render.
     function render() {
         renderTabs();
         el('orderCount').textContent = orders.length + '/5';
@@ -1704,9 +1887,11 @@
             loadSavedCustomerAddresses(order);
         }
 
+        syncPayTabs();
         updatePaymentFields();
     }
 
+    // Hiển thị và đồng bộ giao diện cho render tabs.
     function renderTabs() {
         el('orderTabs').innerHTML = orders.map((o, i) => `
                 <div class="tab ${o.id === activeOrderId ? 'active' : ''}" onclick="selectOrder(${o.id})">
@@ -1717,6 +1902,7 @@
             `).join('');
     }
 
+    // Hiển thị và đồng bộ giao diện cho render items.
     function renderItems(order) {
         if (!order.items?.length) {
             return `<div class="empty"><div><b>Giỏ hàng đang trống</b><span>Nhấn "Thêm sản phẩm" để bắt đầu</span></div></div>`;
@@ -1751,6 +1937,73 @@
             `;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set customer validation.
+    function setCustomerValidation(input, errorId, message) {
+        if (!input) return !message;
+        input.setAttribute('aria-invalid', String(Boolean(message)));
+        input.setCustomValidity(message || '');
+        input.style.borderColor = message ? '#d92d20' : '';
+        if (el(errorId)) el(errorId).textContent = message || '';
+        return !message;
+    }
+
+    // Kiểm tra điều kiện và tính hợp lệ cho validate customer name.
+    function validateCustomerName(input, forceRequired = false) {
+        if (!input) return !forceRequired;
+        const name = String(input.value || '')
+            .replace(/[^\p{L}\s]/gu, '')
+            .replace(/\s{2,}/g, ' ')
+            .trimStart();
+        input.value = name;
+        const message = !name && forceRequired
+            ? 'Vui lòng nhập họ tên khách hàng.'
+            : name && !/^[\p{L}]+(?: [\p{L}]+)+$/u.test(name.trim())
+                ? 'Họ tên cần ít nhất 2 từ, chỉ gồm chữ cái và khoảng trắng.'
+                : name.length > 255
+                    ? 'Họ tên tối đa 255 ký tự.'
+                    : '';
+        return setCustomerValidation(input, 'customerNameValidation', message);
+    }
+
+    // Kiểm tra điều kiện và tính hợp lệ cho validate customer address.
+    function validateCustomerAddress(input, forceRequired = false) {
+        if (!input) return !forceRequired;
+        const address = String(input.value || '').trim();
+        const message = !address && forceRequired
+            ? 'Vui lòng nhập địa chỉ giao hàng.'
+            : address.length > 500
+                ? 'Địa chỉ tối đa 500 ký tự.'
+                : '';
+        return setCustomerValidation(input, 'customerAddressValidation', message);
+    }
+
+    // Kiểm tra điều kiện và tính hợp lệ cho validate customer phone.
+    function validateCustomerPhone(input, forceRequired = false) {
+        if (!input) return !forceRequired;
+        const phone = String(input.value || '').replace(/\D/g, '').slice(0, 10);
+        const required = forceRequired || Boolean(el('provinceSelect'));
+        const valid = phone ? /^(03|05|07|08|09)\d{8}$/.test(phone) : !required;
+        const message = !phone && required
+            ? 'Vui lòng nhập số điện thoại giao hàng.'
+            : phone && !valid
+                ? 'Số điện thoại phải gồm 10 số và bắt đầu bằng 03, 05, 07, 08 hoặc 09.'
+                : '';
+        input.value = phone;
+        return setCustomerValidation(input, 'customerPhoneValidation', message) && valid;
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render inline payment methods.
+    function renderInlinePaymentMethods() {
+        return `
+            <div class="customer-payment-methods" role="group" aria-label="Hình thức thanh toán">
+                <button id="summaryPayCash" class="pay-tab" type="button" onclick="selectCheckoutPayment('CASH')"><i class="fa-solid fa-money-bill-1 pay-tab-icon pay-icon-cash"></i><span class="pay-tab-label">Tiền mặt</span></button>
+                <button id="summaryPayTransfer" class="pay-tab" type="button" onclick="selectCheckoutPayment('TRANSFER')"><i class="fa-solid fa-building-columns pay-tab-icon pay-icon-transfer"></i><span class="pay-tab-label">Chuyển khoản</span></button>
+                <button id="summaryPayMixed" class="pay-tab" type="button" onclick="selectCheckoutPayment('MIXED')"><span class="pay-tab-icon pay-icon-mixed" aria-hidden="true"><i class="fa-solid fa-credit-card"></i><i class="fa-solid fa-money-bill-1"></i></span><span class="pay-tab-label">Kết hợp</span></button>
+                <button id="summaryPayCard" class="pay-tab" type="button" onclick="selectCheckoutPayment('CARD')"><i class="fa-solid fa-credit-card pay-tab-icon pay-icon-card"></i><span class="pay-tab-label">Thẻ ATM / VNPay</span></button>
+            </div>`;
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render customer.
     function renderCustomer(order) {
         const shipping = order.loaiDon === 'Giao hàng';
         const customerId = getSelectedCustomerId(order);
@@ -1760,6 +2013,7 @@
             (customerId ? 'Tự lấy từ địa chỉ mặc định hoặc nhập địa chỉ giao hàng' : 'Số nhà, tên đường') :
             'Chọn địa chỉ đã lưu bên dưới';
         const readonlyAtCounter = !shipping && Boolean(customerId);
+        const showDeliveryForm = !customerId || deliveryInfoEditingByOrderId.has(order.id);
 
         if (!shipping) {
             const customerName = order.tenKhachHang || 'Khách lẻ';
@@ -1774,6 +2028,7 @@
                         <div class="switch" onclick="toggleShipping(true)">
                             <span class="toggle"></span><b>Tại quầy</b>
                         </div>
+                        ${renderInlinePaymentMethods()}
 
                         <div class="row">
                             <div class="panel-title">Khách hàng</div>
@@ -1830,6 +2085,7 @@
                         <div class="switch ${shipping ? 'active' : ''}" onclick="toggleShipping(${!shipping})">
                             <span class="toggle"></span><b>${shipping ? 'Giao hàng' : 'Tại quầy'}</b>
                         </div>
+                        ${renderInlinePaymentMethods()}
 
                         <div class="row">
                             <div class="panel-title">Khách hàng</div>
@@ -1853,7 +2109,7 @@
                                     <div class="customer-avatar">${esc((order.tenKhachHang || 'K').trim().charAt(0).toUpperCase() || 'K')}</div>
                                     <div>
                                         <div class="customer-name">${esc(order.tenKhachHang || 'Khách hàng')}</div>
-                                        <div class="customer-note">Thông tin giao hàng có thể chỉnh bên dưới trước khi thanh toán.</div>
+                                        <div class="customer-note">Bấm Đổi thông tin giao hàng để cập nhật địa chỉ nhận hàng.</div>
                                     </div>
                                 </div>
                                 <div class="customer-info-grid">
@@ -1866,19 +2122,28 @@
                                         <div class="customer-info-value" id="customerSelectedAddressText">${esc(order.diaChiKhachHang || 'Đang chờ địa chỉ mặc định')}</div>
                                     </div>
                                 </div>
-                                ${renderSavedAddressPicker(order, customerId)}
                             </div>
                         ` : ''}
 
+                        ${customerId && !showDeliveryForm ? `
+                            <div class="row" style="display:flex;justify-content:center;margin:14px 0">
+                                <button class="btn ghost" type="button" onclick="toggleDeliveryInfoEditor()"><i class="fa-solid fa-pen"></i> Đổi thông tin giao hàng</button>
+                            </div>
+                        ` : ''}
+
+                        ${showDeliveryForm ? `
+                        ${customerId ? renderSavedAddressPicker(order, customerId) : ''}
                         <div class="row">
                             <div class="label">Tên khách hàng</div>
-                            <input class="input" id="customerName" value="${esc(order.tenKhachHang||'')}" placeholder="Khách lẻ">
+                            <input class="input" id="customerName" value="${esc(order.tenKhachHang||'')}" maxlength="255" placeholder="Nguyễn Văn A" oninput="validateCustomerName(this)" onblur="validateCustomerName(this,true)">
+                            <div class="customer-validation" id="customerNameValidation" aria-live="polite"></div>
                         </div>
 
                         <div class="row">
                             <div>
                                 <div class="label">Số điện thoại ${shipping ? '<span class="red">*</span>' : ''}</div>
-                                <input class="input" id="customerPhone" value="${esc(order.soDienThoai||'')}" placeholder="Số điện thoại">
+                                <input class="input" id="customerPhone" value="${esc(order.soDienThoai||'')}" placeholder="Số điện thoại" inputmode="numeric" maxlength="10" oninput="validateCustomerPhone(this)" onblur="validateCustomerPhone(this, true)">
+                                <div class="phone-validation" id="customerPhoneValidation" aria-live="polite"></div>
                             </div>
                         </div>
 
@@ -1887,36 +2152,48 @@
                         <div class="row">
                             <div>
                                 <div class="label">${addressLabel} ${shipping ? '<span class="red">*</span>' : ''}</div>
-                                <input class="input" id="customerAddress" value="${esc(order.diaChiKhachHang||'')}" placeholder="${addressPlaceholder}" ${readonlyAtCounter ? 'readonly' : ''} oninput="onCustomerAddressInput()" onblur="onCustomerAddressBlur()">
+                                <input class="input" id="customerAddress" value="${esc(order.diaChiKhachHang||'')}" maxlength="500" placeholder="${addressPlaceholder}" ${readonlyAtCounter ? 'readonly' : ''} oninput="validateCustomerAddress(this);onCustomerAddressInput()" onblur="validateCustomerAddress(this,true);onCustomerAddressBlur()">
+                                <div class="customer-validation" id="customerAddressValidation" aria-live="polite"></div>
                             </div>
                         </div>
                         ` : ''}
                         ${shipping ? renderShippingFields(order) : ''}
+                        ` : ''}
 
-                        <div class="row">
-                            <button class="btn small" onclick="${shipping ? 'saveShippingInfo()' : 'saveManualCustomer()'}">Lưu thông tin</button>
-                        </div>
                     </div>
                 </section>
             `;
     }
 
+    // Xử lý tương tác người dùng cho toggle delivery info editor.
+    function toggleDeliveryInfoEditor() {
+        const order = currentOrder();
+        if (!order || order.loaiDon !== 'Giao hàng') return;
+        deliveryInfoEditingByOrderId.add(order.id);
+        render();
+    }
+
+    // Hiển thị và đồng bộ giao diện cho render location fields.
     function renderLocationFields({ shipping = false } = {}) {
         return `
                 <div class="row two">
                     <div>
                         <div class="label">Tỉnh/Thành phố ${shipping ? '<span class="red">*</span>' : ''}</div>
-                        <input class="select-search" type="search" placeholder="Tìm kiếm tỉnh/thành..." oninput="filterPosSelectOptions(this,'provinceSelect')">
-                        <select class="input" id="provinceSelect" onchange="onProvinceChange()">
-                            <option value="">Chọn tỉnh/thành</option>
-                        </select>
+                        <div class="pos-search-select">
+                            <input class="pos-select-input" type="search" placeholder="Tìm kiếm hoặc chọn tỉnh/thành..." autocomplete="off" onfocus="openPosSearchSelect(this)" oninput="filterPosSearchSelect(this)">
+                            <button type="button" class="pos-select-toggle" onclick="togglePosSearchSelect(this)" aria-label="Mở danh sách tỉnh/thành">⌄</button>
+                            <div class="pos-select-menu" role="listbox"></div>
+                            <select class="input" id="provinceSelect" onchange="onProvinceChange()"><option value="">Chọn tỉnh/thành</option></select>
+                        </div>
                     </div>
                     <div>
                         <div class="label">Xã/Phường ${shipping ? '<span class="red">*</span>' : ''}</div>
-                        <input class="select-search" type="search" placeholder="Tìm kiếm xã/phường..." oninput="filterPosSelectOptions(this,'wardSelect')">
-                        <select class="input" id="wardSelect" onchange="onWardChange()">
-                            <option value="">Chọn xã/phường</option>
-                        </select>
+                        <div class="pos-search-select">
+                            <input class="pos-select-input" type="search" placeholder="Tìm kiếm hoặc chọn xã/phường..." autocomplete="off" onfocus="openPosSearchSelect(this)" oninput="filterPosSearchSelect(this)">
+                            <button type="button" class="pos-select-toggle" onclick="togglePosSearchSelect(this)" aria-label="Mở danh sách xã/phường">⌄</button>
+                            <div class="pos-select-menu" role="listbox"></div>
+                            <select class="input" id="wardSelect" onchange="onWardChange()"><option value="">Chọn xã/phường</option></select>
+                        </div>
                     </div>
                     <div class="p-meta" style="grid-column:1 / -1">
                         Chọn tỉnh/thành và xã/phường theo địa giới hành chính mới để tự động tính phí vận chuyển.
@@ -1925,6 +2202,7 @@
             `;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render shipping fields.
     function renderShippingFields(order) {
         return `
                 <div class="row two">
@@ -1938,6 +2216,7 @@
             `;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render saved address picker.
     function renderSavedAddressPicker(order, customerId) {
         const addresses = customerId ? (customerAddressesByCustomerId.get(String(customerId)) || []) : [];
         const selectedKey = selectedAddressKeyByOrderId.get(order.id) || '';
@@ -1953,19 +2232,26 @@
         return `
                 <div class="row">
                     <div class="label">Địa chỉ đã lưu</div>
-                    <input class="select-search" type="search" placeholder="Tìm kiếm địa chỉ..." oninput="filterPosSelectOptions(this,'savedAddressSelect')">
-                    <select class="input" id="savedAddressSelect" onchange="applySavedAddress(this.value)" ${loading ? 'disabled' : ''}>
-                        <option value="">${loading ? 'Đang tải địa chỉ...' : '-- Chọn địa chỉ đã lưu --'}</option>
-                        ${options}
-                    </select>
+                    <div class="pos-search-select ${loading ? 'disabled' : ''}">
+                        <input class="pos-select-input" type="search" placeholder="Tìm kiếm hoặc chọn địa chỉ..." autocomplete="off" ${loading ? 'disabled' : ''} onfocus="openPosSearchSelect(this)" oninput="filterPosSearchSelect(this)">
+                        <button type="button" class="pos-select-toggle" ${loading ? 'disabled' : ''} onclick="togglePosSearchSelect(this)" aria-label="Mở danh sách địa chỉ">⌄</button>
+                        <div class="pos-select-menu" role="listbox"></div>
+                        <select class="input" id="savedAddressSelect" onchange="applySavedAddress(this.value)" ${loading ? 'disabled' : ''}>
+                            <option value="">${loading ? 'Đang tải địa chỉ...' : '-- Chọn địa chỉ đã lưu --'}</option>
+                            ${options}
+                        </select>
+                    </div>
                     <div class="p-meta" style="margin-top:5px">${loading ? 'Đang lấy danh sách địa chỉ của khách hàng.' : 'Chọn một địa chỉ để tự điền thông tin người nhận.'}</div>
                 </div>
             `;
     }
 
+    // Hiển thị và đồng bộ giao diện cho render payment.
     function renderPayment(order) {
         const total = Number(order.tongTienThanhToan || 0);
         const showShippingFee = order.loaiDon === 'Giao hàng' || Number(order.phiVanChuyen || 0) > 0;
+        const hasItems = Array.isArray(order.items)
+            && order.items.some(item => Number(item.soLuong || 0) > 0);
         return `
                 <section class="panel">
                     <div class="panel-body">
@@ -1976,14 +2262,15 @@
                             <button class="btn" type="button" onclick="openVoucherModal()">Xem PGG</button>
                         </div>
                         ${order.maVoucher ? `<div class="voucher-box">Tự động áp dụng phiếu tốt nhất: <b>${esc(order.voucherDisplay || order.maVoucher)}</b> - giảm ${fmt(order.soTienGiam)}</div>` : ''}
-                        ${order.voucherHintCode ? `<div class="hint-box">Thêm ${fmt(order.voucherHintNeedMore)} để dùng phiếu <b>${esc(order.voucherHintCode)}</b>, có thể giảm ${fmt(order.voucherHintDiscount)}.</div>` : ''}
+                        ${hasItems && order.voucherHintCode ? `<div class="hint-box">Thêm ${fmt(order.voucherHintNeedMore)} để dùng phiếu <b>${esc(order.voucherHintCode)}</b>, có thể giảm ${fmt(order.voucherHintDiscount)}.</div>` : ''}
                         <div class="summary">
                             <div class="sum-row"><span>Tiền hàng</span><b>${fmt(order.tongTienGoc)}</b></div>
                             <div class="sum-row"><span>Giảm giá${order.voucherDisplay ? ` (${esc(order.voucherDisplay)})` : ''}</span><b class="red">- ${fmt(order.soTienGiam)}</b></div>
                             ${showShippingFee ? `<div class="sum-row"><span>Phí vận chuyển</span><b id="shippingFeeSummary">${fmt(order.phiVanChuyen||0)}</b></div>` : ''}
                             <div class="sum-row total"><span>Tổng số tiền</span><span id="totalDisplay" data-total="${total}">${fmt(total)}</span></div>
                         </div>
-                        <button class="checkout" onclick="openPaymentModal()">THANH TOÁN</button>
+                        <div class="payment-mode-hint" id="paymentModeHint"></div>
+                        <button class="checkout" id="checkoutButton" onclick="checkout()">THANH TOÁN</button>
                     </div>
                 </section>
             `;
@@ -1992,16 +2279,19 @@
     // ================================================================
     //  PAYMENT (giữ nguyên)
     // ================================================================
+    // Thực hiện xử lý nghiệp vụ của hàm viet qr url.
     function vietQrUrl(amount, orderCode) {
         const value = Math.max(0, Math.round(Number(amount || 0)));
         const info = encodeURIComponent(`Thanh toán ${orderCode || 'POS'}`);
         return `https://img.vietqr.io/image/${BANK_CODE}-${BANK_ACCOUNT}-compact2.png?amount=${value}&addInfo=${info}&accountName=4MenStore`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm select order.
     function selectOrder(id) { rememberActiveOrderDraft();
         setActiveOrder(id);
         render(); }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close order.
     async function closeOrder(id) {
         const order = orders.find(o => o.id === id);
         if (!order) return;
@@ -2023,17 +2313,26 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set pay mode.
     function setPayMode(mode) {
         payMode = mode;
         const total = paymentTotal();
         if (el('cashInput') && el('transferInput')) {
-            el('cashInput').value = moneyText(mode === 'TRANSFER' ? 0 : total);
-            el('transferInput').value = moneyText(mode === 'CASH' ? 0 : (mode === 'TRANSFER' ? total : 0));
+            el('cashInput').value = moneyText(mode === 'TRANSFER' || mode === 'CARD' ? 0 : total);
+            el('transferInput').value = moneyText(mode === 'CASH' || mode === 'CARD' ? 0 : (mode === 'TRANSFER' ? total : 0));
         }
+        if (el('paymentAmountFields')) el('paymentAmountFields').hidden = mode === 'CARD';
+        if (el('cardPaymentNote')) el('cardPaymentNote').classList.toggle('visible', mode === 'CARD');
         syncPayTabs();
         updatePaymentFields();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm select checkout payment.
+    function selectCheckoutPayment(mode) {
+        setPayMode(mode);
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm format payment input.
     function formatPaymentInput(input) {
         const value = moneyValue(input.value);
         input.value = value ? moneyText(value) : '0';
@@ -2046,27 +2345,62 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm payment total.
     function paymentTotal() {
-        return Number(el('paymentModalTotal')?.dataset.total || el('totalDisplay')?.dataset.total || currentOrder()
+        const modalOpen = el('transferModal')?.classList.contains('open');
+        return Number((modalOpen ? el('paymentModalTotal')?.dataset.total : null) || el('totalDisplay')?.dataset.total || currentOrder()
             ?.tongTienThanhToan || 0);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sync pay tabs.
     function syncPayTabs() {
         [
-            ['CASH', 'payCashTab'],
-            ['TRANSFER', 'payTransferTab'],
-            ['MIXED', 'payMixedTab']
-        ].forEach(([mode, id]) => el(id)?.classList.toggle('active', payMode === mode));
+            ['CASH', ['payCashTab', 'summaryPayCash']],
+            ['TRANSFER', ['payTransferTab', 'summaryPayTransfer']],
+            ['MIXED', ['payMixedTab', 'summaryPayMixed']],
+            ['CARD', ['payCardTab', 'summaryPayCard']]
+        ].forEach(([mode, ids]) => ids.forEach(id => {
+            const tab = el(id);
+            if (!tab) return;
+            const active = payMode === mode;
+            tab.classList.toggle('active', active);
+            tab.setAttribute('aria-pressed', String(active));
+        }));
+
+        const presentation = {
+            CASH: {
+                hint: 'Đơn hàng sẽ được ghi nhận thanh toán toàn bộ bằng tiền mặt.',
+                action: 'THANH TOÁN TIỀN MẶT'
+            },
+            TRANSFER: {
+                hint: 'Nhấn thanh toán để hiển thị VietQR và xác nhận chuyển khoản.',
+                action: 'TẠO QR CHUYỂN KHOẢN'
+            },
+            MIXED: {
+                hint: 'Nhấn thanh toán để nhập số tiền mặt và chuyển khoản.',
+                action: 'THANH TOÁN KẾT HỢP'
+            },
+            CARD: {
+                hint: 'Bạn sẽ được chuyển sang cổng VNPay để thanh toán bằng thẻ ATM/Visa/Mastercard.',
+                action: 'THANH TOÁN QUA VNPAY'
+            }
+        }[payMode] || {};
+        if (el('paymentModeHint')) el('paymentModeHint').textContent = presentation.hint || '';
+        if (el('checkoutButton')) el('checkoutButton').textContent = presentation.action || 'THANH TOÁN';
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update payment fields.
     function updatePaymentFields() {
         const total = paymentTotal();
-        const paid = moneyValue(el('cashInput')?.value) + moneyValue(el('transferInput')?.value);
+        const paid = payMode === 'CARD'
+            ? total
+            : moneyValue(el('cashInput')?.value) + moneyValue(el('transferInput')?.value);
         if (el('missingDisplay')) el('missingDisplay').textContent = fmt(Math.max(0, total - paid));
         if (el('changeDisplay')) el('changeDisplay').textContent = fmt(Math.max(0, paid - total));
         updateTransferModal();
     }
 
+    // Xử lý tương tác người dùng cho open payment modal.
     async function openPaymentModal() {
         let order = currentOrder();
         if (!order) return toast('Vui lòng tạo hóa đơn trước', 'error');
@@ -2085,13 +2419,15 @@
         setPayMode(payMode || 'CASH');
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close transfer modal.
     function closeTransferModal() { el('transferModal').classList.remove('open'); }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update transfer modal.
     function updateTransferModal() {
         const order = currentOrder();
         if (!order || !el('transferQrImage')) return;
         const transfer = moneyValue(el('transferInput')?.value);
-        const showQr = payMode !== 'CASH' && transfer > 0;
+        const showQr = ['TRANSFER', 'MIXED'].includes(payMode) && transfer > 0;
         if (el('transferQrPanel')) el('transferQrPanel').style.display = showQr ? 'block' : 'none';
         el('transferBankName').textContent = BANK_NAME;
         el('transferBankAccount').textContent = BANK_ACCOUNT;
@@ -2103,21 +2439,27 @@
     // ================================================================
     //  PRODUCT MODAL
     // ================================================================
+    // Xử lý tương tác người dùng cho open product modal.
     function openProductModal() {
         if (!currentOrder()) return toast('Vui lòng tạo hóa đơn trước', 'error');
         el('productModal').classList.add('open');
         loadProductChoices();
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close product modal.
     function closeProductModal() { el('productModal').classList.remove('open'); }
 
+    // Xử lý tương tác người dùng cho open customer modal.
     function openCustomerModal() { el('customerModal').classList.add('open');
         loadCustomers(); }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close customer modal.
     function closeCustomerModal() { el('customerModal').classList.remove('open'); }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close modal on backdrop.
     function closeModalOnBackdrop(e, id) { if (e.target.id === id) e.target.classList.remove('open'); }
 
+    // Tải hoặc truy xuất dữ liệu cho load product choices.
     async function loadProductChoices() {
         const keyword = el('productKeyword').value.trim();
         const params = new URLSearchParams({ page: 0, size: 20, sort: 'newest' });
@@ -2128,18 +2470,20 @@
             const products = rawProducts.filter(p => Number(p.tongTon || 0) > 0);
             el('productChoices').innerHTML = products.map(p => `
                     <tr>
+                        <td>${productImageHtml(p)}</td>
                         <td>${esc(p.maSp||'')}</td>
                         <td><div class="p-name">${esc(p.tenSp)}</div><div class="p-meta">${productMetaPrice(p)}</div></td>
                         <td>${p.tongTon||0}</td>
                         <td class="money red">${productPriceHtml(p)}</td>
                         <td><div id="variants-${p.idSp}"><button class="variant-chip" onclick="loadVariants(${p.idSp})">Xem biến thể</button></div></td>
                     </tr>
-                `).join('') || '<tr><td colspan="5" style="text-align:center">Không tìm thấy sản phẩm</td></tr>';
+                `).join('') || '<tr><td colspan="6" style="text-align:center">Không tìm thấy sản phẩm</td></tr>';
         } catch (e) {
             toast(e.message, 'error');
         }
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load variants.
     async function loadVariants(idSp) {
         try {
             const rawVariants = await api(`/api/shop/products/${idSp}/variants`);
@@ -2153,10 +2497,12 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm refresh product modal stock.
     async function refreshProductModalStock() {
         if (el('productModal')?.classList.contains('open')) await loadProductChoices();
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho add variant.
     async function addVariant(idSpct) {
         const order = currentOrder();
         try {
@@ -2174,6 +2520,7 @@
     // ================================================================
     //  SCAN QR (giữ nguyên)
     // ================================================================
+    // Thực hiện xử lý nghiệp vụ của hàm scan code.
     async function scanCode() {
         if (!currentOrder()) return toast('Vui lòng tạo hóa đơn trước', 'error');
         el('scanModal').classList.add('open');
@@ -2193,6 +2540,7 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho on scan success.
     async function onScanSuccess(decodedText) {
         if (qrBusy) return;
         qrBusy = true;
@@ -2207,12 +2555,14 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho add variant by code.
     async function addVariantByCode(code) {
         if (!code) return toast('Vui lòng nhập mã biến thể', 'error');
         const variant = await api('/api/pos/variants/by-code?code=' + encodeURIComponent(code));
         await addVariant(variant.idSpct);
     }
 
+    // Xử lý tương tác người dùng cho submit manual qr.
     async function submitManualQr() {
         try {
             await addVariantByCode(el('manualQrCode').value.trim());
@@ -2222,6 +2572,7 @@
         }
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close scan modal.
     async function closeScanModal() {
         el('scanModal').classList.remove('open');
         el('manualQrCode').value = '';
@@ -2235,6 +2586,7 @@
     // ================================================================
     //  QTY / ITEMS
     // ================================================================
+    // Thực hiện xử lý nghiệp vụ của hàm change qty.
     async function changeQty(idHdct, soLuong) {
         const order = currentOrder();
         const item = order?.items?.find(current => current.idHdct === idHdct);
@@ -2255,6 +2607,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm commit qty.
     async function commitQty(idHdct, input) {
         const soLuong = Number(input.value);
         if (!Number.isInteger(soLuong) || soLuong < 1) {
@@ -2265,6 +2618,7 @@
         await changeQty(idHdct, soLuong);
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho remove item.
     async function removeItem(idHdct) {
         const order = currentOrder();
         try {
@@ -2277,6 +2631,7 @@
     // ================================================================
     //  CUSTOMER
     // ================================================================
+    // Tải hoặc truy xuất dữ liệu cho load customers.
     async function loadCustomers() {
         const keyword = el('customerKeyword').value.trim();
         const params = new URLSearchParams({ page: 0, size: 10, trangThai: true });
@@ -2297,6 +2652,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm choose customer.
     async function chooseCustomer(c) {
         const order = currentOrder();
         if (!order) return;
@@ -2307,6 +2663,7 @@
 
         selectedCustomerIdByOrderId.set(order.id, selectedCustomerId);
         selectedAddressKeyByOrderId.delete(order.id);
+        if (shipping) deliveryInfoEditingByOrderId.delete(order.id);
         if (!shipping) selectedLocationByOrderId.delete(order.id);
 
         try {
@@ -2334,7 +2691,7 @@
             closeCustomerModal();
 
             if (shipping) {
-                toast('Đã chọn khách hàng giao hàng. Thông tin đã được điền vào form.');
+                toast('Đã chọn khách hàng. Bấm “Đổi thông tin giao hàng” nếu cần thay đổi địa chỉ.');
                 return;
             }
 
@@ -2344,11 +2701,13 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho toggle shipping.
     async function toggleShipping(enabled) {
         const order = currentOrder();
         if (!order) return;
 
         if (!enabled) {
+            deliveryInfoEditingByOrderId.delete(order.id);
             try {
                 upsertOrder(await api(`/api/pos/orders/${order.id}/shipping`, {
                     method: 'PUT',
@@ -2362,6 +2721,7 @@
 
         selectedAddressKeyByOrderId.delete(order.id);
         selectedLocationByOrderId.delete(order.id);
+        deliveryInfoEditingByOrderId.add(order.id);
         order.loaiDon = 'Giao hàng';
         order.diaChiKhachHang = '';
         order.provinceId = null;
@@ -2373,6 +2733,7 @@
         render();
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get selected customer id.
     function getSelectedCustomerId(order) {
         if (!order) return null;
         if (selectedCustomerIdByOrderId.has(order.id)) return selectedCustomerIdByOrderId.get(order.id);
@@ -2380,10 +2741,12 @@
             order.khachHang?.id ?? order.khachHang?.idKh ?? order.customer?.id ?? null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm customer id of.
     function customerIdOf(customer) {
         return customer?.id ?? customer?.idKh ?? customer?.idKhachHang ?? customer?.customerId ?? null;
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is default address.
     function isDefaultAddress(address) {
         return Boolean(
             address?.macDinh === true ||
@@ -2396,6 +2759,7 @@
         );
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get location state.
     function getLocationState(order) {
         if (!order) return {};
         const cached = selectedLocationByOrderId.get(order.id) || {};
@@ -2407,6 +2771,7 @@
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm remember location from controls.
     function rememberLocationFromControls() {
         const order = currentOrder();
         if (!order) return;
@@ -2420,25 +2785,33 @@
         });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset location controls.
     function resetLocationControls() {
         const order = currentOrder();
         if (order) selectedLocationByOrderId.delete(order.id);
         if (el('provinceSelect')) el('provinceSelect').value = '';
-        if (el('wardSelect')) el('wardSelect').innerHTML = '<option value="">Chọn xã/phường</option>';
+        if (el('wardSelect')) {
+            el('wardSelect').innerHTML = '<option value="">Chọn xã/phường</option>';
+            syncPosSearchSelect(el('wardSelect'));
+        }
     }
 
+    // Xử lý tương tác người dùng cho on customer address input.
     function onCustomerAddressInput() {}
 
+    // Xử lý tương tác người dùng cho on customer address blur.
     function onCustomerAddressBlur() {
         const order = currentOrder();
         if (order?.loaiDon === 'Giao hàng') scheduleAutoShippingFee();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm unwrap list.
     function unwrapList(data) {
         const value = data?.content ?? data?.data ?? data?.items ?? data?.result ?? data;
         return Array.isArray(value) ? value : [];
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get address key.
     function getAddressKey(address, index) {
         return String(
             address?.idDc ??
@@ -2450,6 +2823,7 @@
         );
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get address info.
     function getAddressInfo(address) {
         const detail = String(
             address?.diaChiCuThe ??
@@ -2493,6 +2867,7 @@
         };
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho address label.
     function addressLabel(address) {
         const info = getAddressInfo(address);
         const label = String(address?.tenDiaChi ?? address?.ten ?? address?.maDiaChi ?? '').trim();
@@ -2500,6 +2875,7 @@
         return [label, info.fullAddress].filter(Boolean).join(' - ') + defaultText || 'Địa chỉ chưa có thông tin';
     }
 
+    // Tải hoặc truy xuất dữ liệu cho fetch customer addresses.
     async function fetchCustomerAddresses(customerId) {
         const urls = [
             `/api/khach-hang/${customerId}/dia-chi`,
@@ -2520,26 +2896,50 @@
         throw lastError || new Error('Không tải được địa chỉ khách hàng');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm refresh saved address picker.
     function refreshSavedAddressPicker(orderId) {
         const order = currentOrder();
         const select = el('savedAddressSelect');
+
         if (!order || order.id !== orderId || !select) return;
+
         const customerId = getSelectedCustomerId(order);
         if (!customerId) return;
+
         const addresses = customerAddressesByCustomerId.get(String(customerId)) || [];
         const selectedKey = selectedAddressKeyByOrderId.get(order.id) || '';
+
         select.disabled = false;
-        select.innerHTML = '<option value="">-- Chọn địa chỉ đã lưu --</option>' +
+
+        select.innerHTML =
+            '<option value="">-- Chọn địa chỉ đã lưu --</option>' +
             addresses.map((address, index) => {
                 const key = getAddressKey(address, index);
-                return `<option value="${esc(key)}" ${String(key) === String(selectedKey) ? 'selected' : ''}>${esc(addressLabel(address))}</option>`;
+
+                return `
+                <option
+                    value="${esc(key)}"
+                    ${String(key) === String(selectedKey) ? 'selected' : ''}
+                >
+                    ${esc(addressLabel(address))}
+                </option>
+            `;
             }).join('');
-        const hint = select.parentElement?.querySelector('.p-meta');
-        if (hint) hint.textContent = addresses.length ?
-            'Chọn một địa chỉ để tự điền thông tin người nhận.' :
-            'Khách hàng này chưa có địa chỉ đã lưu.';
+
+        // FIX: đồng bộ select ẩn với ô input đang hiển thị
+        syncPosSearchSelect(select);
+
+        const wrapper = select.closest('.pos-search-select');
+        const hint = wrapper?.nextElementSibling;
+
+        if (hint?.classList?.contains('p-meta')) {
+            hint.textContent = addresses.length
+                ? 'Chọn một địa chỉ để tự điền thông tin người nhận.'
+                : 'Khách hàng này chưa có địa chỉ đã lưu.';
+        }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply default saved address.
     async function applyDefaultSavedAddress(order, addresses) {
         if (!order || !addresses?.length || selectedAddressKeyByOrderId.has(order.id)) return;
         const defaultIndex = addresses.findIndex(isDefaultAddress);
@@ -2549,6 +2949,7 @@
         refreshSavedAddressPicker(order.id);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load saved customer addresses.
     async function loadSavedCustomerAddresses(order) {
         const customerId = getSelectedCustomerId(order);
         if (!order || !customerId) return;
@@ -2570,6 +2971,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm text key.
     function textKey(value) {
         return String(value || '')
             .normalize('NFD')
@@ -2580,6 +2982,7 @@
             .replace(/[^a-z0-9]/g, '');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm select option by id or name.
     function selectOptionByIdOrName(select, id, name) {
         if (!select) return false;
         const idText = id == null ? '' : String(id);
@@ -2598,6 +3001,7 @@
         return true;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize pos select search.
     function normalizePosSelectSearch(value) {
         return String(value || '')
             .normalize('NFD')
@@ -2607,6 +3011,7 @@
             .toLowerCase();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm filter pos select options.
     function filterPosSelectOptions(input, selectId) {
         const select = el(selectId);
         if (!select) return;
@@ -2617,6 +3022,73 @@
         });
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm sync pos search select.
+    function syncPosSearchSelect(select, query = '') {
+        const wrapper = select?.closest('.pos-search-select');
+        if (!wrapper) return;
+        const input = wrapper.querySelector('.pos-select-input');
+        const menu = wrapper.querySelector('.pos-select-menu');
+        const keyword = normalizePosSelectSearch(query);
+        const options = [...select.options].slice(1).filter((option) => {
+            const searchable = normalizePosSelectSearch(`${option.textContent || ''} ${option.dataset?.name || ''}`);
+            return !keyword || searchable.includes(keyword);
+        });
+        if (!query && input) {
+            input.value = select.value ? String(select.selectedOptions?.[0]?.textContent || '').trim() : '';
+        }
+        menu.innerHTML = options.length
+            ? options.map((option) => `<button type="button" class="pos-select-option ${option.value === select.value ? 'active' : ''}" onclick="choosePosSearchSelect('${select.id}',this.dataset.value)" data-value="${esc(option.value)}">${esc(option.textContent.trim())}</button>`).join('')
+            : '<div class="pos-select-empty">Không tìm thấy kết quả phù hợp.</div>';
+    }
+
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close pos search selects.
+    function closePosSearchSelects(except = null) {
+        document.querySelectorAll('.pos-search-select.open').forEach((wrapper) => {
+            if (wrapper === except) return;
+            wrapper.classList.remove('open');
+            syncPosSearchSelect(wrapper.querySelector('select'));
+        });
+    }
+
+    // Xử lý tương tác người dùng cho open pos search select.
+    function openPosSearchSelect(input) {
+        const wrapper = input?.closest('.pos-search-select');
+        if (!wrapper || input.disabled) return;
+        closePosSearchSelects(wrapper);
+        wrapper.classList.add('open');
+        syncPosSearchSelect(wrapper.querySelector('select'), input.value);
+    }
+
+    // Xử lý tương tác người dùng cho toggle pos search select.
+    function togglePosSearchSelect(button) {
+        const wrapper = button?.closest('.pos-search-select');
+        const input = wrapper?.querySelector('.pos-select-input');
+        if (!wrapper || !input || input.disabled) return;
+        if (wrapper.classList.contains('open')) closePosSearchSelects();
+        else {
+            openPosSearchSelect(input);
+            input.focus();
+        }
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm filter pos search select.
+    function filterPosSearchSelect(input) {
+        openPosSearchSelect(input);
+        syncPosSearchSelect(input.closest('.pos-search-select')?.querySelector('select'), input.value);
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm choose pos search select.
+    function choosePosSearchSelect(selectId, value) {
+        const select = el(selectId);
+        if (!select) return;
+        select.value = value;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        const wrapper = select.closest('.pos-search-select');
+        wrapper?.classList.remove('open');
+        syncPosSearchSelect(select);
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm fill location from address.
     async function fillLocationFromAddress(address) {
         const info = getAddressInfo(address);
         await loadProvinces();
@@ -2634,6 +3106,7 @@
         return wardMatched;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply saved address.
     async function applySavedAddress(addressKey, { silent = false } = {}) {
         const order = currentOrder();
         if (!order) return;
@@ -2670,6 +3143,7 @@
     // ================================================================
     //  SHIPPING / LOCATION (giữ nguyên)
     // ================================================================
+    // Tải hoặc truy xuất dữ liệu cho load provinces.
     async function loadProvinces() {
         const select = el('provinceSelect');
         if (!select || select.dataset.loaded) return;
@@ -2681,6 +3155,7 @@
                 list.map(p => `<option value="${p.code}" data-name="${esc(p.name)}">${esc(p.name)}</option>`)
                     .join('');
             select.dataset.loaded = '1';
+            syncPosSearchSelect(select);
             const saved = getLocationState(currentOrder());
             if (selectOptionByIdOrName(select, saved.provinceId, saved.provinceName)) {
                 await onProvinceChange(true);
@@ -2690,9 +3165,13 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho on province change.
     async function onProvinceChange(restoreSaved = false) {
         const provinceId = el('provinceSelect')?.value;
-        if (el('wardSelect')) el('wardSelect').innerHTML = '<option value="">Chọn xã/phường</option>';
+        if (el('wardSelect')) {
+            el('wardSelect').innerHTML = '<option value="">Chọn xã/phường</option>';
+            syncPosSearchSelect(el('wardSelect'));
+        }
         if (!restoreSaved && currentOrder()?.loaiDon === 'Giao hàng') clearShippingFeeForAddressChange();
         rememberLocationFromControls();
         if (!provinceId) { scheduleAutoShippingFee(); return; }
@@ -2706,6 +3185,7 @@
                     .join('');
             const saved = getLocationState(currentOrder());
             if (restoreSaved) selectOptionByIdOrName(el('wardSelect'), saved.wardCode, saved.wardName);
+            syncPosSearchSelect(el('wardSelect'));
             rememberLocationFromControls();
             scheduleAutoShippingFee();
         } catch (error) {
@@ -2713,11 +3193,13 @@
         }
     }
 
+    // Xử lý tương tác người dùng cho on ward change.
     function onWardChange() {
         rememberLocationFromControls();
         scheduleAutoShippingFee();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm shipping payload.
     function shippingPayload(fee) {
         const p = el('provinceSelect'),
             w = el('wardSelect');
@@ -2736,6 +3218,7 @@
         };
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho has complete shipping address.
     function hasCompleteShippingAddress() {
         return Boolean(
             el('provinceSelect')?.value &&
@@ -2743,11 +3226,13 @@
         );
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set shipping fee hint.
     function setShippingFeeHint(message) {
         const hint = el('shippingFeeHint');
         if (hint) hint.textContent = message;
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set shipping fee locally.
     function setShippingFeeLocally(fee) {
         const order = currentOrder();
         if (!order) return;
@@ -2770,11 +3255,13 @@
         updatePaymentFields();
     }
 
+    // Xử lý thao tác đóng, xóa hoặc hủy cho clear shipping fee for address change.
     function clearShippingFeeForAddressChange() {
         setShippingFeeLocally(0);
         setShippingFeeHint('Đang chờ chọn Tỉnh/Thành phố và Xã/Phường để tự tính lại phí.');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm schedule auto shipping fee.
     function scheduleAutoShippingFee() {
         const order = currentOrder();
         if (!order || order.loaiDon !== 'Giao hàng') return;
@@ -2791,6 +3278,7 @@
         }, 450);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm calculate shipping fee.
     async function calculateShippingFee({ silent = false } = {}) {
         if (!hasCompleteShippingAddress()) {
             setShippingFeeLocally(0);
@@ -2819,9 +3307,13 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save shipping info.
     async function saveShippingInfo({ silent = false } = {}) {
         const order = currentOrder();
         if (!order) return null;
+        if (!validateCustomerName(el('customerName'), true)
+            || !validateCustomerPhone(el('customerPhone'), true)
+            || !validateCustomerAddress(el('customerAddress'), true)) return null;
         try {
             let fee = moneyValue(el('shippingFeeInput')?.value);
             if (hasCompleteShippingAddress()) fee = await calculateShippingFee({ silent: true });
@@ -2840,6 +3332,7 @@
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm build walk in counter address.
     function buildWalkInCounterAddress() {
         const order = currentOrder();
         const detail = String(el('customerAddress')?.value || '').trim();
@@ -2853,6 +3346,7 @@
         return parts.filter(Boolean).join(', ');
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho save manual customer.
     async function saveManualCustomer({ silent = false } = {}) {
         const order = currentOrder();
         if (!order) return null;
@@ -2877,12 +3371,14 @@
         }
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set walk in.
     function setWalkIn() {
         const order = currentOrder();
         if (order) {
             selectedCustomerIdByOrderId.delete(order.id);
             selectedAddressKeyByOrderId.delete(order.id);
             selectedLocationByOrderId.delete(order.id);
+            deliveryInfoEditingByOrderId.delete(order.id);
         }
         if (el('customerName')) el('customerName').value = 'Khách lẻ';
         if (el('customerPhone')) el('customerPhone').value = '';
@@ -2892,12 +3388,14 @@
         saveManualCustomer();
     }
 
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set shipping guest.
     async function setShippingGuest() {
         const order = currentOrder();
         if (!order) return;
         selectedCustomerIdByOrderId.set(order.id, null);
         selectedAddressKeyByOrderId.delete(order.id);
         selectedLocationByOrderId.delete(order.id);
+        deliveryInfoEditingByOrderId.add(order.id);
         order.loaiDon = 'Giao hàng';
         order.tenKhachHang = '';
         order.soDienThoai = '';
@@ -2927,10 +3425,12 @@
     // ================================================================
     //  VOUCHER (giữ nguyên)
     // ================================================================
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close voucher modal.
     function closeVoucherModal() {
         el('voucherModal')?.classList.remove('open');
     }
 
+    // Xử lý tương tác người dùng cho open voucher modal.
     async function openVoucherModal() {
         const order = currentOrder();
         if (!order) return toast('Vui lòng tạo hóa đơn trước', 'error');
@@ -2946,6 +3446,7 @@
         }
     }
 
+    // Hiển thị và đồng bộ giao diện cho render voucher list.
     function renderVoucherList(vouchers) {
         const list = el('voucherList');
         if (!vouchers.length) {
@@ -2960,6 +3461,7 @@
         ].join('');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm voucher value text.
     function voucherValueText(voucher) {
         const type = String(voucher.loaiGiam || '').toLowerCase();
         const value = Number(voucher.giaTri || 0);
@@ -2969,12 +3471,14 @@
         return `Giảm ${fmt(value)}`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm voucher date text.
     function voucherDateText(value) {
         if (!value) return '';
         const date = new Date(value);
         return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('vi-VN');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm voucher card.
     function voucherCard(voucher) {
         const disabled = !voucher.applicable;
         const selected = voucher.selected;
@@ -3001,10 +3505,12 @@
             </div>`;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply voucher from button.
     function applyVoucherFromButton(button) {
         applyVoucher(button?.dataset?.code || '');
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply voucher.
     async function applyVoucher(codeArg) {
         const order = currentOrder();
         if (!order) return toast('Vui lòng tạo hóa đơn trước', 'error');
@@ -3028,22 +3534,35 @@
     // ================================================================
     //  CHECKOUT
     // ================================================================
+    // Kiểm tra điều kiện và tính hợp lệ cho checkout.
     async function checkout() {
-        const order = currentOrder();
+        let order = currentOrder();
         if (!order) return toast('Vui lòng tạo hóa đơn trước', 'error');
         if (!order.items?.length) return toast('Đơn hàng chưa có sản phẩm', 'error');
-        if (!el('transferModal')?.classList.contains('open')) { await openPaymentModal(); return; }
+        const paymentModalOpen = el('transferModal')?.classList.contains('open');
+        if (!paymentModalOpen && ['TRANSFER', 'MIXED'].includes(payMode)) {
+            await openPaymentModal();
+            return;
+        }
+        if (!paymentModalOpen && order.loaiDon === 'Giao hàng' && el('provinceSelect')) {
+            const saved = await saveShippingInfo();
+            if (!saved) return;
+            order = currentOrder();
+        }
         const total = Number(order.tongTienThanhToan || 0);
         let tienMat = moneyValue(el('cashInput')?.value);
         let chuyenKhoan = moneyValue(el('transferInput')?.value);
-        if (payMode === 'TRANSFER') {
+        if (payMode === 'CARD') {
+            tienMat = 0;
+            chuyenKhoan = 0;
+        } else if (payMode === 'TRANSFER') {
             chuyenKhoan = chuyenKhoan > 0 ? chuyenKhoan : tienMat;
             tienMat = 0;
         } else if (payMode === 'CASH') {
-            tienMat = tienMat > 0 ? tienMat : chuyenKhoan;
+            tienMat = tienMat > 0 ? tienMat : (chuyenKhoan > 0 ? chuyenKhoan : total);
             chuyenKhoan = 0;
         }
-        const paid = tienMat + chuyenKhoan;
+        const paid = payMode === 'CARD' ? total : tienMat + chuyenKhoan;
         if (paid < total) return toast('Khách thanh toán chưa đủ tiền', 'error');
         const ok = await showConfirm({
             title: 'Xác nhận thanh toán',
@@ -3053,6 +3572,15 @@
         });
         if (!ok) return;
         try {
+            if (payMode === 'CARD') {
+                const payment = await api(`/api/pos/orders/${order.id}/vnpay`, {
+                    method: 'POST'
+                });
+                if (!payment.paymentUrl) throw new Error('VNPay không trả về đường dẫn thanh toán hợp lệ.');
+                closeTransferModal();
+                window.location.assign(payment.paymentUrl);
+                return;
+            }
             const done = await api(`/api/pos/orders/${order.id}/checkout`, {
                 method: 'POST',
                 body: JSON.stringify({
@@ -3061,7 +3589,7 @@
                     chuyenKhoan,
                     phuongThucThanhToan: payMode === 'TRANSFER'
                         ? 'CHUYEN_KHOAN'
-                        : (payMode === 'CASH' ? 'TIEN_MAT' : 'KET_HOP')
+                        : (payMode === 'CASH' ? 'TIEN_MAT' : (payMode === 'CARD' ? 'THE_ATM' : 'KET_HOP'))
                 })
             });
             closeTransferModal();
@@ -3079,7 +3607,21 @@
     //  INIT
     // ================================================================
     document.addEventListener('DOMContentLoaded', () => {
-        loadPendingOrders();
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.pos-search-select')) closePosSearchSelects();
+        });
+        loadPendingOrders().then(() => {
+            const params = new URLSearchParams(window.location.search);
+            const paymentResult = params.get('paymentResult');
+            if (!paymentResult) return;
+            const code = params.get('orderCode') || '';
+            const success = paymentResult === 'success';
+            toast(success
+                ? `Thanh toán VNPay thành công${code ? ` cho ${code}` : ''}.`
+                : `Thanh toán VNPay ${paymentResult === 'pending' ? 'đang chờ xác nhận' : 'chưa thành công'}${code ? ` cho ${code}` : ''}.`,
+                success ? 'success' : 'error');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        });
         el('orderArea')?.addEventListener('input', () => rememberActiveOrderDraft());
         el('orderArea')?.addEventListener('change', () => rememberActiveOrderDraft());
         el('productKeyword')?.addEventListener('input', () => {

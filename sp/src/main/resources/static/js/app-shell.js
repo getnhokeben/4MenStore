@@ -87,11 +87,19 @@
             icon: 'fa-user-tie',
             href: '/nhan-vien',
             roles: [ROLE_MANAGER]
+        },
+        {
+            label: 'Phản hồi',
+            icon: 'fa-star',
+            href: '/phan-hoi',
+            paths: ['/phan-hoi'],
+            roles: [ROLE_MANAGER, ROLE_STAFF]
         }
     ];
 
     document.addEventListener('DOMContentLoaded', initShell);
 
+    // Thực hiện xử lý nghiệp vụ của hàm init shell.
     async function initShell() {
         ensureFontAwesome();
         injectStyle();
@@ -117,6 +125,7 @@
         protectManagerPages(role);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ensure font awesome.
     function ensureFontAwesome() {
         const existed = [...document.styleSheets].some(sheet => {
             try {
@@ -137,6 +146,7 @@
         document.head.appendChild(link);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho get current user.
     async function getCurrentUser() {
         try {
             const response = await fetch(`${AUTH_API}/me`, {
@@ -150,6 +160,7 @@ return await response.json();
 }
 }
 
+// Thực hiện xử lý nghiệp vụ của hàm normalize role.
 function normalizeRole(role) {
     const value = String(role || '')
         .trim()
@@ -173,6 +184,7 @@ function normalizeRole(role) {
     return ROLE_MANAGER;
 }
 
+// Hiển thị và đồng bộ giao diện cho render sidebar.
 function renderSidebar(user, role) {
     const sidebar = document.querySelector('.sidebar');
     if (!sidebar) return;
@@ -188,6 +200,9 @@ function renderSidebar(user, role) {
 
     sidebar.innerHTML = `
             <div class="shell-logo">
+                <button type="button" class="shell-sidebar-toggle" id="shellSidebarToggle" aria-label="Thu gọn thanh menu" aria-expanded="true">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
                 <div class="shell-logo-circle">
                     <img src="/images/logo-4menstore.jpg" alt="4MenStore">
                 </div>
@@ -239,15 +254,16 @@ function renderSidebar(user, role) {
         `;
 }
 
+// Thực hiện xử lý nghiệp vụ của hàm build menu item.
 function buildMenuItem(item, currentPath, index, role) {
     if (!item.children) {
         const active = isActive(item, currentPath);
 
         return `
-                <a class="shell-menu-link ${active ? 'active' : ''}"
+                <a class="shell-menu-link shell-menu-tone-${index % 11} ${active ? 'active' : ''}"
                    href="${item.href}">
                     <span class="shell-menu-left">
-                        <i class="fas ${item.icon}"></i>
+                        <i class="fas ${item.icon} shell-menu-icon"></i>
                         <span>${item.label}</span>
                     </span>
                 </a>
@@ -260,10 +276,12 @@ function buildMenuItem(item, currentPath, index, role) {
 
     return `
             <button type="button"
-                    class="shell-menu-group ${active ? 'active' : ''}"
-                    data-submenu="${submenuId}">
+                    class="shell-menu-group shell-menu-tone-${index % 11} ${active ? 'active' : ''}"
+                    data-submenu="${submenuId}"
+                    aria-controls="${submenuId}"
+                    aria-expanded="${open}">
                 <span class="shell-menu-left">
-                    <i class="fas ${item.icon}"></i>
+                    <i class="fas ${item.icon} shell-menu-icon"></i>
                     <span>${item.label}</span>
                 </span>
                 <i class="fas fa-chevron-down shell-chevron ${open ? 'rotate' : ''}"></i>
@@ -280,6 +298,7 @@ function buildMenuItem(item, currentPath, index, role) {
         `;
 }
 
+// Kiểm tra điều kiện và tính hợp lệ cho is active.
 function isActive(item, path) {
     const paths = item.paths || [item.href];
 
@@ -289,14 +308,28 @@ function isActive(item, path) {
     });
 }
 
+// Thực hiện xử lý nghiệp vụ của hàm bind shell events.
 function bindShellEvents(role) {
+    const sidebarToggle = document.getElementById('shellSidebarToggle');
+    setSidebarCollapsed(localStorage.getItem('fourMenSidebarCollapsed') === 'true');
+    sidebarToggle?.addEventListener('click', () => {
+        setSidebarCollapsed(!document.body.classList.contains('shell-sidebar-collapsed'));
+    });
+
     document.querySelectorAll('.shell-menu-group').forEach(button => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', event => {
+            event.preventDefault();
+            if (document.body.classList.contains('shell-sidebar-collapsed')) {
+                setSidebarCollapsed(false);
+                return;
+            }
             const submenu = document.getElementById(button.dataset.submenu);
             const chevron = button.querySelector('.shell-chevron');
+            if (!submenu) return;
 
-            submenu?.classList.add('open');
-            chevron?.classList.add('rotate');
+            const open = submenu.classList.toggle('open');
+            chevron?.classList.toggle('rotate', open);
+            button.setAttribute('aria-expanded', String(open));
         });
     });
 
@@ -345,6 +378,19 @@ function bindShellEvents(role) {
         });
 }
 
+// Tạo hoặc cập nhật dữ liệu/trạng thái cho set sidebar collapsed.
+function setSidebarCollapsed(collapsed) {
+    document.body.classList.toggle('shell-sidebar-collapsed', collapsed);
+    const toggle = document.getElementById('shellSidebarToggle');
+    if (toggle) {
+        toggle.setAttribute('aria-expanded', String(!collapsed));
+        toggle.setAttribute('aria-label', collapsed ? 'Mở rộng thanh menu' : 'Thu gọn thanh menu');
+        toggle.innerHTML = `<i class="fas fa-chevron-${collapsed ? 'right' : 'left'}"></i>`;
+    }
+    localStorage.setItem('fourMenSidebarCollapsed', String(collapsed));
+}
+
+// Hiển thị và đồng bộ giao diện cho render change password modal.
 function renderChangePasswordModal() {
     if (document.getElementById('shellPasswordModal')) return;
 
@@ -404,6 +450,7 @@ function renderChangePasswordModal() {
     document.body.appendChild(modal);
 }
 
+// Xử lý tương tác người dùng cho open change password modal.
 function openChangePasswordModal() {
     clearPasswordErrors();
 
@@ -421,6 +468,7 @@ function openChangePasswordModal() {
     }, 50);
 }
 
+// Xử lý thao tác đóng, xóa hoặc hủy cho close change password modal.
 function closeChangePasswordModal() {
     const modal = document.getElementById('shellPasswordModal');
     if (modal) {
@@ -428,6 +476,7 @@ function closeChangePasswordModal() {
     }
 }
 
+// Xử lý tương tác người dùng cho submit change password.
 async function submitChangePassword() {
     clearPasswordErrors();
 
@@ -493,6 +542,7 @@ async function submitChangePassword() {
     }
 }
 
+// Thực hiện xử lý nghiệp vụ của hàm logout.
 async function logout() {
     try {
         await fetch(`${AUTH_API}/logout`, {
@@ -504,6 +554,7 @@ async function logout() {
     }
 }
 
+// Thực hiện xử lý nghiệp vụ của hàm protect manager pages.
 function protectManagerPages(role) {
     if (role !== ROLE_STAFF) return;
 
@@ -523,6 +574,7 @@ function protectManagerPages(role) {
     }
 }
 
+// Tạo hoặc cập nhật dữ liệu/trạng thái cho set password error.
 function setPasswordError(id, message) {
     const element = document.getElementById(id);
     if (element) {
@@ -530,6 +582,7 @@ function setPasswordError(id, message) {
     }
 }
 
+// Xử lý thao tác đóng, xóa hoặc hủy cho clear password errors.
 function clearPasswordErrors() {
     [
         'shellOldPasswordError',
@@ -543,6 +596,7 @@ function clearPasswordErrors() {
     });
 }
 
+// Tải hoặc truy xuất dữ liệu cho read message.
 async function readMessage(response) {
     const text = await response.text();
 
@@ -554,6 +608,7 @@ async function readMessage(response) {
     }
 }
 
+// Thực hiện xử lý nghiệp vụ của hàm initials.
 function initials(name) {
     return String(name || 'NV')
         .trim()
@@ -565,6 +620,7 @@ function initials(name) {
         .toUpperCase() || 'NV';
 }
 
+// Hiển thị và đồng bộ giao diện cho show toast.
 function showToast(message, error = false) {
     let wrap = document.getElementById('shellToastWrap');
 
@@ -583,6 +639,7 @@ function showToast(message, error = false) {
     setTimeout(() => item.remove(), 3500);
 }
 
+// Thực hiện xử lý nghiệp vụ của hàm escape html.
 function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, character => ({
         '&': '&amp;',
@@ -593,6 +650,7 @@ function escapeHtml(value) {
     }[character]));
 }
 
+// Thực hiện xử lý nghiệp vụ của hàm inject style.
 function injectStyle() {
     if (document.getElementById('fourMenShellStyle')) return;
 
@@ -609,6 +667,11 @@ function injectStyle() {
                 --shell-muted: #7c8ca1;
                 --shell-primary: #102a56;
                 --shell-gold: #c8a474;
+            }
+
+            /* Tăng cỡ hiển thị đồng đều cho giao diện quản trị trên màn hình desktop. */
+            @media (min-width: 901px) {
+                body { zoom: 1.16; }
             }
 
             .sidebar.app-sidebar {
@@ -634,6 +697,7 @@ function injectStyle() {
             }
 
             .shell-logo {
+                position: relative;
                 padding: 16px 12px 14px;
                 border-bottom: 1px solid var(--shell-line);
                 text-align: center;
@@ -664,6 +728,42 @@ function injectStyle() {
                 font-size: 15px;
                 font-weight: 800;
             }
+
+            .shell-sidebar-toggle {
+                position: absolute;
+                top: 12px;
+                right: 10px;
+                display: grid;
+                width: 26px;
+                height: 26px;
+                place-items: center;
+                border: 1px solid #dce5ef;
+                border-radius: 7px;
+                background: #fff;
+                color: var(--shell-primary);
+                cursor: pointer;
+                box-shadow: 0 3px 9px rgba(15,23,42,.08);
+            }
+
+            .shell-sidebar-toggle:hover { background: #eef4fb; }
+
+            .shell-sidebar-collapsed .sidebar.app-sidebar { width: 70px !important; overflow: visible !important; }
+            .shell-sidebar-collapsed .main { margin-left: 70px !important; }
+            .shell-sidebar-collapsed .shell-logo { padding: 14px 6px 12px; }
+            .shell-sidebar-collapsed .shell-logo-circle { width: 42px; height: 42px; margin-bottom: 0; }
+            .shell-sidebar-collapsed .shell-logo-name,
+            .shell-sidebar-collapsed .shell-menu-left span,
+            .shell-sidebar-collapsed .shell-chevron,
+            .shell-sidebar-collapsed .shell-account-info,
+            .shell-sidebar-collapsed .shell-account-arrow { display: none; }
+            .shell-sidebar-collapsed .shell-menu-link,
+            .shell-sidebar-collapsed .shell-menu-group { justify-content: center; min-height: 46px; padding: 0; }
+            .shell-sidebar-collapsed .shell-menu-left { gap: 0; }
+            .shell-sidebar-collapsed .shell-menu-link i,
+            .shell-sidebar-collapsed .shell-menu-group i { width: auto; font-size: 16px; }
+            .shell-sidebar-collapsed .shell-submenu { display: none !important; }
+            .shell-sidebar-collapsed .shell-account-button { justify-content: center; padding: 12px 0; }
+            .shell-sidebar-collapsed .shell-account-menu { display: none !important; }
 
             .shell-nav {
                 flex: 1;
@@ -1084,6 +1184,10 @@ function injectStyle() {
                 .main {
                     margin-left: 0 !important;
                 }
+
+                .shell-sidebar-toggle { display: none; }
+                .shell-sidebar-collapsed .sidebar.app-sidebar { width: 0 !important; }
+                .shell-sidebar-collapsed .main { margin-left: 0 !important; }
             }
         `;
 

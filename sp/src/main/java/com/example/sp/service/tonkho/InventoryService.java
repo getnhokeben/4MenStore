@@ -16,6 +16,7 @@ public class InventoryService {
     private final ChiTietSanPhamRepository variantRepository;
 
     @Transactional(propagation = Propagation.MANDATORY)
+    // Kiểm tra điều kiện và tính hợp lệ cho validate online availability.
     public ChiTietSanPham validateOnlineAvailability(Integer variantId, int quantity) {
         ChiTietSanPham variant = lockVariant(variantId);
         validatePositiveQuantity(quantity);
@@ -25,6 +26,7 @@ public class InventoryService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
+    // Thực hiện xử lý nghiệp vụ của hàm reserve online.
     public ChiTietSanPham reserveOnline(Integer variantId, int quantity) {
         ChiTietSanPham variant = lockVariant(variantId);
         validatePositiveQuantity(quantity);
@@ -37,6 +39,7 @@ public class InventoryService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
+    // Thực hiện xử lý nghiệp vụ của hàm confirm online reservation.
     public ChiTietSanPham confirmOnlineReservation(Integer variantId, int quantity) {
         ChiTietSanPham variant = lockVariant(variantId);
         validatePositiveQuantity(quantity);
@@ -54,6 +57,7 @@ public class InventoryService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
+    // Thực hiện xử lý nghiệp vụ của hàm release online reservation.
     public ChiTietSanPham releaseOnlineReservation(Integer variantId, int quantity) {
         ChiTietSanPham variant = lockVariant(variantId);
         validatePositiveQuantity(quantity);
@@ -70,6 +74,7 @@ public class InventoryService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
+    // Thực hiện xử lý nghiệp vụ của hàm reserve at counter.
     public ChiTietSanPham reserveAtCounter(Integer variantId, int quantity) {
         ChiTietSanPham variant = lockVariant(variantId);
         validatePositiveQuantity(quantity);
@@ -82,6 +87,7 @@ public class InventoryService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
+    // Thực hiện xử lý nghiệp vụ của hàm deduct online stock.
     public ChiTietSanPham deductOnlineStock(Integer variantId, int quantity) {
         ChiTietSanPham variant = lockVariant(variantId);
         validatePositiveQuantity(quantity);
@@ -98,11 +104,13 @@ public class InventoryService {
      * Online reservations of newer orders remain protected by the availability check.
      */
     @Transactional(propagation = Propagation.MANDATORY)
+    // Thực hiện xử lý nghiệp vụ của hàm deduct legacy online stock.
     public ChiTietSanPham deductLegacyOnlineStock(Integer variantId, int quantity) {
         return deductOnlineStock(variantId, quantity);
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
+    // Thực hiện xử lý nghiệp vụ của hàm restore stock.
     public ChiTietSanPham restoreStock(Integer variantId, int quantity) {
         ChiTietSanPham variant = lockVariant(variantId);
         validatePositiveQuantity(quantity);
@@ -112,6 +120,7 @@ public class InventoryService {
         return variantRepository.save(variant);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lock variant.
     private ChiTietSanPham lockVariant(Integer variantId) {
         if (variantId == null) {
             throw new IllegalArgumentException("Thiếu biến thể sản phẩm");
@@ -120,6 +129,7 @@ public class InventoryService {
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy biến thể sản phẩm id=" + variantId));
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate sellable.
     private void validateSellable(ChiTietSanPham variant) {
         if (!Boolean.TRUE.equals(variant.getTrangThai())
                 || variant.getSanPham() == null
@@ -128,35 +138,42 @@ public class InventoryService {
         }
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate available.
     private void validateAvailable(ChiTietSanPham variant, int quantity) {
         if (available(variant) < quantity) {
             throw new IllegalArgumentException(stockError(variant));
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm stock error.
     private String stockError(ChiTietSanPham variant) {
         return "Sản phẩm " + variant.getMaChiTietSanPham()
                 + " chỉ còn " + available(variant) + " sản phẩm có thể bán";
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho validate positive quantity.
     private void validatePositiveQuantity(int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Số lượng phải lớn hơn 0");
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm stock.
     private int stock(ChiTietSanPham variant) {
         return variant.getSoLuongTon() == null ? 0 : variant.getSoLuongTon();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reserved.
     private int reserved(ChiTietSanPham variant) {
         return variant.getSoLuongGiu() == null ? 0 : variant.getSoLuongGiu();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm available.
     private int available(ChiTietSanPham variant) {
         return Math.max(stock(variant) - reserved(variant), 0);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm touch.
     private void touch(ChiTietSanPham variant) {
         variant.setNgayCapNhat(LocalDateTime.now());
     }

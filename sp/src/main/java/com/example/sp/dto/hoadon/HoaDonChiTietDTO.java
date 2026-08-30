@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 public class HoaDonChiTietDTO {
 
     private Integer idHdct;
+    private Integer idSpct;
 
     // Từ san_pham
     private String maSanPham;   // san_pham.ma_sp

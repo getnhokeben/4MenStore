@@ -55,6 +55,7 @@ public class ShopChatbotService {
 
     private volatile HttpClient httpClient;
 
+    // Thực hiện xử lý nghiệp vụ của hàm reply.
     public ShopChatbotResponse reply(ShopChatbotRequest request) {
         String message = clean(request.getMessage());
         String transcript = transcript(request.getHistory(), message);
@@ -94,6 +95,7 @@ public class ShopChatbotService {
         return advisor.recommendSizes(text);
     }
 
+    // Tải hoặc truy xuất dữ liệu cho load catalog.
     private List<ShopProductDTO> loadCatalog() {
         try {
             Page<ShopProductDTO> page = shopService.getProducts(
@@ -107,6 +109,7 @@ public class ShopChatbotService {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm call open ai.
     private StructuredAiResponse callOpenAi(String transcript, ShopChatbotAdvisor.Advice advice) {
         if (!properties.isConfigured()) return null;
         try {
@@ -140,6 +143,7 @@ public class ShopChatbotService {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm structured text format.
     private Map<String, Object> structuredTextFormat() {
         Map<String, Object> propertiesSchema = new LinkedHashMap<>();
         propertiesSchema.put("reply", Map.of(
@@ -177,6 +181,7 @@ public class ShopChatbotService {
         return Map.of("format", format);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ai input.
     private String aiInput(String transcript, ShopChatbotAdvisor.Advice advice) {
         String summary = advisor.summarize(advice.profile());
         String candidates = advice.rankedProducts().isEmpty()
@@ -197,6 +202,7 @@ public class ShopChatbotService {
                 """.formatted(summary.isBlank() ? "Chưa có tiêu chí mua sắm cụ thể." : summary, candidates, transcript);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm candidate line.
     private String candidateLine(ShopChatbotAdvisor.RankedProduct item) {
         ShopProductDTO product = item.product();
         return "- ID %s | %s | giá %s-%s | tồn %s | size %s | màu %s | loại %s | điểm nội bộ %s | lý do %s"
@@ -210,6 +216,7 @@ public class ShopChatbotService {
     }
 
     @SuppressWarnings("unchecked")
+    // Thực hiện xử lý nghiệp vụ của hàm parse structured response.
     private StructuredAiResponse parseStructuredResponse(
             String outputText,
             List<ShopChatbotAdvisor.RankedProduct> candidates
@@ -240,11 +247,13 @@ public class ShopChatbotService {
     }
 
     @SuppressWarnings("unchecked")
+    // Tải hoặc truy xuất dữ liệu cho list value.
     private List<Object> listValue(Object value) {
         return value instanceof List<?> list ? (List<Object>) list : List.of();
     }
 
     @SuppressWarnings("unchecked")
+    // Thực hiện xử lý nghiệp vụ của hàm extract output text.
     private String extractOutputText(String json) throws Exception {
         Map<String, Object> root = objectMapper.readValue(json, Map.class);
         Object outputValue = root.get("output");
@@ -264,6 +273,7 @@ public class ShopChatbotService {
         return texts.isEmpty() ? null : String.join("\n", texts);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reorder products.
     private List<ShopChatbotAdvisor.RankedProduct> reorderProducts(
             List<ShopChatbotAdvisor.RankedProduct> ranked,
             StructuredAiResponse aiResponse
@@ -281,6 +291,7 @@ public class ShopChatbotService {
         return result;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to recommendation.
     private ShopChatbotRecommendationDTO toRecommendation(ShopChatbotAdvisor.RankedProduct item) {
         return ShopChatbotRecommendationDTO.builder()
                 .productId(item.product().getIdSp())
@@ -291,6 +302,7 @@ public class ShopChatbotService {
                 .build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm to criteria.
     private ShopChatbotCriteriaDTO toCriteria(ShopChatbotAdvisor.CustomerProfile profile) {
         return ShopChatbotCriteriaDTO.builder()
                 .heightCm(profile.heightCm())
@@ -311,6 +323,7 @@ public class ShopChatbotService {
                 .build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fallback reply.
     private String fallbackReply(
             String message,
             ShopChatbotAdvisor.Advice advice,
@@ -367,6 +380,7 @@ public class ShopChatbotService {
         return "Bạn có thể mô tả cùng lúc loại áo, màu, ngân sách, dịp mặc và vóc dáng. Ví dụ: “Tìm áo sơ mi sáng màu đi làm dưới 600k, mình cao 1m75 nặng 70kg”.";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm local quick replies.
     private List<String> localQuickReplies(
             ShopChatbotAdvisor.Advice advice,
             List<ShopChatbotAdvisor.RankedProduct> products
@@ -394,6 +408,7 @@ public class ShopChatbotService {
         return replies.stream().limit(4).toList();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm merge quick replies.
     private List<String> mergeQuickReplies(List<String> primary, List<String> fallback) {
         LinkedHashSet<String> merged = new LinkedHashSet<>();
         if (primary != null) primary.stream().map(this::clean).filter(value -> !value.isBlank()).forEach(merged::add);
@@ -401,6 +416,7 @@ public class ShopChatbotService {
         return merged.stream().limit(4).toList();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm transcript.
     private String transcript(List<ShopChatbotMessageDTO> history, String message) {
         StringBuilder result = new StringBuilder();
         if (history != null) {
@@ -414,6 +430,7 @@ public class ShopChatbotService {
         return result.toString();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm user context.
     private String userContext(List<ShopChatbotMessageDTO> history, String message) {
         StringBuilder result = new StringBuilder();
         if (history != null) {
@@ -426,36 +443,43 @@ public class ShopChatbotService {
         return result.toString();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lookup names.
     private List<String> lookupNames(List<ShopLookupDTO> values) {
         if (values == null) return List.of();
         return values.stream().map(ShopLookupDTO::getTen).filter(value -> value != null && !value.isBlank()).distinct().toList();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format money.
     private String formatMoney(BigDecimal value) {
         NumberFormat format = NumberFormat.getNumberInstance(Locale.forLanguageTag("vi-VN"));
         format.setMaximumFractionDigits(0);
         return format.format(MoneyRoundingUtil.roundNonNegative(value)) + " đ";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm clean.
     private String clean(String value) {
         return value == null ? "" : value.trim().replaceAll("[\\r\\n\\t]+", " ").replaceAll("\\s{2,}", " ");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm string value.
     private String stringValue(Object value) {
         return value == null ? "" : String.valueOf(value);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm contains any.
     private boolean containsAny(String value, String... needles) {
         for (String needle : needles) if (value.contains(normalize(needle))) return true;
         return false;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize.
     private String normalize(String value) {
         if (value == null) return "";
         String decomposed = Normalizer.normalize(value, Normalizer.Form.NFD).replace('đ', 'd').replace('Đ', 'D');
         return decomposed.replaceAll("\\p{M}+", "").toLowerCase(Locale.ROOT).replaceAll("\\s+", " ").trim();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm http client.
     private HttpClient httpClient() {
         HttpClient current = httpClient;
         if (current == null) {
@@ -470,6 +494,7 @@ public class ShopChatbotService {
         return current;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm structured ai response.
     private record StructuredAiResponse(
             String reply,
             List<Integer> productIds,

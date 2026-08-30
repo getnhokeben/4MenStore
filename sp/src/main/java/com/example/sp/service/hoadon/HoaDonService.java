@@ -1,6 +1,7 @@
 package com.example.sp.service.hoadon;
 
 import com.example.sp.dto.hoadon.HoaDonChiTietDTO;
+import com.example.sp.dto.hoadon.CapNhatHoaDonRequest;
 import com.example.sp.dto.hoadon.XacNhanHoanHangRequest;
 import com.example.sp.dto.hoadon.XuLyGiaoHangThatBaiRequest;
 import com.example.sp.model.hoadon.HoaDon;
@@ -42,5 +43,9 @@ public interface HoaDonService {
     List<HoaDonChiTietDTO> getChiTiet(Integer idHoaDon);
     List<LichSuThanhToan> getLichSu(Integer idHoaDon);
     boolean updateThongTinKhachHang(Integer id, String tenKhachHang, String soDienThoai);
+    HoaDon capNhatHoaDonChoXuLy(Integer idHoaDon, CapNhatHoaDonRequest request);
+    HoaDon taoDonMuaThem(Integer idHoaDon);
+    HoaDon taoDonGiaoLaiDoMatHang(Integer idHoaDon);
+    HoaDon xacNhanDonViVanChuyenDenBu(Integer idHoaDon);
     HoaDon capNhatTrangThai(Integer idHoaDon, String trangThai, Integer idNhanVienThucHien);
 }

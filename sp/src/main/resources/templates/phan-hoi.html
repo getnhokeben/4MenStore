@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phản hồi khách hàng | 4MenStore</title>
+    <script src="/js/app-shell.js?v=feedback-workspace-20260727-3" defer></script>
+    <style>
+        :root { --navy:#17365f; --ink:#1d2c43; --muted:#748297; --line:#e7edf5; --blue:#3469bd; --soft:#f4f7fb; --green:#16865c; --gold:#e59a23; --red:#c94a55; }
+        * { box-sizing:border-box; }
+        body { margin:0; min-height:100vh; background:linear-gradient(145deg,#f8fafc 0,#edf3f9 100%); color:var(--ink); font:13px/1.5 Inter,Segoe UI,Arial,sans-serif; }
+        button,input,textarea { font:inherit; }
+        button { cursor:pointer; }
+        .main { min-height:100vh; margin-left:230px; }
+        .topbar { height:62px; display:flex; align-items:center; padding:0 30px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.88); color:#76869a; font-size:12px; backdrop-filter:blur(8px); }
+        .topbar b { color:var(--navy); }
+        .content { max-width:1460px; margin:0 auto; padding:24px 30px 32px; }
+        .hero { display:flex; align-items:center; justify-content:space-between; gap:22px; padding:22px 25px; overflow:hidden; border-radius:16px; color:#fff; background:linear-gradient(118deg,#16365f,#285894 56%,#4b82c8); box-shadow:0 12px 28px rgba(23,54,95,.18); }
+        .hero h1 { margin:0; font-size:24px; letter-spacing:-.35px; }
+        .hero p { max-width:620px; margin:5px 0 0; color:#dce9fb; font-size:12px; }
+        .hero-mark { display:grid; place-items:center; width:58px; height:58px; flex:0 0 58px; border:1px solid rgba(255,255,255,.25); border-radius:16px; background:rgba(255,255,255,.13); font-size:25px; }
+        .summary { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:13px; margin:16px 0; }
+        .metric { position:relative; overflow:hidden; min-height:102px; padding:17px 18px; border:1px solid var(--line); border-radius:13px; background:#fff; box-shadow:0 5px 15px rgba(24,49,84,.035); }
+        .metric:after { position:absolute; right:-12px; bottom:-25px; color:rgba(39,93,158,.06); font-size:76px; font-weight:800; content:attr(data-icon); }
+        .metric span { display:block; color:#8491a3; font-size:10px; font-weight:800; letter-spacing:.65px; text-transform:uppercase; }
+        .metric strong { display:block; margin-top:7px; color:#233c62; font-size:28px; line-height:1; }
+        .metric strong.gold { color:#c77e12; }
+        .metric small { display:block; margin-top:7px; color:#8b98aa; font-size:11px; }
+        .workspace { display:grid; grid-template-columns:minmax(0,1fr) 280px; gap:16px; align-items:start; }
+        .panel { overflow:hidden; border:1px solid var(--line); border-radius:14px; background:#fff; box-shadow:0 8px 20px rgba(24,49,84,.045); }
+        .panel-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:15px 18px; border-bottom:1px solid var(--line); }
+        .panel-title { display:flex; align-items:center; gap:10px; }
+        .panel-title i { display:grid; place-items:center; width:31px; height:31px; border-radius:9px; background:#edf4ff; color:#2a62ad; font-style:normal; font-size:15px; }
+        .panel-title h2 { margin:0; color:#243956; font-size:14px; }
+        .panel-title p { margin:1px 0 0; color:#8a98aa; font-size:10px; }
+        .search { width:260px; height:35px; padding:0 11px 0 33px; border:1px solid #dbe4ef; border-radius:8px; outline:0; background:#fafcff; color:#334862; font-size:11px; }
+        .search:focus { border-color:#7e9ed0; box-shadow:0 0 0 3px rgba(53,105,189,.1); }
+        .search-wrap { position:relative; }
+        .search-wrap:before { position:absolute; z-index:1; left:12px; top:8px; color:#8091a6; content:'⌕'; }
+        .feedback-list { display:grid; gap:0; }
+        .feedback-card { display:grid; grid-template-columns:220px 165px minmax(220px,1fr) 154px; gap:16px; align-items:center; padding:16px 18px; border-bottom:1px solid var(--line); }
+        .feedback-card:last-child { border-bottom:0; }
+        .feedback-card:hover { background:#fbfdff; }
+        .product { display:flex; align-items:center; gap:10px; min-width:0; }
+        .product img,.product-fallback { display:grid; place-items:center; width:43px; height:43px; flex:0 0 43px; border-radius:10px; background:#eef2f7; color:#8290a4; object-fit:cover; font-size:10px; font-weight:800; }
+        .product strong,.customer strong { display:block; overflow:hidden; color:#31435e; font-size:12px; text-overflow:ellipsis; white-space:nowrap; }
+        .product span,.customer span,.reply-date { display:block; margin-top:3px; color:#98a4b4; font-size:10px; }
+        .customer { display:flex; align-items:center; gap:8px; }
+        .avatar { display:grid; place-items:center; width:31px; height:31px; flex:0 0 31px; border-radius:50%; background:#eaf1fc; color:#3966a6; font-size:11px; font-weight:800; }
+        .rating { margin-bottom:5px; color:var(--gold); font-size:14px; letter-spacing:1px; }
+        .review-copy { color:#4d5e74; font-size:12px; line-height:1.55; white-space:pre-wrap; }
+        .admin-reply { margin-top:9px; padding:8px 10px; border-left:3px solid #4574ba; border-radius:0 7px 7px 0; background:#f1f6ff; color:#405a7c; font-size:11px; line-height:1.55; white-space:pre-wrap; }
+        .admin-reply b { display:block; margin-bottom:2px; color:#2f5e9e; font-size:10px; }
+        .actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:7px; }
+        .badge { display:inline-flex; align-items:center; justify-content:center; padding:5px 8px; border-radius:20px; background:#e9f8f0; color:var(--green); font-size:10px; font-weight:800; white-space:nowrap; }
+        .badge.hidden { background:#fff0f1; color:var(--red); }
+        .btn { min-width:74px; height:30px; padding:0 9px; border:1px solid #d7e0eb; border-radius:7px; background:#fff; color:#3b5578; font-size:10px; font-weight:800; }
+        .btn:hover { border-color:#7e9bca; background:#f2f6fd; }
+        .btn.primary { border-color:#2e64ad; background:#2e64ad; color:#fff; }
+        .btn.primary:hover { background:#245493; }
+        .side { display:grid; gap:14px; }
+        .side-card { padding:16px; border:1px solid var(--line); border-radius:14px; background:#fff; box-shadow:0 8px 20px rgba(24,49,84,.035); }
+        .side-card h3 { margin:0 0 10px; color:#30435e; font-size:12px; }
+        .side-card p { margin:0; color:#7d8c9e; font-size:11px; line-height:1.6; }
+        .legend { display:grid; gap:10px; margin-top:13px; }
+        .legend div { display:flex; align-items:center; justify-content:space-between; color:#66768a; font-size:11px; }
+        .legend b { color:#314963; }
+        .tip { border-color:#dce8f9; background:linear-gradient(145deg,#f4f8ff,#fff); }
+        .tip strong { display:block; margin-bottom:5px; color:#315f9c; font-size:11px; }
+        .empty { padding:44px 20px; color:#8b98a9; text-align:center; font-size:12px; }
+        .reply-modal { position:fixed; z-index:2000; inset:0; display:grid; place-items:center; padding:20px; background:rgba(15,30,48,.52); backdrop-filter:blur(3px); }
+        .reply-modal[hidden] { display:none; }
+        .reply-dialog { width:min(560px,100%); overflow:hidden; border-radius:16px; background:#fff; box-shadow:0 22px 58px rgba(7,21,42,.35); }
+        .reply-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:18px 20px 15px; color:#fff; background:linear-gradient(118deg,#183a67,#306cae); }
+        .reply-head h2 { margin:0; font-size:16px; }
+        .reply-head p { margin:3px 0 0; color:#dceaff; font-size:11px; }
+        .close { width:29px; height:29px; border:0; border-radius:8px; background:rgba(255,255,255,.15); color:#fff; font-size:19px; line-height:1; }
+        .reply-body { padding:18px 20px 15px; }
+        .reply-context { display:flex; align-items:center; gap:8px; margin-bottom:12px; padding:9px 10px; border-radius:8px; background:#f4f7fb; color:#64758c; font-size:11px; }
+        .reply-context b { color:#344b6b; }
+        .reply-input { width:100%; min-height:130px; padding:12px; resize:vertical; border:1px solid #d6e0ec; border-radius:9px; outline:0; color:#32455f; font-size:12px; line-height:1.55; }
+        .reply-input:focus { border-color:#5f8ccc; box-shadow:0 0 0 3px rgba(52,105,189,.12); }
+        .reply-foot { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:9px; color:#8b98aa; font-size:10px; }
+        .reply-actions { display:flex; justify-content:flex-end; gap:8px; padding:0 20px 19px; }
+        .reply-error { min-height:16px; margin-top:7px; color:#c5454f; font-size:10px; }
+        @media (max-width:1120px) { .workspace { grid-template-columns:1fr; }.side { grid-template-columns:repeat(2,minmax(0,1fr)); }.feedback-card { grid-template-columns:185px 145px minmax(170px,1fr) 135px; gap:11px; } }
+        @media (max-width:820px) { .main { margin-left:0; }.content { padding:16px; }.topbar { padding:0 16px; }.hero { padding:18px; }.summary { grid-template-columns:repeat(2,minmax(0,1fr)); }.panel-head { align-items:stretch; flex-direction:column; }.search { width:100%; }.feedback-card { grid-template-columns:1fr; gap:11px; }.actions { justify-content:flex-start; }.side { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+<aside class="sidebar"></aside>
+<main class="main">
+    <header class="topbar">Quản lý cửa hàng <span style="margin:0 8px">/</span> <b>Phản hồi khách hàng</b></header>
+    <section class="content">
+        <section class="hero">
+            <div><h1>Phản hồi khách hàng</h1><p>Theo dõi đánh giá, phản hồi nhanh và duy trì trải nghiệm mua sắm tốt nhất cho khách hàng.</p></div>
+            <div class="hero-mark">★</div>
+        </section>
+        <section class="summary">
+            <article class="metric" data-icon="✦"><span>Tổng đánh giá</span><strong id="totalReviews">0</strong><small>Tất cả đánh giá đã nhận</small></article>
+            <article class="metric" data-icon="✓"><span>Đang hiển thị</span><strong id="visibleReviews">0</strong><small>Khách hàng đang xem được</small></article>
+            <article class="metric" data-icon="◌"><span>Chờ xử lý</span><strong id="pendingReplies">0</strong><small>Đánh giá chưa được phản hồi</small></article>
+            <article class="metric" data-icon="★"><span>Điểm trung bình</span><strong class="gold" id="averageRating">0.0</strong><small>Trên thang điểm 5</small></article>
+        </section>
+        <section class="workspace">
+            <section class="panel">
+                <div class="panel-head">
+                    <div class="panel-title"><i>☷</i><div><h2>Danh sách đánh giá</h2><p>Trả lời hoặc thay đổi trạng thái hiển thị từng phản hồi.</p></div></div>
+                    <div class="search-wrap"><input id="feedbackSearch" class="search" type="search" placeholder="Tìm sản phẩm, khách hàng..."></div>
+                </div>
+                <div class="feedback-list" id="feedbackList"><div class="empty">Đang tải phản hồi...</div></div>
+            </section>
+            <aside class="side">
+                <section class="side-card"><h3>Tổng quan hiển thị</h3><div class="legend"><div><span>Đang hiển thị</span><b id="sideVisible">0</b></div><div><span>Đã ẩn</span><b id="sideHidden">0</b></div><div><span>Đã trả lời</span><b id="sideReplied">0</b></div></div></section>
+                <section class="side-card tip"><strong>Gợi ý phản hồi</strong><p>Hãy cảm ơn khách hàng, nêu rõ hướng xử lý và giữ lời nhắn ngắn gọn, thân thiện.</p></section>
+            </aside>
+        </section>
+    </section>
+</main>
+
+<div class="reply-modal" id="replyModal" hidden role="dialog" aria-modal="true" aria-labelledby="replyTitle">
+    <form class="reply-dialog" id="replyForm">
+        <header class="reply-head"><div><h2 id="replyTitle">Trả lời khách hàng</h2><p>Phản hồi này sẽ hiển thị công khai bên dưới đánh giá sản phẩm.</p></div><button class="close" id="closeReplyModal" type="button" aria-label="Đóng">×</button></header>
+        <div class="reply-body"><div class="reply-context" id="replyContext"></div><textarea class="reply-input" id="replyContent" maxlength="1000" placeholder="Nhập phản hồi của 4MenStore..."></textarea><div class="reply-foot"><span id="replyCounter">0 / 1000</span><span>Hãy dùng lời lẽ thân thiện, chuyên nghiệp.</span></div><div class="reply-error" id="replyError"></div></div>
+        <footer class="reply-actions"><button class="btn" id="cancelReply" type="button">Hủy</button><button class="btn primary" id="submitReply" type="submit">Gửi phản hồi</button></footer>
+    </form>
+</div>
+
+<script>
+    let feedbacks = [];
+    let currentReplyId = null;
+    const $ = id => document.getElementById(id);
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
+    const stars = score => '★'.repeat(Math.max(0, Math.min(5, Number(score || 0)))) + '☆'.repeat(Math.max(0, 5 - Number(score || 0)));
+    const initials = value => String(value || 'KH').trim().slice(0, 1).toUpperCase();
+    const imageUrl = value => { const raw = String(value || '').trim(); return !raw ? '' : (/^(https?:|data:|\/)/i.test(raw) ? raw : `/uploads/${raw.replace(/^[/\\]+/, '')}`); };
+    const fmtDate = value => { if (!value) return '—'; const date = new Date(value); return Number.isNaN(date.getTime()) ? '—' : date.toLocaleString('vi-VN', { dateStyle:'short', timeStyle:'short' }); };
+
+    // Hiển thị và đồng bộ giao diện cho render.
+    function render() {
+        const query = $('feedbackSearch').value.trim().toLowerCase();
+        const data = feedbacks.filter(item => !query || `${item.tenSp || ''} ${item.tenKhachHang || ''} ${item.noiDung || ''}`.toLowerCase().includes(query));
+        const visible = feedbacks.filter(item => item.trangThai);
+        const replied = feedbacks.filter(item => String(item.phanHoiQuanTri || '').trim());
+        const average = visible.length ? visible.reduce((sum, item) => sum + Number(item.diemDanhGia || 0), 0) / visible.length : 0;
+        $('totalReviews').textContent = feedbacks.length;
+        $('visibleReviews').textContent = visible.length;
+        $('pendingReplies').textContent = feedbacks.length - replied.length;
+        $('averageRating').textContent = average.toFixed(1);
+        $('sideVisible').textContent = visible.length;
+        $('sideHidden').textContent = feedbacks.length - visible.length;
+        $('sideReplied').textContent = replied.length;
+        $('feedbackList').innerHTML = data.length ? data.map(item => {
+            const image = imageUrl(item.hinhAnh);
+            const reply = item.phanHoiQuanTri ? `<div class="admin-reply"><b>Phản hồi từ 4MenStore · ${esc(fmtDate(item.ngayPhanHoi))}</b>${esc(item.phanHoiQuanTri)}</div>` : '';
+            return `<article class="feedback-card"><div class="product">${image ? `<img src="${esc(image)}" alt="" onerror="this.outerHTML='<span class=&quot;product-fallback&quot;>SP</span>'">` : '<span class="product-fallback">SP</span>'}<div><strong>${esc(item.tenSp || 'Sản phẩm')}</strong><span>Mã đánh giá #${Number(item.id)}</span></div></div><div class="customer"><span class="avatar">${esc(initials(item.tenKhachHang))}</span><div><strong>${esc(item.tenKhachHang || 'Khách hàng')}</strong><span>${esc(fmtDate(item.ngayTao))}</span></div></div><div><div class="rating">${stars(item.diemDanhGia)}</div><div class="review-copy">${esc(item.noiDung || 'Khách hàng chỉ chấm điểm, không để lại nội dung.')}</div>${reply}</div><div><span class="badge ${item.trangThai ? '' : 'hidden'}">${item.trangThai ? 'Đang hiển thị' : 'Đã ẩn'}</span><div class="actions" style="margin-top:9px"><button class="btn" type="button" onclick="toggleFeedback(${Number(item.id)}, ${!item.trangThai})">${item.trangThai ? 'Ẩn đánh giá' : 'Hiển thị'}</button><button class="btn primary" type="button" onclick="openReply(${Number(item.id)})">${item.phanHoiQuanTri ? 'Sửa trả lời' : 'Trả lời'}</button></div></div></article>`;
+        }).join('') : '<div class="empty">Không tìm thấy phản hồi phù hợp.</div>';
+    }
+
+    // Tải hoặc truy xuất dữ liệu cho load.
+    async function load() {
+        try { const response = await fetch('/api/admin/phan-hoi', { credentials:'same-origin' }); if (!response.ok) throw new Error(); feedbacks = await response.json(); render(); }
+        catch { $('feedbackList').innerHTML = '<div class="empty">Không thể tải phản hồi. Vui lòng đăng nhập lại bằng tài khoản nhân viên.</div>'; }
+    }
+
+    // Xử lý tương tác người dùng cho toggle feedback.
+    async function toggleFeedback(id, trangThai) {
+        try { const response = await fetch(`/api/admin/phan-hoi/${id}/trang-thai`, { method:'PATCH', credentials:'same-origin', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify({ trangThai }) }); if (!response.ok) throw new Error(); const changed = await response.json(); feedbacks = feedbacks.map(item => Number(item.id) === Number(id) ? changed : item); render(); }
+        catch { alert('Không thể cập nhật trạng thái đánh giá.'); }
+    }
+
+    // Xử lý tương tác người dùng cho open reply.
+    function openReply(id) {
+        const review = feedbacks.find(item => Number(item.id) === Number(id));
+        if (!review) return;
+        currentReplyId = id;
+        $('replyContext').innerHTML = `<span class="avatar">${esc(initials(review.tenKhachHang))}</span><span>Trả lời đánh giá của <b>${esc(review.tenKhachHang || 'Khách hàng')}</b> về <b>${esc(review.tenSp || 'sản phẩm')}</b></span>`;
+        $('replyContent').value = review.phanHoiQuanTri || '';
+        $('replyError').textContent = '';
+        updateReplyCounter();
+        $('replyModal').hidden = false;
+        setTimeout(() => $('replyContent').focus(), 0);
+    }
+
+    // Xử lý thao tác đóng, xóa hoặc hủy cho close reply.
+    function closeReply() { $('replyModal').hidden = true; currentReplyId = null; }
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update reply counter.
+    function updateReplyCounter() { $('replyCounter').textContent = `${$('replyContent').value.length} / 1000`; }
+
+    // Xử lý tương tác người dùng cho submit reply.
+    async function submitReply(event) {
+        event.preventDefault();
+        const content = $('replyContent').value.trim();
+        if (!content) { $('replyError').textContent = 'Vui lòng nhập nội dung phản hồi.'; $('replyContent').focus(); return; }
+        const button = $('submitReply'); button.disabled = true; button.textContent = 'Đang gửi...';
+        try {
+            const response = await fetch(`/api/admin/phan-hoi/${currentReplyId}/tra-loi`, { method:'PATCH', credentials:'same-origin', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify({ noiDung:content }) });
+            if (!response.ok) throw new Error();
+            const changed = await response.json(); feedbacks = feedbacks.map(item => Number(item.id) === Number(currentReplyId) ? changed : item); closeReply(); render();
+        } catch { $('replyError').textContent = 'Không thể gửi phản hồi. Vui lòng thử lại.'; }
+        finally { button.disabled = false; button.textContent = 'Gửi phản hồi'; }
+    }
+
+    $('feedbackSearch').addEventListener('input', render);
+    $('replyContent').addEventListener('input', updateReplyCounter);
+    $('replyForm').addEventListener('submit', submitReply);
+    $('closeReplyModal').addEventListener('click', closeReply);
+    $('cancelReply').addEventListener('click', closeReply);
+    $('replyModal').addEventListener('click', event => { if (event.target === $('replyModal')) closeReply(); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && !$('replyModal').hidden) closeReply(); });
+    document.addEventListener('DOMContentLoaded', load);
+</script>
+</body>
+</html>

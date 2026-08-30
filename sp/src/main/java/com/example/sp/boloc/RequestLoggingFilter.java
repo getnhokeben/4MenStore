@@ -18,6 +18,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(RequestLoggingFilter.class);
 
     @Override
+    // Thực hiện xử lý nghiệp vụ của hàm do filter internal.
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         ContentCachingRequestWrapper wrapped = new ContentCachingRequestWrapper(request, 10240);
         try {

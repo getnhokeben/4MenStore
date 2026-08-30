@@ -19,6 +19,7 @@ public class ShopChatbotProperties {
     private Duration readTimeout = Duration.ofSeconds(30);
     private int maxOutputTokens = 450;
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is configured.
     public boolean isConfigured() {
         return enabled
                 && apiKey != null

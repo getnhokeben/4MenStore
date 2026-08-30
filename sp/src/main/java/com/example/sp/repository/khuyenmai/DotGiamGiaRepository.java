@@ -60,7 +60,9 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
     );
 
     @Query(value = """
-        SELECT ct.id_spct AS idSpct,
+        SELECT sp.id_sp AS idSp,
+               sp.ma_sp AS maSp,
+               ct.id_spct AS idSpct,
                ct.ma_chi_tiet_san_pham AS maSpct,
                sp.ten_sp AS tenSp,
                ms.ten_mau_sac AS tenMauSac,

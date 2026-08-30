@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/js/app-shell.js?v=live-chat-menu-20260722-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-icons-20260822-1" defer></script>
     <style>
         :root {
             --navy:#102a56;
@@ -39,7 +39,9 @@
         .quick, .filter button { height:34px; border:0; border-radius:7px; padding:0 11px; background:transparent; color:#52657e; cursor:pointer; font:600 12px 'Inter','Segoe UI',Arial,sans-serif; }
         .quick:hover, .quick.active { background:#eaf1ff; color:var(--blue); }
         .filter .sep { width:1px; height:23px; background:var(--line); margin:0 2px; }
-        .date { height:34px; width:130px; padding:0 7px; border:1px solid var(--line); border-radius:7px; color:#45566d; font:500 12px 'Inter','Segoe UI',Arial,sans-serif; outline:0; }
+        .date, .status-select { height:34px; padding:0 9px; border:1px solid var(--line); border-radius:7px; background:#fff; color:#45566d; font:500 12px 'Inter','Segoe UI',Arial,sans-serif; outline:0; }
+        .date { width:130px; }
+        .status-select { width:190px; }
         .apply { background:var(--brand)!important; color:#fff!important; padding:0 15px!important; }
         .reset { text-decoration:none; color:var(--muted); font-size:12px; font-weight:600; padding:8px 4px; }
         .kpis { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:16px; margin-bottom:16px; }
@@ -59,21 +61,21 @@
         .panel-subtitle { margin:5px 0 0; color:var(--muted); font-size:11px; }
         .chart-wrap { height:286px; position:relative; }
         .mini-chart { height:168px; position:relative; }
+        .mini-chart.status-chart { height:230px; }
         .legend { display:flex; align-items:center; gap:6px; color:var(--muted); font-size:11px; font-weight:600; }
         .legend i { width:8px; height:8px; border-radius:50%; background:var(--blue); }
-        .bottom { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,1.42fr); gap:16px; }
+        .bottom { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
         .table-scroll { overflow-x:auto; }
         table { width:100%; border-collapse:collapse; min-width:460px; }
         th { padding:0 8px 11px; border-bottom:1px solid var(--line); color:var(--muted); text-align:left; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.35px; }
         td { padding:12px 8px; border-bottom:1px solid #edf0f4; color:#40516b; font-size:12px; }
         tr:last-child td { border-bottom:0; }
         .product { display:flex; align-items:center; gap:9px; color:var(--ink); font-weight:700; }
-        .product-img, .product-placeholder { width:32px; height:32px; flex:0 0 32px; border-radius:8px; object-fit:cover; background:#eef2f7; }
-        .product-placeholder { display:grid; place-items:center; color:#8ca0b9; font-size:12px; }
-        .rank { color:var(--blue); font-size:13px; font-weight:800; } .sold { color:var(--blue); font-weight:800; } .stock { display:inline-flex; padding:4px 8px; border-radius:20px; color:#c64755; background:#fff0f1; font-size:11px; font-weight:800; }
+        .product-img { width:32px; height:32px; flex:0 0 32px; border-radius:8px; object-fit:cover; background:#eef2f7; }
+        .rank { color:var(--blue); font-size:13px; font-weight:800; } .sold { color:var(--blue); font-weight:800; } .spent { color:var(--green); font-weight:800; } .customer-phone { display:block; margin-top:2px; color:var(--muted); font-size:10px; font-weight:500; } .stock { display:inline-flex; padding:4px 8px; border-radius:20px; color:#c64755; background:#fff0f1; font-size:11px; font-weight:800; }
         .empty { padding:24px!important; color:var(--muted); text-align:center; }
         @media(max-width:1180px) { .kpis{grid-template-columns:repeat(3,1fr)} .dashboard,.bottom{grid-template-columns:1fr} .side-panels{grid-template-columns:1fr 1fr} }
-        @media(max-width:760px) { .topbar{height:56px;padding:0 16px}.content{padding:20px 16px 34px}.heading{align-items:flex-start;flex-direction:column}.filter{width:100%}.filter .sep,.quick{display:none}.date{flex:1;width:0}.apply{flex:1}.kpis,.side-panels{grid-template-columns:1fr}.kpi{min-height:112px}.chart-wrap{height:245px}.topbar .live span{display:none} }
+        @media(max-width:760px) { .topbar{height:56px;padding:0 16px}.content{padding:20px 16px 34px}.heading{align-items:flex-start;flex-direction:column}.filter{width:100%}.filter .sep,.quick{display:none}.date{flex:1;width:0}.status-select{width:100%}.apply{flex:1}.kpis,.side-panels{grid-template-columns:1fr}.kpi{min-height:112px}.chart-wrap{height:245px}.topbar .live span{display:none} }
     </style>
 </head>
 <body>
@@ -85,7 +87,22 @@
             <div><h1>Tổng quan kinh doanh</h1><p>Theo dõi hiệu quả bán hàng và tình hình kho của cửa hàng.</p></div>
             <form id="statsFilter" class="filter">
                 <button class="quick active" type="button" data-range="all">Tất cả</button><button class="quick" type="button" data-range="month">Tháng này</button><button class="quick" type="button" data-range="week">7 ngày qua</button><button class="quick" type="button" data-range="today">Hôm nay</button>
-                <span class="sep"></span><input class="date" type="date" id="fromDate" aria-label="Từ ngày"><input class="date" type="date" id="toDate" aria-label="Đến ngày"><button class="apply" type="submit"><i class="fa-solid fa-filter"></i> Lọc</button><a class="reset" href="/thong-ke">Đặt lại</a>
+                <span class="sep"></span>
+                <select class="status-select" id="statusFilter" aria-label="Trạng thái đơn hàng">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="Chờ thanh toán online">Chờ thanh toán online</option>
+                    <option value="Chờ xác nhận">Chờ xác nhận</option>
+                    <option value="Chờ nhập hàng">Chờ nhập hàng</option>
+                    <option value="Đã xác nhận">Đã xác nhận</option>
+                    <option value="Đang chuẩn bị hàng">Đang chuẩn bị hàng</option>
+                    <option value="Chờ giao hàng">Chờ giao hàng</option>
+                    <option value="Đang giao hàng">Đang giao hàng</option>
+                    <option value="Chờ hàng hoàn">Chờ hàng hoàn</option>
+                    <option value="Hoàn thành">Hoàn thành</option>
+                    <option value="Đã thanh toán">Đã thanh toán</option>
+                    <option value="Đã hủy">Đã hủy</option>
+                </select>
+                <input class="date" type="date" id="fromDate" aria-label="Từ ngày"><input class="date" type="date" id="toDate" aria-label="Đến ngày"><button class="apply" type="submit"><i class="fa-solid fa-filter"></i> Lọc</button><a class="reset" href="/thong-ke">Đặt lại</a>
             </form>
         </div>
         <div class="kpis">
@@ -98,31 +115,42 @@
         <div class="dashboard">
             <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Doanh thu theo thời gian</h2><p class="panel-subtitle">Chỉ tính các đơn hàng đã thanh toán</p></div><span class="legend"><i></i> Doanh thu</span></div><div class="chart-wrap"><canvas id="revenueChart"></canvas></div></article>
             <div class="side-panels">
-                <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Trạng thái đơn hàng</h2><p class="panel-subtitle">Phân bổ đơn theo trạng thái</p></div></div><div class="mini-chart"><canvas id="statusChart"></canvas></div></article>
+                <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Trạng thái đơn hàng</h2><p class="panel-subtitle">Phân bổ đầy đủ theo từng trạng thái</p></div></div><div class="mini-chart status-chart"><canvas id="statusChart"></canvas></div></article>
                 <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Hóa đơn online/offline</h2><p class="panel-subtitle">Cơ cấu đơn theo kênh bán hàng</p></div></div><div class="mini-chart"><canvas id="channelChart"></canvas></div></article>
             </div>
         </div>
         <div class="bottom">
             <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Sắp hết hàng</h2><p class="panel-subtitle">Sản phẩm có tồn kho từ 10 trở xuống</p></div><i class="fa-solid fa-triangle-exclamation" style="color:var(--amber)"></i></div><div class="table-scroll"><table><thead><tr><th>Sản phẩm</th><th>Tồn kho</th><th>Đơn giá</th></tr></thead><tbody id="lowStockBody"><tr><td class="empty" colspan="3">Đang tải dữ liệu...</td></tr></tbody></table></div></article>
             <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Sản phẩm bán chạy</h2><p class="panel-subtitle">Xếp hạng theo số lượng đã bán trong khoảng đã chọn</p></div></div><div class="table-scroll"><table><thead><tr><th>#</th><th>Sản phẩm</th><th>Đã bán</th><th>Đơn giá</th></tr></thead><tbody id="topProductBody"><tr><td class="empty" colspan="4">Đang tải dữ liệu...</td></tr></tbody></table></div></article>
+            <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Khách hàng tiềm năng</h2><p class="panel-subtitle">5 khách có tổng chi tiêu cao nhất trong khoảng đã chọn</p></div><i class="fa-solid fa-user-group" style="color:var(--green)"></i></div><div class="table-scroll"><table><thead><tr><th>#</th><th>Khách hàng</th><th>Đơn hàng</th><th>Chi tiêu</th></tr></thead><tbody id="topCustomerBody"><tr><td class="empty" colspan="4">Đang tải dữ liệu...</td></tr></tbody></table></div></article>
         </div>
     </section>
 </main>
 <script>
     const charts = {}; const currency = new Intl.NumberFormat('vi-VN');
     const COLORS = ['#3267c8','#15946a','#e59b32','#db5360','#7c89a0','#7b61c9'];
-    const STATUS_COLORS = {'Chờ xác nhận':'#e59b32','Đã xác nhận':'#3267c8','Đang chuẩn bị hàng':'#7b61c9','Đang giao hàng':'#38a3db','Chờ hàng hoàn':'#d08a24','Hoàn thành':'#15946a','Đã hủy':'#db5360'};
+    const STATUS_COLORS = {'Chờ thanh toán online':'#f59e0b','Chờ xác nhận':'#e59b32','Chờ nhập hàng':'#b7791f','Đã xác nhận':'#3267c8','Đang chuẩn bị hàng':'#7b61c9','Chờ giao hàng':'#14b8a6','Đang giao hàng':'#38a3db','Chờ hàng hoàn':'#d08a24','Hoàn thành':'#15946a','Đã thanh toán':'#22c55e','Đã hủy':'#db5360'};
     const money = value => `${currency.format(Math.round(Number(value || 0) / 1000) * 1000)} đ`;
     const cell = (row, index, fallback = '') => Array.isArray(row) && row[index] != null ? row[index] : fallback;
     const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    // Thực hiện xử lý nghiệp vụ của hàm chart.
     function chart(id, type, labels, values, options = {}) { const canvas=document.getElementById(id); if (!canvas || !window.Chart) return; if(charts[id]) charts[id].destroy(); charts[id]=new Chart(canvas,{type,data:{labels,datasets:[{data:values,backgroundColor:options.background || (type==='line' ? 'rgba(50,103,200,.12)' : COLORS),borderColor:options.border || (type==='line' ? '#3267c8' : '#fff'),borderWidth:type==='line'?2:2,fill:type==='line',tension:.38,pointRadius:type==='line'?3:0,pointHoverRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:type!=='line',position:'right',labels:{boxWidth:9,boxHeight:9,padding:12,font:{size:10,weight:'600'},color:'#62738b'}},tooltip:{callbacks:{label: ctx => type==='line' ? ` ${money(ctx.raw)}` : ` ${ctx.label}: ${currency.format(ctx.raw)}`}}},scales:type==='line'?{x:{grid:{display:false},ticks:{color:'#8391a4',font:{size:10}}},y:{beginAtZero:true,grid:{color:'#edf1f6'},ticks:{color:'#8391a4',font:{size:10},callback:v => v>=1000000 ? `${v/1000000}tr` : v>=1000 ? `${v/1000}k` : v}}}: {}}}); }
-    function dashboardImageUrl(value) { const raw=String(value ?? '').trim(); const lower=raw.toLowerCase(); if(!raw || lower==='null' || lower==='undefined' || lower==='-' || lower==='chưa có' || lower==='chua co') return ''; if(/^(https?:|data:|blob:)/i.test(raw) || raw.startsWith('/')) return raw; return `/uploads/${raw.replace(/^[/\\]+/, '')}`; }
+    // Thực hiện xử lý nghiệp vụ của hàm dashboard image url.
+    function dashboardImageUrl(value) { const raw=String(value ?? '').trim(); const lower=raw.toLowerCase(); if(!raw || lower==='null' || lower==='undefined' || lower==='-' || lower==='chưa có' || lower==='chua co') return ''; if(/^(https?:|data:|blob:)/i.test(raw) || raw.startsWith('/')) return raw; if(raw.startsWith('uploads/')) return `/${raw}`; return `/uploads/${raw.replace(/^[/\\]+/, '')}`; }
+    // Thực hiện xử lý nghiệp vụ của hàm product.
     function product(row, index, top) { const name=cell(row,0,'-'), quantity=cell(row,1,0), price=cell(row,2,0), src=dashboardImageUrl(cell(row,3,'')); const media=src?`<img class="product-img" src="${escapeHtml(src)}" alt="${escapeHtml(name)}" onerror="this.remove()">`:''; return top?`<tr><td class="rank">${index+1}</td><td><div class="product">${media}<span>${escapeHtml(name)}</span></div></td><td class="sold">${currency.format(quantity)}</td><td>${money(price)}</td></tr>`:`<tr><td><div class="product">${media}<span>${escapeHtml(name)}</span></div></td><td><span class="stock">${currency.format(quantity)} còn lại</span></td><td>${money(price)}</td></tr>`; }
+    // Hiển thị và đồng bộ giao diện cho render rows.
     function renderRows(id, rows, top) { const body=document.getElementById(id); body.innerHTML=rows?.length ? rows.map((row,i)=>product(row,i,top)).join('') : `<tr><td class="empty" colspan="${top?4:3}">Chưa có dữ liệu phù hợp</td></tr>`; }
-    function fill(data) { const status=data.status||[], total=Number(data.totalOrder||0); const paid=status.filter(x=>{const s=String(cell(x,0)).toLowerCase();return s.includes('thanh toán')||s.includes('hoàn thành')||s.includes('hoan thanh');}).reduce((sum,x)=>sum+Number(cell(x,1,0)),0); document.getElementById('totalOrder').textContent=currency.format(total); document.getElementById('totalRevenue').textContent=money(data.totalRevenue); document.getElementById('cashRevenue').textContent=money(data.cashRevenue); document.getElementById('transferRevenue').textContent=money(data.transferRevenue); document.getElementById('paidRate').textContent=total?`${Math.round(paid*100/total)}%`:'0%'; const revenue=data.chart||[]; chart('revenueChart','line',revenue.map(x=>new Date(cell(x,0)).toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})),revenue.map(x=>Number(cell(x,1,0)))); chart('statusChart','doughnut',status.map(x=>cell(x,0,'Không xác định')),status.map(x=>Number(cell(x,1,0))),{background:status.map(x=>STATUS_COLORS[cell(x,0)]||'#7c89a0')}); const channels=data.channel||[]; chart('channelChart','doughnut',channels.map(x=>cell(x,0,'Khác')),channels.map(x=>Number(cell(x,1,0))),{background:['#3267c8','#e59b32','#15946a','#7c89a0']}); renderRows('lowStockBody',data.lowStock||[],false); renderRows('topProductBody',data.topProduct||[],true); }
-    async function loadDashboard() { const p=new URLSearchParams(), from=document.getElementById('fromDate').value, to=document.getElementById('toDate').value; if(from)p.set('fromDate',from);if(to)p.set('toDate',to); const response=await fetch(`/api/thong-ke?${p}`);if(!response.ok)throw new Error('Không thể tải dữ liệu thống kê.'); fill(await response.json()); }
+    // Hiển thị danh sách khách hàng có tổng chi tiêu cao nhất.
+    function renderTopCustomers(rows) { const body=document.getElementById('topCustomerBody'); body.innerHTML=rows?.length ? rows.map((row,index)=>{const name=cell(row,0,'-'), phone=cell(row,1,''), orders=cell(row,2,0), spent=cell(row,3,0);return `<tr><td class="rank">${index+1}</td><td><div class="product"><i class="fa-solid fa-user"></i><span>${escapeHtml(name)}${phone?`<small class="customer-phone">${escapeHtml(phone)}</small>`:''}</span></div></td><td class="sold">${currency.format(orders)}</td><td class="spent">${money(spent)}</td></tr>`;}).join('') : '<tr><td class="empty" colspan="4">Chưa có dữ liệu phù hợp</td></tr>'; }
+    const normalizeStatus = value => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').trim().toLowerCase();
+    // Thực hiện xử lý nghiệp vụ của hàm fill.
+    function fill(data) { const status=data.status||[], total=Number(data.totalOrder||0); const paid=status.filter(x=>{const s=normalizeStatus(cell(x,0));return s==='da thanh toan'||s==='hoan thanh';}).reduce((sum,x)=>sum+Number(cell(x,1,0)),0); document.getElementById('totalOrder').textContent=currency.format(total); document.getElementById('totalRevenue').textContent=money(data.totalRevenue); document.getElementById('cashRevenue').textContent=money(data.cashRevenue); document.getElementById('transferRevenue').textContent=money(data.transferRevenue); document.getElementById('paidRate').textContent=total?`${Math.round(paid*100/total)}%`:'0%'; const revenue=data.chart||[]; chart('revenueChart','line',revenue.map(x=>new Date(cell(x,0)).toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})),revenue.map(x=>Number(cell(x,1,0)))); chart('statusChart','doughnut',status.map(x=>cell(x,0,'Không xác định')),status.map(x=>Number(cell(x,1,0))),{background:status.map(x=>STATUS_COLORS[cell(x,0)]||'#7c89a0')}); const channels=data.channel||[]; chart('channelChart','doughnut',channels.map(x=>cell(x,0,'Khác')),channels.map(x=>Number(cell(x,1,0))),{background:['#3267c8','#e59b32','#15946a','#7c89a0']}); renderRows('lowStockBody',data.lowStock||[],false); renderRows('topProductBody',data.topProduct||[],true); renderTopCustomers(data.topCustomer||[]); }
+    // Tải hoặc truy xuất dữ liệu cho load dashboard.
+    async function loadDashboard() { const p=new URLSearchParams(), from=document.getElementById('fromDate').value, to=document.getElementById('toDate').value, status=document.getElementById('statusFilter').value; if(from)p.set('fromDate',from);if(to)p.set('toDate',to);if(status)p.set('trangThai',status); const response=await fetch(`/api/thong-ke?${p}`);if(!response.ok)throw new Error('Không thể tải dữ liệu thống kê.'); fill(await response.json()); }
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho set range.
     function setRange(range) { const fromInput=document.getElementById('fromDate'), toInput=document.getElementById('toDate'); if(range==='all'){fromInput.value='';toInput.value='';return;} const now=new Date(), end=now.toISOString().slice(0,10), start=new Date(now); if(range==='week')start.setDate(now.getDate()-6); if(range==='month')start.setDate(1); fromInput.value=start.toISOString().slice(0,10);toInput.value=end; }
-    document.addEventListener('DOMContentLoaded',()=>{ const q=new URLSearchParams(location.search), hasDateFilter=q.get('fromDate')||q.get('toDate');document.getElementById('fromDate').value=q.get('fromDate')||'';document.getElementById('toDate').value=q.get('toDate')||''; if(hasDateFilter)document.querySelectorAll('.quick').forEach(x=>x.classList.remove('active'));document.getElementById('statsFilter').addEventListener('submit',event=>{event.preventDefault();document.querySelectorAll('.quick').forEach(x=>x.classList.remove('active'));loadDashboard().catch(error=>alert(error.message));});document.querySelectorAll('.quick').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.quick').forEach(x=>x.classList.toggle('active',x===button));setRange(button.dataset.range);loadDashboard().catch(error=>alert(error.message));}));loadDashboard().catch(error=>alert(error.message));});
+    document.addEventListener('DOMContentLoaded',()=>{ const q=new URLSearchParams(location.search), hasDateFilter=q.get('fromDate')||q.get('toDate');document.getElementById('fromDate').value=q.get('fromDate')||'';document.getElementById('toDate').value=q.get('toDate')||'';document.getElementById('statusFilter').value=q.get('trangThai')||''; if(hasDateFilter)document.querySelectorAll('.quick').forEach(x=>x.classList.remove('active'));document.getElementById('statsFilter').addEventListener('submit',event=>{event.preventDefault();document.querySelectorAll('.quick').forEach(x=>x.classList.remove('active'));loadDashboard().catch(error=>alert(error.message));});document.querySelectorAll('.quick').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.quick').forEach(x=>x.classList.toggle('active',x===button));setRange(button.dataset.range);loadDashboard().catch(error=>alert(error.message));}));loadDashboard().catch(error=>alert(error.message));});
 </script>
 </body>
 </html>

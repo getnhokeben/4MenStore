@@ -29,11 +29,13 @@ public class ShopPaymentController {
     private final ShopPaymentGatewayService paymentGatewayService;
 
     @GetMapping("/config")
+    // Thực hiện xử lý nghiệp vụ của hàm configuration.
     public Map<String, Boolean> configuration() {
         return paymentGatewayService.availability();
     }
 
     @PostMapping("/orders/{orderId}")
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create payment.
     public ShopPaymentResponse createPayment(
             @PathVariable Integer orderId,
             @Valid @RequestBody ShopPaymentRequest request,
@@ -48,36 +50,43 @@ public class ShopPaymentController {
     }
 
     @GetMapping("/vnpay/ipn")
+    // Thực hiện xử lý nghiệp vụ của hàm vnpay ipn.
     public Map<String, String> vnpayIpn(@RequestParam Map<String, String> params) {
         return paymentGatewayService.handleVnPayIpn(params);
     }
 
     @GetMapping("/vnpay/return")
+    // Thực hiện xử lý nghiệp vụ của hàm vnpay return.
     public ResponseEntity<Void> vnpayReturn(@RequestParam Map<String, String> params) {
         return redirect(paymentGatewayService.evaluateVnPayReturn(params));
     }
 
     @PostMapping("/zalopay/callback")
+    // Thực hiện xử lý nghiệp vụ của hàm zalo pay callback.
     public Map<String, Object> zaloPayCallback(@RequestBody Map<String, Object> callback) {
         return paymentGatewayService.handleZaloPayCallback(callback);
     }
 
     @GetMapping("/zalopay/return")
+    // Thực hiện xử lý nghiệp vụ của hàm zalo pay return.
     public ResponseEntity<Void> zaloPayReturn(@RequestParam Map<String, String> params) {
         return redirect(paymentGatewayService.evaluateZaloPayReturn(params));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm redirect.
     private ResponseEntity<Void> redirect(GatewayReturnResult result) {
         String status = !result.valid() ? "invalid"
                 : result.success() ? "success"
                 : result.pending() ? "pending"
                 : "failed";
-        String target = "/shop?paymentResult=" + status
+        String target = (paymentGatewayService.isPosOrder(result.orderCode()) ? "/ban-hang-tai-quay" : "/shop")
+                + "?paymentResult=" + status
                 + "&gateway=" + encode(result.gateway())
                 + "&orderCode=" + encode(result.orderCode());
         return ResponseEntity.status(302).location(URI.create(target)).build();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm client ip.
     private String clientIp(HttpServletRequest request) {
         String forwarded = request.getHeader("X-Forwarded-For");
         if (forwarded != null && !forwarded.isBlank()) {
@@ -86,6 +95,7 @@ public class ShopPaymentController {
         return request.getRemoteAddr();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm encode.
     private String encode(String value) {
         return URLEncoder.encode(value == null ? "" : value, StandardCharsets.UTF_8);
     }

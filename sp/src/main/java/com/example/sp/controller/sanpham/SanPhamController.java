@@ -33,7 +33,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -46,22 +45,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/san-pham")
-@CrossOrigin(origins = "*")
 public class SanPhamController {
 
     private static final Logger log = LoggerFactory.getLogger(SanPhamController.class);
+    private static final long MAX_IMAGE_SIZE_BYTES = 5L * 1024 * 1024;
 
     @Autowired private SanPhamRepository sanPhamRepo;
     @Autowired private SanPhamService sanPhamService;
@@ -75,20 +78,24 @@ public class SanPhamController {
     @Autowired private UploadStorageProperties uploadStorageProperties;
 
     @GetMapping(value = "/trang-chu", produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm trang chu.
     public ResponseEntity<byte[]> trangChu() throws IOException {
         return html("templates/TrangChu.html");
     }
 
     @GetMapping(value = "/quan-ly", produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm quan ly.
     public ResponseEntity<byte[]> quanLy() throws IOException {
         return html("templates/QuanLySanPham.html");
     }
 
     @GetMapping(value = "/bien-the", produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm bien the san pham.
     public ResponseEntity<byte[]> bienTheSanPham() throws IOException {
         return html("templates/BienTheSanPham.html");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm html.
     private ResponseEntity<byte[]> html(String path) throws IOException {
         byte[] html = new ClassPathResource(path).getInputStream().readAllBytes();
         return ResponseEntity.ok()
@@ -96,6 +103,7 @@ public class SanPhamController {
                 .body(html);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product result.
     private Map<String, Object> productResult(SanPham product, String message) {
         Map<String, Object> result = new HashMap<>();
         result.put("message", message);
@@ -105,6 +113,7 @@ public class SanPhamController {
         return result;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm variant result.
     private Map<String, Object> variantResult(ChiTietSanPham variant, String message) {
         Map<String, Object> result = new HashMap<>();
         result.put("message", message);
@@ -120,6 +129,7 @@ public class SanPhamController {
     }
 
     @GetMapping("/hien-thi")
+    // Tải hoặc truy xuất dữ liệu cho get all.
     public ResponseEntity<Page<SanPham>> getAll(
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "chatLieu", required = false) String chatLieu,
@@ -130,11 +140,13 @@ public class SanPhamController {
     }
 
     @GetMapping("/bien-the/{id}")
+    // Tải hoặc truy xuất dữ liệu cho get variants.
     public ResponseEntity<List<ChiTietSanPham>> getVariants(@PathVariable("id") Integer idSp) {
         return ResponseEntity.ok(sanPhamService.getProductVariants(idSp));
     }
 
     @PutMapping("/bien-the/{id}")
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update variant.
     public ResponseEntity<?> updateVariant(@PathVariable("id") Integer idSpct,
                                            @Valid @RequestBody ChiTietSanPhamUpdateRequest request) {
         try {
@@ -146,6 +158,7 @@ public class SanPhamController {
     }
 
     @PostMapping("/them")
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create product.
     public ResponseEntity<?> createProduct(@Valid @RequestBody SanPhamFullRequest request) {
         try {
             SanPham created = sanPhamService.createProduct(request);
@@ -156,22 +169,30 @@ public class SanPhamController {
     }
 
     @PostMapping(value = "/upload-anh", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm upload image.
     public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
             if (file == null || file.isEmpty()) {
                 return ResponseEntity.badRequest().body("Vui lòng chọn file ảnh");
             }
 
-            String originalName = file.getOriginalFilename() == null ? "image" : file.getOriginalFilename();
-            String extension = "";
-            int dotIndex = originalName.lastIndexOf('.');
-            if (dotIndex >= 0 && dotIndex < originalName.length() - 1) {
-                extension = originalName.substring(dotIndex).replaceAll("[^a-zA-Z0-9.]", "");
+            if (file.getSize() > MAX_IMAGE_SIZE_BYTES) {
+                return ResponseEntity.badRequest().body("Ảnh không được vượt quá 5 MB");
             }
-            String fileName = UUID.randomUUID() + extension;
+
+            String extension = detectSafeImageExtension(file);
+            if (extension == null) {
+                return ResponseEntity.badRequest().body("Chỉ chấp nhận ảnh JPG, PNG hoặc GIF hợp lệ");
+            }
+
+            String fileName = UUID.randomUUID() + "." + extension;
             Path uploadDir = uploadStorageProperties.directoryPath();
             Files.createDirectories(uploadDir);
-            Files.copy(file.getInputStream(), uploadDir.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+            Path target = uploadDir.resolve(fileName).normalize();
+            if (!target.startsWith(uploadDir.toAbsolutePath().normalize())) {
+                return ResponseEntity.badRequest().body("Tên tệp không hợp lệ");
+            }
+            Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
 
             Map<String, String> result = new HashMap<>();
             result.put("url", "/uploads/" + fileName);
@@ -182,9 +203,32 @@ public class SanPhamController {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm detect safe image extension.
+    private String detectSafeImageExtension(MultipartFile file) throws IOException {
+        try (ImageInputStream input = ImageIO.createImageInputStream(file.getInputStream())) {
+            if (input == null) return null;
+
+            Iterator<ImageReader> readers = ImageIO.getImageReaders(input);
+            if (!readers.hasNext()) return null;
+
+            ImageReader reader = readers.next();
+            try {
+                return switch (reader.getFormatName().toLowerCase(java.util.Locale.ROOT)) {
+                    case "jpeg", "jpg" -> "jpg";
+                    case "png" -> "png";
+                    case "gif" -> "gif";
+                    default -> null;
+                };
+            } finally {
+                reader.dispose();
+            }
+        }
+    }
+
     @PutMapping("/sua/{id}")
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update product.
     public ResponseEntity<?> updateProduct(@PathVariable("id") Integer idSp,
-                                           @RequestBody SanPhamFullRequest request) {
+                                           @Valid @RequestBody SanPhamFullRequest request) {
         try {
             SanPham updated = sanPhamService.updateProduct(idSp, request);
             return ResponseEntity.ok(productResult(updated, "Cập nhật sản phẩm thành công"));
@@ -198,6 +242,7 @@ public class SanPhamController {
     }
 
     @DeleteMapping("/xoa/{id}")
+    // Xử lý thao tác đóng, xóa hoặc hủy cho delete product.
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer idSp) {
         try {
             sanPhamService.softDeleteProduct(idSp);
@@ -208,6 +253,7 @@ public class SanPhamController {
     }
 
     @PatchMapping("/trang-thai/{id}")
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update status.
     public ResponseEntity<?> updateStatus(@PathVariable("id") Integer idSp,
                                           @RequestBody Map<String, Object> body) {
         try {
@@ -226,6 +272,7 @@ public class SanPhamController {
     }
 
     @GetMapping("/phan-trang")
+    // Thực hiện xử lý nghiệp vụ của hàm phan trang.
     public ResponseEntity<List<SanPham>> phanTrang(@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber) {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -233,46 +280,55 @@ public class SanPhamController {
     }
 
     @GetMapping("/tim-kiem")
+    // Thực hiện xử lý nghiệp vụ của hàm tim kiem.
     public ResponseEntity<List<SanPham>> timKiem(@RequestParam(name = "ten") String ten) {
         return ResponseEntity.ok(sanPhamRepo.findSanPhamsByTenSpContains(ten));
     }
 
     @GetMapping("/danh-muc/kich-co")
+    // Thực hiện xử lý nghiệp vụ của hàm danh muc kich co.
     public ResponseEntity<List<KichCo>> danhMucKichCo() {
         return ResponseEntity.ok(kichCoRepo.findAll(Sort.by("idKichCo").ascending()));
     }
 
     @GetMapping("/danh-muc/mau-sac")
+    // Thực hiện xử lý nghiệp vụ của hàm danh muc mau sac.
     public ResponseEntity<List<MauSac>> danhMucMauSac() {
         return ResponseEntity.ok(mauSacRepo.findAll(Sort.by("idMauSac").ascending()));
     }
 
     @GetMapping("/danh-muc/loai-ao")
+    // Thực hiện xử lý nghiệp vụ của hàm danh muc loai ao.
     public ResponseEntity<List<LoaiAo>> danhMucLoaiAo() {
         return ResponseEntity.ok(loaiAoRepo.findAll(Sort.by("idLoaiAo").ascending()));
     }
 
     @GetMapping({"/danh-muc/phong-cach", "/danh-muc/phong-cach-mac"})
+    // Thực hiện xử lý nghiệp vụ của hàm danh muc phong cach.
     public ResponseEntity<List<PhongCachMac>> danhMucPhongCach() {
         return ResponseEntity.ok(phongCachMacRepo.findAll(Sort.by("idPhongCachMac").ascending()));
     }
 
     @GetMapping("/danh-muc/kieu-dang")
+    // Thực hiện xử lý nghiệp vụ của hàm danh muc kieu dang.
     public ResponseEntity<List<KieuDang>> danhMucKieuDang() {
         return ResponseEntity.ok(kieuDangRepo.findAll(Sort.by("idKieuDang").ascending()));
     }
 
     @GetMapping("/danh-muc/xuat-xu")
+    // Thực hiện xử lý nghiệp vụ của hàm danh muc xuat xu.
     public ResponseEntity<List<XuatXu>> danhMucXuatXu() {
         return ResponseEntity.ok(xuatXuRepo.findAll(Sort.by("idXuatXu").ascending()));
     }
 
     @GetMapping("/danh-muc/chat-lieu")
+    // Thực hiện xử lý nghiệp vụ của hàm danh muc chat lieu.
     public ResponseEntity<List<ChatLieu>> danhMucChatLieu() {
         return ResponseEntity.ok(chatLieuRepo.findAll(Sort.by("idChatLieu").ascending()));
     }
 
     @GetMapping("/{id}")
+    // Tải hoặc truy xuất dữ liệu cho get by id.
     public ResponseEntity<SanPham> getById(@PathVariable Integer id) {
         return sanPhamRepo.findById(id)
                 .map(ResponseEntity::ok)

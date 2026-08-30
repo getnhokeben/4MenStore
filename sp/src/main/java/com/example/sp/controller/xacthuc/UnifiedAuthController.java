@@ -43,18 +43,22 @@ public class UnifiedAuthController {
         private String email;
         private String matKhau;
 
+        // Tải hoặc truy xuất dữ liệu cho get email.
         public String getEmail() {
             return email;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set email.
         public void setEmail(String email) {
             this.email = email;
         }
 
+        // Tải hoặc truy xuất dữ liệu cho get mat khau.
         public String getMatKhau() {
             return matKhau;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set mat khau.
         public void setMatKhau(String matKhau) {
             this.matKhau = matKhau;
         }
@@ -63,10 +67,12 @@ public class UnifiedAuthController {
     public static class ForgotPasswordRequest {
         private String email;
 
+        // Tải hoặc truy xuất dữ liệu cho get email.
         public String getEmail() {
             return email;
         }
 
+        // Tạo hoặc cập nhật dữ liệu/trạng thái cho set email.
         public void setEmail(String email) {
             this.email = email;
         }
@@ -74,6 +80,7 @@ public class UnifiedAuthController {
 
     @PostMapping("/login")
     @Transactional
+    // Thực hiện xử lý nghiệp vụ của hàm login.
     public ResponseEntity<?> login(
             @RequestBody LoginRequest request,
             HttpSession session
@@ -141,6 +148,7 @@ public class UnifiedAuthController {
 
     @PostMapping({"/quen-mat-khau", "/forgot-password"})
     @Transactional(rollbackFor = Exception.class)
+    // Thực hiện xử lý nghiệp vụ của hàm forgot password.
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         String email = normalizeEmail(request == null ? null : request.getEmail());
         if (email.isBlank()) {
@@ -179,6 +187,7 @@ public class UnifiedAuthController {
         return badRequest("Email không tồn tại hoặc tài khoản đã bị khóa.");
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm upgrade employee password if needed.
     private void upgradeEmployeePasswordIfNeeded(NhanVien employee, String rawPassword) {
         if (!isBcryptHash(employee.getMatKhau())) {
             employee.setMatKhau(passwordEncoder.encode(rawPassword));
@@ -186,6 +195,7 @@ public class UnifiedAuthController {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm upgrade customer password if needed.
     private void upgradeCustomerPasswordIfNeeded(KhachHang customer, String rawPassword) {
         if (!isBcryptHash(customer.getMatKhau())) {
             customer.setMatKhau(passwordEncoder.encode(rawPassword));
@@ -193,6 +203,7 @@ public class UnifiedAuthController {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm matches password.
     private boolean matchesPassword(String rawPassword, String storedPassword) {
         if (storedPassword == null || storedPassword.isBlank()) {
             return false;
@@ -202,6 +213,7 @@ public class UnifiedAuthController {
                 : storedPassword.equals(rawPassword);
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is bcrypt hash.
     private boolean isBcryptHash(String value) {
         return value != null && (
                 value.startsWith("$2a$")
@@ -210,6 +222,7 @@ public class UnifiedAuthController {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate temporary password.
     private String generateTemporaryPassword() {
         String upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
         String lower = "abcdefghijkmnopqrstuvwxyz";
@@ -233,18 +246,22 @@ public class UnifiedAuthController {
         return value.toString();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm random character.
     private char randomCharacter(String characters) {
         return characters.charAt(secureRandom.nextInt(characters.length()));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize email.
     private String normalizeEmail(String value) {
         return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm bad request.
     private ResponseEntity<?> badRequest(String message) {
         return ResponseEntity.badRequest().body(Map.of("message", message));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm reset success.
     private ResponseEntity<?> resetSuccess() {
         return ResponseEntity.ok(Map.of(
                 "message",

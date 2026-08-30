@@ -42,6 +42,7 @@ public class ShopChatbotAdvisor {
             "size", "dang", "loai", "lay", "thich", "xem", "giai", "thieu"
     );
 
+    // Thực hiện xử lý nghiệp vụ của hàm advise.
     public Advice advise(String latestMessage, String userContext, List<ShopProductDTO> catalog) {
         String latest = normalize(latestMessage);
         String context = normalize(userContext);
@@ -57,6 +58,7 @@ public class ShopChatbotAdvisor {
         return new Advice(profile, rankedProducts, productIntent, needsClarification);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm recommend sizes.
     public List<String> recommendSizes(String text) {
         Integer height = extractHeight(text);
         Integer weight = extractWeight(text);
@@ -76,6 +78,7 @@ public class ShopChatbotAdvisor {
         return List.copyOf(SIZE_ORDER.subList(Math.max(0, to - 1), to + 1));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm summarize.
     public String summarize(CustomerProfile profile) {
         List<String> parts = new ArrayList<>();
         if (profile.heightCm() != null) parts.add("Cao " + profile.heightCm() + " cm");
@@ -97,6 +100,7 @@ public class ShopChatbotAdvisor {
         return String.join(" · ", parts);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm extract profile.
     private CustomerProfile extractProfile(String latest, String context, List<ShopProductDTO> catalog) {
         Integer height = extractHeight(context);
         Integer weight = extractWeight(context);
@@ -151,15 +155,18 @@ public class ShopChatbotAdvisor {
         );
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm latest or remembered values.
     private List<String> latestOrRememberedValues(String latest, String context, List<String> available) {
         List<String> latestValues = mentionedValues(latest, available);
         return latestValues.isEmpty() ? mentionedValues(context, available) : latestValues;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm first non null.
     private String firstNonNull(String preferred, String fallback) {
         return preferred == null ? fallback : preferred;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm rank products.
     private List<RankedProduct> rankProducts(String latest, CustomerProfile profile, List<ShopProductDTO> catalog) {
         if (catalog == null || catalog.isEmpty()) return List.of();
         List<String> terms = significantTerms(latest);
@@ -250,12 +257,14 @@ public class ShopChatbotAdvisor {
         return ranked.stream().sorted(comparator).limit(14).toList();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm choose preferred size.
     private String choosePreferredSize(CustomerProfile profile) {
         if (profile.sizes().isEmpty()) return null;
         if ("rộng".equals(profile.fitPreference())) return profile.sizes().get(profile.sizes().size() - 1);
         return profile.sizes().get(0);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm extract price bounds.
     private PriceBounds extractPriceBounds(String context) {
         Matcher rangeK = RANGE_K.matcher(context);
         if (rangeK.find()) return new PriceBounds(thousands(rangeK.group(1)), thousands(rangeK.group(2)));
@@ -271,6 +280,7 @@ public class ShopChatbotAdvisor {
         return new PriceBounds(null, null);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm first price.
     private BigDecimal firstPrice(String text) {
         Matcher thousands = PRICE_K.matcher(text);
         if (thousands.find()) return thousands(thousands.group(1));
@@ -281,14 +291,17 @@ public class ShopChatbotAdvisor {
         return null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm thousands.
     private BigDecimal thousands(String value) {
         return new BigDecimal(value).multiply(new BigDecimal("1000"));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm millions.
     private BigDecimal millions(String value) {
         return new BigDecimal(value.replace(',', '.')).multiply(new BigDecimal("1000000"));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm extract explicit sizes.
     private List<String> extractExplicitSizes(String context) {
         LinkedHashSet<String> values = new LinkedHashSet<>();
         Matcher matcher = EXPLICIT_SIZE.matcher(context);
@@ -296,6 +309,7 @@ public class ShopChatbotAdvisor {
         return List.copyOf(values);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm detect fit preference.
     private String detectFitPreference(String context) {
         if (containsAny(context, "oversize", "rong", "thoai mai")) return "rộng";
         if (containsAny(context, "om", "body", "slim", "gon")) return "ôm";
@@ -303,6 +317,7 @@ public class ShopChatbotAdvisor {
         return null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm detect occasion.
     private String detectOccasion(String context) {
         if (containsAny(context, "di lam", "cong so", "hop hanh", "meeting")) return "Đi làm";
         if (containsAny(context, "du tiec", "tiec cuoi", "su kien")) return "Dự tiệc";
@@ -311,6 +326,7 @@ public class ShopChatbotAdvisor {
         return null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm detect sort preference.
     private String detectSortPreference(String latest, String context) {
         String source = latest + " " + context;
         if (containsAny(latest, "re hon", "re nhat", "gia thap", "tiet kiem")) return "price_asc";
@@ -321,6 +337,7 @@ public class ShopChatbotAdvisor {
         return "relevance";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm occasion matches.
     private boolean occasionMatches(String occasion, String haystack) {
         return switch (occasion) {
             case "Đi làm" -> containsAny(haystack, "so mi", "cong so", "thanh lich", "polo");
@@ -331,6 +348,7 @@ public class ShopChatbotAdvisor {
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm fit matches.
     private boolean fitMatches(String preference, String haystack) {
         return switch (preference) {
             case "rộng" -> containsAny(haystack, "oversize", "rong", "relaxed");
@@ -340,6 +358,7 @@ public class ShopChatbotAdvisor {
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm collect values.
     private List<String> collectValues(List<ShopProductDTO> products, Function<ShopProductDTO, List<String>> extractor) {
         if (products == null) return List.of();
         LinkedHashSet<String> values = new LinkedHashSet<>();
@@ -349,10 +368,12 @@ public class ShopChatbotAdvisor {
         return List.copyOf(values);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm mentioned values.
     private List<String> mentionedValues(String context, List<String> available) {
         return available.stream().filter(value -> mentionsValue(context, value)).toList();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm mentions value.
     private boolean mentionsValue(String context, String value) {
         String normalizedValue = normalize(value);
         if (normalizedValue.isBlank()) return false;
@@ -360,6 +381,7 @@ public class ShopChatbotAdvisor {
         return normalizedValue.startsWith("ao ") && context.contains(normalizedValue.substring(3));
     }
 
+    // Kiểm tra điều kiện và tính hợp lệ cho is excluded.
     private boolean isExcluded(String context, String value) {
         String color = normalize(value);
         return containsAny(context,
@@ -372,19 +394,23 @@ public class ShopChatbotAdvisor {
                 "bo " + color);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm overlaps.
     private boolean overlaps(List<String> left, List<String> right) {
         Set<String> normalizedRight = right.stream().map(this::normalize).collect(Collectors.toSet());
         return left.stream().map(this::normalize).anyMatch(normalizedRight::contains);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product sizes.
     private List<String> productSizes(ShopProductDTO product) {
         return lookupNames(product.getKichCos());
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product colors.
     private List<String> productColors(ShopProductDTO product) {
         return lookupNames(product.getMauSacs());
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product categories.
     private List<String> productCategories(ShopProductDTO product) {
         LinkedHashSet<String> values = new LinkedHashSet<>();
         if (product.getLoaiAo() != null && !product.getLoaiAo().isBlank()) values.add(product.getLoaiAo());
@@ -392,25 +418,30 @@ public class ShopChatbotAdvisor {
         return List.copyOf(values);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product materials.
     private List<String> productMaterials(ShopProductDTO product) {
         return product.getChatLieu() == null || product.getChatLieu().getTen() == null
                 ? List.of()
                 : List.of(product.getChatLieu().getTen());
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product styles.
     private List<String> productStyles(ShopProductDTO product) {
         return lookupNames(product.getPhongCachMacs());
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product fits.
     private List<String> productFits(ShopProductDTO product) {
         return lookupNames(product.getKieuDangs());
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm lookup names.
     private List<String> lookupNames(List<ShopLookupDTO> values) {
         if (values == null) return List.of();
         return values.stream().map(ShopLookupDTO::getTen).filter(value -> value != null && !value.isBlank()).distinct().toList();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm product search text.
     private String productSearchText(ShopProductDTO product) {
         List<String> values = new ArrayList<>();
         values.add(product.getTenSp());
@@ -424,6 +455,7 @@ public class ShopChatbotAdvisor {
         return normalize(values.stream().filter(value -> value != null && !value.isBlank()).collect(Collectors.joining(" ")));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm significant terms.
     private List<String> significantTerms(String normalized) {
         return Pattern.compile("[^a-z0-9]+")
                 .splitAsStream(normalized)
@@ -434,6 +466,7 @@ public class ShopChatbotAdvisor {
                 .toList();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm extract height.
     private Integer extractHeight(String text) {
         if (text == null) return null;
         Integer result = null;
@@ -446,6 +479,7 @@ public class ShopChatbotAdvisor {
         return result != null && result >= 140 && result <= 210 ? result : null;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm extract weight.
     private Integer extractWeight(String text) {
         if (text == null) return null;
         Integer result = null;
@@ -454,12 +488,14 @@ public class ShopChatbotAdvisor {
         return result;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm chart rank.
     private int chartRank(int value, int[] thresholds) {
         int rank = 0;
         for (int index = 0; index < thresholds.length; index++) if (value >= thresholds[index]) rank = index;
         return Math.max(0, Math.min(SIZE_ORDER.size() - 1, rank));
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize size.
     private String normalizeSize(String value) {
         if (value == null) return "";
         String size = value.trim().toUpperCase(Locale.ROOT).replaceAll("\\s+", "");
@@ -473,27 +509,32 @@ public class ShopChatbotAdvisor {
         };
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm format money.
     private String formatMoney(BigDecimal value) {
         NumberFormat format = NumberFormat.getNumberInstance(Locale.forLanguageTag("vi-VN"));
         format.setMaximumFractionDigits(0);
         return format.format(MoneyRoundingUtil.roundNonNegative(value)) + "đ";
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm money.
     private BigDecimal money(BigDecimal value) {
         return value == null ? BigDecimal.ZERO : value.max(BigDecimal.ZERO);
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm contains any.
     private boolean containsAny(String value, String... needles) {
         for (String needle : needles) if (value.contains(normalize(needle))) return true;
         return false;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize.
     private String normalize(String value) {
         if (value == null) return "";
         String decomposed = Normalizer.normalize(value, Normalizer.Form.NFD).replace('đ', 'd').replace('Đ', 'D');
         return decomposed.replaceAll("\\p{M}+", "").toLowerCase(Locale.ROOT).replaceAll("\\s+", " ").trim();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm advice.
     public record Advice(
             CustomerProfile profile,
             List<RankedProduct> rankedProducts,
@@ -502,6 +543,7 @@ public class ShopChatbotAdvisor {
     ) {
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm customer profile.
     public record CustomerProfile(
             Integer heightCm,
             Integer weightKg,
@@ -519,6 +561,7 @@ public class ShopChatbotAdvisor {
             String occasion,
             String sortPreference
     ) {
+        // Kiểm tra điều kiện và tính hợp lệ cho has shopping criteria.
         public boolean hasShoppingCriteria() {
             return !sizes.isEmpty() || !colors.isEmpty() || !excludedColors.isEmpty() || !categories.isEmpty()
                     || !materials.isEmpty() || !styles.isEmpty() || !fits.isEmpty() || minPrice != null || maxPrice != null
@@ -526,6 +569,7 @@ public class ShopChatbotAdvisor {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm ranked product.
     public record RankedProduct(
             ShopProductDTO product,
             int matchScore,
@@ -535,7 +579,9 @@ public class ShopChatbotAdvisor {
     ) {
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm price bounds.
     private record PriceBounds(BigDecimal min, BigDecimal max) {
+        // Kiểm tra điều kiện và tính hợp lệ cho has value.
         private boolean hasValue() {
             return min != null || max != null;
         }

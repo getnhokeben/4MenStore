@@ -1,5 +1,6 @@
 package com.example.sp.controller.sanpham;
 
+import java.text.Normalizer;
 import com.example.sp.model.sanpham.ChatLieu;
 import com.example.sp.model.sanpham.KichCo;
 import com.example.sp.model.sanpham.KieuDang;
@@ -23,7 +24,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -49,7 +49,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class ThuocTinhController {
     private static final int MIN_CODE_LENGTH = 2;
     private static final int MAX_CODE_LENGTH = 20;
@@ -65,6 +64,7 @@ public class ThuocTinhController {
     @Autowired private XuatXuRepository xuatXuRepo;
     @Autowired private ChatLieuRepository chatLieuRepo;
 
+    // Thực hiện xử lý nghiệp vụ của hàm attribute config.
     private record AttributeConfig(
             Supplier<List<Object>> findAllSupplier,
             Function<Integer, Optional<Object>> findByIdFn,
@@ -87,6 +87,7 @@ public class ThuocTinhController {
 
     // --- HTML page ---
     @GetMapping(value = "/thuoc-tinh/{slug}", produces = MediaType.TEXT_HTML_VALUE)
+    // Thực hiện xử lý nghiệp vụ của hàm page.
     public ResponseEntity<byte[]> page(@PathVariable String slug) throws IOException {
         if (config(slug) == null) return ResponseEntity.notFound().build();
 
@@ -99,6 +100,7 @@ public class ThuocTinhController {
 
     // --- LIST with filter + pagination ---
     @GetMapping("/api/thuoc-tinh/{slug}")
+    // Tải hoặc truy xuất dữ liệu cho list.
     public ResponseEntity<?> list(@PathVariable String slug,
                                   @RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "10") int size,
@@ -136,6 +138,7 @@ public class ThuocTinhController {
 
     // --- GET by ID ---
     @GetMapping("/api/thuoc-tinh/{slug}/{id}")
+    // Tải hoặc truy xuất dữ liệu cho get by id.
     public ResponseEntity<?> getById(@PathVariable String slug, @PathVariable Integer id) {
         AttributeConfig cfg = config(slug);
         if (cfg == null) return ResponseEntity.notFound().build();
@@ -146,6 +149,7 @@ public class ThuocTinhController {
 
     // --- CREATE ---
     @PostMapping("/api/thuoc-tinh/{slug}")
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho create.
     public ResponseEntity<?> create(@PathVariable String slug, @RequestBody Map<String, Object> body) {
         AttributeConfig cfg = config(slug);
         if (cfg == null) return ResponseEntity.notFound().build();
@@ -165,6 +169,7 @@ public class ThuocTinhController {
 
     // --- UPDATE ---
     @PutMapping("/api/thuoc-tinh/{slug}/{id}")
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update.
     public ResponseEntity<?> update(@PathVariable String slug,
                                     @PathVariable Integer id,
                                     @RequestBody Map<String, Object> body) {
@@ -189,6 +194,7 @@ public class ThuocTinhController {
 
     // --- TOGGLE STATUS ---
     @PatchMapping("/api/thuoc-tinh/{slug}/{id}/trang-thai")
+    // Tạo hoặc cập nhật dữ liệu/trạng thái cho update status.
     public ResponseEntity<?> updateStatus(@PathVariable String slug,
                                           @PathVariable Integer id,
                                           @RequestBody Map<String, Object> body) {
@@ -213,6 +219,7 @@ public class ThuocTinhController {
 
     // --- DELETE ---
     @DeleteMapping("/api/thuoc-tinh/{slug}/{id}")
+    // Xử lý thao tác đóng, xóa hoặc hủy cho delete.
     public ResponseEntity<?> delete(@PathVariable String slug, @PathVariable Integer id) {
         AttributeConfig cfg = config(slug);
         if (cfg == null) return ResponseEntity.notFound().build();
@@ -227,9 +234,10 @@ public class ThuocTinhController {
 
     // --- Helpers ---
 
+    // Thực hiện xử lý nghiệp vụ của hàm apply body.
     private void applyBody(String slug, AttributeConfig cfg, Object entity, Map<String, Object> body, boolean creating, Integer currentId) {
         String code = textValue(body, "ma");
-        String name = textValue(body, "ten");
+        String name = cleanAttributeName(textValue(body, "ten"));
         List<Object> all = cfg.findAllSupplier().get();
         if ((code == null || code.isBlank()) && creating) {
             code = generateUniqueCode(slug, cfg, all);
@@ -250,25 +258,24 @@ public class ThuocTinhController {
             throw new IllegalArgumentException("Tên thuộc tính phải từ " + minNameLength + " đến " + MAX_NAME_LENGTH + " ký tự");
         }
 
-        // Check for duplicate code
+        // Tên được so sánh sau khi chuẩn hóa: bỏ khoảng trắng thừa và không phân biệt hoa/thường.
+        String newNameKey = attributeNameKey(name);
+
         for (Object item : all) {
             Integer itemId = cfg.idGetter.apply(item);
+            if (currentId != null && currentId.equals(itemId)) {
+                continue;
+            }
+
             String itemCode = cfg.codeGetter.apply(item);
             if (itemCode != null && itemCode.trim().equalsIgnoreCase(code)) {
-                if (currentId == null || !currentId.equals(itemId)) {
-                    throw new IllegalArgumentException("Mã thuộc tính '" + code + "' đã tồn tại, vui lòng nhập mã khác");
-                }
+                throw new IllegalArgumentException("Mã thuộc tính '" + code + "' đã tồn tại, vui lòng nhập mã khác");
             }
-        }
 
-        // Check for duplicate name
-        for (Object item : all) {
-            Integer itemId = cfg.idGetter.apply(item);
             String itemName = cfg.nameGetter.apply(item);
-            if (itemName != null && itemName.trim().equalsIgnoreCase(name)) {
-                if (currentId == null || !currentId.equals(itemId)) {
-                    throw new IllegalArgumentException("Tên thuộc tính '" + name + "' đã tồn tại, vui lòng nhập tên khác");
-                }
+            String itemNameKey = attributeNameKey(itemName);
+            if (itemNameKey != null && itemNameKey.equals(newNameKey)) {
+                throw new IllegalArgumentException("Tên thuộc tính '" + name + "' đã tồn tại, vui lòng nhập tên khác");
             }
         }
 
@@ -282,6 +289,7 @@ public class ThuocTinhController {
         }
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm generate unique code.
     private String generateUniqueCode(String slug, AttributeConfig cfg, List<Object> all) {
         String prefix = codePrefix(slug);
         for (int i = 0; i < 50; i++) {
@@ -299,6 +307,7 @@ public class ThuocTinhController {
         return fallback.length() > MAX_CODE_LENGTH ? fallback.substring(0, MAX_CODE_LENGTH) : fallback;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm code prefix.
     private String codePrefix(String slug) {
         if (slug == null || slug.isBlank()) return "TT";
         StringBuilder prefix = new StringBuilder();
@@ -308,6 +317,7 @@ public class ThuocTinhController {
         return prefix.isEmpty() ? "TT" : prefix.toString();
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm normalize size name.
     private String normalizeSizeName(String name) {
         String normalized = name.trim().toUpperCase(Locale.ROOT);
         if (!ALLOWED_SIZE_NAMES.contains(normalized)) {
@@ -316,13 +326,38 @@ public class ThuocTinhController {
         return normalized;
     }
 
+    // Thực hiện xử lý nghiệp vụ của hàm text value.
     private String textValue(Map<String, Object> body, String key) {
         if (body == null || !body.containsKey(key) || body.get(key) == null) return null;
         String value = String.valueOf(body.get(key)).trim();
         return value.isEmpty() ? null : value;
     }
+    // Thực hiện xử lý nghiệp vụ của hàm clean attribute name.
+    private String cleanAttributeName(String value) {
+        if (value == null) {
+            return null;
+        }
 
+        String cleaned = Normalizer
+                .normalize(value, Normalizer.Form.NFC)
+                .replaceAll("\\s+", " ")
+                .trim();
+
+        return cleaned.isEmpty() ? null : cleaned;
+    }
+
+    // Thực hiện xử lý nghiệp vụ của hàm attribute name key.
+    private String attributeNameKey(String value) {
+        String cleaned = cleanAttributeName(value);
+
+        if (cleaned == null) {
+            return null;
+        }
+
+        return cleaned.toLowerCase(Locale.ROOT);
+    }
     /** Returns a 400 response with a consistent JSON body {"message": "..."} */
+    // Thực hiện xử lý nghiệp vụ của hàm bad json.
     private ResponseEntity<Map<String, String>> badJson(String message) {
         Map<String, String> body = new LinkedHashMap<>();
         body.put("message", message);
@@ -330,6 +365,7 @@ public class ThuocTinhController {
     }
 
     /** Returns a 404 response with a consistent JSON body {"message": "..."} */
+    // Thực hiện xử lý nghiệp vụ của hàm not found json.
     private ResponseEntity<Map<String, String>> notFoundJson(String message) {
         Map<String, String> body = new LinkedHashMap<>();
         body.put("message", message);
@@ -337,6 +373,7 @@ public class ThuocTinhController {
     }
 
     @SuppressWarnings("unchecked")
+    // Thực hiện xử lý nghiệp vụ của hàm config.
     private AttributeConfig config(String slug) {
         return switch (slug) {
             case "kich-co" -> new AttributeConfig(
@@ -440,9 +477,12 @@ public class ThuocTinhController {
             default -> null;
         };
     }
-
+    // Thực hiện xử lý nghiệp vụ của hàm normalize.
     private String normalize(String value) {
-        if (value == null || value.isBlank()) return null;
-        return value.trim().toLowerCase(Locale.ROOT);
+        String cleaned = cleanAttributeName(value);
+
+        return cleaned == null
+                ? null
+                : cleaned.toLowerCase(Locale.ROOT);
     }
 }
