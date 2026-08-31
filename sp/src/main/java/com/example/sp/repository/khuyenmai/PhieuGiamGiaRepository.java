@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,6 +51,14 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
     Optional<PhieuGiamGia> findByIdForUpdate(@Param("id") Integer id);
 
     List<PhieuGiamGia> findByTrangThaiTrue();
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Transactional
+    @Query("UPDATE PhieuGiamGia p SET p.trangThai = false "
+            + "WHERE p.trangThai = true "
+            + "AND p.ngayKetThuc IS NOT NULL "
+            + "AND p.ngayKetThuc <= :now")
+    int deactivateExpiredVouchers(@Param("now") LocalDateTime now);
 
     @Modifying
     @Query("UPDATE PhieuGiamGia p SET p.trangThai = false WHERE p.id = :id")

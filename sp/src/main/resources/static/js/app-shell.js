@@ -249,6 +249,7 @@ function renderSidebar(user, role) {
                         <i class="fas fa-sign-out-alt"></i>
                         Đăng xuất
                     </button>
+
                 </div>
             </div>
         `;
@@ -669,9 +670,9 @@ function injectStyle() {
                 --shell-gold: #c8a474;
             }
 
-            /* Tăng cỡ hiển thị đồng đều cho giao diện quản trị trên màn hình desktop. */
-            @media (min-width: 901px) {
-                body { zoom: 1.16; }
+            /* Giữ giao diện dễ đọc trên màn hình desktop. */
+            body {
+                zoom: 1.1;
             }
 
             .sidebar.app-sidebar {
@@ -681,7 +682,7 @@ function injectStyle() {
                 width: var(--shell-width) !important;
                 height: 100vh !important;
                 padding: 0 !important;
-                overflow-y: auto !important;
+                overflow: hidden !important;
                 display: flex !important;
                 flex-direction: column !important;
                 background: var(--shell-bg) !important;
@@ -766,7 +767,9 @@ function injectStyle() {
             .shell-sidebar-collapsed .shell-account-menu { display: none !important; }
 
             .shell-nav {
-                flex: 1;
+                flex: 1 1 auto;
+                min-height: 0;
+                overflow-y: auto;
                 padding: 8px 0 16px;
             }
 
@@ -859,9 +862,8 @@ function injectStyle() {
             }
 
             .shell-account {
-                position: sticky;
-                bottom: 0;
-                margin-top: auto;
+                position: relative;
+                flex: 0 0 auto;
                 border-top: 1px solid var(--shell-line);
                 background: #fff;
             }

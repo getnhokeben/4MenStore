@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,7 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
             LocalDateTime denNgay,
             Pageable pageable
     ) {
+        deactivateExpiredVouchers();
         Pageable requestedPage = withDefaultSort(pageable);
         String searchKey = SearchTextUtil.key(keyword);
         if (searchKey == null) {
@@ -182,6 +184,15 @@ public class PhieuGiamGiaServiceImpl implements PhieuGiamGiaService {
         voucher.setTrangThai(true);
 
         return phieuGiamGiaRepository.save(voucher);
+    }
+
+    /**
+     * Tự động tắt các phiếu đã đến hoặc qua thời điểm kết thúc.
+     * Chạy định kỳ và cũng được gọi trước khi tải danh sách để giao diện luôn đồng bộ.
+     */
+    @Scheduled(fixedDelayString = "${app.voucher.expiration-check-ms:60000}")
+    public void deactivateExpiredVouchers() {
+        phieuGiamGiaRepository.deactivateExpiredVouchers(LocalDateTime.now());
     }
 
     @Override

@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,700;14..32,900&display=swap" rel="stylesheet" />
 
-    <script src="/js/app-shell.js?v=ui-icons-20260822-1" defer></script>
+    <script src="/js/app-shell.js?v=ui-scale-20260831-3" defer></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
 
     <style>
@@ -506,6 +506,10 @@
             gap: 10px;
         }
 
+        .row.two.single-payment-field {
+            grid-template-columns: 1fr;
+        }
+
         .row.three {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -807,14 +811,25 @@
         }
 
         .customer-payment-methods .pay-tab {
-            min-height: 72px;
+            min-height: 104px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            flex-direction: column;
+            gap: 8px;
             padding: 9px;
             text-align: center;
         }
+
+        .customer-payment-methods .pay-tab-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            font-size: 27px;
+        }
+
+        .customer-payment-methods .pay-icon-mixed i:first-child { font-size: 20px; }
+        .customer-payment-methods .pay-icon-mixed i:last-child { font-size: 18px; }
 
         .checkout-payment-methods .pay-tab {
             min-height: 72px;
@@ -1387,18 +1402,12 @@
                 <span>Tổng số tiền</span>
                 <span id="paymentModalTotal" data-total="0">0 đ</span>
             </div>
-            <div class="pay-tabs">
-                <button id="payCashTab" class="pay-tab" type="button" onclick="setPayMode('CASH')"><i class="fa-solid fa-money-bill-1 pay-tab-icon pay-icon-cash"></i><span class="pay-tab-label">Tiền mặt</span></button>
-                <button id="payTransferTab" class="pay-tab" type="button" onclick="setPayMode('TRANSFER')"><i class="fa-solid fa-building-columns pay-tab-icon pay-icon-transfer"></i><span class="pay-tab-label">Chuyển khoản</span></button>
-                <button id="payMixedTab" class="pay-tab" type="button" onclick="setPayMode('MIXED')"><span class="pay-tab-icon pay-icon-mixed" aria-hidden="true"><i class="fa-solid fa-credit-card"></i><i class="fa-solid fa-money-bill-1"></i></span><span class="pay-tab-label">Kết hợp</span></button>
-                <button id="payCardTab" class="pay-tab" type="button" onclick="setPayMode('CARD')"><i class="fa-solid fa-credit-card pay-tab-icon pay-icon-card"></i><span class="pay-tab-label">Thẻ ATM / VNPay</span></button>
-            </div>
             <div class="row two" id="paymentAmountFields">
-                <div>
+                <div id="paymentCashField">
                     <div class="label">Tiền mặt</div>
                     <input class="input money-input" id="cashInput" inputmode="numeric" value="0" oninput="formatPaymentInput(this);updatePaymentFields()">
                 </div>
-                <div>
+                <div id="paymentTransferField">
                     <div class="label">Chuyển khoản</div>
                     <input class="input money-input" id="transferInput" inputmode="numeric" value="0" oninput="formatPaymentInput(this);updatePaymentFields()">
                 </div>
@@ -2321,7 +2330,13 @@
             el('cashInput').value = moneyText(mode === 'TRANSFER' || mode === 'CARD' ? 0 : total);
             el('transferInput').value = moneyText(mode === 'CASH' || mode === 'CARD' ? 0 : (mode === 'TRANSFER' ? total : 0));
         }
-        if (el('paymentAmountFields')) el('paymentAmountFields').hidden = mode === 'CARD';
+        const amountFields = el('paymentAmountFields');
+        if (amountFields) {
+            amountFields.hidden = mode === 'CARD';
+            amountFields.classList.toggle('single-payment-field', mode === 'CASH' || mode === 'TRANSFER');
+        }
+        if (el('paymentCashField')) el('paymentCashField').hidden = !['CASH', 'MIXED'].includes(mode);
+        if (el('paymentTransferField')) el('paymentTransferField').hidden = !['TRANSFER', 'MIXED'].includes(mode);
         if (el('cardPaymentNote')) el('cardPaymentNote').classList.toggle('visible', mode === 'CARD');
         syncPayTabs();
         updatePaymentFields();
@@ -2355,10 +2370,10 @@
     // Thực hiện xử lý nghiệp vụ của hàm sync pay tabs.
     function syncPayTabs() {
         [
-            ['CASH', ['payCashTab', 'summaryPayCash']],
-            ['TRANSFER', ['payTransferTab', 'summaryPayTransfer']],
-            ['MIXED', ['payMixedTab', 'summaryPayMixed']],
-            ['CARD', ['payCardTab', 'summaryPayCard']]
+            ['CASH', ['summaryPayCash']],
+            ['TRANSFER', ['summaryPayTransfer']],
+            ['MIXED', ['summaryPayMixed']],
+            ['CARD', ['summaryPayCard']]
         ].forEach(([mode, ids]) => ids.forEach(id => {
             const tab = el(id);
             if (!tab) return;

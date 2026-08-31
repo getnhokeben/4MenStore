@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="/js/app-shell.js?v=ui-scale-20260822-2" defer></script>
+    <script src="/js/app-shell.js?v=ui-scale-20260831-3" defer></script>
     <style>
         :root{
             --bg:#eef2f6;
@@ -1032,6 +1032,8 @@
 
         rows.innerHTML = state.items.map((item, index) => {
             const status = resolveStatus(item);
+            const end = parseDateForStatus(item.ngayKetThuc);
+            const expired = Boolean(end && end <= new Date());
 
             return `
                 <tr>
@@ -1048,8 +1050,8 @@
                             <button class="icon-btn" type="button" onclick="openForm(${item.id})" title="Sửa">
                                 ${icons.edit}
                             </button>
-                            <label class="switch" title="Bật / tắt">
-                                <input type="checkbox" ${item.trangThai ? 'checked' : ''} onchange="toggleStatus(${item.id})">
+                            <label class="switch" title="${expired ? 'Phiếu đã hết hạn' : 'Bật / tắt'}">
+                                <input type="checkbox" ${item.trangThai && !expired ? 'checked' : ''} ${expired ? 'disabled' : ''} onchange="toggleStatus(${item.id})">
                                 <span></span>
                             </label>
                         </div>
