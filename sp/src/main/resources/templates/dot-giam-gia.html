@@ -1542,9 +1542,13 @@
         picker.lang = 'en-GB';
         picker.min = min;
         picker.value = value && value >= min ? value : min;
+        // Đặt điểm neo vào giữa ô nhập thay vì sát mép phải để bảng ngày/giờ
+        // luôn có đủ khoảng trống hiển thị trong cửa sổ.
+        const viewportWidth = window.visualViewport?.width || window.innerWidth;
+        const anchorLeft = rect.left + (rect.width / 2) - 17;
         picker.style.position = 'fixed';
-        picker.style.left = `${Math.max(0, rect.right - 36)}px`;
-        picker.style.top = `${Math.max(0, rect.top + 2)}px`;
+        picker.style.left = `${Math.max(34, Math.min(anchorLeft, viewportWidth - 140))}px`;
+        picker.style.top = `${Math.max(0, rect.bottom + 4)}px`;
         picker.style.width = '34px';
         picker.style.height = '34px';
         picker.style.opacity = '0.01';
